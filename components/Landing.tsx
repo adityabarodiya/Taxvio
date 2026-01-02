@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "./Button";
-import { Card, CardContent } from "./Card";
 import { CheckCircle } from "lucide-react";
 import logo3 from "../public/logo5.png"
 import Image from "next/image";
