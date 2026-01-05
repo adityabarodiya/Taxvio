@@ -16,13 +16,6 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 1️⃣ Send email (API)
-    await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
     // 2️⃣ Open WhatsApp
     const whatsappNumber = phoneNumber
     const text = `Hello, I am ${form.name}.

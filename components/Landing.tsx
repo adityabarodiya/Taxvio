@@ -8,6 +8,9 @@ import bg from "../public/service/bg.png"
 import bg1 from "../public/service/bg1.png"
 import ServiceCard from "./ServiceCard";
 import { services } from "@/data/service";
+
+
+
 export default function Landing() {
     const phoneNumber = process.env.NEXT_PUBLIC_MOBILE_NUMBER;
     const handleCall = () => {
@@ -15,13 +18,17 @@ export default function Landing() {
         window.location.href = `tel:${phoneNumber}`;
     };
     const handleWhatsApp = () => {
-        if (!phoneNumber) return;
-        window.open(`https://wa.me/${phoneNumber}`, "_blank");
-    };
+    if (!phoneNumber) return;
+    const message = encodeURIComponent(
+      "Hello, I wanted to ask about your tax and compliance services."
+    );
+    const cleanNumber = phoneNumber.startsWith("+") ? phoneNumber : `${phoneNumber}`;
+    window.open(`https://wa.me/${cleanNumber}?text=${message}`, "_blank");
+};
 
     return (
         <main className="min-h-screen bg-white text-gray-800">
-            {/* <main className="min-h-screen bg-[#f5f8fb] text-gray-800"> */}
+           
             {/* Hero Section */}
             <section className="relative bg-gradient-to-b from-[#00416a] to-[#002b45] text-white overflow-hidden">
                 <div className="mx-auto max-w-6xl px-6 py-28 grid md:grid-cols-2 gap-16 items-center">
@@ -238,7 +245,9 @@ export default function Landing() {
                         Need help with GST, Income Tax or Company Registration?
                     </p>
                     <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button className="bg-white text-[#002b45] hover:bg-blue-100">
+                        <Button 
+                        onClick={handleCall}
+                        className="bg-white text-[#002b45] hover:bg-blue-100">
                             Call: +91 {phoneNumber}
                         </Button>
                         <Button variant="outline" className="border-white text-white hover:bg-white hover:text-[#002b45]

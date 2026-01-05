@@ -75,7 +75,7 @@ const [reviewData, setReviewData] = useState({
         <div className="flex justify-center mb-8">
   <button
     onClick={() => setShowReviewForm(true)}
-    className="rounded-xl bg-[#00416a] text-white px-6 py-3 font-semibold shadow hover:bg-[#003354] transition"
+    className="m-8 rounded-xl bg-[#00416a] text-white px-6 py-3 font-semibold shadow hover:bg-[#003354] transition"
   >
     Add a Review
   </button>
@@ -122,7 +122,7 @@ const [reviewData, setReviewData] = useState({
         <div className="flex justify-center mb-8">
   <button
     onClick={() => setShowForm(true)}
-    className="rounded-xl bg-white text-[#00416a] px-6 py-3 font-semibold shadow hover:bg-gray-100 transition"
+    className="m-8 rounded-xl bg-white text-[#00416a] px-6 py-3 font-semibold shadow hover:bg-gray-100 transition"
   >
     Ask a Question
   </button>
