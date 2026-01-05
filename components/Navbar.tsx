@@ -39,6 +39,9 @@ export default function Navbar() {
             <Link href="/about" className="text-gray-700 hover:text-[#00416a] transition">
               About
             </Link>
+             <Link href="/reviews" className="text-gray-700 hover:text-[#00416a] transition">
+              Reviews & FAQs
+            </Link>
             <Link href="/contact" className="text-gray-700 hover:text-[#00416a] transition">
               Contact
             </Link>
@@ -72,6 +75,7 @@ export default function Navbar() {
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
             <Link href="/services" onClick={() => setOpen(false)}>Services</Link>
             <Link href="/about" onClick={() => setOpen(false)}>About</Link>
+            <Link href="/reviews" onClick={() => setOpen(false)}>Reviews & FAQs</Link>
             <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
 
             <Link

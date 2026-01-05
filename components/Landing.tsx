@@ -79,6 +79,19 @@ export default function Landing() {
             <section className="relative bg-gradient-to-b from-[#00416a]/50 to-white py-24">
                 <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-16 items-center">
 
+
+{/* Vector Illustration */}
+                    <div className="relative">
+                        {/* Soft decorative blob */}
+                        <div className="absolute -inset-6 rounded-full bg-[#00416a]/5 blur-3xl" />
+
+                        <Image
+                            src={bg}
+                            alt="About AB Tax Solution Illustration"
+                            className="relative w-full h-auto"
+                            priority
+                        />
+                    </div>
                     {/* Text */}
                     <div>
                         <span className="inline-block mb-3 text-sm font-semibold tracking-wide text-[#00416a]/80 uppercase">
@@ -109,18 +122,7 @@ export default function Landing() {
                         </div>
                     </div>
 
-                    {/* Vector Illustration */}
-                    <div className="relative">
-                        {/* Soft decorative blob */}
-                        <div className="absolute -inset-6 rounded-full bg-[#00416a]/5 blur-3xl" />
-
-                        <Image
-                            src={bg}
-                            alt="About AB Tax Solution Illustration"
-                            className="relative w-full h-auto"
-                            priority
-                        />
-                    </div>
+                    
 
                 </div>
             </section>
@@ -153,7 +155,7 @@ export default function Landing() {
                                 </h3>
                                 <ul className="space-y-3 ">
                                     {[
-                                        "Experienced Law Intern",
+                                        "Expert Guidance",
                                         "Affordable & Transparent Pricing",
                                         "Quick Online Process",
                                         "Trusted by Local Businesses",
