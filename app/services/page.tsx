@@ -2,7 +2,7 @@ import { serviceCategories } from "../../data/serviceCategories";
 
 export default function ServicesPage() {
   return (
-    <section className="bg-gradient-to-b from-gray-100 via-[#00416a]/50 to-white text-white py-28">
+    <section className="bg-linear-to-b from-gray-100 via-[#00416a]/50 to-white text-white py-28">
       <div className="mx-auto max-w-6xl px-6">
 
         {/* Header */}

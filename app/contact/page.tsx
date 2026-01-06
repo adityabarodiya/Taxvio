@@ -31,7 +31,7 @@ Message: ${form.message}`;
   };
 
   return (
-    <section className="relative bg-gradient-to-b from-[#002b45] via-gray-100 via-[#002b45]/10 to-[#002b45] text-white py-28">
+    <section className="relative bg-linear-to-b from-[#002b45]  via-[#002b45]/10 to-[#002b45] text-white py-28">
 
       <div className="mx-auto max-w-3xl px-6">
 

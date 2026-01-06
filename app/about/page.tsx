@@ -6,7 +6,7 @@ export default function About() {
         <main className="bg-gray-200 text-white">
 
             {/* HERO SECTION */}
-            <section className="relative bg-gradient-to-b from-[#00416a] to-[#002b45] text-white py-32">
+            <section className="relative bg-linear-to-b from-[#00416a] to-[#002b45] text-white py-32">
                 <div className="mx-auto max-w-6xl px-6 flex flex-col-reverse md:flex-row items-center gap-12">
 
                     {/* LEFT: Text Content */}
@@ -64,7 +64,7 @@ export default function About() {
             </section>
 
             {/* WHY CHOOSE US */}
-            <section className=" bg-gradient-to-b from-[#002b45] to-[#002b45] text-white py-20">
+            <section className=" bg-linear-to-b from-[#002b45] to-[#002b45] text-white py-20">
                 <div className="mx-auto max-w-6xl px-6">
                     <h2 className="text-3xl font-semibold mb-12">Why Choose Us</h2>
 

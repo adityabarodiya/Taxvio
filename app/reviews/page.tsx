@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
 import  {reviews}  from "@/data/reviews";
-import { faqs } from "@/data/faq";
+
+import Faq from "@/components/Faq";
 const mob  = process.env.NEXT_PUBLIC_MOBILE_NUMBER;
 export default function ReviewsFaqPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -22,7 +23,7 @@ const [reviewData, setReviewData] = useState({
     <main className="bg-gray-100 text-[#002b45]">
 
       {/* HERO */}
-      <section className="bg-gradient-to-b from-[#00416a] to-[#002b45] text-white py-28">
+      <section className="bg-linear-to-b from-[#00416a] to-[#002b45] text-white py-28">
         <div className="mx-auto max-w-6xl px-6 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Trusted by Clients Across India
@@ -35,7 +36,7 @@ const [reviewData, setReviewData] = useState({
       </section>
 
       {/* REVIEWS */}
-      <section className="mx-auto max-w-6xl px-6 py-20">
+      <section className="mx-auto max-w-6xl px-6 py-16">
         <h2 className="text-3xl font-semibold mb-12 text-center">
           Client Reviews
         </h2>
@@ -84,7 +85,8 @@ const [reviewData, setReviewData] = useState({
       </section>
 
       {/* FAQ */}
-      <section className="bg-gradient-to-b from-[#00416a] to-[#002b45] text-white py-20">
+      <Faq/>
+      {/* <section className="bg-gradient-to-b from-[#00416a] to-[#002b45] text-white py-20">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-semibold mb-12 text-center">
             Frequently Asked Questions
@@ -128,7 +130,7 @@ const [reviewData, setReviewData] = useState({
   </button>
 </div>
 
-      </section>
+      </section> */}
 
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-6 py-20 text-center">

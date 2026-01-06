@@ -8,6 +8,7 @@ import bg from "../public/service/bg.png"
 import bg1 from "../public/service/bg1.png"
 import ServiceCard from "./ServiceCard";
 import { services } from "@/data/service";
+import Faq from "./Faq";
 
 
 
@@ -30,7 +31,7 @@ export default function Landing() {
         <main className="min-h-screen bg-white text-gray-800">
            
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-b from-[#00416a] to-[#002b45] text-white overflow-hidden">
+            <section className="relative bg-linear-to-b from-[#00416a] to-[#002b45] text-white overflow-hidden">
                 <div className="mx-auto max-w-6xl px-6 py-28 grid md:grid-cols-2 gap-16 items-center">
 
                     {/* Text */}
@@ -83,7 +84,7 @@ export default function Landing() {
             </section>
 
             {/* About Section */}
-            <section className="relative bg-gradient-to-b from-[#00416a]/50 to-white py-24">
+            <section className="relative bg-linear-to-b from-[#00416a]/50 to-white py-24">
                 <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-16 items-center">
 
 
@@ -136,7 +137,7 @@ export default function Landing() {
 
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-r from-[#00416a] to-[#002b45] text-white">
+            <section className="bg-linear-to-r from-[#00416a] to-[#002b45] text-white">
                 <div className="mx-auto max-w-5xl px-6 py-14 lg:py-16">
 
                     {/* White Container */}
@@ -144,7 +145,7 @@ export default function Landing() {
                         <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
 
                             {/* LEFT: Logo */}
-                            <div className="flex-shrink-0">
+                            <div className="shrink-0">
                                 <Image
                                     src={logo3}
                                     alt="AB Tax Solution Logo"
@@ -210,8 +211,8 @@ export default function Landing() {
 
 
             {/* Services Section */}
-            <section className="py-20">
-                <div className="mx-auto max-w-7xl px-6">
+            <section className="py-20 bg-gray-100">
+                <div className=" mx-auto max-w-7xl px-6">
 
                     <h2 className="text-3xl font-bold text-center text-[#00416a]">
                         Our Services
@@ -235,28 +236,29 @@ export default function Landing() {
             </section>
 
             
-
+<Faq/>
 
             {/* Contact Section */}
-            <section className="bg-[#002b45] text-white py-20">
+            <section className="relative bg-linear-to-b from-[#00416a]/50 to-white py-20">
                 <div className="mx-auto max-w-5xl px-6 text-center">
                     <h2 className="text-3xl font-bold">Get in Touch</h2>
-                    <p className="mt-3 text-blue-100">
+                    <p className="mt-3 text-gray-900">
                         Need help with GST, Income Tax or Company Registration?
                     </p>
                     <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                         <Button 
                         onClick={handleCall}
-                        className="bg-white text-[#002b45] hover:bg-blue-100">
-                            Call: +91 {phoneNumber}
+                        className="text-white  bg-[#002b45] hover:bg-[#003354] transition">
+                            Call: +{phoneNumber}
                         </Button>
-                        <Button variant="outline" className="border-white text-white hover:bg-white hover:text-[#002b45]
+                        <Button variant="outline" className="text-white  bg-[#002b45] hover:bg-[#003354] transition
                         "onClick={handleWhatsApp}>
                             WhatsApp Us
                         </Button>
                     </div>
                 </div>
             </section>
+            
 
             {/* Footer */}
             <footer className="bg-black text-gray-400 py-6 text-center">

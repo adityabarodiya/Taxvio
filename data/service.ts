@@ -1,9 +1,9 @@
 import incometaxbg from "../public/service/incometaxb.png";
 import gstbg from "../public/service/gst.png";
-import companybg from "../public/service/incometaxb.png";
-import llpbg from "../public/service/incometaxb.png";
-import pvtbg from "../public/service/incometaxb.png";
-import compliancebg from "../public/service/incometaxb.png";
+import companybg from "../public/service/company.png";
+import llpbg from "../public/service/register.png";
+import pvtbg from "../public/service/ltd.png";
+import compliancebg from "../public/service/compliance.png";
 
 export const services = [
   {
