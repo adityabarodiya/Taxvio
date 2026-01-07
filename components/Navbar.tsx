@@ -6,6 +6,7 @@ import { useState } from "react";
 import logo from "@/public/logo3.png"; // update path
 import { useRouter } from "next/navigation";
 import ServicesDrawer from "./ServiceDrawer";
+import MobileServicesMenu from "./MobileServiceMenu";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -39,7 +40,7 @@ export default function Navbar() {
             <div
               onMouseEnter={() => setServicesOpen(true)}
               onMouseLeave={() => setServicesOpen(false)}
-              className="relative"
+            // className="relative"
             >
               <span className="cursor-pointer text-gray-700 hover:text-[#00416a]">
                 Services
@@ -58,9 +59,9 @@ export default function Navbar() {
             <Link href="/reviews" className="text-gray-700 hover:text-[#00416a] transition">
               Reviews & FAQs
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-[#00416a] transition">
+            {/* <Link href="/contact" className="text-gray-700 hover:text-[#00416a] transition">
               Contact
-            </Link>
+            </Link> */}
 
             {/* CTA */}
             <Link
@@ -89,10 +90,11 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-t text-gray-900 border-gray-200 hover:text-blue-900c">
           <div className="px-6 py-6 flex flex-col gap-4">
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
-            <Link href="/services" onClick={() => setOpen(false)}>Services</Link>
+            {/* ✅ Mobile Services */}
+            <MobileServicesMenu closeMenu={() => setOpen(false)} />
             <Link href="/about" onClick={() => setOpen(false)}>About</Link>
             <Link href="/reviews" onClick={() => setOpen(false)}>Reviews & FAQs</Link>
-            <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
+            {/* <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link> */}
 
             <Link
               href="/contact"
