@@ -5,15 +5,17 @@ import Link from "next/link";
 import { useState } from "react";
 import logo from "@/public/logo3.png"; // update path
 import { useRouter } from "next/navigation";
+import ServicesDrawer from "./ServiceDrawer";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const router = useRouter()
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full bg-white/90 backdrop-blur border-b border-gray-200">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-14 items-center justify-between">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
@@ -29,17 +31,31 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-8 relative">
             <Link href="/" className="text-gray-700 hover:text-[#00416a] transition">
               Home
             </Link>
-            <Link href="/services" className="text-gray-700 hover:text-[#00416a] transition">
-              Services
-            </Link>
+            {/* HOVER ZONE */}
+            <div
+              onMouseEnter={() => setServicesOpen(true)}
+              onMouseLeave={() => setServicesOpen(false)}
+              className="relative"
+            >
+              <span className="cursor-pointer text-gray-700 hover:text-[#00416a]">
+                Services
+              </span>
+
+              {/* invisible hover bridge */}
+              <div className="absolute top-full h-3 w-full"></div>
+
+              {servicesOpen && <ServicesDrawer />}
+            </div>
+
+
             <Link href="/about" className="text-gray-700 hover:text-[#00416a] transition">
               About
             </Link>
-             <Link href="/reviews" className="text-gray-700 hover:text-[#00416a] transition">
+            <Link href="/reviews" className="text-gray-700 hover:text-[#00416a] transition">
               Reviews & FAQs
             </Link>
             <Link href="/contact" className="text-gray-700 hover:text-[#00416a] transition">
