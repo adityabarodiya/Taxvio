@@ -3,7 +3,7 @@
 export 
 const faqs = [
   {
-    question: "What services does AB Tax Solution provide?",
+    question: "What services does Taxvio provide?",
     answer:
       "We provide Income Tax Returns, GST registration & filing, PAN/TAN services, TDS/TCS returns, ROC compliance, audits, and business registration services."
   },

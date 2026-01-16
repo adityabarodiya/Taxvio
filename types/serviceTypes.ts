@@ -4,7 +4,8 @@ export type ServiceSEO = {
 };
 
 export type ServiceItem = {
-  id: string;
+ 
+   slug: string;
   title: string;
   shortDescription: string;
 
@@ -16,7 +17,7 @@ export type ServiceItem = {
 };
 
 export type ServiceCategory = {
-  id: string;
+  slug: string;
   category: string;
   description: string;
   services: ServiceItem[];

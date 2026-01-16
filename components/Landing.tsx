@@ -2,7 +2,7 @@
 
 import { Button } from "./Button";
 import { CheckCircle } from "lucide-react";
-import logo3 from "../public/logo5.png"
+import logo3 from "../public/why2.png"
 import Image from "next/image";
 import bg from "../public/service/bg.png"
 import bg1 from "../public/service/bg1.png"
@@ -19,17 +19,17 @@ export default function Landing() {
         window.location.href = `tel:${phoneNumber}`;
     };
     const handleWhatsApp = () => {
-    if (!phoneNumber) return;
-    const message = encodeURIComponent(
-      "Hello, I wanted to ask about your tax and compliance services."
-    );
-    const cleanNumber = phoneNumber.startsWith("+") ? phoneNumber : `${phoneNumber}`;
-    window.open(`https://wa.me/${cleanNumber}?text=${message}`, "_blank");
-};
+        if (!phoneNumber) return;
+        const message = encodeURIComponent(
+            "Hello, I wanted to ask about your tax and compliance services."
+        );
+        const cleanNumber = phoneNumber.startsWith("+") ? phoneNumber : `${phoneNumber}`;
+        window.open(`https://wa.me/${cleanNumber}?text=${message}`, "_blank");
+    };
 
     return (
         <main className="min-h-screen bg-white text-gray-800">
-           
+
             {/* Hero Section */}
             <section className="relative bg-linear-to-b from-[#00416a] to-[#002b45] text-white overflow-hidden">
                 <div className="mx-auto max-w-6xl px-6 py-28 grid md:grid-cols-2 gap-16 items-center">
@@ -46,7 +46,7 @@ export default function Landing() {
                         </h1>
 
                         <p className="mt-6 max-w-xl text-white/80 leading-relaxed">
-                            AB Tax Solution helps individuals, startups, and businesses stay compliant
+                            Taxvio helps individuals, startups, and businesses stay compliant
                             with Indian tax and corporate laws through accurate, confidential, and
                             timely services.
                         </p>
@@ -88,14 +88,14 @@ export default function Landing() {
                 <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-16 items-center">
 
 
-{/* Vector Illustration */}
+                    {/* Vector Illustration */}
                     <div className="relative">
                         {/* Soft decorative blob */}
                         <div className="absolute -inset-6 rounded-full bg-[#00416a]/5 blur-3xl" />
 
                         <Image
                             src={bg}
-                            alt="About AB Tax Solution Illustration"
+                            alt="About Taxvio Illustration"
                             className="relative w-full h-auto"
                             priority
                         />
@@ -107,11 +107,11 @@ export default function Landing() {
                         </span>
 
                         <h2 className="text-4xl font-bold text-[#00416a] leading-tight">
-                            About AB Tax Solution
+                            About Taxvio
                         </h2>
 
                         <p className="mt-6 text-gray-600 leading-relaxed">
-                            AB Tax Solution is a Khatauli-based legal and taxation consultancy helping
+                            Taxvio is a Khatauli-based legal and taxation consultancy helping
                             individuals, startups, and businesses comply with Indian tax and corporate
                             laws with accuracy, confidentiality, and timely service.
                         </p>
@@ -130,7 +130,7 @@ export default function Landing() {
                         </div>
                     </div>
 
-                    
+
 
                 </div>
             </section>
@@ -141,14 +141,14 @@ export default function Landing() {
                 <div className="mx-auto max-w-5xl px-6 py-14 lg:py-16">
 
                     {/* White Container */}
-                    <div className="bg-white text-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
-                        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
+                    <div className="rounded-2xl bg-white p-6 text-gray-800 shadow-xl md:p-8">
+                        <div className="flex flex-col items-center gap-6 lg:flex-row-reverse lg:gap-10">
 
-                            {/* LEFT: Logo */}
-                            <div className="shrink-0">
+                            {/* RIGHT: Logo */}
+                            <div className="flex-1 flex justify-center">
                                 <Image
                                     src={logo3}
-                                    alt="AB Tax Solution Logo"
+                                    alt="Taxvio Logo"
                                     width={360}
                                     height={200}
                                     priority
@@ -156,12 +156,13 @@ export default function Landing() {
                                 />
                             </div>
 
-                            {/* RIGHT: Why Choose Us */}
-                            <div className="flex-1">
-                                <h3 className="text-4xl font-semibold text-[#00416a] mb-4">
+                            {/* LEFT: Why Choose Us */}
+                            <div className="shrink-0 lg:ml-20">
+                                <h3 className="mb-4 text-4xl font-semibold text-[#00416a]">
                                     Why Choose Us?
                                 </h3>
-                                <ul className="space-y-3 ">
+
+                                <ul className="space-y-3">
                                     {[
                                         "Expert Guidance",
                                         "Affordable & Transparent Pricing",
@@ -169,7 +170,7 @@ export default function Landing() {
                                         "Trusted by Local Businesses",
                                     ].map((item) => (
                                         <li key={item} className="flex items-center gap-2">
-                                            <CheckCircle className="text-green-500" size={22} />
+                                            <CheckCircle size={22} className="text-green-500" />
                                             <span className="text-xl">{item}</span>
                                         </li>
                                     ))}
@@ -181,8 +182,8 @@ export default function Landing() {
                         <div className="my-6 h-px bg-gray-200" />
 
                         {/* Tagline + CTA */}
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                            <p className="text-sm md:text-base text-gray-600 max-w-2xl text-center md:text-left">
+                        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+                            <p className="max-w-2xl text-center text-sm text-gray-600 md:text-left md:text-base">
                                 Reliable GST, Income Tax & Company Registration Services in Khatauli, UP
                             </p>
 
@@ -204,7 +205,6 @@ export default function Landing() {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </section>
 
@@ -235,8 +235,8 @@ export default function Landing() {
                 </div>
             </section>
 
-            
-<Faq/>
+
+            <Faq />
 
             {/* Contact Section */}
             <section className="relative bg-linear-to-b from-[#00416a]/50 to-white py-20">
@@ -246,9 +246,9 @@ export default function Landing() {
                         Need help with GST, Income Tax or Company Registration?
                     </p>
                     <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button 
-                        onClick={handleCall}
-                        className="text-white  bg-[#002b45] hover:bg-[#003354] transition">
+                        <Button
+                            onClick={handleCall}
+                            className="text-white  bg-[#002b45] hover:bg-[#003354] transition">
                             Call: +{phoneNumber}
                         </Button>
                         <Button variant="outline" className="text-white  bg-[#002b45] hover:bg-[#003354] transition
@@ -258,11 +258,11 @@ export default function Landing() {
                     </div>
                 </div>
             </section>
-            
+
 
             {/* Footer */}
             <footer className="bg-black text-gray-400 py-6 text-center">
-                <p>© {new Date().getFullYear()} AB Tax Solution, Khatauli UP. All rights reserved.</p>
+                <p>© {new Date().getFullYear()} Taxvio, Khatauli UP. All rights reserved.</p>
             </footer>
         </main>
     );

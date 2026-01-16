@@ -3,13 +3,14 @@ import { ServiceCategory } from "@/types/serviceTypes";
 export const serviceCategories: ServiceCategory[] = [
   /* ================= INCOME TAX ================= */
   {
-    id: "income-tax",
+    slug: "income-tax",
     category: "Income Tax",
     description:
       "Complete income tax services for individuals, firms, and corporates",
     services: [
       {
-        id: "pan-card",
+      
+        slug:"pan-card",
         title: "PAN Card",
         shortDescription:
           "Complete assistance for new PAN card application, correction, reissue, and demographic updates with proper compliance support.",
@@ -35,14 +36,14 @@ export const serviceCategories: ServiceCategory[] = [
         ],
 
         seo: {
-          title: "PAN Card Services in India | AB Tax Solution",
+          title: "PAN Card Services in India | Taxvio",
           description:
             "Apply for new PAN card, correction, reissue, and PAN-related services with expert support.",
         },
       },
 
       {
-        id: "tan-application",
+        slug: "tan-application",
         title: "TAN Application",
         shortDescription:
           "End-to-end support for TAN application for businesses and professionals liable to deduct or collect tax at source.",
@@ -68,14 +69,14 @@ export const serviceCategories: ServiceCategory[] = [
         ],
 
         seo: {
-          title: "TAN Application Services | AB Tax Solution",
+          title: "TAN Application Services | Taxvio",
           description:
             "Professional assistance for TAN registration and compliance in India.",
         },
       },
 
       {
-        id: "aadhar-pan-linking",
+        slug: "aadhar-pan-linking",
         title: "Aadhaar PAN Linking",
         shortDescription:
           "Quick and hassle-free Aadhaar–PAN linking services to ensure compliance and avoid penalties.",
@@ -107,7 +108,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "itr-salaried",
+        slug: "itr-salaried",
         title: "Income Tax Return – Individual (Salaried)",
         shortDescription:
           "Accurate income tax return filing for salaried individuals ensuring maximum deductions, compliance, and timely submission.",
@@ -141,7 +142,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "itr-proprietor",
+        slug: "itr-proprietor",
         title: "Income Tax Return – Individual Proprietor",
         shortDescription:
           "ITR filing services for proprietors with business income, including balance sheet and profit & loss preparation.",
@@ -174,7 +175,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "itr-firm-llp",
+        slug: "itr-firm-llp",
         title: "Income Tax Return – Firm / LLP",
         shortDescription:
           "Comprehensive ITR filing for partnership firms and LLPs ensuring statutory compliance and timely submissions.",
@@ -207,7 +208,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "itr-trust-company",
+        slug: "itr-trust-company",
         title: "Income Tax Return – Trust / Pvt Ltd / Public Ltd",
         shortDescription:
           "Specialized income tax return filing for trusts and companies with complete compliance and audit coordination.",
@@ -240,7 +241,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "quarterly-tds",
+        slug: "quarterly-tds",
         title: "Quarterly TDS Return",
         shortDescription:
           "Preparation and filing of quarterly TDS returns with accurate reconciliation and timely compliance.",
@@ -273,7 +274,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "quarterly-tcs",
+        slug: "quarterly-tcs",
         title: "Quarterly TCS Return",
         shortDescription:
           "Assistance in quarterly TCS return filing ensuring correct reporting and statutory adherence.",
@@ -305,7 +306,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "income-tax-audit",
+        slug: "income-tax-audit",
         title: "Income Tax Audit Compliance Assistance",
         shortDescription:
           "Complete support for income tax audit compliance including documentation, coordination, and reporting.",
@@ -338,7 +339,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "income-tax-scrutiny",
+        slug: "income-tax-scrutiny",
         title: "Income Tax Scrutiny & Financial Assessment",
         shortDescription:
           "Professional representation and support during income tax scrutiny, notices, and financial assessments.",
@@ -370,7 +371,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "12a-application",
+        slug: "12a-application",
         title: "12A Application",
         shortDescription:
           "Registration services under Section 12A for trusts and NGOs to claim income tax exemptions.",
@@ -403,7 +404,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "80g-application",
+        slug: "80g-application",
         title: "80G Application",
         shortDescription:
           "End-to-end assistance for 80G registration enabling donors to claim tax deductions.",
@@ -435,7 +436,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "15g-15h",
+        slug: "15g-15h",
         title: "15G & 15H",
         shortDescription:
           "Preparation and submission of Form 15G and 15H to avoid excess TDS deduction on eligible income.",
@@ -469,13 +470,13 @@ export const serviceCategories: ServiceCategory[] = [
 
   /* ================= GST ================= */
   {
-    id: "gst",
+    slug: "gst",
     category: "GST Services",
     description:
       "Comprehensive GST registration, return filing, and advisory",
     services: [
       {
-        id: "gst-registration",
+        slug: "gst-registration",
         title: "GST Registration",
         shortDescription:
           "End-to-end GST registration services including eligibility assessment, documentation, and approval support.",
@@ -502,14 +503,14 @@ export const serviceCategories: ServiceCategory[] = [
         ],
 
         seo: {
-          title: "GST Registration Services | AB Tax Solution",
+          title: "GST Registration Services | Taxvio",
           description:
             "Quick and hassle-free GST registration services with expert guidance.",
         },
       },
 
       {
-        id: "gst-return",
+        slug: "gst-return",
         title: "GST Return Filing",
         shortDescription:
           "Monthly and quarterly GST return filing with reconciliation and compliance checks.",
@@ -541,7 +542,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "gst-refund",
+        slug: "gst-refund",
         title: "GST Refund Application",
         shortDescription:
           "Assistance in GST refund applications with proper documentation and follow-ups.",
@@ -576,13 +577,13 @@ export const serviceCategories: ServiceCategory[] = [
   },
     /* ================= ROC ================= */
   {
-    id: "roc",
+    slug: "roc",
     category: "Registrar of Companies (ROC)",
     description:
       "Company formation, statutory compliance, and ROC-related services for businesses",
     services: [
       {
-        id: "private-limited-formation",
+        slug: "private-limited-formation",
         title: "Private Limited Company Formation",
         shortDescription:
           "Complete incorporation services for private limited companies including documentation, MCA filing, and ROC approval.",
@@ -615,7 +616,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "public-limited-formation",
+        slug: "public-limited-formation",
         title: "Public Limited Company Formation",
         shortDescription:
           "End-to-end public limited company registration with compliance-focused execution and ROC approvals.",
@@ -648,7 +649,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "llp-formation",
+        slug: "llp-formation",
         title: "LLP Formation",
         shortDescription:
           "Hassle-free LLP registration services with complete MCA and ROC compliance.",
@@ -681,7 +682,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "annual-roc-return",
+        slug: "annual-roc-return",
         title: "Annual ROC Return",
         shortDescription:
           "Preparation and filing of annual ROC returns ensuring statutory compliance and timely submission.",
@@ -714,7 +715,7 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
-        id: "din-application",
+        slug: "din-application",
         title: "DIN Number Application",
         shortDescription:
           "Assistance in obtaining Director Identification Number (DIN) for company directors.",

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AB TAX Solution",
+  title: "Taxvio",
   description: "Simplifying Tax & Legal Compliance for Individuals & Businesses",
 };
 

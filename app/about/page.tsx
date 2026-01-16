@@ -15,7 +15,7 @@ export default function About() {
                             Trusted Tax & Compliance <br /> Experts You Can Rely On
                         </h1>
                         <p className="text-gray-300 text-lg">
-                            AB Tax Solution provides reliable, transparent, and end-to-end
+                            Taxvio provides reliable, transparent, and end-to-end
                             taxation, compliance, and business registration services across India.
                         </p>
                         <a
@@ -31,7 +31,7 @@ export default function About() {
                         <div className="absolute -inset-8 rounded-full bg-white/10 blur-3xl" />
                         <Image
                             src={bg1}
-                            alt="About AB Tax Solution"
+                            alt="About Taxvio"
                             className="w-full h-auto "
                             priority
                         />
@@ -45,7 +45,7 @@ export default function About() {
                 <div className="md:w-1/2 space-y-6">
                     <Image
                         src={logo}
-                        alt="About AB Tax Solution"
+                        alt="About Taxvio"
                         className="w-full h-auto "
                         priority
                     />
@@ -53,7 +53,7 @@ export default function About() {
                 <div className="relative">
                     <h2 className="text-3xl font-semibold mb-6">Who We Are</h2>
                     <p className="text-[#002b45] leading-relaxed max-w-3xl">
-                        AB Tax Solution is a professional tax consultancy firm dedicated to
+                        Taxvio is a professional tax consultancy firm dedicated to
                         simplifying complex taxation and regulatory processes for individuals,
                         startups, and businesses. With deep expertise in Income Tax, GST,
                         ROC compliances, and statutory filings, we ensure accuracy,

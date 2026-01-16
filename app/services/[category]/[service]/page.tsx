@@ -14,9 +14,9 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { category, service } = await params;
 
-  const categoryData = serviceCategories.find(c => c.id === category);
+  const categoryData = serviceCategories.find(c => c.slug === category);
   const serviceData = categoryData?.services.find(
-    s => s.id === service
+    s => s.slug === service
   );
 
   if (!serviceData) return {};
@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: Props) {
 export default async function ServiceDetailPage({ params }: Props) {
   const { category, service } = await params;
 
-  const categoryData = serviceCategories.find(c => c.id === category);
+  const categoryData = serviceCategories.find(c => c.slug === category);
   const serviceData: ServiceItem | undefined =
-    categoryData?.services.find(s => s.id === service);
+    categoryData?.services.find(s => s.slug === service);
 
   if (!serviceData) notFound();
 
@@ -48,45 +48,45 @@ export default async function ServiceDetailPage({ params }: Props) {
         <p className="mt-4 text-gray-600 text-lg">
           {serviceData.shortDescription}
         </p>
-{/* FEATURES */}
-<div className="mt-12">
-  <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-    Key Features
-  </h2>
-  <ul className="list-disc pl-6 space-y-2 text-gray-700">
-    {serviceData.features.map((item, i) => (
-      <li key={i}>{item}</li>
-    ))}
-  </ul>
-</div>
+        {/* FEATURES */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
+            Key Features
+          </h2>
+          <ul className="list-disc pl-6 space-y-2 text-gray-700">
+            {serviceData.features.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </div>
 
-{/* DOCUMENTS */}
-<div className="mt-12">
-  <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-    Documents Required
-  </h2>
-  <ul className="list-disc pl-6 space-y-2 text-gray-700">
-    {serviceData.documentsRequired.map((doc, i) => (
-      <li key={i}>{doc}</li>
-    ))}
-  </ul>
-</div>
+        {/* DOCUMENTS */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
+            Documents Required
+          </h2>
+          <ul className="list-disc pl-6 space-y-2 text-gray-700">
+            {serviceData.documentsRequired.map((doc, i) => (
+              <li key={i}>{doc}</li>
+            ))}
+          </ul>
+        </div>
 
-{/* IDEAL FOR */}
-<div className="mt-12">
-  <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-    Ideal For
-  </h2>
-  <ul className="list-disc pl-6 space-y-2 text-gray-700">
-    {serviceData.idealFor.map((item, i) => (
-      <li key={i}>{item}</li>
-    ))}
-  </ul>
-</div>
+        {/* IDEAL FOR */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
+            Ideal For
+          </h2>
+          <ul className="list-disc pl-6 space-y-2 text-gray-700">
+            {serviceData.idealFor.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </div>
 
         <div className="mt-10 space-y-6 text-gray-700 leading-relaxed">
           <p>
-            AB Tax Solution provides professional{" "}
+            Taxvio provides professional{" "}
             {serviceData.title.toLowerCase()} services ensuring accuracy,
             compliance, and peace of mind.
           </p>

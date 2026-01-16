@@ -6,7 +6,7 @@ export const reviews = [
     role: "Salaried Professional",
     rating: 5,
     review:
-      "AB Tax Solution made my income tax filing stress-free and smooth."
+      "Taxvio made my income tax filing stress-free and smooth."
   },
   {
     name: "Neha Verma",
