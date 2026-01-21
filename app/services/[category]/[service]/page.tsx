@@ -3,16 +3,36 @@ import { serviceCategories } from "@/data/serviceCategories";
 import { ServiceItem } from "@/types/serviceTypes";
 
 type Props = {
-  params: Promise<{
+  params: {
     category: string;
     service: string;
-  }>;
+  };
 };
+
+
+export function generateStaticParams() {
+  const paths: { category: string; service: string }[] = [];
+
+  serviceCategories.forEach((category) => {
+    category.services.forEach((service) => {
+      paths.push({
+        category: category.slug,
+        service: service.slug,
+      });
+    });
+  });
+
+  return paths;
+}
+
+
+
+
 
 /* ================= METADATA ================= */
 
 export async function generateMetadata({ params }: Props) {
-  const { category, service } = await params;
+  const { category, service } = params;
 
   const categoryData = serviceCategories.find(c => c.slug === category);
   const serviceData = categoryData?.services.find(
@@ -29,8 +49,8 @@ export async function generateMetadata({ params }: Props) {
 
 /* ================= PAGE ================= */
 
-export default async function ServiceDetailPage({ params }: Props) {
-  const { category, service } = await params;
+export default function ServiceDetailPage({ params }: Props) {
+  const { category, service } = params;
 
   const categoryData = serviceCategories.find(c => c.slug === category);
   const serviceData: ServiceItem | undefined =
