@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Taxvio",
-  description: "Simplifying Tax & Legal Compliance for Individuals & Businesses",
+  description:
+    "Simplifying Tax & Legal Compliance for Individuals & Businesses",
 };
 
 export default function RootLayout({
@@ -28,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar/>
+        <Navbar />
         {children}
       </body>
     </html>
