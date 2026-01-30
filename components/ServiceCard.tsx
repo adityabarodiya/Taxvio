@@ -12,29 +12,30 @@ export default function ServiceCard({
   image,
 }: ServiceCardProps) {
   return (
-    <div className="bg-[#00416a] text-white rounded-2xl shadow-md p-4 hover:shadow-lg transition flex flex-col gap-2">
+    <article className="bg-[#00416a] text-white rounded-2xl shadow-md p-5 hover:shadow-xl transition flex flex-col gap-3">
       
-      {/* First line: Image + Title */}
-      <div className="flex items-center gap-2">
+      {/* Header: Image + Title */}
+      <header className="flex items-center gap-3">
         <div className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0">
           <Image
             src={image}
-            alt={title}
-            width={38}
-            height={38}
+            alt={`${title} service by Taxvio`}
+            width={40}
+            height={40}
             className="object-contain"
-            priority={false}
+            loading="lazy"
           />
         </div>
-        <h3 className="text-lg md:text-xl font-semibold ">
+
+        <h3 className="text-lg md:text-xl font-semibold leading-snug">
           {title}
         </h3>
-      </div>
+      </header>
 
-      {/* Second line: Description */}
-      <p className="text-sm md:text-base ">
+      {/* Description */}
+      <p className="text-sm md:text-base text-white/90 leading-relaxed">
         {description}
       </p>
-    </div>
+    </article>
   );
 }

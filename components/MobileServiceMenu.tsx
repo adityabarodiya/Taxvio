@@ -1,114 +1,74 @@
-// "use client";
-
-// import { useState } from "react";
-// import Link from "next/link";
-// import { serviceCategories } from "@/data/serviceCategories";
-
-// export default function MobileServicesMenu({ closeMenu }: { closeMenu: () => void }) {
-//   const [servicesOpen, setServicesOpen] = useState(false);
-//   const [openCategory, setOpenCategory] = useState<string | null>(null);
-
-//   return (
-//     <div className="">
-//         {/* <div className="border rounded-lg"> */}
-//       {/* SERVICES TOGGLE */}
-//       <button
-//         onClick={() => setServicesOpen(!servicesOpen)}
-//         className="w-full flex justify-between items-center  font-medium text-gray-800"
-//       >
-//         Services
-//         <span>{servicesOpen ? "−" : "+"}</span>
-//       </button>
-
-//       {/* SERVICES MENU */}
-//       {servicesOpen && (
-//         <div className="px-2 py-2 pb-2 space-y-2">
-//           {serviceCategories.map(category => {
-//             const isOpen = openCategory === category.slug;
-
-//             return (
-//               <div key={category.slug} className="border rounded-md">
-//                 <button
-//                   onClick={() =>
-//                     setOpenCategory(isOpen ? null : category.slug)
-//                   }
-//                   className="w-full flex justify-between items-center px-4 py-2 text-sm font-medium text-gray-700"
-//                 >
-//                   {category.category}
-//                   <span>{isOpen ? "−" : "+"}</span>
-//                 </button>
-
-//                 {isOpen && (
-//                   <div className="pl-4 pb-2 space-y-1">
-//                     {category.services.map(service => (
-//                       <Link
-//                         key={service.slug}
-//                         href={`/services/${category.slug}/${service.slug}`}
-//                         onClick={closeMenu}
-//                         className="block text-sm text-gray-600 py-1"
-//                       >
-//                         {service.title}
-//                       </Link>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-//             );
-//           })}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { serviceCategories } from "@/data/serviceCategories";
 
-export default function MobileServicesMenu({ closeMenu }: { closeMenu: () => void }) {
+export default function MobileServicesMenu({
+  closeMenu,
+}: {
+  closeMenu: () => void;
+}) {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
 
   return (
-    <div className="space-y-3">
+    <nav aria-label="Services menu" className="space-y-3">
       {serviceCategories.map((category) => {
         const hasDropdown = category.services.length > 1;
+        const isOpen = openCategory === category.slug;
 
         if (!hasDropdown) {
+          const service = category.services[0];
           return (
             <Link
               key={category.slug}
-              href={`/services/${category.slug}/${category.services[0].slug}`}
+              href={`/services/${category.slug}/${service.slug}`}
               onClick={closeMenu}
-              className="block text-gray-700"
+              className="block hover:text-[#00416a] transition"
+              title={`${category.category} services`}
             >
-              {category.category}
+              <span className="text-gray-700">{category.category}</span>
+              <span className="block text-xs text-gray-500">
+                {service.shortDescription}
+              </span>
             </Link>
           );
         }
 
         return (
-          <div key={category.slug}>
+          <div key={category.slug} className="space-y-1">
             <button
-              className="flex w-full justify-between text-gray-700"
+              type="button"
+              aria-expanded={isOpen}
+              aria-controls={`submenu-${category.slug}`}
+              className="flex w-full items-center justify-between text-gray-700 hover:text-[#00416a] transition"
               onClick={() =>
-                setOpenCategory(openCategory === category.slug ? null : category.slug)
+                setOpenCategory(isOpen ? null : category.slug)
               }
             >
-              {category.category}
-              <span>{openCategory === category.slug ? "−" : "+"}</span>
+              <span>{category.category}</span>
+              <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
             </button>
 
-            {openCategory === category.slug && (
-              <div className="ml-4 mt-2 space-y-2">
+            {isOpen && (
+              <div
+                id={`submenu-${category.slug}`}
+                className="ml-4 mt-2 space-y-3"
+              >
                 {category.services.map((service) => (
                   <Link
                     key={service.slug}
                     href={`/services/${category.slug}/${service.slug}`}
                     onClick={closeMenu}
-                    className="block text-sm text-gray-600"
+                    className="block hover:text-[#00416a] transition"
+                    title={`${service.title} service`}
                   >
-                    {service.title}
+                    <span className="text-sm text-gray-700">
+                      {service.title}
+                    </span>
+                    <span className="block text-xs text-gray-500">
+                      {service.shortDescription}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -116,6 +76,6 @@ export default function MobileServicesMenu({ closeMenu }: { closeMenu: () => voi
           </div>
         );
       })}
-    </div>
+    </nav>
   );
 }

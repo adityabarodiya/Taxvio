@@ -9,7 +9,7 @@ type Props = {
   };
 };
 
-
+/* ✅ REQUIRED FOR STATIC EXPORT */
 export function generateStaticParams() {
   const paths: { category: string; service: string }[] = [];
 
@@ -25,18 +25,13 @@ export function generateStaticParams() {
   return paths;
 }
 
-
-
-
-
 /* ================= METADATA ================= */
-
 export async function generateMetadata({ params }: Props) {
   const { category, service } = params;
 
-  const categoryData = serviceCategories.find(c => c.slug === category);
+  const categoryData = serviceCategories.find((c) => c.slug === category);
   const serviceData = categoryData?.services.find(
-    s => s.slug === service
+    (s) => s.slug === service
   );
 
   if (!serviceData) return {};
@@ -48,13 +43,12 @@ export async function generateMetadata({ params }: Props) {
 }
 
 /* ================= PAGE ================= */
-
 export default function ServiceDetailPage({ params }: Props) {
   const { category, service } = params;
 
-  const categoryData = serviceCategories.find(c => c.slug === category);
+  const categoryData = serviceCategories.find((c) => c.slug === category);
   const serviceData: ServiceItem | undefined =
-    categoryData?.services.find(s => s.slug === service);
+    categoryData?.services.find((s) => s.slug === service);
 
   if (!serviceData) notFound();
 
@@ -68,6 +62,7 @@ export default function ServiceDetailPage({ params }: Props) {
         <p className="mt-4 text-gray-600 text-lg">
           {serviceData.shortDescription}
         </p>
+
         {/* FEATURES */}
         <div className="mt-12">
           <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
@@ -112,8 +107,8 @@ export default function ServiceDetailPage({ params }: Props) {
           </p>
 
           <p>
-            Our experts handle documentation, filing, follow-ups and department
-            coordination so you can focus on your business.
+            Our experts handle documentation, filing, and follow-ups so you can
+            focus on your business.
           </p>
         </div>
 
