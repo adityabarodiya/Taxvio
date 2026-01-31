@@ -14,7 +14,7 @@ import Footar from "./Footar";
 import { motion } from "framer-motion";
 
 export default function Landing() {
-  const phoneNumber = process.env.NEXT_PUBLIC_MOBILE_NUMBER;
+  const phoneNumber = "918937980366"
 
   const handleCall = () => {
     if (!phoneNumber) return;
@@ -88,7 +88,7 @@ export default function Landing() {
                   Free Consultation
                 </Link>
 
-                <Link href="/services" className="rounded-xl border px-6 py-3">
+                <Link href="/serviceslist" className="rounded-xl border px-6 py-3">
                   View Services
                 </Link>
               </div>

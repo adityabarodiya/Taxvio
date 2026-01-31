@@ -95,9 +95,7 @@ export default function Navbar() {
               About
             </Link>
 
-            <Link href="/reviews" className="text-gray-700 hover:text-[#00416a] transition">
-              Reviews & FAQs
-            </Link>
+           
 
             <Link
               href="/contact"
