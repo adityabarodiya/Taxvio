@@ -113,11 +113,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Sales & expense records",
           "Previous ITR (if any)",
         ],
-        idealFor: [
-          "Shop owners",
-          "Freelancers",
-          "Small business proprietors",
-        ],
+        idealFor: ["Shop owners", "Freelancers", "Small business proprietors"],
         seo: {
           title: "ITR Filing for Proprietors",
           description:
@@ -142,11 +138,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Financial statements",
           "Bank statements",
         ],
-        idealFor: [
-          "Partnership firms",
-          "LLPs",
-          "Professional firms",
-        ],
+        idealFor: ["Partnership firms", "LLPs", "Professional firms"],
         seo: {
           title: "ITR Filing for Firm & LLP",
           description:
@@ -200,11 +192,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Deductee details",
           "Salary/payment records",
         ],
-        idealFor: [
-          "Employers",
-          "Businesses",
-          "Companies & firms",
-        ],
+        idealFor: ["Employers", "Businesses", "Companies & firms"],
         seo: {
           title: "Quarterly TDS Return Filing",
           description:
@@ -235,8 +223,7 @@ export const serviceCategories: ServiceCategory[] = [
         ],
         seo: {
           title: "Quarterly TCS Return Filing",
-          description:
-            "Accurate and timely TCS return filing services.",
+          description: "Accurate and timely TCS return filing services.",
         },
       },
 
@@ -314,15 +301,10 @@ export const serviceCategories: ServiceCategory[] = [
           "Activity details",
           "Financial statements",
         ],
-        idealFor: [
-          "Charitable trusts",
-          "NGOs",
-          "Non-profit organizations",
-        ],
+        idealFor: ["Charitable trusts", "NGOs", "Non-profit organizations"],
         seo: {
           title: "12A Registration Services",
-          description:
-            "Apply for 12A registration with expert guidance.",
+          description: "Apply for 12A registration with expert guidance.",
         },
       },
 
@@ -343,10 +325,7 @@ export const serviceCategories: ServiceCategory[] = [
           "PAN of trust",
           "Activity & donation details",
         ],
-        idealFor: [
-          "Charitable trusts",
-          "NGOs",
-        ],
+        idealFor: ["Charitable trusts", "NGOs"],
         seo: {
           title: "80G Registration Services",
           description:
@@ -370,14 +349,10 @@ export const serviceCategories: ServiceCategory[] = [
           "Income proof",
           "Bank interest details",
         ],
-        idealFor: [
-          "Senior citizens",
-          "Individuals with low taxable income",
-        ],
+        idealFor: ["Senior citizens", "Individuals with low taxable income"],
         seo: {
           title: "Form 15G & 15H Services",
-          description:
-            "Assistance in filing Form 15G and 15H accurately.",
+          description: "Assistance in filing Form 15G and 15H accurately.",
         },
       },
     ],
@@ -387,8 +362,7 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "gst",
     category: "GST Services",
-    description:
-      "Comprehensive GST registration, return filing, and advisory",
+    description: "Comprehensive GST registration, return filing, and advisory",
     services: [
       {
         slug: "gst-registration",
@@ -443,8 +417,7 @@ export const serviceCategories: ServiceCategory[] = [
         ],
         seo: {
           title: "GST Return Filing Services",
-          description:
-            "Accurate GST return filing for businesses.",
+          description: "Accurate GST return filing for businesses.",
         },
       },
 
@@ -464,14 +437,10 @@ export const serviceCategories: ServiceCategory[] = [
           "Export invoices (if applicable)",
           "Bank account details",
         ],
-        idealFor: [
-          "Exporters",
-          "Businesses with excess ITC",
-        ],
+        idealFor: ["Exporters", "Businesses with excess ITC"],
         seo: {
           title: "GST Refund Services",
-          description:
-            "Professional support for GST refund claims.",
+          description: "Professional support for GST refund claims.",
         },
       },
 
@@ -491,10 +460,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Reason for cancellation",
           "Business closure proof (if any)",
         ],
-        idealFor: [
-          "Closed businesses",
-          "Non-operational GST holders",
-        ],
+        idealFor: ["Closed businesses", "Non-operational GST holders"],
         seo: {
           title: "GST Cancellation Services",
           description:
@@ -513,14 +479,8 @@ export const serviceCategories: ServiceCategory[] = [
           "Document upload",
           "Approval tracking",
         ],
-        documentsRequired: [
-          "GSTIN",
-          "Updated address proof",
-          "PAN / Aadhaar",
-        ],
-        idealFor: [
-          "Businesses with changed details",
-        ],
+        documentsRequired: ["GSTIN", "Updated address proof", "PAN / Aadhaar"],
+        idealFor: ["Businesses with changed details"],
         seo: {
           title: "GST Amendment Services",
           description:
@@ -539,19 +499,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Online filing",
           "Acknowledgement support",
         ],
-        documentsRequired: [
-          "GSTIN",
-          "PAN",
-          "Previous LUT (if any)",
-        ],
-        idealFor: [
-          "Exporters",
-          "Service exporters",
-        ],
+        documentsRequired: ["GSTIN", "PAN", "Previous LUT (if any)"],
+        idealFor: ["Exporters", "Service exporters"],
         seo: {
           title: "GST LUT Filing Services",
-          description:
-            "Professional LUT filing services for GST exporters.",
+          description: "Professional LUT filing services for GST exporters.",
         },
       },
 
@@ -571,9 +523,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Books of accounts",
           "Sales & purchase data",
         ],
-        idealFor: [
-          "All GST registered businesses",
-        ],
+        idealFor: ["All GST registered businesses"],
         seo: {
           title: "GSTR-9 Filing Services",
           description:
@@ -597,13 +547,10 @@ export const serviceCategories: ServiceCategory[] = [
           "GST returns",
           "Supporting documents",
         ],
-        idealFor: [
-          "Businesses receiving GST notices",
-        ],
+        idealFor: ["Businesses receiving GST notices"],
         seo: {
           title: "GST Notice Reply Services",
-          description:
-            "Professional GST notice reply and compliance services.",
+          description: "Professional GST notice reply and compliance services.",
         },
       },
 
@@ -623,14 +570,10 @@ export const serviceCategories: ServiceCategory[] = [
           "Sales & purchase registers",
           "Books of accounts",
         ],
-        idealFor: [
-          "Large businesses",
-          "Entities under GST audit",
-        ],
+        idealFor: ["Large businesses", "Entities under GST audit"],
         seo: {
           title: "GST Audit Services",
-          description:
-            "Expert GST audit assistance and compliance services.",
+          description: "Expert GST audit assistance and compliance services.",
         },
       },
 
@@ -645,14 +588,8 @@ export const serviceCategories: ServiceCategory[] = [
           "System integration",
           "Compliance monitoring",
         ],
-        documentsRequired: [
-          "GSTIN",
-          "Accounting software access",
-        ],
-        idealFor: [
-          "Large businesses",
-          "High turnover entities",
-        ],
+        documentsRequired: ["GSTIN", "Accounting software access"],
+        idealFor: ["Large businesses", "High turnover entities"],
         seo: {
           title: "GST E-Invoicing Services",
           description:
@@ -662,8 +599,118 @@ export const serviceCategories: ServiceCategory[] = [
     ],
   },
 
-  
+  /* ================= FSSAI ================= */
+  {
+    slug: "fssai",
+    category: "FSSAI Services",
+    description:
+      "Food license registration, renewal and compliance services for food businesses",
+    services: [
+      {
+        slug: "fssai-new-registration",
+        title: "FSSAI New Registration",
+        shortDescription:
+          "Assistance in obtaining FSSAI food license for new food businesses with complete documentation support.",
+        features: [
+          "Eligibility assessment",
+          "Basic / State / Central license filing",
+          "Document preparation",
+          "License approval support",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Aadhaar card",
+          "Business address proof",
+          "Food business details",
+        ],
+        idealFor: [
+          "Restaurants & cafes",
+          "Food manufacturers",
+          "Cloud kitchens",
+          "Food traders",
+        ],
+        seo: {
+          title: "FSSAI Registration Services | Taxvio",
+          description:
+            "Apply for new FSSAI food license with professional assistance.",
+        },
+      },
 
+      {
+        slug: "fssai-renewal",
+        title: "FSSAI License Renewal",
+        shortDescription:
+          "Timely renewal of FSSAI food license to avoid penalties and business disruption.",
+        features: [
+          "Renewal application filing",
+          "Document update",
+          "Validity extension",
+        ],
+        documentsRequired: [
+          "Existing FSSAI license",
+          "Updated business details",
+        ],
+        idealFor: ["Existing food businesses"],
+        seo: {
+          title: "FSSAI Renewal Services",
+          description:
+            "Renew your FSSAI food license easily with expert support.",
+        },
+      },
+
+      {
+        slug: "fssai-modification",
+        title: "FSSAI License Modification",
+        shortDescription:
+          "Update FSSAI license details such as address, product category, or business name.",
+        features: [
+          "Modification filing",
+          "Document upload",
+          "Approval tracking",
+        ],
+        documentsRequired: ["FSSAI license", "Updated business proof"],
+        idealFor: ["Food businesses with changed details"],
+        seo: {
+          title: "FSSAI Modification Services",
+          description:
+            "Modify or update your FSSAI license with professional assistance.",
+        },
+      },
+
+      {
+        slug: "fssai-return",
+        title: "FSSAI Annual Return Filing",
+        shortDescription:
+          "Preparation and filing of FSSAI annual return for eligible food manufacturers and importers.",
+        features: [
+          "Return preparation",
+          "Online filing",
+          "Compliance verification",
+        ],
+        documentsRequired: ["FSSAI license", "Sales & production data"],
+        idealFor: ["Manufacturers & importers"],
+        seo: {
+          title: "FSSAI Annual Return Filing",
+          description: "Professional FSSAI annual return filing services.",
+        },
+      },
+
+      {
+        slug: "fssai-notice-reply",
+        title: "FSSAI Notice Reply & Compliance",
+        shortDescription:
+          "Expert support for replying to FSSAI notices and handling departmental queries.",
+        features: ["Notice analysis", "Reply drafting", "Document submission"],
+        documentsRequired: ["FSSAI notice", "License copy"],
+        idealFor: ["Food businesses receiving notices"],
+        seo: {
+          title: "FSSAI Notice Reply Services",
+          description:
+            "Professional assistance for FSSAI notice reply and compliance.",
+        },
+      },
+    ],
+  },
   /* ================= ROC ================= */
   {
     slug: "roc",
@@ -675,143 +722,175 @@ export const serviceCategories: ServiceCategory[] = [
         slug: "private-limited-formation",
         title: "Private Limited Company Formation",
         shortDescription:
-          "Complete incorporation services for private limited companies including documentation, MCA filing, and ROC approval.",
+          "Complete incorporation services for private limited companies including documentation and MCA filing.",
         features: [
-          "Name approval assistance",
+          "Name approval",
           "MOA & AOA drafting",
-          "MCA & ROC filing",
-          "Certificate of Incorporation support",
+          "Certificate of Incorporation",
+          "PAN & TAN application",
         ],
         documentsRequired: [
           "PAN & Aadhaar of directors",
-          "Address proof of directors",
-          "Registered office address proof",
-          "Passport size photographs",
+          "Registered office proof",
         ],
-        idealFor: [
-          "Startups",
-          "Growing businesses",
-          "Entrepreneurs seeking investment",
-        ],
+        idealFor: ["Startups", "Growing businesses"],
         seo: {
           title: "Private Limited Company Registration",
           description:
-            "Start your private limited company with expert assistance and complete ROC compliance.",
-        },
-      },
-
-      {
-        slug: "public-limited-formation",
-        title: "Public Limited Company Formation",
-        shortDescription:
-          "End-to-end public limited company registration with compliance-focused execution and ROC approvals.",
-        features: [
-          "Company name approval",
-          "MOA & AOA drafting",
-          "ROC & MCA filing",
-          "Incorporation certificate issuance",
-        ],
-        documentsRequired: [
-          "PAN & Aadhaar of directors",
-          "Address proof",
-          "Registered office proof",
-          "Digital Signature Certificate (DSC)",
-        ],
-        idealFor: [
-          "Large businesses",
-          "Companies planning IPO",
-          "Enterprises with multiple shareholders",
-        ],
-        seo: {
-          title: "Public Limited Company Registration",
-          description:
-            "Professional public limited company formation services in India.",
+            "Start your private limited company with expert assistance.",
         },
       },
 
       {
         slug: "llp-formation",
-        title: "LLP Formation",
+        title: "LLP Registration",
         shortDescription:
-          "Hassle-free LLP registration services with complete MCA and ROC compliance.",
+          "Professional LLP registration services with MCA compliance and documentation support.",
         features: [
           "Name reservation",
           "LLP agreement drafting",
-          "ROC & MCA filing",
-          "LLPIN allotment support",
+          "Incorporation certificate",
         ],
         documentsRequired: [
           "PAN & Aadhaar of partners",
-          "Address proof of partners",
           "Registered office proof",
-          "Passport size photographs",
         ],
-        idealFor: [
-          "Professionals",
-          "Small & medium businesses",
-          "Consultants & service providers",
-        ],
+        idealFor: ["Professionals", "Small businesses"],
         seo: {
           title: "LLP Registration Services",
           description:
-            "Register your LLP smoothly with expert guidance and ROC compliance.",
+            "Register your LLP with complete ROC compliance and expert support.",
         },
       },
 
       {
-        slug: "annual-roc-return",
-        title: "Annual ROC Return",
+        slug: "opc-formation",
+        title: "One Person Company (OPC) Registration",
         shortDescription:
-          "Preparation and filing of annual ROC returns ensuring statutory compliance and timely submission.",
+          "OPC registration services for solo entrepreneurs with complete MCA compliance.",
         features: [
-          "AOC-4 filing",
-          "MGT-7 filing",
-          "Financial statement review",
-          "Compliance status check",
+          "Name approval",
+          "MOA & AOA drafting",
+          "Incorporation certificate",
         ],
         documentsRequired: [
-          "Balance sheet",
-          "Profit & loss statement",
-          "Director details",
-          "Shareholding details",
+          "PAN & Aadhaar of director",
+          "Registered office proof",
         ],
-        idealFor: [
-          "Private limited companies",
-          "Public limited companies",
-          "LLPs",
-        ],
+        idealFor: ["Solo entrepreneurs"],
         seo: {
-          title: "Annual ROC Return Filing",
+          title: "OPC Registration Services",
           description:
-            "Timely and accurate annual ROC return filing services.",
+            "Register your One Person Company easily with expert assistance.",
         },
       },
 
       {
-        slug: "din-application",
-        title: "DIN Number Application",
+        slug: "section-8-company",
+        title: "Section 8 Company Registration",
         shortDescription:
-          "Assistance in obtaining Director Identification Number (DIN) for company directors.",
+          "Formation of non-profit Section 8 companies for charitable and social objectives.",
         features: [
-          "DIN application filing",
-          "Document verification",
-          "DIN allotment tracking",
-          "Correction support (if required)",
+          "Name approval",
+          "MOA & AOA drafting",
+          "License under Section 8",
         ],
         documentsRequired: [
-          "PAN card",
-          "Aadhaar card",
-          "Address proof",
-          "Passport size photograph",
+          "PAN & Aadhaar of directors",
+          "Registered office proof",
         ],
-        idealFor: [
-          "Proposed company directors",
-          "Designated partners",
-        ],
+        idealFor: ["NGOs", "Charitable institutions"],
         seo: {
-          title: "DIN Application Services",
+          title: "Section 8 Company Registration",
           description:
-            "Apply for DIN quickly with professional support and MCA compliance.",
+            "Professional Section 8 company registration services in India.",
+        },
+      },
+
+      {
+        slug: "annual-roc-compliance",
+        title: "Annual ROC Compliance",
+        shortDescription:
+          "Filing of annual ROC returns and compliance documents for companies and LLPs.",
+        features: ["AOC-4 filing", "MGT-7 filing", "LLP Form 11 & 8"],
+        documentsRequired: ["Balance sheet", "Profit & loss account"],
+        idealFor: ["Private limited companies", "LLPs"],
+        seo: {
+          title: "Annual ROC Compliance Services",
+          description:
+            "Ensure timely ROC annual return filing with expert support.",
+        },
+      },
+
+      {
+        slug: "director-appointment-resignation",
+        title: "Director Appointment / Resignation",
+        shortDescription:
+          "ROC filing services for appointment and resignation of company directors.",
+        features: [
+          "DIR-12 filing",
+          "Board resolution drafting",
+          "MCA approval tracking",
+        ],
+        documentsRequired: ["PAN & Aadhaar of director", "DSC"],
+        idealFor: ["Private limited companies"],
+        seo: {
+          title: "Director Appointment & Resignation ROC Filing",
+          description:
+            "Professional assistance for director appointment and resignation ROC filings.",
+        },
+      },
+
+      {
+        slug: "company-name-change",
+        title: "Company Name Change",
+        shortDescription:
+          "ROC compliance support for changing company name with MCA approval.",
+        features: [
+          "Name availability check",
+          "RUN form filing",
+          "MOA & AOA alteration",
+        ],
+        documentsRequired: ["Certificate of incorporation", "Board resolution"],
+        idealFor: ["Companies rebranding"],
+        seo: {
+          title: "Company Name Change ROC Filing",
+          description:
+            "Change your company name legally with ROC compliance support.",
+        },
+      },
+
+      {
+        slug: "authorized-capital-increase",
+        title: "Increase in Authorized Share Capital",
+        shortDescription:
+          "ROC filing for increasing authorized share capital of a company.",
+        features: ["SH-7 filing", "MOA alteration", "Capital structure update"],
+        documentsRequired: ["MOA", "Board resolution"],
+        idealFor: ["Growing companies"],
+        seo: {
+          title: "Increase Authorized Capital ROC Filing",
+          description:
+            "Increase your company's authorized capital with expert ROC compliance.",
+        },
+      },
+
+      {
+        slug: "company-closure",
+        title: "Company Closure / Strike Off",
+        shortDescription:
+          "Professional assistance for company closure and strike-off under ROC.",
+        features: [
+          "STK-2 filing",
+          "Document preparation",
+          "Closure certificate",
+        ],
+        documentsRequired: ["PAN of company", "Financial statements"],
+        idealFor: ["Inactive companies"],
+        seo: {
+          title: "Company Closure & Strike Off",
+          description:
+            "Close your inactive company legally with ROC strike-off services.",
         },
       },
     ],
