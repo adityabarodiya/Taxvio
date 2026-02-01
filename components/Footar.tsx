@@ -45,7 +45,7 @@ export default function Footar() {
             <li><Link href="/serviceslist" className="hover:text-white transition">Services</Link></li>
             <li><Link href="/about" className="hover:text-white transition">About Us</Link></li>
             <li><Link href="/contact" className="hover:text-white transition">Contact</Link></li>
-            <li><Link href="/blog" className="hover:text-white transition">Blog</Link></li>
+            <li><Link href="/city" className="hover:text-white transition">City</Link></li>
           </ul>
         </motion.div>
 
