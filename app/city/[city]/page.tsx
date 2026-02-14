@@ -2,76 +2,69 @@ import Link from "next/link";
 import Footar from "@/components/Footar";
 import { serviceCategories } from "@/data/serviceCategories";
 
-/* ================= CITY LIST (STATIC) ================= */
+/* ================= CITY SLUGS ================= */
 const cities = [
-  "delhi",
-  "noida",
-  "greater-noida",
-  "ghaziabad",
-  "gurgaon",
-  "faridabad",
-  "meerut",
-  "muzaffarnagar",
-  "khatauli",
-  "shamli",
-  "saharanpur",
-  "lucknow",
-  "kanpur",
-  "jaipur",
-  "chandigarh",
-  "mumbai",
-  "pune",
-  "ahmedabad",
-  "surat",
-  "indore",
-  "bhopal",
-  "bengaluru",
-  "chennai",
-  "hyderabad",
-  "kolkata",
-  "patna",
-  "ranchi",
+  "delhi","noida","greater-noida","ghaziabad","gurgaon","faridabad","meerut",
+  "muzaffarnagar","khatauli","shamli","saharanpur","moradabad","bareilly",
+  "aligarh","mathura","agra","lucknow","kanpur","varanasi","prayagraj",
+  "jaipur","kota","ajmer","udaipur","bikaner",
+  "chandigarh","ambala","panipat","karnal","ludhiana","jalandhar","amritsar",
+  "dehradun","haridwar","roorkee","haldwani",
+  "mumbai","pune","nagpur","nashik","aurangabad",
+  "ahmedabad","surat","vadodara","rajkot",
+  "indore","bhopal","gwalior","jabalpur",
+  "bengaluru","chennai","hyderabad","coimbatore","madurai",
+  "vijayawada","visakhapatnam",
+  "kolkata","howrah","durgapur","asansol",
+  "patna","gaya","ranchi","jamshedpur",
+  "raipur","bilaspur","bhubaneswar","cuttack",
 ];
+
+/* ================= SAFE FORMATTER ================= */
+function formatCityName(slug: string | undefined) {
+  if (!slug) return "City";
+
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
 
 /* ================= STATIC EXPORT REQUIRED ================= */
 export function generateStaticParams() {
-  return cities.map((city) => ({
+  return cities.map(city => ({
     city,
   }));
 }
 
-/* ================= SAFE FORMATTER ================= */
-function formatCityName(slug: string) {
-  return slug
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
-
 /* ================= SEO ================= */
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { city: string };
+  params: Promise<{ city: string }>;
 }) {
-  const cityName = formatCityName(params.city);
+  const { city } = await params;
+  const cityName = formatCityName(city);
 
   return {
     title: `GST, Income Tax & ROC Services in ${cityName} | Taxvio`,
-    description: `Taxvio provides GST registration, Income Tax filing and ROC compliance services in ${cityName}.`,
+    description: `Get GST registration, Income Tax filing and company compliance services in ${cityName} with Taxvio.`,
   };
 }
 
 /* ================= PAGE ================= */
-export default function CityServicesPage({
+export default async function CityServicesPage({
   params,
 }: {
-  params: { city: string };
+  params: Promise<{ city: string }>;
 }) {
-  const cityName = formatCityName(params.city);
+  const { city } = await params;
+  const cityName = formatCityName(city);
 
   return (
     <main className="min-h-screen bg-gray-50">
+
       {/* HERO */}
       <section className="bg-[#00416a] text-white py-20">
         <div className="max-w-6xl mx-auto px-6 text-center">
@@ -79,8 +72,8 @@ export default function CityServicesPage({
             GST, Income Tax & ROC Services in {cityName}
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-white/90">
-            Get professional GST registration, Income Tax filing and company
-            compliance services in {cityName} with Taxvio.
+            Taxvio provides professional GST registration, Income Tax filing
+            and business compliance services in {cityName}.
           </p>
         </div>
       </section>
@@ -88,17 +81,17 @@ export default function CityServicesPage({
       {/* SERVICES */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-6 space-y-16">
-          {serviceCategories.map((category) => (
+          {serviceCategories.map(category => (
             <div key={category.slug}>
               <h2 className="text-3xl font-bold text-[#00416a] mb-4">
                 {category.category} Services in {cityName}
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {category.services.map((service) => (
+                {category.services.map(service => (
                   <Link
                     key={service.slug}
-                    href={`/services/${category.slug}/${service.slug}`}
+                    href={`/contact`}
                     className="block rounded-2xl border bg-white p-6 shadow-sm hover:shadow-lg transition"
                   >
                     <h3 className="text-lg font-semibold text-[#00416a]">
