@@ -47,7 +47,7 @@ export default function ServicesPage() {
                 {category.services.map((service) => (
                   <Link
                     key={service.slug}
-                    href={`/services/${category.slug}/${service.slug}`}
+                    href={`/serviceslist/${category.slug}/${service.slug}`}
                     className="group block rounded-2xl border bg-white p-6 shadow-sm hover:shadow-xl transition focus:outline-none focus:ring-2 focus:ring-[#00416a]"
                   >
                     <h3 className="text-lg font-semibold text-[#00416a] group-hover:underline">
