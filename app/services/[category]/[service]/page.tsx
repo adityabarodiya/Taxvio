@@ -21,7 +21,6 @@ export function generateStaticParams() {
       });
     });
   });
-
   return paths;
 }
 
