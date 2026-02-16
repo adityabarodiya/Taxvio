@@ -1,6 +1,423 @@
 import { ServiceCategory } from "@/types/serviceTypes";
 
 export const serviceCategories: ServiceCategory[] = [
+  /* ================= GST ================= */
+  {
+    slug: "gst",
+    category: "GST Services",
+    description: "Comprehensive GST registration, return filing, and advisory",
+    services: [
+      {
+        slug: "gst-registration",
+        title: "GST Registration",
+        shortDescription:
+          "End-to-end GST registration services including eligibility assessment, documentation, and approval support.",
+        features: [
+          "GST eligibility consultation",
+          "Document preparation & filing",
+          "GSTIN allotment support",
+          "Post-registration guidance",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Aadhaar card",
+          "Business address proof",
+          "Bank account details",
+          "Photograph of proprietor/partners",
+        ],
+        idealFor: [
+          "Small & medium businesses",
+          "Startups & entrepreneurs",
+          "Traders & service providers",
+        ],
+        seo: {
+          title: "GST Registration Services | Taxvio",
+          description:
+            "Quick and hassle-free GST registration services with expert guidance.",
+        },
+      },
+
+      {
+        slug: "gst-return",
+        title: "GST Return Filing",
+        shortDescription:
+          "Monthly and quarterly GST return filing with reconciliation and compliance checks.",
+        features: [
+          "GSTR-1, GSTR-3B filing",
+          "Invoice reconciliation",
+          "Late fee & interest guidance",
+          "Compliance monitoring",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Sales & purchase invoices",
+          "Bank statements",
+        ],
+        idealFor: [
+          "Registered GST businesses",
+          "Traders & manufacturers",
+          "Service providers",
+        ],
+        seo: {
+          title: "GST Return Filing Services",
+          description: "Accurate GST return filing for businesses.",
+        },
+      },
+
+      {
+        slug: "gst-refund",
+        title: "GST Refund Application",
+        shortDescription:
+          "Assistance in GST refund applications with proper documentation and follow-ups.",
+        features: [
+          "Refund eligibility analysis",
+          "Application preparation",
+          "Department follow-up",
+          "Refund tracking",
+        ],
+        documentsRequired: [
+          "GST returns",
+          "Export invoices (if applicable)",
+          "Bank account details",
+        ],
+        idealFor: ["Exporters", "Businesses with excess ITC"],
+        seo: {
+          title: "GST Refund Services",
+          description: "Professional support for GST refund claims.",
+        },
+      },
+
+      {
+        slug: "gst-cancellation",
+        title: "GST Cancellation",
+        shortDescription:
+          "Professional assistance for GST cancellation application with proper documentation and closure compliance.",
+        features: [
+          "Eligibility check",
+          "Application filing",
+          "Final return guidance",
+          "Cancellation order follow-up",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Reason for cancellation",
+          "Business closure proof (if any)",
+        ],
+        idealFor: ["Closed businesses", "Non-operational GST holders"],
+        seo: {
+          title: "GST Cancellation Services",
+          description:
+            "Apply for GST cancellation with expert support and compliance assistance.",
+        },
+      },
+
+      {
+        slug: "gst-amendment",
+        title: "GST Amendment / Update",
+        shortDescription:
+          "Update GST registration details such as address, business name, and contact details with proper filing support.",
+        features: [
+          "Core field amendment",
+          "Non-core field update",
+          "Document upload",
+          "Approval tracking",
+        ],
+        documentsRequired: ["GSTIN", "Updated address proof", "PAN / Aadhaar"],
+        idealFor: ["Businesses with changed details"],
+        seo: {
+          title: "GST Amendment Services",
+          description:
+            "Make changes in GST registration details with professional support.",
+        },
+      },
+
+      {
+        slug: "gst-search",
+        title: "GSTIN Search & Verification",
+        shortDescription:
+          "Instant GSTIN verification to check business legal name, registration status, taxpayer type and jurisdiction details.",
+        features: [
+          "GSTIN format validation",
+          "Real-time GST status check",
+          "Legal & trade name verification",
+          "Jurisdiction & registration date details",
+          "Fraud prevention support",
+        ],
+        documentsRequired: ["Valid 15-digit GSTIN number"],
+        idealFor: [
+          "Businesses verifying vendors",
+          "Accountants & tax professionals",
+          "Buyers claiming Input Tax Credit",
+          "Due diligence checks",
+        ],
+        seo: {
+          title: "GSTIN Search & Verification Tool | Check GST Number Online",
+          description:
+            "Verify GSTIN online instantly. Check GST registration status, legal name, taxpayer type and jurisdiction details with our GST search tool.",
+        },
+      },
+
+      {
+        slug: "gst-lut",
+        title: "GST LUT Filing",
+        shortDescription:
+          "Filing of Letter of Undertaking (LUT) for exporters to supply goods or services without payment of IGST.",
+        features: [
+          "Eligibility check",
+          "LUT preparation",
+          "Online filing",
+          "Acknowledgement support",
+        ],
+        documentsRequired: ["GSTIN", "PAN", "Previous LUT (if any)"],
+        idealFor: ["Exporters", "Service exporters"],
+        seo: {
+          title: "GST LUT Filing Services",
+          description: "Professional LUT filing services for GST exporters.",
+        },
+      },
+
+      {
+        slug: "gstr-9",
+        title: "GST Annual Return (GSTR-9)",
+        shortDescription:
+          "Preparation and filing of GST annual return with reconciliation and compliance review.",
+        features: [
+          "Annual data reconciliation",
+          "GSTR-9 filing",
+          "Error identification",
+          "Compliance verification",
+        ],
+        documentsRequired: [
+          "GST returns",
+          "Books of accounts",
+          "Sales & purchase data",
+        ],
+        idealFor: ["All GST registered businesses"],
+        seo: {
+          title: "GSTR-9 Filing Services",
+          description:
+            "Accurate GST annual return filing with professional assistance.",
+        },
+      },
+
+      {
+        slug: "gst-notice-reply",
+        title: "GST Notice Reply & Compliance",
+        shortDescription:
+          "Expert assistance in drafting and filing replies to GST notices and departmental queries.",
+        features: [
+          "Notice analysis",
+          "Reply drafting",
+          "Document submission",
+          "Case follow-up",
+        ],
+        documentsRequired: [
+          "GST notice",
+          "GST returns",
+          "Supporting documents",
+        ],
+        idealFor: ["Businesses receiving GST notices"],
+        seo: {
+          title: "GST Notice Reply Services",
+          description: "Professional GST notice reply and compliance services.",
+        },
+      },
+
+      {
+        slug: "gst-audit",
+        title: "GST Audit Assistance",
+        shortDescription:
+          "Complete support for GST audit including reconciliation, documentation, and departmental coordination.",
+        features: [
+          "Audit applicability check",
+          "Data reconciliation",
+          "Audit report preparation",
+          "Department coordination",
+        ],
+        documentsRequired: [
+          "GST returns",
+          "Sales & purchase registers",
+          "Books of accounts",
+        ],
+        idealFor: ["Large businesses", "Entities under GST audit"],
+        seo: {
+          title: "GST Audit Services",
+          description: "Expert GST audit assistance and compliance services.",
+        },
+      },
+
+      {
+        slug: "gst-e-invoicing",
+        title: "GST E-Invoicing Setup & Compliance",
+        shortDescription:
+          "Implementation and compliance support for GST e-invoicing including IRN generation and system setup.",
+        features: [
+          "E-invoice registration",
+          "IRN generation support",
+          "System integration",
+          "Compliance monitoring",
+        ],
+        documentsRequired: ["GSTIN", "Accounting software access"],
+        idealFor: ["Large businesses", "High turnover entities"],
+        seo: {
+          title: "GST E-Invoicing Services",
+          description:
+            "Professional e-invoicing compliance support for GST registered businesses.",
+        },
+      },
+    ],
+  },
+
+  /* ================= FSSAI ================= */
+  {
+    slug: "fssai",
+    category: "FSSAI Services",
+    description:
+      "FSSAI registration, license renewal, modification, annual return filing and food compliance support for restaurants, manufacturers and food businesses across India.",
+    services: [
+      {
+        slug: "fssai-registration",
+        title: "FSSAI Registration (Basic / State / Central)",
+        shortDescription:
+          "Complete assistance in obtaining FSSAI food license including Basic, State and Central registration with documentation and approval support.",
+        features: [
+          "Eligibility assessment",
+          "Basic FSSAI registration",
+          "State license filing",
+          "Central license filing",
+          "Document preparation",
+          "Approval tracking",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Aadhaar card",
+          "Business address proof",
+          "Food business details",
+          "Product list",
+        ],
+        idealFor: [
+          "Restaurants & cafes",
+          "Cloud kitchens",
+          "Food manufacturers",
+          "Food importers/exporters",
+          "Grocery stores",
+        ],
+        seo: {
+          title: "FSSAI Registration Services | Basic, State & Central License",
+          description:
+            "Apply for FSSAI registration online with expert support. Get Basic, State or Central food license with complete documentation assistance.",
+        },
+      },
+
+      {
+        slug: "fssai-renewal",
+        title: "FSSAI License Renewal",
+        shortDescription:
+          "Timely renewal of FSSAI license to avoid penalties and business interruption.",
+        features: [
+          "Renewal eligibility check",
+          "Document update",
+          "Online filing",
+          "Validity extension",
+        ],
+        documentsRequired: [
+          "Existing FSSAI license",
+          "Updated business details",
+        ],
+        idealFor: ["Existing food businesses"],
+        seo: {
+          title: "FSSAI Renewal Services | Renew Food License Online",
+          description:
+            "Renew your FSSAI food license easily and avoid penalties with professional support.",
+        },
+      },
+
+      {
+        slug: "fssai-modification",
+        title: "FSSAI License Modification",
+        shortDescription:
+          "Update FSSAI license details such as address, product category, or business structure.",
+        features: [
+          "Core field modification",
+          "Non-core field update",
+          "Document upload",
+          "Approval tracking",
+        ],
+        documentsRequired: ["Existing FSSAI license", "Updated business proof"],
+        idealFor: ["Food businesses with changed details"],
+        seo: {
+          title: "FSSAI License Modification Services",
+          description:
+            "Modify or update your FSSAI license details with expert compliance support.",
+        },
+      },
+
+      {
+        slug: "fssai-annual-return",
+        title: "FSSAI Annual Return Filing",
+        shortDescription:
+          "Preparation and filing of FSSAI annual return for manufacturers and importers as per FSSAI regulations.",
+        features: [
+          "Return preparation",
+          "Online filing",
+          "Compliance verification",
+          "Penalty guidance",
+        ],
+        documentsRequired: ["FSSAI license", "Production & sales data"],
+        idealFor: ["Food manufacturers", "Food importers"],
+        seo: {
+          title: "FSSAI Annual Return Filing Services",
+          description:
+            "Professional FSSAI annual return filing services for manufacturers and importers.",
+        },
+      },
+
+      {
+        slug: "fssai-notice-reply",
+        title: "FSSAI Notice Reply & Compliance",
+        shortDescription:
+          "Expert drafting and response filing for FSSAI notices and departmental queries.",
+        features: [
+          "Notice analysis",
+          "Reply drafting",
+          "Supporting document submission",
+          "Department coordination",
+        ],
+        documentsRequired: [
+          "FSSAI notice",
+          "License copy",
+          "Supporting records",
+        ],
+        idealFor: ["Food businesses receiving FSSAI notices"],
+        seo: {
+          title: "FSSAI Notice Reply Services",
+          description:
+            "Professional assistance in replying to FSSAI notices and handling compliance matters.",
+        },
+      },
+
+      {
+        slug: "fssai-search",
+        title: "FSSAI License Search & Verification",
+        shortDescription:
+          "Verify FSSAI license number and check food business registration details instantly.",
+        features: [
+          "License number verification",
+          "Business name check",
+          "License validity status",
+          "Fraud prevention support",
+        ],
+        documentsRequired: ["FSSAI license number"],
+        idealFor: ["Businesses verifying vendors", "Distributors", "Consumers"],
+        seo: {
+          title: "FSSAI License Search Online",
+          description:
+            "Verify FSSAI license number online and check registration details instantly.",
+        },
+      },
+    ],
+  },
+
   /* ================= INCOME TAX ================= */
   {
     slug: "income-tax",
@@ -358,359 +775,6 @@ export const serviceCategories: ServiceCategory[] = [
     ],
   },
 
-  /* ================= GST ================= */
-  {
-    slug: "gst",
-    category: "GST Services",
-    description: "Comprehensive GST registration, return filing, and advisory",
-    services: [
-      {
-        slug: "gst-registration",
-        title: "GST Registration",
-        shortDescription:
-          "End-to-end GST registration services including eligibility assessment, documentation, and approval support.",
-        features: [
-          "GST eligibility consultation",
-          "Document preparation & filing",
-          "GSTIN allotment support",
-          "Post-registration guidance",
-        ],
-        documentsRequired: [
-          "PAN card",
-          "Aadhaar card",
-          "Business address proof",
-          "Bank account details",
-          "Photograph of proprietor/partners",
-        ],
-        idealFor: [
-          "Small & medium businesses",
-          "Startups & entrepreneurs",
-          "Traders & service providers",
-        ],
-        seo: {
-          title: "GST Registration Services | Taxvio",
-          description:
-            "Quick and hassle-free GST registration services with expert guidance.",
-        },
-      },
-
-      {
-        slug: "gst-return",
-        title: "GST Return Filing",
-        shortDescription:
-          "Monthly and quarterly GST return filing with reconciliation and compliance checks.",
-        features: [
-          "GSTR-1, GSTR-3B filing",
-          "Invoice reconciliation",
-          "Late fee & interest guidance",
-          "Compliance monitoring",
-        ],
-        documentsRequired: [
-          "GSTIN",
-          "Sales & purchase invoices",
-          "Bank statements",
-        ],
-        idealFor: [
-          "Registered GST businesses",
-          "Traders & manufacturers",
-          "Service providers",
-        ],
-        seo: {
-          title: "GST Return Filing Services",
-          description: "Accurate GST return filing for businesses.",
-        },
-      },
-
-      {
-        slug: "gst-refund",
-        title: "GST Refund Application",
-        shortDescription:
-          "Assistance in GST refund applications with proper documentation and follow-ups.",
-        features: [
-          "Refund eligibility analysis",
-          "Application preparation",
-          "Department follow-up",
-          "Refund tracking",
-        ],
-        documentsRequired: [
-          "GST returns",
-          "Export invoices (if applicable)",
-          "Bank account details",
-        ],
-        idealFor: ["Exporters", "Businesses with excess ITC"],
-        seo: {
-          title: "GST Refund Services",
-          description: "Professional support for GST refund claims.",
-        },
-      },
-
-      {
-        slug: "gst-cancellation",
-        title: "GST Cancellation",
-        shortDescription:
-          "Professional assistance for GST cancellation application with proper documentation and closure compliance.",
-        features: [
-          "Eligibility check",
-          "Application filing",
-          "Final return guidance",
-          "Cancellation order follow-up",
-        ],
-        documentsRequired: [
-          "GSTIN",
-          "Reason for cancellation",
-          "Business closure proof (if any)",
-        ],
-        idealFor: ["Closed businesses", "Non-operational GST holders"],
-        seo: {
-          title: "GST Cancellation Services",
-          description:
-            "Apply for GST cancellation with expert support and compliance assistance.",
-        },
-      },
-
-      {
-        slug: "gst-amendment",
-        title: "GST Amendment / Update",
-        shortDescription:
-          "Update GST registration details such as address, business name, and contact details with proper filing support.",
-        features: [
-          "Core field amendment",
-          "Non-core field update",
-          "Document upload",
-          "Approval tracking",
-        ],
-        documentsRequired: ["GSTIN", "Updated address proof", "PAN / Aadhaar"],
-        idealFor: ["Businesses with changed details"],
-        seo: {
-          title: "GST Amendment Services",
-          description:
-            "Make changes in GST registration details with professional support.",
-        },
-      },
-
-      {
-        slug: "gst-lut",
-        title: "GST LUT Filing",
-        shortDescription:
-          "Filing of Letter of Undertaking (LUT) for exporters to supply goods or services without payment of IGST.",
-        features: [
-          "Eligibility check",
-          "LUT preparation",
-          "Online filing",
-          "Acknowledgement support",
-        ],
-        documentsRequired: ["GSTIN", "PAN", "Previous LUT (if any)"],
-        idealFor: ["Exporters", "Service exporters"],
-        seo: {
-          title: "GST LUT Filing Services",
-          description: "Professional LUT filing services for GST exporters.",
-        },
-      },
-
-      {
-        slug: "gstr-9",
-        title: "GST Annual Return (GSTR-9)",
-        shortDescription:
-          "Preparation and filing of GST annual return with reconciliation and compliance review.",
-        features: [
-          "Annual data reconciliation",
-          "GSTR-9 filing",
-          "Error identification",
-          "Compliance verification",
-        ],
-        documentsRequired: [
-          "GST returns",
-          "Books of accounts",
-          "Sales & purchase data",
-        ],
-        idealFor: ["All GST registered businesses"],
-        seo: {
-          title: "GSTR-9 Filing Services",
-          description:
-            "Accurate GST annual return filing with professional assistance.",
-        },
-      },
-
-      {
-        slug: "gst-notice-reply",
-        title: "GST Notice Reply & Compliance",
-        shortDescription:
-          "Expert assistance in drafting and filing replies to GST notices and departmental queries.",
-        features: [
-          "Notice analysis",
-          "Reply drafting",
-          "Document submission",
-          "Case follow-up",
-        ],
-        documentsRequired: [
-          "GST notice",
-          "GST returns",
-          "Supporting documents",
-        ],
-        idealFor: ["Businesses receiving GST notices"],
-        seo: {
-          title: "GST Notice Reply Services",
-          description: "Professional GST notice reply and compliance services.",
-        },
-      },
-
-      {
-        slug: "gst-audit",
-        title: "GST Audit Assistance",
-        shortDescription:
-          "Complete support for GST audit including reconciliation, documentation, and departmental coordination.",
-        features: [
-          "Audit applicability check",
-          "Data reconciliation",
-          "Audit report preparation",
-          "Department coordination",
-        ],
-        documentsRequired: [
-          "GST returns",
-          "Sales & purchase registers",
-          "Books of accounts",
-        ],
-        idealFor: ["Large businesses", "Entities under GST audit"],
-        seo: {
-          title: "GST Audit Services",
-          description: "Expert GST audit assistance and compliance services.",
-        },
-      },
-
-      {
-        slug: "gst-e-invoicing",
-        title: "GST E-Invoicing Setup & Compliance",
-        shortDescription:
-          "Implementation and compliance support for GST e-invoicing including IRN generation and system setup.",
-        features: [
-          "E-invoice registration",
-          "IRN generation support",
-          "System integration",
-          "Compliance monitoring",
-        ],
-        documentsRequired: ["GSTIN", "Accounting software access"],
-        idealFor: ["Large businesses", "High turnover entities"],
-        seo: {
-          title: "GST E-Invoicing Services",
-          description:
-            "Professional e-invoicing compliance support for GST registered businesses.",
-        },
-      },
-    ],
-  },
-
-  /* ================= FSSAI ================= */
-  {
-    slug: "fssai",
-    category: "FSSAI Services",
-    description:
-      "Food license registration, renewal and compliance services for food businesses",
-    services: [
-      {
-        slug: "fssai-new-registration",
-        title: "FSSAI New Registration",
-        shortDescription:
-          "Assistance in obtaining FSSAI food license for new food businesses with complete documentation support.",
-        features: [
-          "Eligibility assessment",
-          "Basic / State / Central license filing",
-          "Document preparation",
-          "License approval support",
-        ],
-        documentsRequired: [
-          "PAN card",
-          "Aadhaar card",
-          "Business address proof",
-          "Food business details",
-        ],
-        idealFor: [
-          "Restaurants & cafes",
-          "Food manufacturers",
-          "Cloud kitchens",
-          "Food traders",
-        ],
-        seo: {
-          title: "FSSAI Registration Services | Taxvio",
-          description:
-            "Apply for new FSSAI food license with professional assistance.",
-        },
-      },
-
-      {
-        slug: "fssai-renewal",
-        title: "FSSAI License Renewal",
-        shortDescription:
-          "Timely renewal of FSSAI food license to avoid penalties and business disruption.",
-        features: [
-          "Renewal application filing",
-          "Document update",
-          "Validity extension",
-        ],
-        documentsRequired: [
-          "Existing FSSAI license",
-          "Updated business details",
-        ],
-        idealFor: ["Existing food businesses"],
-        seo: {
-          title: "FSSAI Renewal Services",
-          description:
-            "Renew your FSSAI food license easily with expert support.",
-        },
-      },
-
-      {
-        slug: "fssai-modification",
-        title: "FSSAI License Modification",
-        shortDescription:
-          "Update FSSAI license details such as address, product category, or business name.",
-        features: [
-          "Modification filing",
-          "Document upload",
-          "Approval tracking",
-        ],
-        documentsRequired: ["FSSAI license", "Updated business proof"],
-        idealFor: ["Food businesses with changed details"],
-        seo: {
-          title: "FSSAI Modification Services",
-          description:
-            "Modify or update your FSSAI license with professional assistance.",
-        },
-      },
-
-      {
-        slug: "fssai-return",
-        title: "FSSAI Annual Return Filing",
-        shortDescription:
-          "Preparation and filing of FSSAI annual return for eligible food manufacturers and importers.",
-        features: [
-          "Return preparation",
-          "Online filing",
-          "Compliance verification",
-        ],
-        documentsRequired: ["FSSAI license", "Sales & production data"],
-        idealFor: ["Manufacturers & importers"],
-        seo: {
-          title: "FSSAI Annual Return Filing",
-          description: "Professional FSSAI annual return filing services.",
-        },
-      },
-
-      {
-        slug: "fssai-notice-reply",
-        title: "FSSAI Notice Reply & Compliance",
-        shortDescription:
-          "Expert support for replying to FSSAI notices and handling departmental queries.",
-        features: ["Notice analysis", "Reply drafting", "Document submission"],
-        documentsRequired: ["FSSAI notice", "License copy"],
-        idealFor: ["Food businesses receiving notices"],
-        seo: {
-          title: "FSSAI Notice Reply Services",
-          description:
-            "Professional assistance for FSSAI notice reply and compliance.",
-        },
-      },
-    ],
-  },
   /* ================= ROC ================= */
   {
     slug: "roc",

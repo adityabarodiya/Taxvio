@@ -15,7 +15,7 @@ export default function ServicesDrawer({
         {category.services.map((service) => (
           <li key={service.slug}>
             <Link
-              href={`/services/${category.slug}/${service.slug}`}
+              href={`/serviceslist/${category.slug}/${service.slug}`}
               className="block px-4 py-2 text-sm text-gray-700 transition
                          hover:bg-gray-100 hover:text-[#00416a]
                          focus:bg-gray-100 focus:text-[#00416a]
