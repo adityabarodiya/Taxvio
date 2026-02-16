@@ -44,7 +44,7 @@ export default function Navbar() {
                 return (
                   <Link
                     key={category.slug}
-                    href={`/services/${category.slug}/${category.services[0].slug}`}
+                    href={`/serviceslist/${category.slug}/${category.services[0].slug}`}
                     className="text-gray-700 hover:text-[#00416a] transition"
                     title={`${category.category} services`}
                   >

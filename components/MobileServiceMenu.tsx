@@ -22,7 +22,7 @@ export default function MobileServicesMenu({
           return (
             <Link
               key={category.slug}
-              href={`/services/${category.slug}/${service.slug}`}
+              href={`/serviceslist/${category.slug}/${service.slug}`}
               onClick={closeMenu}
               className="block hover:text-[#00416a] transition"
               title={`${category.category} services`}
@@ -58,7 +58,7 @@ export default function MobileServicesMenu({
                 {category.services.map((service) => (
                   <Link
                     key={service.slug}
-                    href={`/services/${category.slug}/${service.slug}`}
+                    href={`/serviceslist/${category.slug}/${service.slug}`}
                     onClick={closeMenu}
                     className="block hover:text-[#00416a] transition"
                     title={`${service.title} service`}
