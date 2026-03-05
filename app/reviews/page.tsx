@@ -86,51 +86,7 @@ const [reviewData, setReviewData] = useState({
 
       {/* FAQ */}
       <Faq/>
-      {/* <section className="bg-gradient-to-b from-[#00416a] to-[#002b45] text-white py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-3xl font-semibold mb-12 text-center">
-            Frequently Asked Questions
-          </h2>
-
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className="rounded-2xl bg-[#003354] border border-white/10"
-              >
-                <button
-                  onClick={() =>
-                    setOpenIndex(openIndex === index ? null : index)
-                  }
-                  className="w-full px-6 py-5 flex justify-between items-center text-left"
-                >
-                  <span className="font-medium text-lg">
-                    {faq.question}
-                  </span>
-                  <span className="text-2xl font-bold">
-                    {openIndex === index ? "−" : "+"}
-                  </span>
-                </button>
-
-                {openIndex === index && (
-                  <div className="px-6 pb-5 text-gray-300 leading-relaxed">
-                    {faq.answer}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="flex justify-center mb-8">
-  <button
-    onClick={() => setShowForm(true)}
-    className="m-8 rounded-xl bg-white text-[#00416a] px-6 py-3 font-semibold shadow hover:bg-gray-100 transition"
-  >
-    Ask a Question
-  </button>
-</div>
-
-      </section> */}
+      
 
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-6 py-20 text-center">

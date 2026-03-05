@@ -40,8 +40,8 @@ export default function Footer() {
 
             {/* Contact schema-friendly */}
             <address className="not-italic mt-4 text-white/60 text-xs space-y-1">
-              <p>📧 <a href="mailto:info@taxvio.in" className="hover:text-white transition">support@taxvio.in</a></p>
-              <p>📞 <a href="tel:+918937980366" className="hover:text-white transition">+91 12345 67890</a></p>
+              <p>📧 <a href="mailto:info@taxvio.in" className="hover:text-white transition">info@taxvio.in</a></p>
+              <p>📞 <a href="tel:+918937980366" className="hover:text-white transition">+91 8937980366 </a></p>
               <p>🇮🇳 India — Pan India Services</p>
             </address>
           </motion.div>

@@ -4,7 +4,7 @@ import Footar from "@/components/Footar";
 export default function Home() {
   return (
     <div className="">
-      <Navbar />
+      
       <Landing />
       <Footar />
     </div>
