@@ -503,7 +503,7 @@ export default function Landing() {
                 className="mt-8 grid grid-cols-2 gap-3"
               >
                 {[
-                  { label: "GST Registration", price: "from ₹1,499" },
+                  { label: "GST Registration", price: "from ₹999" },
                   { label: "ITR Filing", price: "from ₹499" },
                   { label: "Company Formation", price: "from ₹6,999" },
                   { label: "TDS Returns", price: "from ₹999" },

@@ -1,84 +1,72 @@
-import Script from "next/script";
-import Link from "next/link";
-import Footar from "@/components/Footar";
+import type { Metadata } from "next";
 import GSTReturnClient from "./GSTReturnClient";
 
-export const metadata = {
-  title: "GST Return Filing in India | GSTR-1, GSTR-3B | Taxvio",
+export const metadata: Metadata = {
+  title: "GST Return Filing India 2025 — GSTR-1, GSTR-3B, GSTR-9 | Taxvio",
   description:
-    "File GST returns online with Taxvio. Expert GST return filing services including GSTR-1, GSTR-3B, annual returns and late fee calculator support.",
+    "CA-assisted GST return filing for all businesses — GSTR-1, GSTR-3B, GSTR-9 annual return, QRMP scheme, ITC reconciliation, GSTR-9C. Starting ₹499/month. Zero late fees. Serving Muzaffarnagar, Uttar Pradesh & pan-India.",
+  keywords: [
+    "GST return filing India",
+    "GSTR-1 filing online",
+    "GSTR-3B filing online",
+    "GSTR-9 annual return filing",
+    "GST return filing service India",
+    "monthly GST return filing",
+    "QRMP scheme GST filing",
+    "GST ITC reconciliation",
+    "GSTR-2B reconciliation service",
+    "GST return due date 2025",
+    "GST late fee calculator",
+    "GSTR-9C reconciliation statement",
+    "GST return filing for small business",
+    "GST return filing for e-commerce seller",
+    "GST return filing Muzaffarnagar",
+    "GST return filing Uttar Pradesh",
+    "GST return filing Khatauli",
+    "CA assisted GST return filing India",
+    "nil GST return filing",
+    "GST compliance monthly service",
+  ],
+  alternates: {
+    canonical: "https://www.taxvio.in/serviceslist/gst/gst-return",
+  },
+  openGraph: {
+    title: "GST Return Filing India — GSTR-1, GSTR-3B, GSTR-9 | Taxvio",
+    description:
+      "Professional monthly GST return filing — GSTR-1, GSTR-3B, ITC reconciliation, QRMP management, GSTR-9 annual return. Starting ₹499/month. CA-assisted, pan India.",
+    url: "https://www.taxvio.in/serviceslist/gst/gst-return",
+    siteName: "Taxvio",
+    locale: "en_IN",
+    type: "website",
+    images: [
+      {
+        url: "https://www.taxvio.in/og/gst-return.jpg",
+        width: 1200,
+        height: 630,
+        alt: "GST Return Filing India — GSTR-1 GSTR-3B GSTR-9 — Taxvio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GST Return Filing India — GSTR-1, GSTR-3B, GSTR-9 | Taxvio",
+    description:
+      "Monthly GST return filing from ₹499/month. GSTR-1, GSTR-3B, ITC reconciliation, QRMP, GSTR-9. CA-assisted, pan India.",
+    images: ["https://www.taxvio.in/og/gst-return.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function GSTReturnPage() {
-  return (
-    <>
-      {/* FAQ Schema */}
-      <Script
-        id="gst-return-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: [
-              {
-                "@type": "Question",
-                name: "What is GST late fee per day?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "GST late fee is ₹50 per day (₹25 CGST + ₹25 SGST), subject to maximum limits.",
-                },
-              },
-              {
-                "@type": "Question",
-                name: "What happens if GST return is not filed?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "Late filing attracts penalties, interest and may lead to GST registration suspension.",
-                },
-              },
-            ],
-          }),
-        }}
-      />
-
-      <main className="bg-gray-50 text-[#002b45]">
-
-        {/* HERO SECTION */}
-        <section className="bg-gradient-to-b from-[#00416a] to-[#002b45] text-white py-28 text-center">
-          <div className="max-w-5xl mx-auto px-6 space-y-6">
-            <h1 className="text-4xl md:text-5xl font-bold">
-              GST Return Filing Services – Stay Compliant & Avoid Penalties
-            </h1>
-            <p className="text-lg text-gray-200">
-              Accurate GSTR-1, GSTR-3B, QRMP & Annual Return filing services across India.
-            </p>
-
-            <Link
-              href="/contact"
-              className="inline-block mt-6 bg-white text-[#00416a] px-8 py-3 rounded-xl font-semibold shadow hover:bg-gray-200 transition"
-            >
-              File GST Return Now
-            </Link>
-          </div>
-        </section>
-
-        {/* CLIENT COMPONENT (Calculator + Due Dates) */}
-        <GSTReturnClient />
-
-        <Footar />
-
-        {/* Sticky CTA */}
-        <div className="fixed bottom-0 left-0 right-0 bg-[#00416a] text-white py-4 text-center shadow-lg">
-          <Link
-            href="/contact"
-            className="bg-white text-[#00416a] px-6 py-2 rounded-lg font-semibold"
-          >
-            File GST Return Today
-          </Link>
-        </div>
-
-      </main>
-    </>
-  );
+  return <GSTReturnClient />;
 }
