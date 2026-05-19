@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import logo from "@/public/tv2.png";
+import logo from "@/public/logo_taxvio.png";
 import ServicesDrawer from "./ServiceDrawer";
 import MobileServicesMenu from "./MobileServiceMenu";
 import { serviceCategories } from "@/data/serviceCategories";
@@ -85,7 +85,7 @@ export default function Navbar() {
               <Image
                 src={logo}
                 alt="Taxvio — GST, Income Tax & Compliance Services India"
-                className="h-28 w-auto"
+                className="h-16 w-auto"
                 priority
               />
             </Link>
