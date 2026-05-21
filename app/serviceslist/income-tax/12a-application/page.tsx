@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     "section 2(15) charitable purpose trust",
   ],
   alternates: {
-    canonical: "https://www.taxvio.in/income-tax/12a-application",
+    canonical: "https://www.taxvio.in/serviceslist/income-tax/12a-application",
   },
   openGraph: {
     title: "Section 12A / 12AB Registration for Trusts & NGOs | Form 10A 10AB | Taxvio",
     description:
       "Expert 12AB trust registration — Form 10A/10AB, provisional & regular, 80G approval, 5-year renewal. Starting ₹3,999. CA-assisted pan-India service.",
-    url: "https://www.taxvio.in/income-tax/12a-application",
+    url: "https://www.taxvio.in/serviceslist/income-tax/12a-application",
     siteName: "Taxvio",
     locale: "en_IN",
     type: "website",

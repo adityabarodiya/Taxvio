@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     "15G 15H multi bank submission",
   ],
   alternates: {
-    canonical: "https://www.taxvio.in/income-tax/15g-15h",
+    canonical: "https://www.taxvio.in/serviceslist/income-tax/15g-15h",
   },
   openGraph: {
     title: "Form 15G & Form 15H Filing — Stop TDS on FD Interest | Taxvio",
     description:
       "Stop TDS on FD interest, savings, dividends & EPF withdrawal. Expert 15G/15H eligibility check and filing. Starting ₹499. Senior citizen support.",
-    url: "https://www.taxvio.in/income-tax/15g-15h",
+    url: "https://www.taxvio.in/serviceslist/income-tax/15g-15h",
     siteName: "Taxvio",
     locale: "en_IN",
     type: "website",

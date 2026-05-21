@@ -113,7 +113,7 @@ const STATES_DISTRICTS: { state: string; districts: string[] }[] = [
       "Dakshina Kannada","Davanagere","Dharwad","Gadag","Hassan",
       "Haveri","Kalaburagi","Kodagu","Kolar","Koppal","Mandya",
       "Mysuru","Raichur","Ramanagara","Shivamogga","Tumakuru",
-      "Udupi","Uttara Kannada","Vijayanagara","Vijayapura","Yadgir",
+      "Udupi","Uttara Kannada","Vijayanagara","Vijayapura","Yadgir","Bangalore",
     ],
   },
   {
@@ -147,7 +147,7 @@ const STATES_DISTRICTS: { state: string; districts: string[] }[] = [
       "Jalgaon","Jalna","Kolhapur","Latur","Mumbai City","Mumbai Suburban",
       "Nagpur","Nanded","Nandurbar","Nashik","Osmanabad","Palghar",
       "Parbhani","Pune","Raigad","Ratnagiri","Sangli","Satara",
-      "Sindhudurg","Solapur","Thane","Wardha","Washim","Yavatmal",
+      "Sindhudurg","Solapur","Thane","Wardha","Washim","Yavatmal","Mumbai",
     ],
   },
   {
@@ -304,7 +304,7 @@ const STATES_DISTRICTS: { state: string; districts: string[] }[] = [
     districts: [
       "Central Delhi","East Delhi","New Delhi","North Delhi",
       "North East Delhi","North West Delhi","Shahdara","South Delhi",
-      "South East Delhi","South West Delhi","West Delhi",
+      "South East Delhi","South West Delhi","West Delhi", "Delhi",
     ],
   },
   {

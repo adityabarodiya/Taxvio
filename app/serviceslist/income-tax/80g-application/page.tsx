@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     "charitable trust donor tax benefit India",
   ],
   alternates: {
-    canonical: "https://www.taxvio.in/income-tax/80g-application",
+    canonical: "https://www.taxvio.in/serviceslist/income-tax/80g-application",
   },
   openGraph: {
     title: "Section 80G Approval for Trusts & NGOs | Form 10BD 10BE | Taxvio",
     description:
       "Expert 80G approval — Form 10A/10AB, 50%/100% donor deduction, Form 10BD & 10BE compliance. Starting ₹2,999. CA-assisted pan-India service.",
-    url: "https://www.taxvio.in/income-tax/80g-application",
+    url: "https://www.taxvio.in/serviceslist/income-tax/80g-application",
     siteName: "Taxvio",
     locale: "en_IN",
     type: "website",
