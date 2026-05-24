@@ -2,9 +2,9 @@
 
 import Footar from "@/components/Footar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-// ─── SEO structured data (JSON-LD) ───────────────────────────────────────────
+/* ── JSON-LD ── */
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -13,1046 +13,667 @@ const jsonLd = {
     "@type": "AccountingService",
     name: "Taxvio",
     areaServed: "India",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
+    address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
   },
-  description:
-    "Professional income tax scrutiny assessment and notice handling services in India. Response to notices under Section 143(1), 143(2), 148, 142(1), 156, 271, and faceless assessment. Representing taxpayers before Income Tax Assessing Officers. Serving Khatauli, Muzaffarnagar and pan-India.",
+  description: "Professional income tax scrutiny and notice handling in India. Response to notices under Section 143(1), 143(2), 148, 142(1), 156, 271, and faceless assessment. Serving Khatauli, Muzaffarnagar and pan-India.",
   serviceType: "Income Tax Scrutiny & Notice Response",
-  offers: {
-    "@type": "Offer",
-    priceCurrency: "INR",
-    price: "1999",
-    priceSpecification: {
-      "@type": "UnitPriceSpecification",
-      minPrice: "1999",
-      maxPrice: "14999",
-    },
-  },
+  offers: { "@type": "Offer", priceCurrency: "INR", price: "1999", priceSpecification: { "@type": "UnitPriceSpecification", minPrice: "1999", maxPrice: "14999" } },
 };
 
-// ─── FAQPage structured data ──────────────────────────────────────────────────
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: [
-    {
-      "@type": "Question",
-      name: "What is a Section 143(1) income tax notice?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Section 143(1) is an intimation — not a scrutiny notice — sent by the Income Tax Department after processing the ITR. It informs the taxpayer whether the return has been accepted as filed, or whether there is a demand (tax payable) or a refund due. Common reasons for demand in 143(1) include TDS mismatch with Form 26AS, arithmetic errors, or disallowance of deductions not matching Form 16.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is a Section 143(2) scrutiny notice?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Section 143(2) is a formal scrutiny notice issued by the Assessing Officer when the ITR is selected for detailed examination. It requires the taxpayer to produce books of accounts, documents, and information to verify the correctness of income, deductions, and tax liability reported in the ITR. A 143(2) notice must be responded to with full documentation within the stipulated time.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is a Section 148 notice for income escaping assessment?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Section 148 is a reassessment notice issued when the Assessing Officer has reason to believe that income has escaped assessment — i.e., income was not reported or was under-reported in the original ITR. It can be issued up to 3 years from the end of the relevant assessment year (or 10 years for cases involving large income or foreign assets). The taxpayer must file a fresh ITR in response.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is faceless assessment and how does it work?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Faceless Assessment under Section 144B eliminates face-to-face interaction between taxpayers and Assessing Officers. All notices, responses, and hearings are conducted digitally through the Income Tax portal. Cases are assigned to AOs at random locations — not the taxpayer's jurisdiction. All communications must be submitted electronically with proper documentation through the portal.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What should I do immediately after receiving an income tax notice?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "First, do not ignore the notice — even a 143(1) intimation with no demand should be reviewed. Identify the notice type (section number), check the due date for response, collect all relevant documents, and engage a tax professional. Missing the response deadline escalates the case to best judgement assessment under Section 144, resulting in large tax additions.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can I file an appeal if I disagree with the scrutiny assessment order?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. If you disagree with the assessment order (passed under Section 143(3) or 144), you can file an appeal before the Commissioner of Income Tax (Appeals) — CIT(A) — within 30 days of receiving the order. If the CIT(A) order is adverse, further appeal can be filed before the Income Tax Appellate Tribunal (ITAT). Taxvio assists with appeal preparation and representation at all levels.",
-      },
-    },
+    { "@type": "Question", name: "What is a Section 143(2) scrutiny notice?", acceptedAnswer: { "@type": "Answer", text: "Section 143(2) is a formal scrutiny notice issued by the Assessing Officer when the ITR is selected for detailed examination. It requires the taxpayer to produce books, documents, and information to verify the correctness of income and deductions reported in the ITR." } },
+    { "@type": "Question", name: "What is a Section 148 reassessment notice?", acceptedAnswer: { "@type": "Answer", text: "Section 148 is issued when the AO has reason to believe income has escaped assessment. It can go back up to 3 years (or 10 years for large income/foreign assets). The taxpayer must file a fresh ITR in response." } },
+    { "@type": "Question", name: "What is faceless assessment?", acceptedAnswer: { "@type": "Answer", text: "Faceless Assessment under Section 144B eliminates face-to-face interaction. All notices, responses, and hearings are conducted digitally through the Income Tax portal. Cases are assigned to AOs at random locations." } },
   ],
 };
 
+/* ══════════════════════════════════════════════════════════ */
 export default function IncomeTaxScrutinyClient() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <main className="bg-white text-gray-800">
-        <UrgencyBanner />
+      <main className="bg-white text-gray-800 overflow-x-hidden">
+
+        {/* ── URGENCY BANNER ── */}
+        <div className="bg-red-600 text-white text-center py-3 font-semibold text-sm px-4" role="alert">
+          ⚠️ Received a Tax Notice? Do NOT Ignore It — Missing the Response Deadline Leads to Best Judgement Assessment & Large Tax Demands. Act Today.
+        </div>
 
         {/* ── HERO ── */}
-        <section
-          className="bg-gradient-to-r from-[#00416a] to-[#002b45] text-white py-24"
-          aria-label="Income Tax Scrutiny & Notice Handling Hero"
-        >
-          <div className="max-w-6xl mx-auto px-6">
-            {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-300">
-              <ol className="flex gap-2 flex-wrap">
-                <li><Link href="/" className="hover:text-white">Home</Link></li>
-                <li aria-hidden="true">/</li>
-                <li><Link href="/services" className="hover:text-white">Services</Link></li>
-                <li aria-hidden="true">/</li>
-                <li><Link href="/income-tax" className="hover:text-white">Income Tax</Link></li>
-                <li aria-hidden="true">/</li>
-                <li aria-current="page" className="text-white font-medium">
-                  Scrutiny & Notice Handling
-                </li>
-              </ol>
+        <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full border border-white/10" />
+          <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full border border-white/10" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full border border-white/5 -translate-x-1/2 translate-y-1/2" />
+
+          <div className="relative max-w-6xl mx-auto px-6 py-28 md:py-36">
+            <nav className="mb-6 text-sm text-white/60 flex items-center gap-2 flex-wrap">
+              <Link href="/" className="hover:text-white transition">Home</Link>
+              <span>/</span>
+              <Link href="/serviceslist" className="hover:text-white transition">Services</Link>
+              <span>/</span>
+              <Link href="/serviceslist/income-tax" className="hover:text-white transition">Income Tax</Link>
+              <span>/</span>
+              <span className="text-white">Scrutiny & Notice Handling</span>
             </nav>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Income Tax Scrutiny Assessment & Notice Handling Services — India
-            </h1>
-            <p className="text-lg text-gray-200 max-w-3xl">
-              Expert response to income tax notices under Section 143(1),
-              143(2), 148, 142(1), 156, 245, and 271. Faceless assessment
-              representation, scrutiny documentation, appeal filing before
-              CIT(A) and ITAT. Don't ignore your notice — act immediately.
-              Serving Khatauli, Muzaffarnagar and pan-India online.
-            </p>
+            <div className="flex flex-col lg:flex-row items-start gap-12">
+              <div className="flex-1">
+                <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                  ⚖️ Income Tax Scrutiny & Notice Handling
+                </span>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                  Income Tax<br />
+                  <span className="text-[#7ecbf0]">Scrutiny & Notice</span><br />
+                  Handling — India
+                </h1>
+                <p className="text-lg text-gray-200 leading-relaxed max-w-2xl mb-10">
+                  Every income tax notice has a deadline — missing it results in
+                  <strong className="text-white"> Best Judgement Assessment with arbitrary large additions</strong>.
+                  Taxvio's CA and legal expert team handles all notice types — Section 143(1), 143(2), 148, 142(1),
+                  156, 270A, 271 — plus Faceless Assessment representation and CIT(A) / ITAT appeals.
+                  Don't face it alone. Starting ₹1,999.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center text-base">
+                    Get Immediate Notice Help →
+                  </Link>
+                  <Link href="#notice-types" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base">
+                    🔍 Identify My Notice
+                  </Link>
+                </div>
+                <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/70">
+                  {["✅ All Notice Types Handled", "✅ Faceless Assessment Support", "✅ CIT(A) & ITAT Appeals", "✅ CA + Legal Expert Team"].map(t => (
+                    <span key={t} className="bg-white/10 border border-white/20 px-3 py-1 rounded-full">{t}</span>
+                  ))}
+                </div>
+              </div>
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/contact"
-                className="bg-white text-[#00416a] px-8 py-3 rounded-xl font-semibold shadow hover:scale-105 transition"
-                aria-label="Get help with income tax notice now"
-              >
-                Get Notice Help Now
-              </Link>
-              <Link
-                href="#notice-types"
-                className="border border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition"
-              >
-                Identify Your Notice
-              </Link>
-            </div>
-
-            <div className="mt-10 flex flex-wrap gap-6 text-sm text-gray-300">
-              <span>✅ All Notice Types Handled</span>
-              <span>✅ Faceless Assessment Support</span>
-              <span>✅ CIT(A) & ITAT Appeals</span>
-              <span>✅ CA + Legal Expert Team</span>
+              {/* hero card */}
+              <div className="w-full lg:w-80 bg-white/10 backdrop-blur border border-white/20 rounded-3xl p-8 flex-shrink-0">
+                <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-5">⚠️ Act Immediately</p>
+                <ul className="space-y-4 text-sm text-gray-200">
+                  {[
+                    ["📋", "11 notice types covered"],
+                    ["⏰", "Strict response deadlines"],
+                    ["🖥️", "Faceless assessment experts"],
+                    ["📁", "Complete documentation support"],
+                    ["⚖️", "CIT(A) & ITAT appeal filing"],
+                    ["💰", "Starting ₹1,999"],
+                  ].map(([icon, text]) => (
+                    <li key={text as string} className="flex items-start gap-3">
+                      <span className="text-base">{icon}</span>
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* ── STATS ── */}
+        <section className="bg-gray-50 py-14 border-b">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {[
+              { number: "11+", label: "Notice Types Handled", icon: "📋" },
+              { number: "30 Days", label: "CIT(A) Appeal Window", icon: "⏰" },
+              { number: "100%", label: "Digital Faceless Process", icon: "🖥️" },
+              { number: "₹1,999", label: "Starting Notice Fee", icon: "💰" },
+            ].map((s) => (
+              <div key={s.label} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div className="text-3xl mb-2">{s.icon}</div>
+                <p className="text-2xl font-extrabold text-[#00416a] mb-1">{s.number}</p>
+                <p className="text-gray-500 text-sm font-medium">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── TRUST BADGES ── */}
+        <section className="py-8 bg-white border-b">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm font-semibold text-gray-700">
+            {["✔ CA & Legal Team Supervised", "✔ Faceless Assessment Experts", "✔ Deadline-Driven Process", "✔ Appeal Filing & Representation"].map((t) => (
+              <div key={t} className="bg-gray-50 rounded-xl py-3 px-4 border hover:border-[#00416a] transition">{t}</div>
+            ))}
+          </div>
+        </section>
+
         {/* ── MAIN CONTENT ── */}
-        <section className="max-w-6xl mx-auto px-6 pt-20 pb-12">
+        <article className="max-w-6xl mx-auto px-6 py-20 space-y-24">
 
           {/* INTRO */}
-          <article>
-            <h2 className="text-3xl font-semibold text-[#00416a] mb-6">
-              Income Tax Scrutiny & Notice Handling — Complete Guide
+          <section id="overview">
+            <SectionLabel text="Why Notices Happen" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-6">
+              Why the Income Tax Department Issues Scrutiny Notices
             </h2>
+            <div className="grid md:grid-cols-2 gap-8 text-gray-700 leading-relaxed">
+              <div className="space-y-4">
+                <p>
+                  Receiving an income tax notice is one of the most stressful experiences for any taxpayer.
+                  However, <strong>a notice is not always a cause for panic</strong>. Many notices are routine
+                  communications requiring a prompt, well-documented response. What truly escalates a notice
+                  into a serious tax demand is either <strong>ignoring it</strong> or responding without proper
+                  documentation and legal grounding.
+                </p>
+                <p>
+                  ITR scrutiny is now driven by AI-powered risk assessment systems — the Department's
+                  <strong> Computer Aided Scrutiny Selection (CASS)</strong> and Annual Information Statement
+                  (AIS) cross-verify your ITR against bank data, GST returns, registrar records, and TDS
+                  certificates. Any mismatch or anomaly triggers an automated notice — often before a human
+                  officer even reviews the case.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <p>
+                  Since 2021, the Income Tax Department has implemented <strong>Faceless Assessment under
+                  Section 144B</strong> — all scrutiny proceedings are now conducted entirely digitally through
+                  the Income Tax portal, without face-to-face meetings. This makes written response quality and
+                  supporting documentation more critical than ever — there is no opportunity to clarify verbally.
+                </p>
+                <p>
+                  <strong>Taxvio</strong>, based in Khatauli (Muzaffarnagar, UP), provides comprehensive income
+                  tax notice handling and scrutiny representation for individuals, proprietors, firms, LLPs, and
+                  companies across Uttar Pradesh and pan-India. Our CA and legal expert team handles every stage
+                  — from notice review to AO representation to CIT(A) and ITAT appeals.
+                </p>
+              </div>
+            </div>
+          </section>
 
-            <p className="mb-5 leading-relaxed text-gray-700">
-              Receiving an income tax notice is one of the most stressful
-              experiences for any taxpayer — individual, proprietor, firm, or
-              company. However, <strong>a notice is not always a cause for
-              panic</strong>. Many income tax notices are routine communications
-              that require a prompt, well-documented response. What truly
-              escalates a notice into a serious tax demand is either{" "}
-              <strong>ignoring the notice</strong> or responding without proper
-              documentation and legal grounding.
-            </p>
-
-            <p className="mb-5 leading-relaxed text-gray-700">
-              The Income Tax Department issues notices under multiple sections
-              of the Income Tax Act — each with a different purpose, different
-              required response, and a specific deadline. A{" "}
-              <strong>Section 143(1) intimation</strong> after ITR processing
-              is very different from a{" "}
-              <strong>Section 143(2) scrutiny notice</strong> or a{" "}
-              <strong>Section 148 reassessment notice</strong>. Responding to
-              each requires a tailored approach — the right documents, correct
-              legal arguments, and timely submission through the Income Tax
-              portal.
-            </p>
-
-            <p className="mb-5 leading-relaxed text-gray-700">
-              Since 2021, the Income Tax Department has implemented{" "}
-              <strong>Faceless Assessment under Section 144B</strong> — all
-              scrutiny proceedings, notices, and orders are now conducted
-              digitally without face-to-face meetings. This has made professional
-              representation more important than ever, as every response is
-              permanently on record and forms the basis for the final assessment
-              order.
-            </p>
-
-            <p className="mb-10 leading-relaxed text-gray-700">
-              <strong>Taxvio</strong>, based in Khatauli (Muzaffarnagar, UP),
-              provides comprehensive income tax notice handling and scrutiny
-              assessment representation services for individuals, proprietors,
-              firms, LLPs, and companies across Uttar Pradesh and pan-India.
-              Our CA and legal expert team handles notice review, document
-              preparation, portal submission, AO representation, and appeal
-              filing before CIT(A) and ITAT.
-            </p>
-
-            {/* WHY NOTICES ARE ISSUED */}
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-              Why Does the Income Tax Department Issue Scrutiny Notices?
+          {/* WHY NOTICES ARE TRIGGERED */}
+          <section id="notice-triggers">
+            <SectionLabel text="Common Triggers" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
+              Why Was Your ITR Selected for Scrutiny?
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              ITR scrutiny is triggered by specific risk parameters built into
-              the Department's AI-driven risk assessment systems. Understanding
-              why your return was selected helps prepare a stronger response:
-            </p>
-            <ul className="list-disc pl-6 mb-10 text-gray-700 space-y-2">
-              <li>
-                <strong>TDS / Form 26AS mismatch</strong> — Income reported in
-                ITR does not match TDS credits in Form 26AS or AIS. This is the
-                most common trigger for 143(1) demands and 143(2) scrutiny.
-              </li>
-              <li>
-                <strong>High-value transactions not reported</strong> — SFT
-                (Statement of Financial Transactions) data from banks, registrars,
-                and mutual funds showing large transactions (property purchases,
-                cash deposits, share sales, FD interest) that are not reflected
-                in the ITR.
-              </li>
-              <li>
-                <strong>Sudden income drop or large loss</strong> — Significant
-                reduction in declared income compared to previous years, or
-                large business losses that reduce tax to zero.
-              </li>
-              <li>
-                <strong>Large deductions / exemptions claimed</strong> — HRA
-                exemptions, 80C/80D deductions, or capital gain exemptions
-                (54/54F) that appear disproportionate to declared income.
-              </li>
-              <li>
-                <strong>Cash deposits during demonetisation or high cash
-                sales</strong> — Large cash deposits or cash-heavy businesses
-                attract scrutiny for unreported income.
-              </li>
-              <li>
-                <strong>GST turnover vs ITR turnover mismatch</strong> — The
-                Department cross-verifies GSTR-1/GSTR-3B turnover with ITR
-                business income. Any unexplained gap triggers notices.
-              </li>
-              <li>
-                <strong>Foreign assets or foreign income</strong> — Any foreign
-                bank accounts, investments, or income not disclosed in ITR
-                Schedule FA triggers high-priority scrutiny.
-              </li>
-              <li>
-                <strong>Random computer-based selection</strong> — A small
-                percentage of returns are selected for scrutiny at random by
-                CASS (Computer Aided Scrutiny Selection) even without specific
-                risk flags.
-              </li>
-            </ul>
-          </article>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[
+                { icon: "📊", title: "TDS / Form 26AS Mismatch", desc: "Income reported in ITR doesn't match TDS credits in Form 26AS or AIS — the most common trigger for 143(1) demands and 143(2) scrutiny." },
+                { icon: "🏦", title: "High-Value Transactions Not Reported", desc: "SFT data from banks, registrars, and mutual funds showing large property purchases, cash deposits, share sales, or FD interest not reflected in ITR." },
+                { icon: "📉", title: "Sudden Income Drop or Large Loss", desc: "Significant reduction in declared income vs previous years, or large business losses that reduce tax to zero — both trigger automated scrutiny." },
+                { icon: "💼", title: "Large Deductions or Exemptions Claimed", desc: "HRA exemptions, 80C/80D deductions, or capital gain exemptions (54/54F) that appear disproportionate to declared income level." },
+                { icon: "💵", title: "High Cash Sales or Demonetisation Deposits", desc: "Large cash deposits during demonetisation periods or cash-heavy businesses attract scrutiny for potential unreported income." },
+                { icon: "🧾", title: "GST Turnover vs ITR Turnover Mismatch", desc: "Department cross-verifies GSTR-1/GSTR-3B turnover with ITR business income. Any unexplained gap directly triggers notices." },
+                { icon: "🌍", title: "Foreign Assets or Foreign Income", desc: "Any foreign bank accounts, investments, or income not disclosed in ITR Schedule FA triggers high-priority scrutiny by the Department." },
+                { icon: "🎲", title: "Random CASS Selection", desc: "A percentage of returns are selected for scrutiny at random by Computer Aided Scrutiny Selection (CASS) even without specific risk flags." },
+                { icon: "📋", title: "Previous Year Additions Not Disclosed", desc: "Additions made in earlier assessments that were not carried forward or disclosed correctly in subsequent year returns." },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-4 p-5 rounded-2xl border bg-gray-50 hover:bg-white hover:shadow-md hover:border-[#00416a]/30 transition">
+                  <div className="text-3xl flex-shrink-0">{item.icon}</div>
+                  <div>
+                    <p className="font-semibold text-[#00416a] mb-1">{item.title}</p>
+                    <p className="text-sm text-gray-600">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* NOTICE TYPES TABLE */}
-          <NoticeTypesSection />
+          <section id="notice-types">
+            <SectionLabel text="Notice Guide" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Types of Income Tax Notices — Section-Wise Complete Guide
+            </h2>
+            <p className="text-gray-600 mb-8 max-w-2xl">
+              Every notice has a section number that tells you exactly what the Department wants.
+              Identify your notice type below to understand what's required.
+            </p>
+            <div className="overflow-x-auto rounded-2xl border shadow-sm">
+              <table className="min-w-full text-sm">
+                <thead className="bg-[#00416a] text-white">
+                  <tr>
+                    {["Section", "Notice Type", "What It Means", "Response Required", "Urgency"].map((h) => (
+                      <th key={h} className="px-4 py-4 text-left font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {[
+                    ["143(1)", "Intimation after ITR processing", "ITR processed — demand raised, refund due, or accepted as filed", "Pay demand / accept refund / file rectification if error", "Medium"],
+                    ["143(2)", "Scrutiny notice", "ITR selected for detailed examination by Assessing Officer", "Produce books, documents, and answer questionnaire fully", "High"],
+                    ["142(1)", "Pre-assessment enquiry", "AO requires specific information or documents before completing assessment", "Furnish all information and documents within time given", "High"],
+                    ["148", "Reassessment — income escaping", "AO believes income was not reported or under-reported in original ITR", "File fresh ITR and respond with complete documentation", "Very High"],
+                    ["148A", "Pre-reassessment show cause", "Show cause before issuing 148 — AO must give opportunity to explain", "Submit explanation with evidence why reassessment is not warranted", "Very High"],
+                    ["156", "Tax demand notice", "Tax, interest, or penalty payable following assessment order", "Pay demand or file appeal within 30 days", "Very High"],
+                    ["245", "Refund vs demand adjustment", "Department proposes to adjust pending refund against outstanding demand", "Accept or object within 30 days through portal", "Medium"],
+                    ["139(9)", "Defective return notice", "ITR filed is incomplete or contains errors making it defective", "Correct and re-file ITR within 15 days", "Medium"],
+                    ["131", "Summons", "AO summoning taxpayer or third party to attend or produce documents", "Attend personally or produce required documents on specified date", "Very High"],
+                    ["271(1)(c)", "Penalty — concealment", "Penalty for concealment of income or furnishing inaccurate particulars", "Submit reply contesting penalty with evidence of bona fide disclosure", "High"],
+                    ["270A", "Penalty — under-reporting", "Penalty at 50% (under-reporting) or 200% (misreporting) of tax on added income", "Contest by proving income was reported correctly or showing reasonable cause", "High"],
+                  ].map(([section, type, meaning, response, urgency], i) => (
+                    <tr key={section} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="px-4 py-4 font-bold text-[#00416a] whitespace-nowrap">Sec {section}</td>
+                      <td className="px-4 py-4 font-medium text-gray-800">{type}</td>
+                      <td className="px-4 py-4 text-gray-600 text-xs">{meaning}</td>
+                      <td className="px-4 py-4 text-gray-600 text-xs">{response}</td>
+                      <td className="px-4 py-4">
+                        <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+                          urgency === "Very High" ? "bg-red-100 text-red-700" :
+                          urgency === "High" ? "bg-orange-100 text-orange-700" :
+                          "bg-yellow-100 text-yellow-700"
+                        }`}>{urgency}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-xs text-gray-500 italic">
+              * All notices arrive on your registered email and are visible on the IT portal under "Pending Actions → e-Proceedings". Ensure email and mobile are updated on the portal.
+            </p>
+          </section>
 
           {/* FACELESS ASSESSMENT */}
-          <article>
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4 mt-4">
+          <section id="faceless-assessment">
+            <SectionLabel text="Faceless Assessment" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
               Faceless Assessment Under Section 144B — How It Works
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              Introduced in 2020 and made mandatory for all scrutiny cases,
-              Faceless Assessment is a complete digital process:
+            <p className="text-gray-600 mb-8 max-w-2xl">
+              Since 2021, all scrutiny assessments are conducted digitally under the Faceless Assessment
+              scheme — making professional written representation more critical than ever.
             </p>
-            <ul className="list-disc pl-6 mb-8 text-gray-700 space-y-2">
-              <li>
-                <strong>Random case assignment</strong> — Once a return is
-                selected for scrutiny under Section 143(2), it is assigned to
-                an Assessing Officer (AO) in a National Faceless Assessment
-                Centre (NFAC) at a location different from the taxpayer's
-                jurisdiction. The taxpayer never meets the AO in person.
-              </li>
-              <li>
-                <strong>Digital notice and response</strong> — All notices,
-                questionnaires, show-cause notices (SCN), and draft assessment
-                orders are served through the Income Tax e-filing portal. All
-                responses, documents, and submissions must be uploaded digitally.
-              </li>
-              <li>
-                <strong>Peer review of draft orders</strong> — Before issuing
-                a final assessment order, the draft is reviewed by a separate
-                Review Unit and Technical Unit to ensure accuracy and
-                consistency.
-              </li>
-              <li>
-                <strong>Personal hearing via video conference</strong> — If a
-                taxpayer requests a personal hearing, it is conducted via video
-                conference — not in person. The request must be made explicitly
-                through the portal.
-              </li>
-              <li>
-                <strong>Final assessment order</strong> — The final order under
-                Section 143(3) is passed and served digitally. If there are
-                additions and tax demands, a demand notice under Section 156 is
-                issued simultaneously.
-              </li>
-            </ul>
-            <p className="mb-10 leading-relaxed text-gray-700">
-              In faceless assessment, the quality of your written response and
-              supporting documentation is everything — there is no opportunity
-              to explain verbally. This makes professional representation
-              critical. Taxvio prepares structured, comprehensive written
-              responses for every query raised during faceless proceedings.
-            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[
+                { icon: "🎲", title: "Random Case Assignment", desc: "Once selected for scrutiny, the case is assigned to an AO at a National Faceless Assessment Centre (NFAC) at a random location — not the taxpayer's jurisdiction. No face-to-face meeting." },
+                { icon: "🖥️", title: "100% Digital Process", desc: "All notices, questionnaires, Show Cause Notices (SCN), and draft assessment orders are served digitally through the Income Tax e-filing portal. All responses must be uploaded electronically." },
+                { icon: "🔍", title: "Peer Review of Draft Orders", desc: "Before issuing a final order, the draft is reviewed by a separate Review Unit and Technical Unit — ensuring consistency and accuracy in additions proposed." },
+                { icon: "📹", title: "Video Conference Hearings", desc: "If a personal hearing is requested, it is conducted via video conference — not in person. The request must be explicitly made through the portal by the taxpayer." },
+                { icon: "📄", title: "Final Assessment Order", desc: "Final order under Section 143(3) is passed and served digitally. If tax demands arise, a Section 156 demand notice is issued simultaneously." },
+                { icon: "✍️", title: "Written Response is Everything", desc: "In faceless assessment, there is no verbal explanation — every response is permanently on record. A comprehensive, well-documented written response is your only defence." },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-4 p-5 rounded-2xl border bg-gray-50 hover:bg-white hover:shadow-md hover:border-[#00416a]/30 transition">
+                  <div className="text-3xl flex-shrink-0">{item.icon}</div>
+                  <div>
+                    <p className="font-semibold text-[#00416a] mb-1">{item.title}</p>
+                    <p className="text-sm text-gray-600">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            {/* SCRUTINY PROCESS */}
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-              The Scrutiny Assessment Process — From Notice to Order
+          {/* SCRUTINY STAGES */}
+          <section id="scrutiny-stages">
+            <SectionLabel text="Scrutiny Timeline" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              The Scrutiny Assessment Process — Stage by Stage
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              Understanding the full scrutiny timeline helps you respond
-              correctly at each stage:
+            <p className="text-gray-600 mb-10 max-w-2xl">
+              Understanding the full scrutiny timeline helps you respond correctly at each stage and
+              prevents escalation to best judgement assessment.
             </p>
-            <ul className="list-disc pl-6 mb-10 text-gray-700 space-y-2">
-              <li>
-                <strong>Stage 1 — Section 143(2) Notice</strong> — Issued
-                within 6 months from the end of the assessment year in which
-                the ITR was filed (e.g., for AY 2024-25 return, notice can be
-                issued up to 30th September 2025). Requires taxpayer to appear
-                or submit documents.
-              </li>
-              <li>
-                <strong>Stage 2 — Section 142(1) Questionnaire</strong> — The
-                AO issues a questionnaire seeking specific information —
-                source of income, investments, expenses, bank account
-                reconciliation, party-wise details. Each question must be
-                answered with supporting documents.
-              </li>
-              <li>
-                <strong>Stage 3 — Show Cause Notice (SCN)</strong> — If the
-                AO proposes additions to income or disallowances, a draft
-                assessment order with a Show Cause Notice is issued before
-                finalising the order. The taxpayer has an opportunity to contest
-                the proposed additions.
-              </li>
-              <li>
-                <strong>Stage 4 — Final Assessment Order (Section 143(3)
-                or 144)</strong> — The AO passes the final order. If the
-                taxpayer cooperated, order is under 143(3) (regular assessment).
-                If the taxpayer did not respond, order is passed ex-parte under
-                Section 144 (best judgement assessment) with large additions.
-              </li>
-              <li>
-                <strong>Stage 5 — Section 156 Demand Notice</strong> — If the
-                assessment order results in a tax demand, a demand notice under
-                Section 156 is issued simultaneously, specifying the amount and
-                due date for payment.
-              </li>
-              <li>
-                <strong>Stage 6 — Appeal to CIT(A)</strong> — If the taxpayer
-                disagrees with the order, an appeal can be filed before the
-                Commissioner of Income Tax (Appeals) within 30 days of
-                receiving the order. Stay of demand can also be requested.
-              </li>
-            </ul>
-          </article>
+            <div className="relative">
+              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#00416a] to-[#7ecbf0] hidden md:block" />
+              <div className="space-y-8">
+                {[
+                  { stage: "Stage 1", title: "Section 143(2) Notice", color: "border-blue-400", desc: "Issued within 6 months from the end of the assessment year in which the ITR was filed. Formally selects the return for scrutiny and requires the taxpayer to appear or submit documents." },
+                  { stage: "Stage 2", title: "Section 142(1) Questionnaire", color: "border-yellow-400", desc: "AO issues a detailed questionnaire seeking specific information — source of income, investments, party-wise expenses, bank reconciliation. Each question must be answered with supporting documents." },
+                  { stage: "Stage 3", title: "Show Cause Notice (SCN)", color: "border-orange-400", desc: "If the AO proposes additions or disallowances, a draft assessment order with SCN is issued. The taxpayer has a final opportunity to contest the proposed additions before the order is finalised." },
+                  { stage: "Stage 4", title: "Final Assessment Order (Section 143(3) or 144)", color: "border-red-400", desc: "AO passes the final order. If taxpayer cooperated: order under 143(3) (regular assessment). If taxpayer didn't respond: ex-parte order under Section 144 (best judgement) with large arbitrary additions." },
+                  { stage: "Stage 5", title: "Section 156 Demand Notice", color: "border-red-600", desc: "If the assessment results in a tax demand, a Section 156 demand notice is issued simultaneously specifying the amount and due date. Must be paid or appealed within 30 days." },
+                  { stage: "Stage 6", title: "Appeal to CIT(A) — Within 30 Days", color: "border-green-400", desc: "If you disagree with the order, appeal to Commissioner of Income Tax (Appeals) within 30 days. Stay of demand can be requested. Taxvio handles complete appeal preparation and representation." },
+                ].map((step, i) => (
+                  <div key={step.stage} className="relative md:pl-16 flex gap-6 items-start">
+                    <div className="hidden md:flex absolute left-0 w-10 h-10 bg-[#00416a] text-white rounded-full items-center justify-center font-bold text-sm flex-shrink-0 z-10 border-4 border-white shadow-md">
+                      {i + 1}
+                    </div>
+                    <div className={`bg-white border-l-4 ${step.color} rounded-2xl p-6 hover:shadow-md transition flex-1`}>
+                      <span className="text-xs font-bold text-[#00416a]/40 tracking-widest uppercase">{step.stage}</span>
+                      <h3 className="text-lg font-bold text-[#00416a] mt-1 mb-3">{step.title}</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
           {/* PENALTY NOTICES */}
-          <PenaltyNoticesSection />
-
-          {/* APPEAL SECTION */}
-          <article>
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4 mt-4">
-              Income Tax Appeals — CIT(A) and ITAT
+          <section id="penalty-notices">
+            <SectionLabel text="Penalty Provisions" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Penalty & Prosecution Notices — Rates & Defence Strategy
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              If you disagree with an assessment order, penalty order, or any
-              other order of the Assessing Officer, you have the right to
-              appeal through India's structured income tax appellate hierarchy:
+            <p className="text-gray-600 mb-8 max-w-2xl">
+              If scrutiny results in income additions, the AO may initiate separate penalty proceedings.
+              Here are the key provisions and how Taxvio helps contest them.
             </p>
-            <ul className="list-disc pl-6 mb-8 text-gray-700 space-y-3">
-              <li>
-                <strong>Commissioner of Income Tax (Appeals) — CIT(A) /
-                JCIT(A)</strong> — First appellate authority. Appeal must be
-                filed in Form 35 within <strong>30 days</strong> of receiving
-                the order. Filing fee ranges from ₹250 to ₹1,000 based on
-                income. The CIT(A) can confirm, modify, or delete additions made
-                by the AO. Since 2023, faceless appeal proceedings are also
-                conducted digitally.
-              </li>
-              <li>
-                <strong>Income Tax Appellate Tribunal (ITAT)</strong> — Second
-                appellate authority. Appeal against CIT(A) order must be filed
-                in Form 36 within <strong>60 days</strong>. ITAT is a quasijudicial body — proceedings are more formal. Tribunal's
-                decisions are binding on the AO and CIT(A) for the taxpayer.
-                Tax effect threshold of ₹50 lakh applies for Department appeals
-                to ITAT (Department does not appeal small-amount cases).
-              </li>
-              <li>
-                <strong>High Court</strong> — Appeal on substantial questions
-                of law can be filed before the relevant High Court under Section
-                260A within <strong>120 days</strong> of ITAT order.
-              </li>
-              <li>
-                <strong>Stay of Demand During Appeal</strong> — While an appeal
-                is pending, the taxpayer can request stay of demand (suspension
-                of the tax demand) before the AO or CIT(A). Typically, 20% of
-                the disputed demand must be paid as a precondition for stay.
-              </li>
-            </ul>
-            <p className="mb-10 leading-relaxed text-gray-700">
-              Taxvio assists with the complete appeal process — drafting the
-              grounds of appeal, preparing the paper book with supporting
-              judgements and documents, filing the appeal, and representing the
-              taxpayer at CIT(A) hearings. For ITAT matters, we coordinate
-              with senior tax advocates.
-            </p>
+            <div className="overflow-x-auto rounded-2xl border shadow-sm">
+              <table className="min-w-full text-sm">
+                <thead className="bg-[#00416a] text-white">
+                  <tr>
+                    {["Section", "Offence", "Penalty Rate", "Defence / Mitigation"].map((h) => (
+                      <th key={h} className="px-5 py-4 text-left font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {[
+                    ["270A", "Under-reporting of income", "50% of tax on under-reported income", "Show income reported correctly or difference is due to disputed legal interpretation"],
+                    ["270A", "Misreporting of income", "200% of tax on misreported income", "Prove disclosure was bona fide — no intention to misreport"],
+                    ["271(1)(c)", "Concealment (pre-AY 2017-18)", "100%–300% of tax on concealed income", "Prove bona fide disclosure and concealment was not deliberate"],
+                    ["271B", "No audit / late audit report", "0.5% of turnover — max ₹1.5 lakh", "Prove reasonable cause — illness, natural disaster, etc."],
+                    ["272A", "Non-compliance with notices", "₹10,000 per default (continuing)", "Show notice not properly served or compliance made subsequently"],
+                    ["276C", "Wilful tax evasion", "Prosecution — 6 months to 7 years + fine", "Prove no wilful intent — distinguish bona fide error from deliberate evasion"],
+                    ["276CC", "Wilful failure to file ITR", "Prosecution — 3 months to 7 years", "Prove failure was not wilful; late filing before prosecution initiated"],
+                  ].map(([section, offence, penalty, defence], i) => (
+                    <tr key={`${section}-${i}`} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="px-5 py-4 font-bold text-[#00416a]">Sec {section}</td>
+                      <td className="px-5 py-4 text-gray-700">{offence}</td>
+                      <td className="px-5 py-4 font-bold text-red-600">{penalty}</td>
+                      <td className="px-5 py-4 text-gray-600 text-xs">{defence}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
 
-            {/* COMMON MISTAKES */}
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-              Common Mistakes Taxpayers Make When Handling Notices
+          {/* APPEALS */}
+          <section id="appeals">
+            <SectionLabel text="Appeal Hierarchy" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
+              Income Tax Appeals — CIT(A), ITAT & High Court
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              These mistakes consistently turn manageable notices into large
-              tax demands — avoid them at all costs:
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[
+                { level: "1st Appeal", body: "CIT(A) / JCIT(A)", deadline: "30 days from order", icon: "🏛️", color: "border-blue-400", desc: "File Form 35 before Commissioner of Income Tax (Appeals). Fee ₹250–₹1,000. CIT(A) can confirm, modify, or delete AO's additions. Since 2023, faceless appeal proceedings conducted digitally." },
+                { level: "2nd Appeal", body: "ITAT", deadline: "60 days from CIT(A) order", icon: "⚖️", color: "border-indigo-400", desc: "Income Tax Appellate Tribunal. File Form 36. Quasi-judicial body — proceedings more formal. ITAT decisions binding on AO and CIT(A). ₹50L tax effect threshold for Department appeals." },
+                { level: "High Court", body: "HC under Section 260A", deadline: "120 days from ITAT order", icon: "🏗️", color: "border-purple-400", desc: "Appeal on substantial questions of law only — not on factual disputes. Filed before the relevant High Court with senior tax advocate representation." },
+                { level: "Stay of Demand", body: "AO / CIT(A)", deadline: "File with appeal", icon: "⏸️", color: "border-green-400", desc: "During pending appeal, apply for stay of demand (suspension of tax collection). Typically 20% of disputed demand must be paid as precondition for stay grant." },
+              ].map((item) => (
+                <div key={item.level} className={`border-t-4 ${item.color} bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition`}>
+                  <div className="text-3xl mb-3">{item.icon}</div>
+                  <p className="text-xs font-bold text-[#00416a]/60 uppercase tracking-widest mb-1">{item.level}</p>
+                  <h3 className="font-bold text-[#00416a] mb-1">{item.body}</h3>
+                  <p className="text-xs font-semibold text-red-500 mb-3">Deadline: {item.deadline}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* COMMON MISTAKES */}
+          <section id="common-mistakes" className="bg-red-50 border border-red-100 rounded-3xl p-8 md:p-12">
+            <SectionLabel text="What Not to Do" />
+            <h2 className="text-3xl font-bold text-red-700 mb-4">
+              Common Mistakes That Turn Notices Into Large Tax Demands
+            </h2>
+            <p className="text-gray-700 mb-8 max-w-3xl">
+              These mistakes consistently escalate manageable notices into large assessments. Every one
+              of these is preventable with professional guidance.
             </p>
-            <ul className="list-disc pl-6 mb-10 text-gray-700 space-y-2">
-              <li>
-                <strong>Ignoring the notice</strong> — The single most
-                dangerous mistake. Even a 143(1) intimation ignored for too
-                long can become a demand enforced through bank attachment or
-                salary deduction.
-              </li>
-              <li>
-                <strong>Responding late</strong> — Missing the response deadline
-                in a 143(2) or 142(1) notice results in the AO passing a best
-                judgement assessment under Section 144 — estimating income
-                arbitrarily and raising massive demands.
-              </li>
-              <li>
-                <strong>Submitting incomplete documentation</strong> — Partially
-                responding to a questionnaire leaves open issues that the AO
-                can use to make additions. Every query must be answered with
-                supporting evidence.
-              </li>
-              <li>
-                <strong>Not verifying 26AS / AIS before responding</strong> — All
-                income, transactions, and TDS credits reported in the Department's
-                database (AIS) must be reconciled before submitting a response.
-                Contradictions between your response and AIS data are used as
-                evidence of concealment.
-              </li>
-              <li>
-                <strong>Paying disputed demand without appeal</strong> — Paying
-                a tax demand raised through scrutiny without filing an appeal
-                is treated as acceptance of the assessment. Always file an
-                appeal if the additions are unjustified.
-              </li>
-              <li>
-                <strong>Not preserving books of accounts</strong> — During
-                scrutiny, the AO can require production of books up to 6 years
-                old. Missing books result in best judgement assessment and
-                Section 271A penalty.
-              </li>
-            </ul>
-          </article>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[
+                { mistake: "Ignoring the notice", risk: "Bank attachment / salary deduction", desc: "Even a 143(1) intimation ignored too long can be enforced through coercive recovery — bank account attachment or salary deduction." },
+                { mistake: "Responding after the deadline", risk: "Best judgement assessment", desc: "Missing response deadline in 143(2) or 142(1) results in AO passing Section 144 order — estimating income arbitrarily with massive additions." },
+                { mistake: "Incomplete documentation", risk: "Additions on unanswered queries", desc: "Partially answering the questionnaire leaves open issues. Every query must be answered with supporting evidence — no partial responses." },
+                { mistake: "Not verifying AIS before responding", risk: "Contradiction used as concealment", desc: "AIS data from banks is cross-verified. Contradictions between your response and AIS records are used as evidence of deliberate concealment." },
+                { mistake: "Paying disputed demand without appeal", risk: "Acceptance of assessment", desc: "Paying a demand without filing appeal is treated as acceptance. Always appeal unjustified additions within 30 days — then negotiate." },
+                { mistake: "Books not preserved", risk: "Best judgement + Section 271A penalty", desc: "AO can require books up to 6 years old. Missing books result in arbitrary assessment and ₹25,000 Section 271A penalty for non-maintenance." },
+              ].map((p) => (
+                <div key={p.mistake} className="bg-white border border-red-100 rounded-xl p-5">
+                  <p className="font-bold text-red-600 text-sm mb-1">❌ {p.mistake}</p>
+                  <p className="text-xs font-semibold text-red-400 mb-2">Risk: {p.risk}</p>
+                  <p className="text-sm text-gray-600">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-          {/* WORKFLOW */}
-          <WorkflowSection />
+          {/* PROCESS */}
+          <section id="our-process">
+            <SectionLabel text="How We Work" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Taxvio's 6-Step Notice Handling & Scrutiny Response Process
+            </h2>
+            <p className="text-gray-600 mb-12 max-w-2xl">
+              Our structured, deadline-driven process ensures every notice is responded to with complete
+              documentation and legal precision — minimising additions and protecting your tax position.
+            </p>
+            <div className="relative">
+              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#00416a] to-[#7ecbf0] hidden md:block" />
+              <div className="space-y-10">
+                {[
+                  { step: "01", title: "Notice Review & Urgency Assessment", desc: "We review your notice — identify the section, assessment year involved, nature of query raised, and exact response deadline. We classify urgency immediately and advise on the documents needed for a complete response, so not a single day is wasted." },
+                  { step: "02", title: "AIS / Form 26AS Reconciliation", desc: "We cross-verify all income, TDS credits, high-value transactions, and financial data in your AIS and Form 26AS against your ITR and books — identifying every mismatch that triggered the notice and preparing explanations with supporting evidence for each." },
+                  { step: "03", title: "Document Collection & Response Drafting", desc: "We collect all required documents — bank statements, purchase/sale invoices, TDS certificates, loan statements, investment proofs — and prepare a comprehensive, legally sound written response for each query raised by the AO." },
+                  { step: "04", title: "Portal Submission & Acknowledgement", desc: "The complete response with all supporting documents is submitted through the Income Tax e-filing portal under e-Proceedings within the deadline. Submission acknowledgement is preserved as permanent proof of compliance." },
+                  { step: "05", title: "Show Cause Notice (SCN) Response", desc: "If the AO issues an SCN before passing the assessment order, we prepare a detailed reply contesting proposed additions — citing relevant case laws, judicial precedents, CBDT circulars, and correct legal interpretation of every disputed item." },
+                  { step: "06", title: "Appeal Filing & Representation (CIT(A) / ITAT)", desc: "If the final order contains unjustified additions, we file an appeal in Form 35 before CIT(A) within 30 days — drafting detailed grounds of appeal, preparing the complete paper book, requesting stay of demand, and representing at CIT(A) hearings." },
+                ].map((step, i) => (
+                  <div key={step.step} className="relative md:pl-16 flex gap-6 items-start">
+                    <div className="hidden md:flex absolute left-0 w-10 h-10 bg-[#00416a] text-white rounded-full items-center justify-center font-bold text-sm flex-shrink-0 z-10 border-4 border-white shadow-md">
+                      {i + 1}
+                    </div>
+                    <div className="bg-white border rounded-2xl p-6 hover:shadow-md transition flex-1">
+                      <span className="text-xs font-bold text-[#00416a]/40 tracking-widest uppercase">Step {step.step}</span>
+                      <h3 className="text-lg font-bold text-[#00416a] mt-1 mb-3">{step.title}</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
-          {/* CALCULATOR */}
-          <ScrutinyFeeCalculator />
+          {/* FEE CALCULATOR */}
+          <FeeCalculator />
 
           {/* TESTIMONIALS */}
-          <Testimonials />
+          <section id="testimonials">
+            <SectionLabel text="Client Stories" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
+              Trusted for Notice Resolution Across India
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { name: "Sanjeev Agarwal", location: "Khatauli", text: "Received a Section 143(2) scrutiny notice for AY 2022-23. Taxvio prepared a thorough response with all documents. The AO accepted our reply and passed the order without any additions." },
+                { name: "Priya Constructions Pvt. Ltd.", location: "Muzaffarnagar", text: "Section 148 reassessment for cash deposits. Taxvio handled everything — fresh ITR, detailed response, portal submissions — demand ultimately reduced to nil." },
+                { name: "Ramesh & Co. Partnership Firm", location: "Meerut", text: "GST vs ITR turnover mismatch triggered 143(2). Taxvio reconciled our books, prepared a detailed reconciliation statement, and the scrutiny was closed without additions." },
+              ].map((r, i) => (
+                <div key={i} className="border rounded-2xl p-6 hover:shadow-lg transition bg-white">
+                  <div className="flex mb-3">
+                    {[...Array(5)].map((_, j) => <span key={j} className="text-yellow-400 text-lg">★</span>)}
+                  </div>
+                  <p className="mb-4 text-gray-700 text-sm leading-relaxed italic">"{r.text}"</p>
+                  <p className="font-bold text-[#00416a]">{r.name}</p>
+                  <p className="text-sm text-gray-500">{r.location}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* LOCAL SEO */}
+          <section id="cities-served">
+            <SectionLabel text="Our Reach" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Income Tax Notice Handling Services Across India
+            </h2>
+            <p className="text-gray-600 mb-8 max-w-3xl leading-relaxed">
+              Taxvio is based in <strong>Khatauli, Muzaffarnagar, UP</strong> and provides income tax
+              scrutiny and notice handling services for individuals, businesses, firms, LLPs, and companies
+              across <strong>Noida</strong>, <strong>Delhi NCR</strong>, <strong>Meerut</strong>,
+              <strong> Ghaziabad</strong>, and <strong>Mumbai</strong> — as well as pan-India online.
+              Since all scrutiny proceedings are now faceless and digital, geography is no barrier to
+              receiving expert representation.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {["Khatauli", "Muzaffarnagar", "Noida", "Delhi NCR", "Meerut", "Mumbai"].map((city) => (
+                <div key={city} className="bg-gray-50 border rounded-xl p-4 text-center text-sm font-semibold text-[#00416a] hover:bg-[#00416a] hover:text-white transition cursor-default">
+                  📍 {city}
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* FAQ */}
           <FAQSection />
-        </section>
 
-        <PremiumCTA />
+          {/* RELATED SERVICES */}
+          <section id="related-services">
+            <SectionLabel text="Explore More" />
+            <h2 className="text-3xl font-bold text-[#00416a] mb-8">Related Income Tax Services</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[
+                { title: "ITR Filing — Salaried", icon: "👔", link: "/serviceslist/income-tax/itr-salaried", desc: "Accurate ITR filing for individuals." },
+                { title: "Income Tax Audit", icon: "🔍", link: "/serviceslist/income-tax/income-tax-audit", desc: "Section 44AB audit and Form 3CD." },
+                { title: "ITR — Proprietor", icon: "🏪", link: "/serviceslist/income-tax/itr-proprietor", desc: "ITR-3/4 for business owners." },
+                { title: "Quarterly TDS Return", icon: "📋", link: "/serviceslist/income-tax/quarterly-tds", desc: "TDS compliance for employers." },
+              ].map((s) => (
+                <Link key={s.title} href={s.link} className="block border rounded-2xl p-6 hover:shadow-lg hover:border-[#00416a]/40 transition group bg-white">
+                  <div className="text-3xl mb-3">{s.icon}</div>
+                  <h3 className="font-bold text-[#00416a] mb-2">{s.title}</h3>
+                  <p className="text-sm text-gray-600 mb-3">{s.desc}</p>
+                  <span className="text-sm text-[#00416a] font-semibold group-hover:underline">Learn More →</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* FINAL CTA */}
+          <section id="cta">
+            <div className="bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] rounded-3xl shadow-2xl px-8 py-14 md:px-14 md:py-16 text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
+              <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
+                <div className="max-w-2xl text-center lg:text-left">
+                  <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">⚠️ Don't Wait — Act Before the Deadline</p>
+                  <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
+                    Received a Tax Notice?<br />Act Now — Don't Wait.
+                  </h3>
+                  <p className="text-lg text-gray-200 leading-relaxed">
+                    Every day of delay increases your risk of large tax additions. Taxvio's CA and legal
+                    team handles all notice types — 143(1), 143(2), 148, penalty, and appeals. Service
+                    starts at ₹1,999. Serving Khatauli, Muzaffarnagar, Meerut and all of India online.
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto flex-shrink-0">
+                  <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center">
+                    Get Immediate Help Now
+                  </Link>
+                  <Link href="tel:+918937980366" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+                    📞 Free Notice Review
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </article>
+
+        <Footar />
       </main>
     </>
   );
 }
 
-/* ================= URGENCY BANNER ================= */
-function UrgencyBanner() {
-  return (
-    <div
-      className="bg-red-600 text-white text-center py-3 font-semibold text-sm"
-      role="alert"
-    >
-      ⚠️ Received a Tax Notice? Do NOT Ignore It — Missing the Response
-      Deadline Leads to Best Judgement Assessment & Large Tax Demands. Act
-      Today.
-    </div>
-  );
-}
+/* ══════════════════════ INTERACTIVE COMPONENTS ══════════════════════ */
 
-/* ================= NOTICE TYPES TABLE ================= */
-function NoticeTypesSection() {
-  return (
-    <section id="notice-types" aria-label="Income Tax Notice Types">
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-16 mb-4">
-        Types of Income Tax Notices — Section-Wise Guide
-      </h2>
-      <p className="mb-6 leading-relaxed text-gray-700">
-        Every income tax notice has a specific section number that tells you
-        exactly what the Department wants and how urgently you must respond.
-        Here is a complete guide to all major notice types:
-      </p>
-
-      <div className="overflow-x-auto mb-6">
-        <table
-          className="min-w-full border rounded-xl overflow-hidden"
-          aria-label="Income Tax Notice Types and Response Guide"
-        >
-          <thead className="bg-[#00416a] text-white">
-            <tr>
-              <th className="p-4 text-left" scope="col">Section</th>
-              <th className="p-4 text-left" scope="col">Notice Type</th>
-              <th className="p-4 text-left" scope="col">What It Means</th>
-              <th className="p-4 text-left" scope="col">Response Required</th>
-              <th className="p-4 text-left" scope="col">Urgency</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              [
-                "143(1)",
-                "Intimation after ITR processing",
-                "ITR processed — demand raised, refund due, or accepted as filed",
-                "Pay demand / accept refund / file rectification if error",
-                "Medium",
-              ],
-              [
-                "143(2)",
-                "Scrutiny notice",
-                "ITR selected for detailed examination by AO",
-                "Produce books, documents, and answer questionnaire",
-                "High",
-              ],
-              [
-                "142(1)",
-                "Pre-assessment enquiry",
-                "AO requires specific information or documents before completing assessment",
-                "Furnish information and documents within time given",
-                "High",
-              ],
-              [
-                "148",
-                "Reassessment — income escaping",
-                "AO believes income was not reported or under-reported in original ITR",
-                "File fresh ITR and respond with complete documentation",
-                "Very High",
-              ],
-              [
-                "148A",
-                "Pre-reassessment show cause",
-                "Show cause before issuing 148 reassessment — AO must give opportunity",
-                "Submit explanation with evidence why reassessment is not warranted",
-                "Very High",
-              ],
-              [
-                "156",
-                "Tax demand notice",
-                "Tax, interest, or penalty is payable following assessment order",
-                "Pay demand or file appeal within 30 days",
-                "Very High",
-              ],
-              [
-                "245",
-                "Adjustment of refund against demand",
-                "Department proposes to adjust pending refund against outstanding demand",
-                "Accept or object within 30 days — objection must be filed on portal",
-                "Medium",
-              ],
-              [
-                "139(9)",
-                "Defective return notice",
-                "ITR filed is incomplete or contains errors making it defective",
-                "Correct and re-file ITR within 15 days",
-                "Medium",
-              ],
-              [
-                "131",
-                "Summons",
-                "AO summoning taxpayer or third party to attend or produce documents",
-                "Attend personally or produce required documents on specified date",
-                "Very High",
-              ],
-              [
-                "271(1)(c)",
-                "Penalty notice — concealment",
-                "Penalty for concealment of income or furnishing inaccurate particulars",
-                "Submit reply contesting penalty with evidence of bona fide disclosure",
-                "High",
-              ],
-              [
-                "270A",
-                "Penalty — under-reporting",
-                "Penalty for under-reporting or misreporting income (200% of tax on misreported income)",
-                "Contest by proving income reported correctly or reasonable cause",
-                "High",
-              ],
-            ].map(([section, type, meaning, response, urgency], i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                <td className="p-4 font-semibold text-[#00416a] whitespace-nowrap">
-                  Sec {section}
-                </td>
-                <td className="p-4 font-medium text-gray-700">{type}</td>
-                <td className="p-4 text-gray-600 text-sm">{meaning}</td>
-                <td className="p-4 text-gray-600 text-sm">{response}</td>
-                <td className="p-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      urgency === "Very High"
-                        ? "bg-red-100 text-red-700"
-                        : urgency === "High"
-                        ? "bg-orange-100 text-orange-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {urgency}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <p className="mb-16 text-gray-600 italic text-sm">
-        * All notices now arrive on your registered email and are available on
-        the Income Tax e-filing portal under "Pending Actions → e-Proceedings".
-        Ensure your email ID and mobile number are updated on the portal to
-        receive notices on time.
-      </p>
-    </section>
-  );
-}
-
-/* ================= PENALTY NOTICES SECTION ================= */
-function PenaltyNoticesSection() {
-  return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-4">
-        Penalty & Prosecution Notices — Rates & Defence
-      </h2>
-      <p className="mb-6 leading-relaxed text-gray-700">
-        If the scrutiny assessment results in additions to income, the AO may
-        initiate separate penalty proceedings. Here are the key penalty
-        provisions and what can be done to contest them:
-      </p>
-
-      <div className="overflow-x-auto mb-16">
-        <table
-          className="min-w-full border rounded-xl overflow-hidden"
-          aria-label="Income Tax Penalty Provisions"
-        >
-          <thead className="bg-[#00416a] text-white">
-            <tr>
-              <th className="p-4 text-left" scope="col">Section</th>
-              <th className="p-4 text-left" scope="col">Offence</th>
-              <th className="p-4 text-left" scope="col">Penalty Rate</th>
-              <th className="p-4 text-left" scope="col">Defence / Mitigation</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              [
-                "270A",
-                "Under-reporting of income",
-                "50% of tax on under-reported income",
-                "Show income was reported correctly or difference is due to disputed legal interpretation",
-              ],
-              [
-                "270A",
-                "Misreporting of income",
-                "200% of tax on misreported income",
-                "Prove disclosure was bona fide and there was no intention to misreport",
-              ],
-              [
-                "271(1)(c)",
-                "Concealment or inaccurate particulars (pre-AY 2017-18 cases)",
-                "100%–300% of tax on concealed income",
-                "Prove bona fide disclosure and that concealment was not deliberate",
-              ],
-              [
-                "271B",
-                "Failure to get accounts audited / file audit report",
-                "0.5% of turnover — max ₹1.5 lakh",
-                "Prove reasonable cause (illness, natural disaster, etc.)",
-              ],
-              [
-                "271F",
-                "Failure to file ITR (pre-2018)",
-                "₹5,000 flat",
-                "Section 234F now applicable for recent years — no separate 271F",
-              ],
-              [
-                "272A",
-                "Failure to comply with notices / summons",
-                "₹10,000 per default (continuing)",
-                "Show notice was not properly served or compliance was made subsequently",
-              ],
-              [
-                "276C",
-                "Wilful attempt to evade tax",
-                "Prosecution — 6 months to 7 years imprisonment + fine",
-                "Prove no wilful intent — distinguish from bonafide error or disputed interpretation",
-              ],
-              [
-                "276CC",
-                "Wilful failure to furnish ITR",
-                "Prosecution — 3 months to 3 years (tax < ₹25L) or up to 7 years (tax > ₹25L)",
-                "Prove failure was not wilful — late but filed before prosecution initiated",
-              ],
-            ].map(([section, offence, penalty, defence], i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                <td className="p-4 font-semibold text-[#00416a] whitespace-nowrap">
-                  Sec {section}
-                </td>
-                <td className="p-4 text-gray-700 text-sm">{offence}</td>
-                <td className="p-4 font-medium text-red-600 text-sm">{penalty}</td>
-                <td className="p-4 text-gray-600 text-sm">{defence}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-}
-
-/* ================= WORKFLOW ================= */
-function WorkflowSection() {
-  const steps = [
-    {
-      title: "1. Notice Review & Urgency Assessment",
-      desc: "We review your notice — identify the section, assessment year involved, nature of query, and response deadline. We immediately classify urgency and advise on the exact documents needed.",
-    },
-    {
-      title: "2. AIS / Form 26AS Reconciliation",
-      desc: "We cross-verify all income, TDS credits, high-value transactions, and financial data in your AIS and Form 26AS against your ITR and books of accounts — identifying all mismatches that triggered the notice.",
-    },
-    {
-      title: "3. Document Collection & Response Preparation",
-      desc: "We collect all required documents — bank statements, purchase and sale invoices, TDS certificates, loan statements, investment proofs — and prepare a comprehensive, legally sound written response for each query raised.",
-    },
-    {
-      title: "4. Portal Submission & Acknowledgement",
-      desc: "The complete response with all supporting documents is submitted through the Income Tax e-filing portal under e-Proceedings within the deadline. Submission acknowledgement is preserved as proof of compliance.",
-    },
-    {
-      title: "5. Show Cause Notice (SCN) Response",
-      desc: "If the AO issues a Show Cause Notice before passing the assessment order, we prepare a detailed reply contesting proposed additions — citing relevant case laws, judicial precedents, and correct legal interpretation.",
-    },
-    {
-      title: "6. Appeal Filing & Representation (if needed)",
-      desc: "If the final order has unjustified additions, we file an appeal in Form 35 before CIT(A) within 30 days — drafting detailed grounds of appeal, preparing the paper book, and representing at CIT(A) hearings.",
-    },
-  ];
-
-  return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-4">
-        Our Notice Handling & Scrutiny Response Process
-      </h2>
-      <p className="mb-10 leading-relaxed text-gray-700">
-        Taxvio follows a structured, deadline-driven process to ensure every
-        notice is responded to with full documentation and legal precision —
-        minimising additions and protecting your tax position:
-      </p>
-
-      <div className="relative border-l-4 border-[#00416a] pl-8 space-y-10 mb-16">
-        {steps.map((s, i) => (
-          <div key={i} className="relative">
-            <div className="absolute -left-11 top-1 w-6 h-6 bg-[#00416a] rounded-full border-4 border-white" />
-            <h3 className="text-xl font-semibold text-[#00416a]">{s.title}</h3>
-            <p className="text-gray-600 mt-2 leading-relaxed">{s.desc}</p>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-/* ================= FEE CALCULATOR ================= */
-function ScrutinyFeeCalculator() {
-  const [noticeType, setNoticeType] = useState<string>("");
+function FeeCalculator() {
+  const [selected, setSelected] = useState<string>("");
   const [fee, setFee] = useState<number | null>(null);
-  const [label, setLabel] = useState("");
+  const [desc, setDesc] = useState("");
 
-  const noticeOptions = [
+  const options = [
     { value: "143_1", label: "Section 143(1) — Intimation / Demand", fee: 1999, desc: "AIS reconciliation + rectification or response filing" },
     { value: "139_9", label: "Section 139(9) — Defective Return", fee: 1499, desc: "ITR correction and refiling within 15 days" },
     { value: "245", label: "Section 245 — Refund Adjustment", fee: 1999, desc: "Objection filing or verification of outstanding demand" },
     { value: "143_2", label: "Section 143(2) — Scrutiny Notice", fee: 4999, desc: "Full scrutiny response — documents, questionnaire, portal submission" },
     { value: "142_1", label: "Section 142(1) — Pre-Assessment Enquiry", fee: 3999, desc: "Detailed query response with supporting documentation" },
     { value: "148", label: "Section 148 — Reassessment Notice", fee: 7999, desc: "Fresh ITR filing + complete reassessment representation" },
-    { value: "271", label: "Section 271 / 270A — Penalty Notice", fee: 5999, desc: "Penalty contest reply with legal grounds and precedents" },
-    { value: "appeal", label: "CIT(A) Appeal Filing", fee: 9999, desc: "Grounds of appeal, paper book, CIT(A) representation" },
-    { value: "itat", label: "ITAT Appeal", fee: 14999, desc: "ITAT appeal drafting + coordination with senior advocate" },
+    { value: "271", label: "Section 271 / 270A — Penalty Notice", fee: 5999, desc: "Penalty contest reply with legal grounds and case law precedents" },
+    { value: "appeal_cita", label: "CIT(A) Appeal Filing", fee: 9999, desc: "Grounds of appeal, paper book, CIT(A) representation" },
+    { value: "appeal_itat", label: "ITAT Appeal", fee: 14999, desc: "ITAT appeal drafting + coordination with senior tax advocate" },
   ];
 
-  const handleSelect = (option: { value: string; label: string; fee: number; desc: string }) => {
-    setNoticeType(option.value);
-    setFee(option.fee);
-    setLabel(option.desc);
-  };
-
   return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-4">
-        Estimate Your Notice Handling Fee
-      </h2>
-      <p className="mb-6 text-gray-700 leading-relaxed">
-        Select the type of notice you received for an instant fee estimate:
-      </p>
+    <section id="fee-calculator">
+      <SectionLabel text="Fee Estimator" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">Estimate Your Notice Handling Fee</h2>
+      <p className="text-gray-600 mb-8 max-w-xl">Select the type of notice you received for an instant fee estimate.</p>
 
-      <div
-        className="bg-gray-50 p-8 rounded-2xl shadow mb-16"
-        role="region"
-        aria-label="Income Tax Notice Handling Fee Calculator"
-      >
+      <div className="bg-gray-50 border rounded-3xl p-8">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-          {noticeOptions.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => handleSelect(opt)}
+          {options.map((opt) => (
+            <button key={opt.value}
+              onClick={() => { setSelected(opt.value); setFee(opt.fee); setDesc(opt.desc); }}
               className={`text-left p-4 rounded-xl border transition text-sm ${
-                noticeType === opt.value
-                  ? "bg-[#00416a] text-white border-[#00416a]"
-                  : "bg-white text-gray-700 border-gray-300 hover:border-[#00416a]"
-              }`}
-              aria-pressed={noticeType === opt.value}
-            >
+                selected === opt.value ? "bg-[#00416a] text-white border-[#00416a]" : "bg-white text-gray-700 border-gray-200 hover:border-[#00416a]"
+              }`}>
               <span className="font-semibold block mb-1">{opt.label}</span>
-              <span className={`text-xs ${noticeType === opt.value ? "text-gray-200" : "text-gray-500"}`}>
+              <span className={`text-xs ${selected === opt.value ? "text-gray-200" : "text-gray-500"}`}>
                 Starting ₹{opt.fee.toLocaleString("en-IN")}
               </span>
             </button>
           ))}
         </div>
 
-        {fee !== null && (
+        {fee !== null ? (
           <div className="border-t pt-5" aria-live="polite">
             <p className="text-lg font-semibold text-[#00416a]">
-              Estimated Fee:{" "}
-              <span className="text-2xl">₹{fee.toLocaleString("en-IN")}</span>{" "}
-              onwards
+              Estimated Fee: <span className="text-3xl font-extrabold">₹{fee.toLocaleString("en-IN")}</span> onwards
             </p>
-            <p className="text-sm text-gray-500 mt-1">{label}</p>
-            <p className="text-sm text-gray-400 mt-2">
-              * Fees vary based on complexity, number of assessment years
-              involved, and volume of documentation. GST extra.
-            </p>
+            <p className="text-sm text-gray-500 mt-1">{desc}</p>
+            <p className="text-xs text-gray-400 mt-2">* Fees vary based on complexity, number of assessment years, and documentation volume. GST extra.</p>
+            <Link href="/contact" className="mt-4 inline-block bg-[#00416a] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#002b45] transition">
+              Get Started Now →
+            </Link>
           </div>
-        )}
-
-        {fee === null && (
-          <p className="text-gray-500 text-sm">
-            Select a notice type above to see an estimated fee.
-          </p>
+        ) : (
+          <p className="text-gray-400 text-sm">Select a notice type above to see an estimated fee.</p>
         )}
       </div>
-    </>
+    </section>
   );
 }
 
-/* ================= TESTIMONIALS ================= */
-function Testimonials() {
-  const reviews = [
-    {
-      name: "Sanjeev Agarwal",
-      location: "Khatauli",
-      rating: 5,
-      text: "Received a Section 143(2) scrutiny notice for AY 2022-23. Taxvio prepared a thorough response with all documents. The AO accepted our reply and passed the order without any additions.",
-    },
-    {
-      name: "Priya Constructions Pvt. Ltd.",
-      location: "Muzaffarnagar",
-      rating: 5,
-      text: "We had a Section 148 reassessment notice for cash deposits. Taxvio handled the entire process — fresh ITR, detailed response, and portal submissions — demand reduced to nil.",
-    },
-    {
-      name: "Ramesh & Co. Partnership Firm",
-      location: "Meerut",
-      rating: 5,
-      text: "Our GST vs ITR turnover mismatch triggered a 143(2) notice. Taxvio reconciled our books, prepared a reconciliation statement, and the scrutiny was closed without additions.",
-    },
-  ];
-
-  return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-8">
-        Trusted for Notice Resolution Across India
-      </h2>
-
-      <div className="grid md:grid-cols-3 gap-6 mb-16">
-        {reviews.map((r, i) => (
-          <div
-            key={i}
-            className="border p-6 rounded-xl shadow hover:shadow-lg transition"
-            itemScope
-            itemType="https://schema.org/Review"
-          >
-            <div className="flex mb-3" aria-label={`${r.rating} out of 5 stars`}>
-              {Array.from({ length: r.rating }).map((_, j) => (
-                <span key={j} className="text-yellow-400 text-lg">★</span>
-              ))}
-            </div>
-            <p className="mb-4 text-gray-700 italic" itemProp="reviewBody">
-              "{r.text}"
-            </p>
-            <h4
-              className="font-semibold text-[#00416a]"
-              itemProp="author"
-              itemScope
-              itemType="https://schema.org/Person"
-            >
-              <span itemProp="name">{r.name}</span>
-            </h4>
-            <p className="text-sm text-gray-500">{r.location}</p>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-/* ================= FAQ ================= */
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(null);
-
   const faqs = [
-    {
-      q: "What should I do immediately after receiving an income tax notice?",
-      a: "Do not ignore it. Identify the section number on the notice (e.g., 143(1), 143(2), 148). Check the response deadline carefully — most notices give 15–30 days. Log in to the Income Tax portal (incometax.gov.in) under 'Pending Actions → e-Proceedings' to see the full notice and deadline. Then engage a tax professional immediately to review the notice, gather required documents, and prepare a complete response.",
-    },
-    {
-      q: "What is the difference between Section 143(1) and Section 143(2)?",
-      a: "Section 143(1) is an automated intimation after ITR processing — it either accepts the return, raises a demand (due to TDS mismatch, arithmetic error, or deduction disallowance), or confirms a refund. It is not a scrutiny. Section 143(2) is a formal scrutiny notice issued by an Assessing Officer for detailed examination of the ITR — requiring books, documents, and explanations to verify the correctness of income and deductions reported.",
-    },
-    {
-      q: "What is a Section 148 reassessment notice?",
-      a: "Section 148 is issued when the AO has 'reason to believe' that income chargeable to tax has escaped assessment — i.e., income was under-reported or not reported in the original ITR. Before issuing 148, the AO must now issue a Section 148A notice giving the taxpayer an opportunity to explain. Reassessment can go back up to 3 years (or 10 years for large income/foreign assets). The taxpayer must file a fresh ITR in response.",
-    },
-    {
-      q: "What is faceless assessment and do I still need a CA?",
-      a: "Faceless Assessment under Section 144B means all scrutiny proceedings are conducted digitally — no face-to-face meetings with the AO. All notices, responses, and hearings happen through the Income Tax portal. Professional representation is even more important in faceless assessment because every written response and document submitted becomes the permanent record — there's no opportunity to verbally clarify. A well-prepared written response can mean the difference between nil additions and large demands.",
-    },
-    {
-      q: "Can I appeal if I disagree with the assessment order?",
-      a: "Yes. If the assessment order (Section 143(3) or 144) contains unjustified additions, you can file an appeal before CIT(A) within 30 days of receiving the order in Form 35. If CIT(A) order is adverse, further appeal to ITAT is available within 60 days. During pending appeal, you can request a stay on 20% of the disputed demand. Taxvio assists with the complete appeal process including drafting grounds of appeal and representation.",
-    },
-    {
-      q: "What is the penalty for under-reporting of income?",
-      a: "Under Section 270A, under-reporting of income (honest error or wrong deduction claim) attracts penalty at 50% of the tax payable on the under-reported income. Misreporting (deliberate concealment, false documents, bogus claims) attracts 200% penalty. These penalties are separate from the tax and interest on the additions. A proper response during scrutiny proceedings can prevent both the addition and the resulting penalty.",
-    },
+    { q: "What should I do immediately after receiving an income tax notice?", a: "Do not ignore it. Identify the section number on the notice. Check the response deadline — most give 15–30 days. Log in to the Income Tax portal under 'Pending Actions → e-Proceedings' to see the full notice. Then engage a tax professional immediately — every day of delay reduces your response quality and increases risk of adverse additions." },
+    { q: "What is the difference between Section 143(1) and Section 143(2)?", a: "Section 143(1) is an automated intimation after ITR processing — it accepts the return, raises a demand (due to TDS mismatch, arithmetic error, or deduction disallowance), or confirms a refund. It is not a scrutiny. Section 143(2) is a formal scrutiny notice issued by an AO for detailed examination — requiring books, documents, and explanations to verify the correctness of income and deductions reported." },
+    { q: "What is a Section 148 reassessment notice?", a: "Section 148 is issued when the AO has 'reason to believe' income has escaped assessment. Before issuing 148, the AO must now issue a Section 148A notice giving the taxpayer an opportunity to explain. Reassessment can go back 3 years (or 10 years for large income/foreign assets). The taxpayer must file a fresh ITR in response and fully support all income declarations." },
+    { q: "What is faceless assessment and do I still need a CA?", a: "Faceless Assessment under Section 144B means all scrutiny proceedings are conducted digitally — no face-to-face meetings with the AO. Professional representation is even more important because every written response becomes the permanent record. A well-prepared written response with complete documentation can mean the difference between nil additions and large demands worth lakhs." },
+    { q: "Can I appeal if I disagree with the assessment order?", a: "Yes. If the assessment order contains unjustified additions, file an appeal before CIT(A) within 30 days in Form 35. If CIT(A) order is adverse, further appeal to ITAT within 60 days. During pending appeal, request stay on 20% of disputed demand. Taxvio handles the complete appeal process — drafting grounds, paper book preparation, and hearing representation." },
+    { q: "What is the penalty for under-reporting of income?", a: "Under Section 270A, under-reporting attracts 50% of tax on under-reported income. Misreporting (deliberate concealment, false documents) attracts 200% penalty. These are separate from the tax and interest on the additions themselves. A proper response during scrutiny can prevent both the addition and the resulting penalty — making professional representation cost-effective." },
   ];
 
   return (
-    <section id="faq" aria-label="Frequently Asked Questions about Income Tax Scrutiny">
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-8">
+    <section id="faq">
+      <SectionLabel text="FAQs" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-10">
         Frequently Asked Questions — Income Tax Scrutiny & Notice Handling
       </h2>
-
-      <div className="space-y-4 mb-16">
+      <div className="space-y-5">
         {faqs.map((f, i) => (
-          <div
-            key={i}
-            className="border rounded-xl overflow-hidden"
-            itemScope
-            itemType="https://schema.org/Question"
-          >
-            <button
-              className="w-full text-left p-5 font-semibold text-gray-800 flex justify-between items-center hover:bg-gray-50 transition"
-              onClick={() => setOpen(open === i ? null : i)}
-              aria-expanded={open === i}
-              aria-controls={`faq-answer-${i}`}
-            >
-              <span itemProp="name">{f.q}</span>
-              <span className="text-[#00416a] text-xl ml-4 shrink-0">
-                {open === i ? "−" : "+"}
-              </span>
-            </button>
-            <div
-              id={`faq-answer-${i}`}
-              className={`px-5 text-gray-600 leading-relaxed transition-all duration-300 ${
-                open === i ? "max-h-96 pb-5" : "max-h-0 overflow-hidden"
-              }`}
-              itemScope
-              itemType="https://schema.org/Answer"
-            >
-              <p itemProp="text">{f.a}</p>
-            </div>
-          </div>
+          <details key={i} className="group border rounded-2xl overflow-hidden"
+            open={open === i}
+            onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open ? i : null)}>
+            <summary className="flex items-center justify-between px-6 py-5 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50 transition list-none">
+              <span>{f.q}</span>
+              <span className="text-[#00416a] text-xl group-open:rotate-45 transition-transform duration-200 flex-shrink-0 ml-4">+</span>
+            </summary>
+            <div className="px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t pt-4">{f.a}</div>
+          </details>
         ))}
       </div>
     </section>
   );
 }
 
-/* ================= CTA ================= */
-function PremiumCTA() {
+function SectionLabel({ text }: { text: string }) {
   return (
-    <section className="mt-16 mb-0" aria-label="Call to Action">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="bg-gradient-to-r from-[#00416a] to-[#002b45] rounded-3xl shadow-2xl px-8 py-16 text-white text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Received a Tax Notice? Act Now — Don't Wait
-          </h2>
-          <p className="text-gray-200 mb-3 max-w-2xl mx-auto">
-            Every day of delay increases your risk of large tax additions.
-            Taxvio's expert CA and legal team handles all notice types —
-            143(1), 143(2), 148, penalty, and appeals. Service starts at
-            ₹1,999. Serving Khatauli, Muzaffarnagar, Meerut and all of India
-            online.
-          </p>
-          <p className="text-gray-300 text-sm mb-8">
-            📞 Call / WhatsApp us today with your notice details | 📧 Email your notice for a free review
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/contact"
-              className="bg-white text-[#00416a] px-8 py-3 rounded-xl font-semibold shadow hover:scale-105 transition"
-              aria-label="Get immediate help with income tax notice"
-            >
-              Get Immediate Notice Help
-            </Link>
-            <Link
-              href="/contact"
-              className="border border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition"
-            >
-              Free Notice Review
-            </Link>
-          </div>
-        </div>
-      </div>
-      <Footar/>
-    </section>
+    <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#00416a]/60 mb-3 border border-[#00416a]/20 px-3 py-1 rounded-full bg-[#00416a]/5">
+      {text}
+    </span>
   );
 }
