@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     "GST ITR turnover mismatch notice",
   ],
   alternates: {
-    canonical: "https://www.taxvio.in/income-tax/income-tax-scrutiny",
+    canonical: "https://www.taxvio.in/serviceslist/income-tax/income-tax-scrutiny",
   },
   openGraph: {
     title: "Income Tax Scrutiny & Notice Handling | Section 143 148 | Taxvio",
     description:
       "Expert handling of all income tax notices — Section 143(1), 143(2), 148, 142(1). Faceless assessment, CIT(A) & ITAT appeals. Starting ₹1,999.",
-    url: "https://www.taxvio.in/income-tax/income-tax-scrutiny",
+    url: "https://www.taxvio.in/serviceslist/income-tax/income-tax-scrutiny",
     siteName: "Taxvio",
     locale: "en_IN",
     type: "website",

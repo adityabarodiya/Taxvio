@@ -121,7 +121,7 @@ export default function Section12AClient() {
                     Apply for 12AB — ₹3,999 Onwards →
                   </Link>
                   <Link
-                    href="tel:+919999999999"
+                    href="tel:+918937980366"
                     className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base"
                   >
                     📞 Free Eligibility Check
@@ -591,7 +591,7 @@ export default function Section12AClient() {
                   <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center">
                     Apply Now — ₹3,999 Onwards
                   </Link>
-                  <Link href="tel:+919999999999" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+                  <Link href="tel:+918937980366" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
                     📞 Free Eligibility Check
                   </Link>
                 </div>

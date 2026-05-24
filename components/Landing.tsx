@@ -129,7 +129,7 @@ const SERVICES_HIGHLIGHT = [
     icon: Receipt,
     title: "GST Services",
     desc: "Registration, GSTR-1, GSTR-3B, GSTR-9, LUT filing, e-invoicing, refunds, and notice replies for all GST-registered businesses across India.",
-    href: "/gst",
+    href: "/serviceslist/gst",
     count: "11 Services",
     color: "from-emerald-500 to-teal-600",
   },
@@ -137,7 +137,7 @@ const SERVICES_HIGHLIGHT = [
     icon: FileText,
     title: "Income Tax",
     desc: "ITR filing for individuals, proprietors, firms, LLPs, and companies. TDS/TCS returns, tax audit, scrutiny, 12A/80G, Form 15G/15H, and PAN/TAN services.",
-    href: "/income-tax",
+    href: "/serviceslist/income-tax",
     count: "14 Services",
     color: "from-blue-500 to-indigo-600",
   },
@@ -145,7 +145,7 @@ const SERVICES_HIGHLIGHT = [
     icon: Building2,
     title: "Company Registration",
     desc: "Pvt Ltd, LLP, OPC, and Section 8 company formation with complete ROC compliance, annual returns, director changes, and company closure services.",
-    href: "/roc",
+    href: "/serviceslist/roc",
     count: "9 Services",
     color: "from-violet-500 to-purple-600",
   },
@@ -153,7 +153,7 @@ const SERVICES_HIGHLIGHT = [
     icon: Shield,
     title: "FSSAI License",
     desc: "Basic, State, and Central FSSAI food license registration, annual return filing, license renewal, modification, and FSSAI notice reply services.",
-    href: "/fssai",
+    href: "/serviceslist/fssai",
     count: "6 Services",
     color: "from-orange-500 to-amber-600",
   },
@@ -732,7 +732,7 @@ export default function Landing() {
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true }}
+              viewport={{ once: true }} 
               variants={stagger}
             >
               <motion.div variants={fadeUp} className="mb-10">
