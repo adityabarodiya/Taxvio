@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import bg1 from "../../public/service/bg1.png";
-import logo from "@/public/tv2.png";
+import logo from "@/public/logo_taxvio.png";
 import Footar from "@/components/Footar";
 import type { Metadata } from "next";
 import {

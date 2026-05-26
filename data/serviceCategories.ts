@@ -265,6 +265,88 @@ export const serviceCategories: ServiceCategory[] = [
             "Professional e-invoicing compliance support for GST registered businesses.",
         },
       },
+
+      /* ── NEW ── */
+      {
+        slug: "gst-for-e-commerce",
+        title: "GST for E-Commerce Sellers & Operators",
+        shortDescription:
+          "Complete GST compliance for Amazon, Flipkart, Meesho, Shopify and D2C sellers — registration, marketplace reconciliation, TCS credit matching, GSTR-8 and GST notice support.",
+        features: [
+          "GST registration & marketplace GSTIN setup",
+          "Monthly GSTR-1 & GSTR-3B filing",
+          "Marketplace settlement reconciliation",
+          "GST TCS credit matching (Section 52)",
+          "GSTR-8 compliance for ECOs",
+          "Section 9(5) advisory — Zomato, Swiggy",
+          "GST notice & mismatch support",
+        ],
+        documentsRequired: [
+          "PAN card of proprietor / firm / company",
+          "Aadhaar card (mobile-linked)",
+          "Business address proof",
+          "Bank account details",
+          "Amazon / Flipkart / Meesho settlement reports",
+          "Marketplace sales and return reports",
+          "Commission and shipping fee invoices",
+        ],
+        idealFor: [
+          "Amazon, Flipkart and Meesho sellers",
+          "Shopify and D2C brands",
+          "Restaurants on Zomato / Swiggy",
+          "ONDC and multi-platform sellers",
+          "E-commerce operators collecting TCS",
+        ],
+        seo: {
+          title:
+            "GST for E-Commerce Sellers & Operators — Amazon, Flipkart, Meesho | Taxvio",
+          description:
+            "GST registration, GSTR-1, GSTR-3B, GSTR-8, marketplace settlement reconciliation, TCS credit matching and GST notice support for Amazon, Flipkart, Meesho, Shopify and D2C sellers. Starting ₹1,499.",
+        },
+      },
+
+      /* ── NEW ── */
+      {
+        slug: "gst-for-freelancers",
+        title: "GST for Freelancers & Independent Professionals",
+        shortDescription:
+          "End-to-end GST setup for developers, designers, consultants and content creators — registration, LUT for zero-rated foreign client billing, SAC code mapping, GSTR-1, GSTR-3B, ITC on business tools and RCM compliance.",
+        features: [
+          "GST registration for freelancers",
+          "LUT filing (Form RFD-11) for foreign clients",
+          "Zero-rated export invoice setup",
+          "SAC code identification & invoice format",
+          "Monthly GSTR-1 & GSTR-3B filing",
+          "ITC on laptop, software & business tools",
+          "QRMP scheme advisory",
+          "RCM review for foreign subscriptions",
+          "GST notice & mismatch support",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Aadhaar card (mobile-linked)",
+          "Business address proof",
+          "Bank account details",
+          "Photograph of proprietor",
+          "Previous LUT acknowledgement (if renewal)",
+          "FIRC / FIRA for past export invoices (if any)",
+        ],
+        idealFor: [
+          "IT & software developers",
+          "Graphic designers & UI/UX professionals",
+          "Content writers & copywriters",
+          "Management & business consultants",
+          "Digital marketers & SEO specialists",
+          "Chartered accountants & lawyers",
+          "Freelancers billing foreign clients",
+        ],
+        seo: {
+          title:
+            "GST for Freelancers India — Registration, LUT, Returns & Foreign Client Billing | Taxvio",
+          description:
+            "GST registration, LUT for zero-rated foreign billing, SAC code setup, GSTR-1, GSTR-3B, ITC on business tools and RCM compliance for freelancers and independent professionals. Starting ₹1,499.",
+        },
+      },
     ],
   },
 
