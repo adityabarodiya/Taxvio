@@ -4,7 +4,7 @@ import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-// ─── SEO structured data (JSON-LD) ───────────────────────────────────────────
+/* ── JSON-LD ── */
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -13,455 +13,658 @@ const jsonLd = {
     "@type": "AccountingService",
     name: "Taxvio",
     areaServed: "India",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
+    address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
   },
-  description:
-    "Professional ITR-6 filing for private limited and public companies, and ITR-7 filing for trusts, NGOs, Section 8 companies, and charitable institutions in India. Tax audit, MAT, 12A/80G exemptions, and full compliance. Serving Khatauli, Muzaffarnagar and pan-India.",
+  description: "Professional ITR-6 for companies and ITR-7 for trusts/NGOs. MAT computation, 12A/80G compliance, tax audit Form 3CA/3CD. Serving Khatauli, Muzaffarnagar and pan-India.",
   serviceType: "Income Tax Return Filing for Companies and Trusts",
-  offers: {
-    "@type": "Offer",
-    priceCurrency: "INR",
-    price: "4999",
-    priceSpecification: {
-      "@type": "UnitPriceSpecification",
-      minPrice: "4999",
-      maxPrice: "14999",
-    },
-  },
+  offers: { "@type": "Offer", priceCurrency: "INR", price: "2999", priceSpecification: { "@type": "UnitPriceSpecification", minPrice: "2999", maxPrice: "14999" } },
 };
 
-// ─── FAQPage structured data ──────────────────────────────────────────────────
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: [
-    {
-      "@type": "Question",
-      name: "Which ITR form should a private limited company file?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A private limited company, public limited company, or OPC must file ITR-6, unless it claims exemption under Section 11 (income of religious or charitable trusts). ITR-6 is mandatory for all domestic companies and foreign companies operating in India.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Which ITR form should a trust or NGO file?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Trusts, NGOs, Section 8 companies, political parties, research associations, and other entities claiming exemption under Sections 10, 11, or 12 of the Income Tax Act must file ITR-7. Registration under Section 12A/12AB and approval under Section 80G are prerequisites for availing tax exemptions.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the income tax rate for a private limited company in FY 2025-26?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Domestic companies can opt for 22% tax rate under Section 115BAA (no MAT applicable) or the regular rate of 30%. New manufacturing companies incorporated after Oct 1, 2019 can opt for 15% under Section 115BAB. Surcharge and 4% cess apply additionally.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is MAT (Minimum Alternate Tax) for companies?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "MAT under Section 115JB is applicable when a company's regular income tax is less than 15% of its book profit. In such cases, the company must pay 15% of book profit as tax. Companies opting for Section 115BAA concessional rate are exempt from MAT.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Is tax audit mandatory for companies?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes, tax audit under Section 44AB is mandatory for all companies (regardless of turnover) since companies are always required to get their accounts audited. Additionally, a statutory audit under the Companies Act is separately mandatory for all registered companies.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the ITR filing due date for companies and trusts for FY 2025-26?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "For companies liable to tax audit, the ITR-6 due date is 31st October 2026 and the audit report must be filed by 30th September 2026. For trusts and NGOs filing ITR-7, the due date is 31st October 2026 if audit is applicable, or 31st July 2026 if not.",
-      },
-    },
+    { "@type": "Question", name: "Which ITR form should a private limited company file?", acceptedAnswer: { "@type": "Answer", text: "All private limited companies, public companies, and OPCs must file ITR-6, regardless of turnover or profit/loss. Companies claiming Section 11 exemption must file ITR-7 instead." } },
+    { "@type": "Question", name: "What is MAT and when does it apply?", acceptedAnswer: { "@type": "Answer", text: "MAT under Section 115JB applies when regular income tax is less than 15% of book profit. Companies opting for Section 115BAA (22%) are exempt from MAT." } },
+    { "@type": "Question", name: "What is the ITR deadline for companies FY 2025-26?", acceptedAnswer: { "@type": "Answer", text: "31st October 2026 for audit cases. Tax audit report (Form 3CA/3CD) must be filed by 30th September 2026." } },
   ],
 };
 
+/* ══════════════════════════════════════════════════════════ */
 export default function ITRTrustCompanyClient() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <main className="bg-white text-gray-800">
+      <main className="bg-white text-gray-800 overflow-x-hidden">
         <DeadlineBanner />
 
         {/* ── HERO ── */}
-        <section
-          className="bg-gradient-to-r from-[#00416a] to-[#002b45] text-white py-24"
-          aria-label="ITR Filing for Companies and Trusts Hero"
-        >
-          <div className="max-w-6xl mx-auto px-6">
-            {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-300">
-              <ol className="flex gap-2 flex-wrap">
-                <li><Link href="/" className="hover:text-white">Home</Link></li>
-                <li aria-hidden="true">/</li>
-                <li><Link href="/services" className="hover:text-white">Services</Link></li>
-                <li aria-hidden="true">/</li>
-                <li><Link href="/income-tax" className="hover:text-white">Income Tax</Link></li>
-                <li aria-hidden="true">/</li>
-                <li aria-current="page" className="text-white font-medium">ITR for Companies & Trusts</li>
-              </ol>
+        <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full border border-white/10" />
+          <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full border border-white/10" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full border border-white/5 -translate-x-1/2 translate-y-1/2" />
+
+          <div className="relative max-w-6xl mx-auto px-6 py-28 md:py-36">
+            <nav className="mb-6 text-sm text-white/60 flex items-center gap-2 flex-wrap">
+              <Link href="/" className="hover:text-white transition">Home</Link>
+              <span>/</span>
+              <Link href="/serviceslist" className="hover:text-white transition">Services</Link>
+              <span>/</span>
+              <Link href="/serviceslist/income-tax" className="hover:text-white transition">Income Tax</Link>
+              <span>/</span>
+              <span className="text-white">ITR — Companies & Trusts</span>
             </nav>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              ITR Filing for Companies & Trusts in India — FY 2025-26
-            </h1>
-            <p className="text-lg text-gray-200 max-w-3xl">
-              Expert ITR-6 filing for private limited companies, public
-              companies & OPCs, and ITR-7 filing for trusts, NGOs, Section 8
-              companies & charitable institutions. MAT compliance, 12A/80G
-              exemptions, tax audit (Form 3CA/3CD), and complete Income Tax Act
-              compliance. Serving Khatauli, Muzaffarnagar and pan-India.
-            </p>
+            <div className="flex flex-col lg:flex-row items-start gap-12">
+              <div className="flex-1">
+                <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                  🏢 ITR-6 & ITR-7 — Companies, Trusts & NGOs
+                </span>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                  ITR Filing for<br />
+                  <span className="text-[#7ecbf0]">Companies & Trusts</span><br />
+                  FY 2025-26
+                </h1>
+                <p className="text-lg text-gray-200 leading-relaxed max-w-2xl mb-10">
+                  <strong className="text-white">All companies must file ITR-6</strong> — mandatory regardless of
+                  turnover or profit. <strong className="text-white">Trusts and NGOs must file ITR-7</strong> —
+                  with strict 85% income application rules or face full taxation at 30%+. Taxvio's CA-assisted
+                  team handles MAT computation, Section 115BAA regime, 12A/80G compliance, tax audit
+                  (Form 3CA/3CD), and timely e-filing — starting ₹2,999.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center text-base">
+                    File Company / Trust ITR →
+                  </Link>
+                  <Link href="tel:+919999999999" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base">
+                    📞 Free Consultation
+                  </Link>
+                </div>
+                <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/70">
+                  {["✅ ITR-6 & ITR-7 Expert Filing", "✅ MAT / AMT Computation", "✅ 12A / 80G Compliance", "✅ Tax Audit Form 3CA/3CD"].map(t => (
+                    <span key={t} className="bg-white/10 border border-white/20 px-3 py-1 rounded-full">{t}</span>
+                  ))}
+                </div>
+              </div>
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/contact"
-                className="bg-white text-[#00416a] px-8 py-3 rounded-xl font-semibold shadow hover:scale-105 transition"
-                aria-label="File ITR for my company or trust"
-              >
-                File Company / Trust ITR Now
-              </Link>
-              <Link
-                href="#faq"
-                className="border border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition"
-              >
-                View FAQs
-              </Link>
-            </div>
-
-            <div className="mt-10 flex flex-wrap gap-6 text-sm text-gray-300">
-              <span>✅ ITR-6 & ITR-7 Expert Filing</span>
-              <span>✅ MAT / AMT Computation</span>
-              <span>✅ 12A / 80G Trust Compliance</span>
-              <span>✅ Tax Audit Support (3CA/3CD)</span>
+              {/* hero card */}
+              <div className="w-full lg:w-80 bg-white/10 backdrop-blur border border-white/20 rounded-3xl p-8 flex-shrink-0">
+                <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-5">Key Deadlines</p>
+                <ul className="space-y-4 text-sm text-gray-200">
+                  {[
+                    ["📋", "ITR-6: All companies mandatory"],
+                    ["🕌", "ITR-7: Trusts, NGOs, Sec 8 cos"],
+                    ["📅", "Audit ITR due: 31st Oct 2026"],
+                    ["🔍", "Tax audit report: 30th Sept 2026"],
+                    ["⚠️", "Trust: 85% income must be applied"],
+                    ["💰", "Starting fee: ₹2,999"],
+                  ].map(([icon, text]) => (
+                    <li key={text as string} className="flex items-start gap-3">
+                      <span className="text-base">{icon}</span>
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* ── STATS ── */}
+        <section className="bg-gray-50 py-14 border-b">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {[
+              { number: "ITR-6", label: "Mandatory for All Companies", icon: "🏢" },
+              { number: "ITR-7", label: "For Trusts, NGOs & Sec 8", icon: "🕌" },
+              { number: "31 Oct", label: "Company / Trust ITR Deadline", icon: "📅" },
+              { number: "₹2,999", label: "Starting Filing Fee", icon: "💰" },
+            ].map((s) => (
+              <div key={s.label} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div className="text-3xl mb-2">{s.icon}</div>
+                <p className="text-2xl font-extrabold text-[#00416a] mb-1">{s.number}</p>
+                <p className="text-gray-500 text-sm font-medium">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── TRUST BADGES ── */}
+        <section className="py-8 bg-white border-b">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm font-semibold text-gray-700">
+            {["✔ CA-Supervised Filing", "✔ MAT Credit Tracking", "✔ 12A/80G Annual Compliance", "✔ DSC-Based e-Filing"].map((t) => (
+              <div key={t} className="bg-gray-50 rounded-xl py-3 px-4 border hover:border-[#00416a] transition">{t}</div>
+            ))}
+          </div>
+        </section>
+
         {/* ── MAIN CONTENT ── */}
-        <section className="max-w-6xl mx-auto px-6 pt-20 pb-12">
+        <article className="max-w-6xl mx-auto px-6 py-20 space-y-24">
 
           {/* INTRO */}
-          <article>
-            <h2 className="text-3xl font-semibold text-[#00416a] mb-6">
-              Complete Guide to ITR Filing for Companies & Trusts (FY 2025-26 / AY 2026-27)
+          <section id="overview">
+            <SectionLabel text="ITR-6 & ITR-7 Overview" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-6">
+              Complete Guide — ITR Filing for Companies & Trusts (FY 2025-26 / AY 2026-27)
             </h2>
+            <div className="grid md:grid-cols-2 gap-8 text-gray-700 leading-relaxed">
+              <div className="space-y-4">
+                <p>
+                  Companies and trusts are among the most complex taxpayer categories in India — each
+                  operating under distinct legal frameworks, tax rates, and compliance obligations.
+                  A <strong>private limited company, public company, or One Person Company (OPC)</strong>
+                  is a separate legal entity entirely distinct from its shareholders and directors.
+                  It has its own PAN, files its own income tax return, and pays tax at rates prescribed
+                  specifically for companies under the Income Tax Act, 1961.
+                  <strong> All companies — whether profit-making or loss-making — must file ITR-6 every year</strong>
+                  without exception. There is no turnover threshold or exemption for non-filing.
+                </p>
+                <p>
+                  The most significant tax planning decision for companies is choosing between the
+                  <strong> regular 30% rate</strong> (with MAT at 15% of book profit) and the
+                  <strong> concessional 22% rate under Section 115BAA</strong> (no MAT applicable,
+                  but irrevocable once exercised). New manufacturing companies may opt for
+                  <strong> 15% under Section 115BAB</strong>. Choosing the wrong regime can result
+                  in significantly higher tax — and unlike individual taxpayers, companies cannot
+                  switch back once the concessional regime is opted.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <p>
+                  <strong>Trusts, NGOs, and charitable institutions</strong> operate under an entirely
+                  different taxation framework. Entities registered under Section 12A/12AB and approved
+                  under Section 80G can claim near-complete exemption from income tax on income applied
+                  for charitable purposes. However, this exemption is conditional on strict ongoing
+                  compliance — including annual ITR-7 filing, maintaining audited accounts, and ensuring
+                  <strong> at least 85% of income is applied</strong> for charitable purposes in the
+                  same financial year. Non-compliance can result in cancellation of registration and
+                  full taxation of accumulated corpus at 30%+.
+                </p>
+                <p>
+                  <strong>Taxvio</strong>, based in Khatauli (Muzaffarnagar, UP), provides comprehensive
+                  ITR-6 and ITR-7 filing services for companies and trusts across Uttar Pradesh and
+                  pan-India. Our CA-led team handles MAT computation, 12A/80G annual compliance,
+                  tax audit coordination, Form 9A/10 filings, and timely e-filing via DSC — starting
+                  ₹2,999.
+                </p>
+              </div>
+            </div>
+          </section>
 
-            <p className="mb-5 leading-relaxed text-gray-700">
-              Companies and trusts are among the most complex categories of
-              taxpayers in India. Unlike individuals or proprietors, a{" "}
-              <strong>private limited company, public limited company, or
-              One Person Company (OPC)</strong> is a separate legal entity
-              entirely distinct from its shareholders and directors. It has its
-              own PAN, files its own income tax return, and pays tax at rates
-              prescribed specifically for companies under the Income Tax Act,
-              1961. All companies — whether profit-making or loss-making —{" "}
-              <strong>must file ITR-6 every year</strong> without exception.
-            </p>
-
-            <p className="mb-5 leading-relaxed text-gray-700">
-              <strong>Trusts, NGOs, and charitable institutions</strong> operate
-              under an entirely different taxation framework. Entities registered
-              under Section 12A/12AB of the Income Tax Act and approved under
-              Section 80G can claim near-complete exemption from income tax on
-              income applied for charitable or religious purposes. However, this
-              exemption is conditional on strict compliance requirements —
-              including annual ITR-7 filing, maintenance of accounts, and
-              adherence to application-of-income rules. Non-compliance results
-              in cancellation of registration and full taxation of accumulated
-              corpus.
-            </p>
-
-            <p className="mb-10 leading-relaxed text-gray-700">
-              <strong>Taxvio</strong>, based in Khatauli (Muzaffarnagar, UP),
-              provides end-to-end ITR filing services for companies and trusts
-              across Uttar Pradesh and pan-India through our secure online
-              platform. Our CA-assisted team handles ITR-6, ITR-7, statutory
-              audit coordination, MAT computation, 12A/80G compliance, and
-              all associated income tax filings.
-            </p>
-
-            {/* ITR-6 SECTION */}
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-              ITR-6 — Income Tax Return for Companies
+          {/* ITR-6 vs ITR-7 */}
+          <section id="itr6-vs-itr7">
+            <SectionLabel text="Which Form Applies" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
+              ITR-6 vs ITR-7 — Which Form Does Your Entity File?
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              <strong>ITR-6</strong> is the prescribed form for all domestic and
-              foreign companies registered under the Companies Act, 2013 or
-              earlier acts — except those claiming exemption under Section 11
-              (charitable/religious trusts). ITR-6 is an elaborate form that
-              requires:
-            </p>
-            <ul className="list-disc pl-6 mb-8 text-gray-700 space-y-2">
-              <li>Audited Balance Sheet and Profit & Loss Account</li>
-              <li>Schedule of fixed assets and depreciation (Income Tax Act rates)</li>
-              <li>Details of all related party transactions</li>
-              <li>MAT (Minimum Alternate Tax) computation under Section 115JB</li>
-              <li>Details of brought-forward losses, unabsorbed depreciation, and MAT credit</li>
-              <li>Director details, shareholding pattern, and subsidiary information</li>
-              <li>Tax audit report linkage (Form 3CA/3CD mandatory for all companies)</li>
-              <li>Details of international / domestic transfer pricing transactions (if applicable)</li>
-              <li>Dividend distribution details and TDS compliance summary</li>
-            </ul>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="border-t-4 border-[#00416a] bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition">
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="text-4xl">🏢</span>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#00416a]/60">For All Companies</p>
+                    <h3 className="text-2xl font-extrabold text-[#00416a]">ITR-6</h3>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Mandatory for all private limited companies, public limited companies, One Person Companies (OPCs),
+                  and foreign companies operating in India. The only exception is a company claiming income tax
+                  exemption under Section 11 — which must file ITR-7 instead.
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    "Private Limited Companies (Pvt. Ltd.)",
+                    "Public Limited Companies (Ltd.)",
+                    "One Person Companies (OPC)",
+                    "Section 8 Companies not claiming Sec 11 exemption",
+                    "Foreign Companies with Indian operations",
+                    "All companies — regardless of turnover or profit/loss",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+                      <span className="text-[#00416a] font-bold mt-0.5 flex-shrink-0">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-4 bg-[#00416a]/5 border border-[#00416a]/10 rounded-xl px-4 py-3">
+                  <p className="text-xs font-semibold text-[#00416a]">📋 Key requirements: Audited financials, MAT computation, Form 3CA/3CD, DSC filing</p>
+                </div>
+              </div>
 
-            {/* WHO FILES ITR-7 */}
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-              ITR-7 — Income Tax Return for Trusts, NGOs & Exempt Entities
-            </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              <strong>ITR-7</strong> must be filed by entities that are required
-              to furnish a return under Sections 139(4A), 139(4B), 139(4C), or
-              139(4D) of the Income Tax Act. These include:
-            </p>
-            <ul className="list-disc pl-6 mb-8 text-gray-700 space-y-2">
-              <li>
-                <strong>Charitable & Religious Trusts</strong> — Public trusts
-                registered under Section 12A/12AB claiming exemption under
-                Section 11 and 12.
-              </li>
-              <li>
-                <strong>Section 8 Companies</strong> — Non-profit companies
-                (formerly Section 25 companies) registered under the Companies
-                Act for charitable purposes.
-              </li>
-              <li>
-                <strong>NGOs & Societies</strong> — Societies registered under
-                the Societies Registration Act claiming tax exemption.
-              </li>
-              <li>
-                <strong>Political Parties</strong> — Registered political
-                parties filing under Section 139(4B).
-              </li>
-              <li>
-                <strong>Research Associations, Educational Institutions &
-                Hospitals</strong> — Entities approved under Section 10(23C)
-                for income tax exemption.
-              </li>
-              <li>
-                <strong>Mutual Funds & Securitisation Trusts</strong> — Entities
-                filing under Section 139(4D).
-              </li>
-            </ul>
-            <p className="mb-10 leading-relaxed text-gray-700">
-              ITR-7 requires detailed reporting of income received, income
-              applied for charitable purposes, accumulation of income under
-              Section 11(2), investment of funds, and compliance with the
-              application-of-income mandate. Failure to apply at least{" "}
-              <strong>85% of income</strong> for charitable purposes — or to
-              accumulate the balance with proper Form 9A/10 filings — results
-              in the unapplied income becoming fully taxable.
-            </p>
-          </article>
+              <div className="border-t-4 border-blue-500 bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition">
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="text-4xl">🕌</span>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-blue-600/60">For Trusts & Exempt Entities</p>
+                    <h3 className="text-2xl font-extrabold text-blue-700">ITR-7</h3>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Filed by entities claiming income tax exemption under Sections 10, 11, or 12 of the
+                  Income Tax Act — or required to file under Sections 139(4A), 4B, 4C, or 4D.
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    "Charitable & Religious Trusts (12A/12AB registered)",
+                    "Section 8 Companies claiming Section 11 exemption",
+                    "NGOs & Societies registered under Societies Act",
+                    "Political Parties (Section 139(4B))",
+                    "Educational Institutions & Hospitals (Section 10(23C))",
+                    "Research Associations & Mutual Funds (Section 139(4D))",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+                      <span className="text-blue-600 font-bold mt-0.5 flex-shrink-0">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
+                  <p className="text-xs font-semibold text-blue-700">📋 Key requirements: 85% income application, Form 9A/10 if accumulating, Form 10B/10BB audit</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
           {/* TAX RATE TABLE */}
-          <TaxRateTable />
-
-          {/* TRUST EXEMPTION SECTION */}
-          <TrustExemptionSection />
-
-          {/* DEDUCTIONS & COMPLIANCE */}
-          <article>
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4 mt-4">
-              Business Deductions & Expenses for Companies (ITR-6)
+          <section id="company-tax-rates">
+            <SectionLabel text="Company Tax Rate Structure" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Income Tax Rates for Companies — FY 2025-26 (AY 2026-27)
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              Companies can claim all legitimate business expenses as deductions
-              against gross income. Key deductions include:
+            <p className="text-gray-600 mb-8 max-w-2xl">
+              Choosing the right tax regime is one of the most impactful decisions for company tax planning.
+              Once the concessional regime is opted, it cannot be withdrawn.
             </p>
-            <ul className="list-disc pl-6 mb-8 text-gray-700 space-y-2">
-              <li>
-                <strong>Depreciation under Income Tax Act</strong> — Block-wise
-                depreciation on plant & machinery, computers, vehicles,
-                furniture, and buildings at prescribed IT Act rates (separate
-                from Companies Act rates used in books).
-              </li>
-              <li>
-                <strong>Employee Costs</strong> — Salaries, PF, ESI, gratuity
-                provisions (within limits), and employee welfare expenses.
-              </li>
-              <li>
-                <strong>Director Remuneration</strong> — Managerial remuneration
-                paid to directors, subject to Companies Act limits and disclosure
-                requirements in ITR-6.
-              </li>
-              <li>
-                <strong>Interest on Business Borrowings</strong> — Interest paid
-                on loans, debentures, and working capital facilities. Thin
-                capitalisation rules (Section 94B) may limit deductions for
-                companies with significant foreign borrowings.
-              </li>
-              <li>
-                <strong>R&D Expenditure</strong> — Companies can claim 100%
-                deduction on revenue expenditure incurred on in-house R&D
-                facilities approved by DSIR (Section 35).
-              </li>
-              <li>
-                <strong>CSR Expenditure</strong> — Note: CSR spending under
-                Section 135 of the Companies Act is generally not deductible
-                under Section 37(1) of the Income Tax Act. This is a common
-                error in company ITRs.
-              </li>
-              <li>
-                <strong>Brought-Forward Losses & Unabsorbed Depreciation</strong> — Companies
-                can carry forward business losses for 8 years and unabsorbed
-                depreciation indefinitely, subject to continuity-of-ownership
-                conditions under Section 79.
-              </li>
-            </ul>
+            <div className="overflow-x-auto rounded-2xl border shadow-sm">
+              <table className="min-w-full text-sm">
+                <thead className="bg-[#00416a] text-white">
+                  <tr>
+                    {["Regime / Section", "Applicable To", "Tax Rate", "MAT Applicable?"].map((h) => (
+                      <th key={h} className="px-5 py-4 text-left font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {[
+                    ["Regular Rate (Section 115A)", "All domestic companies (default)", "30%", "Yes — 15% of book profit"],
+                    ["Section 115BAA (Concessional)", "Domestic companies — irrevocable option", "22%", "No — MAT not applicable"],
+                    ["Section 115BAB (New Mfg. Co.)", "New manufacturing companies post Oct 1, 2019", "15%", "No — MAT not applicable"],
+                    ["Foreign Companies", "Foreign companies with India operations", "40%", "Yes"],
+                    ["Surcharge (income ₹1–10 Cr)", "All companies", "7%", "—"],
+                    ["Surcharge (income > ₹10 Cr)", "All companies", "12%", "—"],
+                    ["Health & Education Cess", "All companies", "4%", "—"],
+                    ["Effective Rate (115BAA + cess)", "Domestic — concessional", "25.17%", "No MAT"],
+                  ].map(([regime, applicable, rate, mat], i) => (
+                    <tr key={regime} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="px-5 py-4 font-medium text-gray-800">{regime}</td>
+                      <td className="px-5 py-4 text-gray-700">{applicable}</td>
+                      <td className="px-5 py-4 font-bold text-[#00416a]">{rate}</td>
+                      <td className="px-5 py-4 text-gray-700">{mat}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-xs text-gray-500 italic">
+              * Advance tax for companies: 15% by June 15 | 45% by Sept 15 | 75% by Dec 15 | 100% by March 15. Shortfall attracts interest under Sections 234B and 234C.
+            </p>
+          </section>
 
-            {/* TAX AUDIT FOR COMPANIES */}
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-              Tax Audit & Statutory Audit — Mandatory for All Companies
+          {/* MAT SECTION */}
+          <section id="mat-computation" className="bg-blue-50 border border-blue-100 rounded-3xl p-8 md:p-12">
+            <SectionLabel text="MAT — Critical for Companies" />
+            <h2 className="text-3xl font-bold text-blue-800 mb-4">
+              MAT (Minimum Alternate Tax) — What Every Company Must Know
             </h2>
-            <p className="mb-5 leading-relaxed text-gray-700">
-              Companies in India are subject to two mandatory audits every year:
+            <p className="text-gray-700 mb-8 max-w-3xl">
+              MAT under Section 115JB is the most frequently misunderstood aspect of company taxation.
+              Errors in MAT computation lead to understated tax payments and interest demands.
             </p>
-            <ul className="list-disc pl-6 mb-5 text-gray-700 space-y-2">
-              <li>
-                <strong>Statutory Audit under Companies Act</strong> — Mandatory
-                for all registered companies regardless of turnover. The
-                statutory auditor must be a practicing CA appointed by
-                shareholders in the AGM. Audited financial statements form the
-                basis for ITR-6 preparation.
-              </li>
-              <li>
-                <strong>Tax Audit under Section 44AB</strong> — Mandatory for
-                all companies since companies are always required to maintain
-                and audit accounts. The tax audit report in Form 3CA/3CD must
-                be filed on the Income Tax portal before the ITR due date.
-              </li>
-            </ul>
-            <p className="mb-10 leading-relaxed text-gray-700">
-              Taxvio coordinates with your statutory auditor to obtain the
-              audited financials and then prepares the tax audit report and
-              ITR-6 in parallel — ensuring both are filed well before the
-              October deadline. For trusts requiring audit under Section 12A/12AB,
-              we similarly coordinate audit completion and ITR-7 preparation.
-            </p>
-          </article>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white border border-blue-100 rounded-2xl p-6">
+                <h3 className="font-bold text-[#00416a] mb-4">📊 How MAT Works</h3>
+                <ul className="space-y-3">
+                  {[
+                    "MAT applies when regular income tax < 15% of book profit",
+                    "Book profit = Net profit as per P&L adjusted for specific additions and deductions prescribed under Section 115JB",
+                    "Common additions: depreciation as per books, provisions for deferred tax, provisions for losses of subsidiary companies",
+                    "Common deductions: depreciation as per Section 32, brought-forward losses (whichever is lower of b/f losses or unabsorbed depreciation)",
+                    "Final MAT = 15% of computed book profit + surcharge + cess",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+                      <span className="text-blue-600 font-bold mt-0.5 flex-shrink-0">→</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="bg-white border border-blue-100 rounded-2xl p-6">
+                <h3 className="font-bold text-[#00416a] mb-4">💳 MAT Credit — 15-Year Carry Forward</h3>
+                <ul className="space-y-3">
+                  {[
+                    "Excess MAT paid over regular tax becomes MAT credit under Section 115JAA",
+                    "MAT credit can be carried forward for 15 assessment years",
+                    "MAT credit is utilised in years when regular tax exceeds MAT liability",
+                    "Critical: MAT credit must be correctly reported in ITR-6 every year — any error results in permanent loss",
+                    "Companies opting for Section 115BAA (22%) are fully exempt from MAT — existing MAT credit lapses on opting 115BAA",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+                      <span className="text-blue-600 font-bold mt-0.5 flex-shrink-0">→</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
 
-          {/* WORKFLOW */}
-          <WorkflowSection />
-
-          {/* DOCUMENTS */}
-          <article>
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
-              Documents Required for Company / Trust ITR Filing
+          {/* TRUST EXEMPTION */}
+          <section id="trust-exemption">
+            <SectionLabel text="Trust & NGO Exemption Framework" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Tax Exemption Framework for Trusts & NGOs — 12AB, 80G & Section 11
             </h2>
+            <p className="text-gray-600 mb-8 max-w-2xl">
+              The trust exemption framework requires active ongoing compliance — not just one-time
+              registration. Missing any annual compliance step can trigger full taxation.
+            </p>
+            <div className="overflow-x-auto rounded-2xl border shadow-sm">
+              <table className="min-w-full text-sm">
+                <thead className="bg-[#00416a] text-white">
+                  <tr>
+                    {["Section / Form", "Purpose", "Benefit", "Annual Requirement"].map((h) => (
+                      <th key={h} className="px-5 py-4 text-left font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {[
+                    ["Section 12A / 12AB", "Registration of charitable / religious trust", "Income applied for charitable purposes is exempt", "Re-registration every 5 years — Form 10AB"],
+                    ["Section 80G", "Donor deduction approval", "Donors can claim 50%–100% deduction on donations", "Renewal every 5 years — Form 10AB with 12AB"],
+                    ["Section 11 & 12", "Primary exemption clauses", "85% income applied for charitable purpose = exempt", "85% application rule must be met annually"],
+                    ["Form 10B / 10BB", "Trust audit report", "Mandatory audit for income > ₹5 lakh", "Filed annually along with ITR-7"],
+                    ["Form 9A", "Deemed application", "Extends application deadline by 1 year for income not applied", "Filed before ITR due date if applicable"],
+                    ["Form 10", "Accumulation statement", "Allows income accumulation for specific purpose for up to 5 years", "Filed before ITR due date if applicable"],
+                    ["Form 10BD", "Donor statement (80G cases)", "Reports donor-wise donation details including PAN", "Due by 31st May annually"],
+                  ].map(([section, purpose, benefit, annual], i) => (
+                    <tr key={section} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="px-5 py-4 font-bold text-[#00416a]">{section}</td>
+                      <td className="px-5 py-4 text-gray-700 text-xs">{purpose}</td>
+                      <td className="px-5 py-4 text-gray-700 text-xs">{benefit}</td>
+                      <td className="px-5 py-4 text-gray-700 text-xs">{annual}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-5 bg-amber-50 border border-amber-200 rounded-2xl px-6 py-5">
+              <p className="text-sm text-amber-800 font-semibold">
+                ⚠️ <strong>Critical:</strong> Trusts that miss the 85% application-of-income threshold and do
+                not file Form 9A or Form 10 before the ITR due date will have the unapplied income taxed at
+                the maximum marginal rate (30%+). Taxvio tracks this deadline proactively for every trust client.
+              </p>
+            </div>
+          </section>
 
-            <p className="mb-3 font-semibold text-gray-700">For Companies (ITR-6):</p>
-            <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-              <li>Audited Balance Sheet, P&L Account, and Notes to Accounts</li>
-              <li>Depreciation schedule (both Companies Act and Income Tax Act)</li>
-              <li>Tax audit report (Form 3CA/3CD) — if separately filed</li>
-              <li>Form 26AS and AIS for the company's PAN</li>
-              <li>TDS certificates received (Form 16A from clients/banks)</li>
-              <li>Advance tax payment challans (Form 280)</li>
-              <li>MAT computation worksheet (book profit reconciliation)</li>
-              <li>Previous year's ITR acknowledgement and MAT credit details</li>
-              <li>Director DIN details and their remuneration details</li>
-              <li>GST returns — GSTR-1, GSTR-3B, GSTR-9</li>
-              <li>DSC (Digital Signature Certificate) of authorised signatory</li>
-            </ul>
+          {/* COMPANY DEDUCTIONS */}
+          <section id="company-deductions">
+            <SectionLabel text="Company Deductions" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
+              Key Business Deductions Available to Companies (ITR-6)
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[
+                { icon: "🏗️", title: "IT Act Depreciation", desc: "Block-wise depreciation on plant & machinery, computers, vehicles, and furniture at IT Act rates — separate from Companies Act book depreciation." },
+                { icon: "👥", title: "Employee Costs", desc: "Salaries, PF, ESI, gratuity provisions (within limits), ESOPs, and all employee welfare expenses — fully deductible." },
+                { icon: "👔", title: "Director Remuneration", desc: "Managerial remuneration paid to directors, subject to Companies Act limits and disclosure requirements in the ITR-6 return." },
+                { icon: "🏦", title: "Interest on Borrowings", desc: "Interest on loans, debentures, and working capital facilities. Section 94B thin capitalisation rules may cap deductions for companies with significant foreign borrowings." },
+                { icon: "🔬", title: "R&D Expenditure", desc: "100% deduction on revenue expenditure on in-house R&D facilities approved by DSIR under Section 35 — a key benefit for technology companies." },
+                { icon: "📉", title: "Brought-Forward Losses", desc: "Business losses carried forward for 8 years, unabsorbed depreciation carried forward indefinitely — subject to continuity-of-ownership conditions under Section 79." },
+                { icon: "🚫", title: "CSR Spending — NOT Deductible", desc: "CSR expenditure under Companies Act Section 135 is generally NOT deductible under Section 37(1). This is one of the most common errors in company ITRs — Taxvio checks this." },
+                { icon: "🌐", title: "Transfer Pricing Adjustments", desc: "Companies with related-party international transactions must comply with transfer pricing rules. Arms-length pricing documentation required under Sections 92A–92F." },
+                { icon: "💳", title: "MAT Credit Utilisation", desc: "MAT credit from previous years can be utilised in the current year when regular tax exceeds MAT — correctly reported in ITR-6 to prevent permanent loss." },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-4 p-5 rounded-2xl border bg-gray-50 hover:bg-white hover:shadow-md hover:border-[#00416a]/30 transition">
+                  <div className="text-3xl flex-shrink-0">{item.icon}</div>
+                  <div>
+                    <p className="font-semibold text-[#00416a] mb-1 text-sm">{item.title}</p>
+                    <p className="text-sm text-gray-600">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            <p className="mb-3 font-semibold text-gray-700">For Trusts / NGOs (ITR-7):</p>
-            <ul className="list-disc pl-6 mb-10 text-gray-700 space-y-2">
-              <li>12A / 12AB registration certificate from Income Tax Department</li>
-              <li>80G approval certificate (if applicable)</li>
-              <li>Audited accounts — Receipt & Payment account, Income & Expenditure account, Balance Sheet</li>
-              <li>Details of income received (donations, grants, interest) and its source</li>
-              <li>Details of income applied for charitable purposes with supporting bills</li>
-              <li>Form 9A (if income not applied but intention to apply in next year)</li>
-              <li>Form 10 (if income accumulated under Section 11(2) for specific purpose)</li>
-              <li>Form 10B / 10BB audit report (mandatory for trusts with income above ₹5 lakh)</li>
-              <li>FCRA registration (if foreign donations received)</li>
-              <li>Form 26AS and AIS for the trust PAN</li>
-            </ul>
-
-            {/* CONSEQUENCES */}
-            <h2 className="text-2xl font-semibold text-[#00416a] mb-4">
+          {/* CONSEQUENCES */}
+          <section id="consequences" className="bg-red-50 border border-red-100 rounded-3xl p-8 md:p-12">
+            <SectionLabel text="Non-Compliance Risk" />
+            <h2 className="text-3xl font-bold text-red-700 mb-4">
               Consequences of Non-Compliance for Companies & Trusts
             </h2>
-            <p className="mb-4 leading-relaxed text-gray-700">
-              Companies and trusts face the most severe consequences for
-              non-compliance among all taxpayer categories:
+            <p className="text-gray-700 mb-8 max-w-3xl">
+              Companies and trusts face the most severe consequences among all taxpayer categories.
+              For trusts, non-compliance can be existential — triggering cancellation of registration.
             </p>
-            <ul className="list-disc pl-6 mb-10 text-gray-700 space-y-2">
-              <li>
-                <strong>Penalty under Section 234F</strong> — ₹5,000 late
-                filing fee for ITR filed after the due date.
-              </li>
-              <li>
-                <strong>Interest under Sections 234A, 234B & 234C</strong> — 1%
-                per month on outstanding tax from due date, for shortfall in
-                advance tax, and for deferment of advance tax instalments.
-              </li>
-              <li>
-                <strong>Penalty under Section 271B</strong> — Failure to file
-                tax audit report: 0.5% of turnover or ₹1.5 lakh, whichever is
-                lower.
-              </li>
-              <li>
-                <strong>MAT credit lapse</strong> — MAT credit (excess MAT
-                paid over regular tax) is available for carry-forward for 15
-                years. Delayed or incorrect ITR filing can result in MAT credit
-                not being recorded properly, leading to permanent loss.
-              </li>
-              <li>
-                <strong>Trust registration cancellation</strong> — For trusts,
-                failure to file ITR-7 or violation of application-of-income
-                rules can lead to cancellation of 12A/12AB registration by the
-                Principal Commissioner, making the entire corpus and income
-                taxable. This is effectively an existential threat to the trust.
-              </li>
-              <li>
-                <strong>Prosecution risk for companies</strong> — Persistent
-                non-filing of ITR by a company can trigger prosecution under
-                Section 276CC, with potential imprisonment for directors.
-              </li>
-            </ul>
-          </article>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[
+                { risk: "Section 234F Penalty", entity: "Companies & Trusts", penalty: "₹5,000 late filing fee", desc: "Automatic penalty for ITR-6 or ITR-7 filed after the October 31 due date." },
+                { risk: "Section 234A/B/C Interest", entity: "Companies", penalty: "1% per month on outstanding tax", desc: "Interest on unpaid tax, advance tax shortfall, and deferment of quarterly instalments." },
+                { risk: "Section 271B — Audit Penalty", entity: "Companies & Trusts", penalty: "0.5% of turnover, max ₹1.5L", desc: "Failure to file tax audit report (Form 3CA/3CD or Form 10B/10BB) by 30th September." },
+                { risk: "MAT Credit Lapse", entity: "Companies", penalty: "Permanent loss of tax credit", desc: "Incorrect ITR-6 filing can result in MAT credit not being properly recorded — permanently losing up to 15 years of carry-forward benefit." },
+                { risk: "Trust Registration Cancellation", entity: "Trusts & NGOs", penalty: "Full corpus taxable at 30%+", desc: "Failure to file ITR-7 or violation of 85% application-of-income rule can lead to 12A/12AB cancellation — effectively destroying the trust's financial structure." },
+                { risk: "Section 276CC Prosecution", entity: "Company Directors", penalty: "Imprisonment for directors", desc: "Persistent non-filing of company ITR can trigger prosecution of directors under Section 276CC — a serious personal liability risk." },
+              ].map((p) => (
+                <div key={p.risk} className="bg-white border border-red-100 rounded-xl p-5">
+                  <p className="font-bold text-red-600 text-sm mb-1">⚠️ {p.risk}</p>
+                  <p className="text-xs text-red-400 font-semibold mb-1">Entity: {p.entity}</p>
+                  <p className="text-xs font-semibold text-red-500 mb-2">{p.penalty}</p>
+                  <p className="text-sm text-gray-600">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-          {/* CALCULATOR */}
-          <ITRCalculator />
+          {/* DOCUMENTS */}
+          <section id="documents">
+            <SectionLabel text="Documents Checklist" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Documents Required for Company & Trust ITR Filing
+            </h2>
+            <p className="text-gray-600 mb-8 max-w-2xl">Prepare these in advance to ensure smooth, accurate, and timely ITR-6 and ITR-7 filing.</p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="border-t-4 border-[#00416a] bg-white rounded-2xl p-6 shadow-sm">
+                <p className="font-bold text-[#00416a] mb-4">🏢 For Companies (ITR-6)</p>
+                <ul className="space-y-2">
+                  {[
+                    "Audited Balance Sheet, P&L Account, and Notes to Accounts",
+                    "Depreciation schedule (both Companies Act and IT Act rates)",
+                    "Tax audit report (Form 3CA/3CD) — from statutory auditor",
+                    "Form 26AS and AIS for the company PAN",
+                    "TDS certificates received (Form 16A from clients/banks)",
+                    "Advance tax payment challans (Form 280)",
+                    "MAT computation worksheet (book profit reconciliation)",
+                    "Previous year's ITR and MAT credit brought-forward details",
+                    "Director DIN details and remuneration details",
+                    "GST returns — GSTR-1, GSTR-3B, GSTR-9",
+                    "DSC of MD/CEO/authorised signatory for e-filing",
+                  ].map((doc) => (
+                    <li key={doc} className="flex items-start gap-3 text-sm text-gray-700">
+                      <span className="text-[#00416a] font-bold mt-0.5 flex-shrink-0">✓</span>{doc}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="border-t-4 border-blue-500 bg-white rounded-2xl p-6 shadow-sm">
+                <p className="font-bold text-blue-700 mb-4">🕌 For Trusts / NGOs (ITR-7)</p>
+                <ul className="space-y-2">
+                  {[
+                    "12A / 12AB registration certificate from Income Tax Department",
+                    "80G approval certificate (if applicable)",
+                    "Audited accounts — Receipt & Payment, Income & Expenditure, Balance Sheet",
+                    "Details of all income received (donations, grants, interest) and sources",
+                    "Details of income applied for charitable purposes with supporting bills",
+                    "Form 9A (if income not applied — intent to apply next year)",
+                    "Form 10 (if income accumulated for specific purpose — up to 5 years)",
+                    "Form 10B / 10BB audit report (income > ₹5 lakh)",
+                    "Form 10BD filed and Form 10BE issued (if 80G approved)",
+                    "FCRA registration (if foreign donations received)",
+                    "Form 26AS and AIS for the trust PAN",
+                  ].map((doc) => (
+                    <li key={doc} className="flex items-start gap-3 text-sm text-gray-700">
+                      <span className="text-blue-600 font-bold mt-0.5 flex-shrink-0">✓</span>{doc}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* PROCESS */}
+          <section id="our-process">
+            <SectionLabel text="How We Work" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Taxvio's 6-Step Filing Process for Companies & Trusts
+            </h2>
+            <p className="text-gray-600 mb-12 max-w-2xl">
+              ITR-6 and ITR-7 are the most complex returns in the Indian income tax system.
+              Our structured process ensures complete accuracy, MAT tracking, and deadline compliance.
+            </p>
+            <div className="relative">
+              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#00416a] to-[#7ecbf0] hidden md:block" />
+              <div className="space-y-10">
+                {[
+                  { step: "01", title: "Entity Assessment & Tax Regime Identification", desc: "We assess whether ITR-6 (company) or ITR-7 (trust/NGO) applies, verify registration status (12A/12AB/80G for trusts), and identify any tax regime elections — particularly whether Section 115BAA (22% concessional) or 115BAB (15% for new manufacturing) is more beneficial for the company." },
+                  { step: "02", title: "Audited Financials Review & MAT Computation", desc: "For companies, we review audited financials and prepare the book profit reconciliation for MAT under Section 115JB — adjusting net profit for all prescribed additions and deductions. We identify MAT credit available from previous years and ensure it is correctly utilised and reported." },
+                  { step: "03", title: "Tax Audit Coordination (Form 3CA/3CD)", desc: "We coordinate with the statutory auditor to obtain and review the tax audit report, prepare Form 3CA/3CD schedules covering GST reconciliation, TDS compliance (Clause 34), MSME payments (43B(h)), related party transactions (40A(2)(b)), and all 44 clauses — ensuring upload before 30th September." },
+                  { step: "04", title: "Trust Income Application Review (ITR-7)", desc: "For trusts, we verify that at least 85% of income has been applied for charitable purposes, identify any accumulation requirements, prepare Form 9A (deemed application) or Form 10 (specific purpose accumulation) if needed, and verify Form 10B/10BB audit report compliance." },
+                  { step: "05", title: "Complete ITR Preparation & Quality Review", desc: "Full ITR-6 or ITR-7 preparation covering all schedules — loss carry-forward, brought-forward depreciation, advance tax reconciliation, audit report linkage, partner/director details, and MAT credit tracking. Internal quality review to prevent defective return notices from the Department." },
+                  { step: "06", title: "DSC-Based e-Filing & Post-Filing Compliance", desc: "Companies file ITR-6 using the MD/CEO's DSC. Trusts file ITR-7 using trustee's DSC or EVC. Post-filing, we track 143(1) intimations, assist with rectification, monitor MAT credit utilisation, and proactively prepare for the next year's advance tax schedule and compliance calendar." },
+                ].map((step, i) => (
+                  <div key={step.step} className="relative md:pl-16 flex gap-6 items-start">
+                    <div className="hidden md:flex absolute left-0 w-10 h-10 bg-[#00416a] text-white rounded-full items-center justify-center font-bold text-sm flex-shrink-0 z-10 border-4 border-white shadow-md">
+                      {i + 1}
+                    </div>
+                    <div className="bg-white border rounded-2xl p-6 hover:shadow-md transition flex-1">
+                      <span className="text-xs font-bold text-[#00416a]/40 tracking-widest uppercase">Step {step.step}</span>
+                      <h3 className="text-lg font-bold text-[#00416a] mt-1 mb-3">{step.title}</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* FEE CALCULATOR */}
+          <ITRFeeCalculator />
 
           {/* TESTIMONIALS */}
-          <Testimonials />
+          <section id="testimonials">
+            <SectionLabel text="Client Stories" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
+              Trusted by Companies & Trusts Across India
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { name: "Rajshree Enterprises Pvt. Ltd.", location: "Khatauli", text: "Taxvio handled our ITR-6 with tax audit seamlessly. MAT computation was accurate and the return was filed well before the October deadline. No notices." },
+                { name: "Shri Ram Charitable Trust", location: "Muzaffarnagar", text: "Our 12A trust ITR-7 was filed on time with correct income application workings. Taxvio also helped renew our 80G approval without any issues." },
+                { name: "Innovate Tech Solutions Pvt. Ltd.", location: "Meerut", text: "We switched to the 115BAA concessional tax regime with Taxvio's guidance — saving significant tax. The ITR-6 filing was error-free and on time." },
+              ].map((r, i) => (
+                <div key={i} className="border rounded-2xl p-6 hover:shadow-lg transition bg-white">
+                  <div className="flex mb-3">
+                    {[...Array(5)].map((_, j) => <span key={j} className="text-yellow-400 text-lg">★</span>)}
+                  </div>
+                  <p className="mb-4 text-gray-700 text-sm leading-relaxed italic">"{r.text}"</p>
+                  <p className="font-bold text-[#00416a]">{r.name}</p>
+                  <p className="text-sm text-gray-500">{r.location}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* LOCAL SEO */}
+          <section id="cities-served">
+            <SectionLabel text="Our Reach" />
+            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+              Company & Trust ITR Filing Services Across India
+            </h2>
+            <p className="text-gray-600 mb-8 max-w-3xl leading-relaxed">
+              Taxvio is based in <strong>Khatauli, Muzaffarnagar, UP</strong> and provides ITR-6 and
+              ITR-7 filing for companies and trusts across <strong>Noida</strong>, <strong>Delhi NCR</strong>,
+              <strong> Meerut</strong>, <strong>Ghaziabad</strong>, and <strong>Mumbai</strong> — as well as
+              pan-India online. Our CA team has handled company ITRs across trading, manufacturing, real
+              estate, and technology sectors, and trust ITRs for educational, religious, and social welfare
+              organisations across Western UP.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {["Khatauli", "Muzaffarnagar", "Noida", "Delhi NCR", "Meerut", "Mumbai"].map((city) => (
+                <div key={city} className="bg-gray-50 border rounded-xl p-4 text-center text-sm font-semibold text-[#00416a] hover:bg-[#00416a] hover:text-white transition cursor-default">
+                  📍 {city}
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* FAQ */}
           <FAQSection />
-        </section>
 
-        <PremiumCTA />
+          {/* RELATED SERVICES */}
+          <section id="related-services">
+            <SectionLabel text="Explore More" />
+            <h2 className="text-3xl font-bold text-[#00416a] mb-8">Related Income Tax Services</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[
+                { title: "Income Tax Audit", icon: "🔍", link: "/serviceslist/income-tax/income-tax-audit", desc: "Form 3CA/3CD audit for companies." },
+                { title: "12A / 12AB Registration", icon: "🏛️", link: "/serviceslist/income-tax/12a-application", desc: "Trust income tax exemption registration." },
+                { title: "80G Registration", icon: "💝", link: "/serviceslist/income-tax/80g-application", desc: "Donor deduction benefit for NGOs." },
+                { title: "Income Tax Scrutiny", icon: "⚖️", link: "/serviceslist/income-tax/income-tax-scrutiny", desc: "Notice defence for companies & trusts." },
+              ].map((s) => (
+                <Link key={s.title} href={s.link} className="block border rounded-2xl p-6 hover:shadow-lg hover:border-[#00416a]/40 transition group bg-white">
+                  <div className="text-3xl mb-3">{s.icon}</div>
+                  <h3 className="font-bold text-[#00416a] mb-2">{s.title}</h3>
+                  <p className="text-sm text-gray-600 mb-3">{s.desc}</p>
+                  <span className="text-sm text-[#00416a] font-semibold group-hover:underline">Learn More →</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* FINAL CTA */}
+          <section id="cta">
+            <div className="bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] rounded-3xl shadow-2xl px-8 py-14 md:px-14 md:py-16 text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
+              <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
+                <div className="max-w-2xl text-center lg:text-left">
+                  <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">File Before 31st October 2026</p>
+                  <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
+                    File Your Company / Trust ITR<br />Before the Deadline
+                  </h3>
+                  <p className="text-lg text-gray-200 leading-relaxed">
+                    Avoid penalties, protect MAT credit, maintain 12A/80G registration, and stay 100%
+                    compliant. Taxvio's CA-assisted ITR-6 & ITR-7 filing starts at ₹2,999. Serving
+                    Khatauli, Muzaffarnagar, Meerut and all of India online.
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto flex-shrink-0">
+                  <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center">
+                    Start Filing — ₹2,999 Onwards
+                  </Link>
+                  <Link href="tel:+919999999999" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+                    📞 Free Consultation
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </article>
+
+        <Footar />
       </main>
     </>
   );
 }
 
-/* ================= DEADLINE BANNER ================= */
+/* ══════════════════════ INTERACTIVE COMPONENTS ══════════════════════ */
+
 function DeadlineBanner() {
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
 
@@ -472,462 +675,133 @@ function DeadlineBanner() {
   }, []);
 
   return (
-    <div
-      className="bg-red-600 text-white text-center py-3 font-semibold text-sm"
-      role="alert"
-      aria-live="polite"
-    >
-      ⏳ Company / Trust ITR Deadline — 31st October 2026 (Audit Cases) &nbsp;|&nbsp;
-      Tax Audit Report by 30th Sept 2026 &nbsp;|&nbsp;{" "}
-      {daysLeft !== null ? `${daysLeft} Days Left` : "Act Now"}
+    <div className="bg-red-600 text-white text-center py-3 font-semibold text-sm px-4" role="alert" aria-live="polite">
+      ⏳ Company / Trust ITR Deadline: <strong>31st October 2026</strong> &nbsp;|&nbsp;
+      Tax Audit Report (Form 3CA/3CD): <strong>30th September 2026</strong> &nbsp;|&nbsp;
+      {daysLeft !== null ? <strong>{daysLeft} Days Left</strong> : "Act Now"}
     </div>
   );
 }
 
-/* ================= TAX RATE TABLE ================= */
-function TaxRateTable() {
-  return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-16 mb-4">
-        Income Tax Rate for Companies — FY 2025-26
-      </h2>
-      <p className="mb-6 leading-relaxed text-gray-700">
-        Companies have multiple tax rate options under the Income Tax Act. The
-        choice of regime significantly affects tax liability — and once opted,
-        the concessional regime cannot be withdrawn:
-      </p>
-
-      <div className="overflow-x-auto mb-6">
-        <table
-          className="min-w-full border rounded-xl overflow-hidden"
-          aria-label="Income Tax Rate for Companies FY 2025-26"
-        >
-          <thead className="bg-[#00416a] text-white">
-            <tr>
-              <th className="p-4 text-left" scope="col">Regime / Section</th>
-              <th className="p-4 text-left" scope="col">Applicable To</th>
-              <th className="p-4 text-left" scope="col">Tax Rate</th>
-              <th className="p-4 text-left" scope="col">MAT Applicable?</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ["Regular Rate (Section 115A)", "All domestic companies (default)", "30%", "Yes — 15% of book profit"],
-              ["Section 115BAA (Concessional)", "Domestic companies (irrevocable option)", "22%", "No — MAT not applicable"],
-              ["Section 115BAB (New Mfg. Co.)", "New manufacturing companies post Oct 1, 2019", "15%", "No — MAT not applicable"],
-              ["Foreign Companies", "Foreign companies with India operations", "40%", "Yes"],
-              ["Surcharge (income ₹1–10 Cr)", "All companies", "7%", "—"],
-              ["Surcharge (income > ₹10 Cr)", "All companies", "12%", "—"],
-              ["Health & Education Cess", "All companies", "4%", "—"],
-              ["Effective Rate (115BAA + cess)", "Domestic companies (concessional)", "25.17%", "No MAT"],
-            ].map(([regime, applicable, rate, mat], i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                <td className="p-4 font-medium text-gray-700">{regime}</td>
-                <td className="p-4 text-gray-600">{applicable}</td>
-                <td className="p-4 font-semibold text-[#00416a]">{rate}</td>
-                <td className="p-4 text-gray-600">{mat}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <p className="mb-16 text-gray-600 italic text-sm">
-        * Advance tax is mandatory for companies in four instalments: 15% by
-        June 15, 45% by September 15, 75% by December 15, and 100% by March 15.
-        Shortfall attracts interest under Sections 234B and 234C.
-      </p>
-    </>
-  );
-}
-
-/* ================= TRUST EXEMPTION SECTION ================= */
-function TrustExemptionSection() {
-  return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-4">
-        Tax Exemption Framework for Trusts & NGOs — 12A, 12AB & 80G
-      </h2>
-      <p className="mb-6 leading-relaxed text-gray-700">
-        Charitable and religious trusts in India operate under a special
-        exemption framework that requires active compliance to maintain
-        tax-free status:
-      </p>
-
-      <div className="overflow-x-auto mb-6">
-        <table
-          className="min-w-full border rounded-xl overflow-hidden"
-          aria-label="Trust and NGO Tax Exemption Framework"
-        >
-          <thead className="bg-[#00416a] text-white">
-            <tr>
-              <th className="p-4 text-left" scope="col">Section</th>
-              <th className="p-4 text-left" scope="col">Purpose</th>
-              <th className="p-4 text-left" scope="col">Benefit</th>
-              <th className="p-4 text-left" scope="col">Renewal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ["Section 12A / 12AB", "Registration of charitable / religious trust", "Income applied for charitable purposes is exempt from tax", "Re-registration required every 5 years under 12AB"],
-              ["Section 80G", "Approval for donor deductions", "Donors can claim 50%–100% deduction on donations made", "Renewal every 5 years"],
-              ["Section 10(23C)", "Approved educational institutions, hospitals, funds", "Complete income tax exemption", "Separate approval required"],
-              ["Section 11 & 12", "Actual income exemption clauses", "85% of income applied for charitable purpose = exempt", "Ongoing compliance required"],
-              ["Form 10B / 10BB", "Audit report for trusts", "Mandatory for trusts with income > ₹5 lakh", "Filed annually with ITR-7"],
-              ["Form 9A / Form 10", "Accumulation of income", "Allows deferral of application of income by 1 year (9A) or up to 5 years (10)", "Filed before ITR due date"],
-            ].map(([section, purpose, benefit, renewal], i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                <td className="p-4 font-semibold text-[#00416a]">{section}</td>
-                <td className="p-4 text-gray-600">{purpose}</td>
-                <td className="p-4 text-gray-600">{benefit}</td>
-                <td className="p-4 text-gray-600">{renewal}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <p className="mb-16 text-gray-600 italic text-sm">
-        * Trusts that miss the 85% application-of-income threshold and do not
-        file Form 9A or Form 10 before the ITR due date will have the
-        unapplied income taxed at the maximum marginal rate (30%+). Our team
-        tracks these deadlines proactively for every trust client.
-      </p>
-    </>
-  );
-}
-
-/* ================= WORKFLOW ================= */
-function WorkflowSection() {
-  const steps = [
-    {
-      title: "1. Entity Assessment & Applicable Form Identification",
-      desc: "We assess whether ITR-6 (company) or ITR-7 (trust/NGO) applies, verify registration status (12A/12AB/80G for trusts), and identify any special tax regime elections (115BAA/115BAB for companies).",
-    },
-    {
-      title: "2. Audited Financials Review & MAT Computation",
-      desc: "For companies, we review audited financials, reconcile book profit for MAT computation under Section 115JB, and identify MAT credit available from previous years.",
-    },
-    {
-      title: "3. Tax Audit Coordination (Form 3CA/3CD)",
-      desc: "We coordinate with the statutory auditor to obtain the tax audit report, prepare Form 3CA/3CD schedules, and ensure upload on the Income Tax portal before 30th September.",
-    },
-    {
-      title: "4. Trust Income Application Review (ITR-7 cases)",
-      desc: "For trusts, we verify that at least 85% of income has been applied for charitable purposes, prepare Form 9A / Form 10 for accumulation if needed, and file Form 10B / 10BB audit report.",
-    },
-    {
-      title: "5. ITR Preparation & Internal Quality Review",
-      desc: "Complete ITR-6 or ITR-7 preparation including all schedules, loss carry-forward details, advance tax reconciliation, and audit report linkage. Internal review to prevent defective return notices.",
-    },
-    {
-      title: "6. e-Filing via DSC & Post-Filing Compliance Support",
-      desc: "Companies file ITR-6 using the MD / CEO's DSC. Trusts file ITR-7 using the trustee's DSC or EVC. Post-filing, we track intimations under Section 143(1) and assist with rectification if needed.",
-    },
-  ];
-
-  return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-4">
-        Our ITR Filing Process for Companies & Trusts
-      </h2>
-      <p className="mb-10 leading-relaxed text-gray-700">
-        ITR-6 and ITR-7 are among the most complex returns in the Indian income
-        tax system. Taxvio follows a structured, end-to-end workflow to ensure
-        complete accuracy and deadline compliance:
-      </p>
-
-      <div className="relative border-l-4 border-[#00416a] pl-8 space-y-10 mb-16">
-        {steps.map((s, i) => (
-          <div key={i} className="relative">
-            <div className="absolute -left-11 top-1 w-6 h-6 bg-[#00416a] rounded-full border-4 border-white" />
-            <h3 className="text-xl font-semibold text-[#00416a]">{s.title}</h3>
-            <p className="text-gray-600 mt-2 leading-relaxed">{s.desc}</p>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-/* ================= FEE CALCULATOR ================= */
-function ITRCalculator() {
+function ITRFeeCalculator() {
   const [entityType, setEntityType] = useState<"company" | "trust">("company");
-  const [turnover, setTurnover] = useState(0);
-  const [fee, setFee] = useState(4999);
-  const [label, setLabel] = useState("");
+  const [turnover, setTurnover] = useState("");
+  const [result, setResult] = useState<{ fee: number; label: string } | null>(null);
 
-  useEffect(() => {
+  const calculate = () => {
+    const t = Number(turnover);
+    if (!t) return;
+
     if (entityType === "company") {
-      if (turnover <= 10000000) {
-        setFee(4999);
-        setLabel("ITR-6 — Small Company (Turnover ≤ ₹1 Cr)");
-      } else if (turnover <= 100000000) {
-        setFee(7999);
-        setLabel("ITR-6 — Mid-size Company with Tax Audit (Form 3CA/3CD)");
+      if (t <= 10000000) {
+        setResult({ fee: 4999, label: "ITR-6 — Small Company (Turnover ≤ ₹1 Cr) with Tax Audit" });
+      } else if (t <= 100000000) {
+        setResult({ fee: 7999, label: "ITR-6 — Mid-size Company with Tax Audit (Form 3CA/3CD) + MAT" });
       } else {
-        setFee(14999);
-        setLabel("ITR-6 — Large Company with Tax Audit + MAT + Transfer Pricing");
+        setResult({ fee: 14999, label: "ITR-6 — Large Company with Tax Audit + MAT + Transfer Pricing" });
       }
     } else {
-      if (turnover <= 500000) {
-        setFee(2999);
-        setLabel("ITR-7 — Small Trust / NGO (Income ≤ ₹5 Lakh, No Audit)");
-      } else if (turnover <= 5000000) {
-        setFee(4999);
-        setLabel("ITR-7 — Trust / NGO with Form 10B Audit Report");
+      if (t <= 500000) {
+        setResult({ fee: 2999, label: "ITR-7 — Small Trust / NGO (Income ≤ ₹5 Lakh, No Audit Required)" });
+      } else if (t <= 5000000) {
+        setResult({ fee: 4999, label: "ITR-7 — Trust / NGO with Form 10B / 10BB Audit Report" });
       } else {
-        setFee(7999);
-        setLabel("ITR-7 — Large Trust / Section 8 Company with Complex Compliance");
+        setResult({ fee: 7999, label: "ITR-7 — Large Trust / Section 8 Company with Complex Compliance" });
       }
     }
-  }, [entityType, turnover]);
+  };
 
   return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-4">
-        Estimate Your Company / Trust ITR Filing Fee
-      </h2>
-      <p className="mb-6 text-gray-700 leading-relaxed">
-        Our fees depend on entity type and the complexity of the return. Select
-        your entity type and enter your annual turnover / income:
-      </p>
+    <section id="fee-calculator">
+      <SectionLabel text="Fee Estimator" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">Estimate Your Company / Trust ITR Filing Fee</h2>
+      <p className="text-gray-600 mb-8 max-w-xl">Select entity type and enter turnover/income for an instant fee estimate.</p>
 
-      <div
-        className="bg-gray-50 p-8 rounded-2xl shadow mb-16"
-        role="region"
-        aria-label="Company Trust ITR Fee Calculator"
-      >
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={() => setEntityType("company")}
-            className={`px-6 py-2 rounded-xl font-semibold transition ${
-              entityType === "company"
-                ? "bg-[#00416a] text-white"
-                : "border border-[#00416a] text-[#00416a] hover:bg-gray-100"
-            }`}
-            aria-pressed={entityType === "company"}
-          >
-            Company (ITR-6)
-          </button>
-          <button
-            onClick={() => setEntityType("trust")}
-            className={`px-6 py-2 rounded-xl font-semibold transition ${
-              entityType === "trust"
-                ? "bg-[#00416a] text-white"
-                : "border border-[#00416a] text-[#00416a] hover:bg-gray-100"
-            }`}
-            aria-pressed={entityType === "trust"}
-          >
-            Trust / NGO (ITR-7)
-          </button>
+      <div className="bg-gray-50 border rounded-3xl p-8 max-w-2xl">
+        <div className="flex gap-3 mb-6">
+          {[
+            { value: "company" as const, label: "Company (ITR-6)" },
+            { value: "trust" as const, label: "Trust / NGO (ITR-7)" },
+          ].map((e) => (
+            <button key={e.value} onClick={() => { setEntityType(e.value); setResult(null); setTurnover(""); }}
+              className={`px-5 py-2.5 rounded-xl font-semibold transition border text-sm ${
+                entityType === e.value ? "bg-[#00416a] text-white border-[#00416a]" : "bg-white text-gray-700 border-gray-200 hover:border-[#00416a]"
+              }`}>
+              {e.label}
+            </button>
+          ))}
         </div>
 
-        <label
-          htmlFor="turnover-input"
-          className="block font-semibold text-gray-700 mb-2"
-        >
-          {entityType === "company"
-            ? "Enter Annual Turnover of Company (₹)"
-            : "Enter Annual Income / Receipts of Trust (₹)"}
+        <label className="block font-semibold text-gray-700 mb-2 text-sm">
+          {entityType === "company" ? "Annual Turnover of Company (₹)" : "Annual Income / Receipts of Trust (₹)"}
         </label>
         <input
-          id="turnover-input"
           type="number"
           placeholder={entityType === "company" ? "e.g. 25000000" : "e.g. 2000000"}
-          className="border p-3 rounded-xl w-full mb-4 focus:outline-none focus:ring-2 focus:ring-[#00416a]"
-          onChange={(e) => setTurnover(Number(e.target.value))}
-          aria-describedby="fee-output"
+          value={turnover}
+          onChange={(e) => { setTurnover(e.target.value); setResult(null); }}
+          className="border p-3 rounded-xl w-full mb-4 focus:outline-none focus:ring-2 focus:ring-[#00416a] text-sm"
         />
-        <p
-          id="fee-output"
-          className="text-lg font-semibold text-[#00416a]"
-          aria-live="polite"
-        >
-          Estimated Filing Fee:{" "}
-          <span className="text-2xl">₹{fee.toLocaleString("en-IN")}</span>
-        </p>
-        <p className="text-sm text-gray-500 mt-1">{label}</p>
-        <p className="text-sm text-gray-400 mt-2">
-          * Inclusive of ITR preparation and e-filing. Tax audit coordination,
-          DSC charges, transfer pricing documentation, and Form 10B/10BB fees
-          are additional where applicable. GST extra.
-        </p>
-      </div>
-    </>
-  );
-}
+        <button onClick={calculate} disabled={!turnover}
+          className="w-full bg-[#00416a] text-white py-3 rounded-xl font-bold hover:bg-[#002b45] transition disabled:opacity-40 text-sm">
+          Calculate Filing Fee
+        </button>
 
-/* ================= TESTIMONIALS ================= */
-function Testimonials() {
-  const reviews = [
-    {
-      name: "Rajshree Enterprises Pvt. Ltd.",
-      location: "Khatauli",
-      rating: 5,
-      text: "Taxvio handled our company's ITR-6 with tax audit seamlessly. MAT computation was accurate and the return was filed well before the October deadline.",
-    },
-    {
-      name: "Shri Ram Charitable Trust",
-      location: "Muzaffarnagar",
-      rating: 5,
-      text: "Our 12A trust ITR-7 was filed on time with correct income application workings. Taxvio also helped us renew our 80G approval without any issues.",
-    },
-    {
-      name: "Innovate Tech Solutions Pvt. Ltd.",
-      location: "Meerut",
-      rating: 5,
-      text: "We switched to the 115BAA concessional tax regime with Taxvio's guidance — saving significant tax. The ITR-6 filing was error-free and timely.",
-    },
-  ];
-
-  return (
-    <>
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-8">
-        Trusted by Companies & Trusts Across India
-      </h2>
-
-      <div className="grid md:grid-cols-3 gap-6 mb-16">
-        {reviews.map((r, i) => (
-          <div
-            key={i}
-            className="border p-6 rounded-xl shadow hover:shadow-lg transition"
-            itemScope
-            itemType="https://schema.org/Review"
-          >
-            <div className="flex mb-3" aria-label={`${r.rating} out of 5 stars`}>
-              {Array.from({ length: r.rating }).map((_, j) => (
-                <span key={j} className="text-yellow-400 text-lg">★</span>
-              ))}
-            </div>
-            <p className="mb-4 text-gray-700 italic" itemProp="reviewBody">
-              "{r.text}"
+        {result && (
+          <div className="mt-5 border-t pt-5" aria-live="polite">
+            <p className="text-lg font-semibold text-[#00416a]">
+              Estimated Fee: <span className="text-3xl font-extrabold">₹{result.fee.toLocaleString("en-IN")}</span> onwards
             </p>
-            <h4
-              className="font-semibold text-[#00416a]"
-              itemProp="author"
-              itemScope
-              itemType="https://schema.org/Person"
-            >
-              <span itemProp="name">{r.name}</span>
-            </h4>
-            <p className="text-sm text-gray-500">{r.location}</p>
+            <p className="text-sm text-gray-500 mt-1">{result.label}</p>
+            <p className="text-xs text-gray-400 mt-2">* Includes ITR preparation and e-filing. Tax audit coordination, DSC, transfer pricing documentation, Form 10B/10BB fees additional. GST extra.</p>
+            <Link href="/contact" className="mt-4 inline-block bg-[#00416a] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#002b45] transition">
+              Start Filing Now →
+            </Link>
           </div>
-        ))}
+        )}
       </div>
-    </>
+    </section>
   );
 }
 
-/* ================= FAQ ================= */
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(null);
-
   const faqs = [
-    {
-      q: "Which ITR form should a private limited company file?",
-      a: "All private limited companies, public limited companies, and OPCs must file ITR-6, regardless of turnover or profit/loss. The only exception is a company claiming exemption under Section 11 (charitable/religious trusts), which must file ITR-7 instead.",
-    },
-    {
-      q: "Which ITR form should a trust or NGO file?",
-      a: "Trusts registered under Section 12A/12AB, NGOs, Section 8 companies, political parties, educational institutions claiming 10(23C) exemption, and research associations must file ITR-7. This form requires detailed reporting of income received and income applied for charitable purposes.",
-    },
-    {
-      q: "What is the income tax rate for a private limited company in FY 2025-26?",
-      a: "Domestic companies have multiple options: 30% (regular rate with MAT at 15% of book profit), 22% under Section 115BAA (no MAT, irrevocable), or 15% under Section 115BAB for new manufacturing companies. The effective rates after surcharge and cess are 31.2%, 25.17%, and 17.01% respectively.",
-    },
-    {
-      q: "What is MAT and when does it apply to companies?",
-      a: "MAT (Minimum Alternate Tax) under Section 115JB applies when a company's regular income tax liability is less than 15% of its book profit. The company must then pay 15% of book profit as tax. The excess MAT paid over regular tax becomes MAT credit, which can be carried forward for 15 years. Companies opting for Section 115BAA are exempt from MAT.",
-    },
-    {
-      q: "What happens if a trust does not apply 85% of income for charitable purposes?",
-      a: "If a trust does not apply at least 85% of its income for charitable or religious purposes in the same year, the unapplied amount becomes taxable at the maximum marginal rate (30%+). The trust can avoid this by filing Form 9A (to extend application deadline by one year) or Form 10 (to accumulate income for a specific purpose for up to 5 years) — both must be filed before the ITR due date.",
-    },
-    {
-      q: "What is the ITR due date for companies and trusts for FY 2025-26?",
-      a: "For companies and trusts liable to tax audit (all companies, and trusts with income above ₹5 lakh), the ITR due date is 31st October 2026. The tax audit report must be filed by 30th September 2026. For trusts not liable to audit (income ≤ ₹5 lakh), the due date is 31st July 2026.",
-    },
+    { q: "Which ITR form should a private limited company file?", a: "All private limited companies, public limited companies, and OPCs must file ITR-6, regardless of turnover or profit/loss. The only exception is a company claiming exemption under Section 11 (charitable/religious trusts), which must file ITR-7. Filing the wrong form results in a defective return notice." },
+    { q: "Which ITR form should a trust or NGO file?", a: "Trusts registered under Section 12A/12AB, NGOs, Section 8 companies claiming Section 11 exemption, political parties, educational institutions under Section 10(23C), and research associations must file ITR-7. This form requires detailed reporting of income received, income applied for charitable purposes, and accumulation details." },
+    { q: "What is the income tax rate for a private limited company in FY 2025-26?", a: "Domestic companies can opt for 22% under Section 115BAA (no MAT, irrevocable) or pay the regular 30% rate with MAT at 15% of book profit. New manufacturing companies incorporated after October 1, 2019 can opt for 15% under Section 115BAB. Effective rates after surcharge and cess: 25.17% (115BAA), 31.2% or higher (regular), and 17.01% (115BAB)." },
+    { q: "What is MAT and when does it apply to companies?", a: "MAT (Minimum Alternate Tax) under Section 115JB applies when regular income tax is less than 15% of book profit. The company pays 15% of book profit as tax. Excess MAT over regular tax becomes MAT credit, carried forward for 15 years. Companies opting for Section 115BAA are fully exempt from MAT — but existing MAT credit lapses on opting 115BAA." },
+    { q: "What happens if a trust does not apply 85% of income for charitable purposes?", a: "If a trust does not apply at least 85% of its income for charitable or religious purposes in the same year, the unapplied amount becomes taxable at the maximum marginal rate (30%+). The trust can avoid this by filing Form 9A (extending application by 1 year) or Form 10 (accumulation for specific purpose up to 5 years) — both must be filed before the ITR due date." },
+    { q: "What is the ITR due date for companies and trusts for FY 2025-26?", a: "For companies and trusts liable to tax audit, the ITR due date is 31st October 2026. The tax audit report (Form 3CA/3CD or Form 10B/10BB) must be filed by 30th September 2026. For trusts not liable to audit (income ≤ ₹5 lakh), the due date is 31st July 2026. Late filing attracts Section 234F penalty (₹5,000) and Section 234A interest." },
   ];
 
   return (
-    <section id="faq" aria-label="Frequently Asked Questions for Companies and Trusts">
-      <h2 className="text-3xl font-semibold text-[#00416a] mt-20 mb-8">
+    <section id="faq">
+      <SectionLabel text="FAQs" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-10">
         Frequently Asked Questions — ITR Filing for Companies & Trusts
       </h2>
-
-      <div className="space-y-4 mb-16">
+      <div className="space-y-5">
         {faqs.map((f, i) => (
-          <div
-            key={i}
-            className="border rounded-xl overflow-hidden"
-            itemScope
-            itemType="https://schema.org/Question"
-          >
-            <button
-              className="w-full text-left p-5 font-semibold text-gray-800 flex justify-between items-center hover:bg-gray-50 transition"
-              onClick={() => setOpen(open === i ? null : i)}
-              aria-expanded={open === i}
-              aria-controls={`faq-answer-${i}`}
-            >
-              <span itemProp="name">{f.q}</span>
-              <span className="text-[#00416a] text-xl ml-4 shrink-0">
-                {open === i ? "−" : "+"}
-              </span>
-            </button>
-            <div
-              id={`faq-answer-${i}`}
-              className={`px-5 text-gray-600 leading-relaxed transition-all duration-300 ${
-                open === i ? "max-h-96 pb-5" : "max-h-0 overflow-hidden"
-              }`}
-              itemScope
-              itemType="https://schema.org/Answer"
-            >
-              <p itemProp="text">{f.a}</p>
-            </div>
-          </div>
+          <details key={i} className="group border rounded-2xl overflow-hidden"
+            open={open === i}
+            onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open ? i : null)}>
+            <summary className="flex items-center justify-between px-6 py-5 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50 transition list-none">
+              <span>{f.q}</span>
+              <span className="text-[#00416a] text-xl group-open:rotate-45 transition-transform duration-200 flex-shrink-0 ml-4">+</span>
+            </summary>
+            <div className="px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t pt-4">{f.a}</div>
+          </details>
         ))}
       </div>
     </section>
   );
 }
 
-/* ================= CTA ================= */
-function PremiumCTA() {
+function SectionLabel({ text }: { text: string }) {
   return (
-    <section className="mt-16 mb-0" aria-label="Call to Action">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="bg-gradient-to-r from-[#00416a] to-[#002b45] rounded-3xl shadow-2xl px-8 py-16 text-white text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            File Your Company / Trust ITR for FY 2025-26 Before Deadline
-          </h2>
-          <p className="text-gray-200 mb-3 max-w-2xl mx-auto">
-            Avoid penalties, protect MAT credit, maintain 12A/80G registration,
-            and stay 100% compliant. Taxvio's CA-assisted ITR-6 & ITR-7 filing
-            starts at ₹2,999. Serving Khatauli, Muzaffarnagar, Meerut and all
-            of India online.
-          </p>
-          <p className="text-gray-300 text-sm mb-8">
-            📞 Call / WhatsApp us today | 📧 Email for a free compliance checklist
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/contact"
-              className="bg-white text-[#00416a] px-8 py-3 rounded-xl font-semibold shadow hover:scale-105 transition"
-              aria-label="Start ITR-6 or ITR-7 filing with Taxvio"
-            >
-              Start Filing — ₹2,999 Onwards
-            </Link>
-            <Link
-              href="/contact"
-              className="border border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition"
-            >
-              Get Free Consultation
-            </Link>
-          </div>
-        </div>
-      </div>
-      <Footar/>
-    </section>
+    <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#00416a]/60 mb-3 border border-[#00416a]/20 px-3 py-1 rounded-full bg-[#00416a]/5">
+      {text}
+    </span>
   );
 }
