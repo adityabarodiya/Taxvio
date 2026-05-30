@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Footar from "@/components/Footar";
 
-const PHONE = "918937980366";
+const PHONE = "+918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with FSSAI Licence Modification / Amendment.")}`;
 const DARK = { background: "linear-gradient(135deg,#1a5c1a 0%,#14431a 55%,#0d2e10 100%)" };
 
