@@ -8,29 +8,43 @@ import logo from "@/public/logo_taxvio.png";
 import ServicesDrawer from "./ServiceDrawer";
 import MobileServicesMenu from "./MobileServiceMenu";
 import { serviceCategories } from "@/data/serviceCategories";
-import { Phone, MessageCircle, X, Menu, ChevronDown } from "lucide-react";
+import {
+  Phone,
+  MessageCircle,
+  X,
+  Menu,
+  ChevronDown,
+  Star,
+  ArrowRight,
+  BadgeCheck,
+  Clock,
+  Mail,
+} from "lucide-react";
 
 const PHONE = "918937980366";
-const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with GST and tax compliance services.")}`;
+const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
+  "Hello Taxvio, I need help with GST and tax compliance services."
+)}`;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [announcementVisible, setAnnouncementVisible] = useState(true);
   const pathname = usePathname();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /* Scroll shadow */
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* Close mobile menu on route change */
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setServicesOpen(null);
+  }, [pathname]);
 
-  /* Lock body scroll when mobile menu open */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -42,7 +56,7 @@ export default function Navbar() {
   };
 
   const handleMouseLeave = () => {
-    closeTimer.current = setTimeout(() => setServicesOpen(null), 120);
+    closeTimer.current = setTimeout(() => setServicesOpen(null), 150);
   };
 
   const isActive = (href: string) =>
@@ -50,70 +64,99 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Top micro-bar ─────────────────────────────────────────────── */}
-      <div className="hidden md:block bg-[#00416a] text-white text-xs">
-        <div className="max-w-6xl mx-auto px-6 h-8 flex items-center justify-between">
-          <span className="text-white/60 flex items-center gap-4">
-            <span>🇮🇳 Pan India · 100% Online · CA-Assisted</span>
-            <span className="text-white/30">|</span>
-            <span>Mon–Sat · 9 AM – 7 PM IST</span>
-          </span>
-          <div className="flex items-center gap-4">
-            <a href={`tel:${PHONE}`}
-              className="flex items-center gap-1.5 text-white/75 hover:text-white transition">
-              <Phone size={11} /> +91 89379 80366
-            </a>
-            <span className="text-white/25">|</span>
-            <a href="mailto:support@taxvio.in"
-              className="text-white/75 hover:text-white transition">
-              info@taxvio.in
-            </a>
+      {/* ── TOP ANNOUNCEMENT BAR ── */}
+      {announcementVisible && (
+        <div className="bg-gradient-to-r from-[#00416a] via-[#003560] to-[#00416a] text-white text-xs relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4">
+            <div className="hidden md:flex items-center gap-5 text-white/65">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                100% Online · CA-Assisted
+              </span>
+              <span className="text-white/25">·</span>
+              <span className="flex items-center gap-1">
+                <Clock size={10} className="text-sky-300" />
+                Mon–Sat · 9 AM – 7 PM IST
+              </span>
+              <span className="text-white/25">·</span>
+              <span className="flex items-center gap-1 text-yellow-300/80">
+                <Star size={10} className="fill-yellow-300" />
+                4.9★ Rated · 2,400+ Reviews
+              </span>
+            </div>
+            <span className="md:hidden flex items-center gap-1.5 text-white/70 text-[11px]">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              Pan India · Online · CA-Assisted · 4.9★
+            </span>
+            <div className="flex items-center gap-3">
+              <a href={`tel:+${PHONE}`} className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors">
+                <Phone size={10} className="text-sky-300" />
+                +91 89379 80366
+              </a>
+              <span className="hidden sm:block text-white/25">·</span>
+              <a href="mailto:info@taxvio.in" className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors">
+                <Mail size={10} className="text-sky-300" />
+                info@taxvio.in
+              </a>
+              <button
+                onClick={() => setAnnouncementVisible(false)}
+                className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white ml-1"
+                aria-label="Dismiss announcement"
+              >
+                <X size={10} />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* ── Main Navbar ───────────────────────────────────────────────── */}
+      {/* ── MAIN NAVBAR ── */}
       <header
-        className={`sticky top-0 left-0 z-50 w-full bg-white/95 backdrop-blur-md transition-all duration-300
-          ${scrolled ? "shadow-[0_2px_20px_rgba(0,65,106,0.10)] border-b border-gray-100" : "border-b border-gray-100/60"}`}
+        className={`sticky top-0 left-0 z-50 w-full bg-white/96 backdrop-blur-md transition-all duration-300
+          ${scrolled
+            ? "shadow-[0_4px_24px_rgba(0,65,106,0.10)] border-b border-gray-100"
+            : "border-b border-gray-100/80"
+          }`}
       >
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex h-16 items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex h-16 items-center justify-between gap-4">
 
             {/* ── Logo ── */}
-            <Link href="/" aria-label="Taxvio home" className="shrink-0 flex items-center">
+            <Link
+              href="/"
+              aria-label="Taxvio — GST, Income Tax & Compliance"
+              className="shrink-0 flex items-center group"
+            >
               <Image
                 src={logo}
                 alt="Taxvio — GST, Income Tax & Compliance Services India"
-                className="h-16 w-auto"
+                className="h-12 w-auto transition-opacity group-hover:opacity-90"
                 priority
               />
             </Link>
 
             {/* ── Desktop Nav ── */}
-            <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-
-              <Link href="/"
-                className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                  ${isActive("/")
-                    ? "text-[#00416a] bg-[#00416a]/7"
-                    : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>
+            <nav className="hidden md:flex items-center gap-0.5" aria-label="Main navigation">
+              <Link
+                href="/"
+                className={`relative px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200
+                  ${isActive("/") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}
+              >
                 Home
-                {isActive("/") && (
-                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#00416a] rounded-full" />
-                )}
+                {isActive("/") && <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-[#00416a] rounded-full" />}
               </Link>
 
               {serviceCategories.map((category) => {
                 const hasDropdown = category.services.length > 1;
                 const isOpen = servicesOpen === category.slug;
+                const isCatActive = isActive(`/serviceslist/${category.slug}`);
 
                 if (!hasDropdown) {
                   return (
                     <Link
                       key={category.slug}
                       href={`/serviceslist/${category.slug}/${category.services[0].slug}`}
-                      className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-[#00416a] hover:bg-gray-50 rounded-lg transition-all duration-200"
+                      className="px-3.5 py-2 text-sm font-medium text-gray-600 hover:text-[#00416a] hover:bg-gray-50 rounded-xl transition-all duration-200"
                     >
                       {category.category}
                     </Link>
@@ -121,9 +164,7 @@ export default function Navbar() {
                 }
 
                 return (
-                  <div
-                    key={category.slug}
-                    className="relative"
+                  <div key={category.slug} className="relative"
                     onMouseEnter={() => handleMouseEnter(category.slug)}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -131,30 +172,19 @@ export default function Navbar() {
                       type="button"
                       aria-expanded={isOpen}
                       aria-haspopup="true"
-                      className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                        ${isOpen
-                          ? "text-[#00416a] bg-[#00416a]/7"
-                          : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}
+                      className={`flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200
+                        ${isOpen || isCatActive ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}
                     >
                       {category.category}
-                      <ChevronDown
-                        size={14}
-                        className={`transition-transform duration-200 ${isOpen ? "rotate-180 text-[#00416a]" : "text-gray-400"}`}
-                      />
+                      <ChevronDown size={14} className={`transition-transform duration-200 ${isOpen ? "rotate-180 text-[#00416a]" : "text-gray-400"}`} />
                     </button>
-
-                    {/* Bridge to prevent dropdown flicker */}
-                    <div className="absolute top-full left-0 h-3 w-full" />
-
-                    {/* Dropdown */}
+                    {isOpen && <div className="absolute top-full left-0 h-4 w-full" />}
                     {isOpen && (
-                      <div
-                        className="absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2"
+                      <div className="absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2"
                         onMouseEnter={() => handleMouseEnter(category.slug)}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {/* Tip arrow */}
-                        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45 z-10" />
+                        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45 z-10 shadow-sm" />
                         <div className="relative animate-in fade-in slide-in-from-top-2 duration-150">
                           <ServicesDrawer category={category} />
                         </div>
@@ -164,139 +194,226 @@ export default function Navbar() {
                 );
               })}
 
-              <Link href="/about"
-                className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                  ${isActive("/about")
-                    ? "text-[#00416a] bg-[#00416a]/7"
-                    : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>
-                About
-              </Link>
-
-              <Link href="/city"
-                className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                  ${isActive("/city")
-                    ? "text-[#00416a] bg-[#00416a]/7"
-                    : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>
-                Cities
-              </Link>
+              <Link href="/about" className={`px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${isActive("/about") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>About</Link>
+              <Link href="/city" className={`px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${isActive("/city") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>Cities</Link>
+              <Link href="/reviews" className={`px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${isActive("/reviews") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>Reviews</Link>
             </nav>
 
             {/* ── Desktop CTAs ── */}
             <div className="hidden md:flex items-center gap-2 shrink-0">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
+              <a
+                href={`tel:+${PHONE}`}
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:border-[#00416a]/30 hover:text-[#00416a] hover:bg-gray-50 active:scale-[0.97] transition-all duration-200"
+                aria-label="Call Taxvio"
+              >
+                <Phone size={14} className="text-[#00416a] shrink-0" />
+                <span className="hidden lg:block">Call</span>
+              </a>
+              <a
+                href={WA}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="WhatsApp Taxvio"
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-semibold hover:bg-green-100 hover:border-green-300 active:scale-[0.97] transition-all duration-200">
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#25d366]/10 border border-[#25d366]/25 text-[#16a34a] text-sm font-semibold hover:bg-[#25d366]/15 hover:border-[#25d366]/40 active:scale-[0.97] transition-all duration-200"
+              >
                 <MessageCircle size={15} className="shrink-0" />
                 WhatsApp
               </a>
               <Link
                 href="/contact"
-                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#00416a] text-white text-sm font-bold shadow-md hover:bg-[#003050] hover:shadow-lg active:scale-[0.97] transition-all duration-200"
+                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#00416a] text-white text-sm font-bold shadow-lg shadow-[#00416a]/20 hover:bg-[#003050] hover:shadow-xl hover:shadow-[#00416a]/25 active:scale-[0.97] transition-all duration-200"
               >
                 Free Consultation
+                <ArrowRight size={14} className="shrink-0" />
               </Link>
             </div>
 
-            {/* ── Mobile Toggle ── */}
-            <button
-              onClick={() => setOpen(!open)}
-              className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:scale-95 transition-all"
-              aria-label={open ? "Close menu" : "Open menu"}
-              aria-expanded={open}
-            >
-              {open ? <X size={20} /> : <Menu size={20} />}
-            </button>
+            {/* ── Mobile: right side CTAs + hamburger ── */}
+            <div className="flex md:hidden items-center gap-2 shrink-0">
+              {/* Inline WhatsApp button on mobile header */}
+              <a
+                href={WA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-green-50 border border-green-200 text-green-700 text-xs font-bold active:scale-95 transition-all"
+                aria-label="WhatsApp Taxvio"
+              >
+                <MessageCircle size={14} className="shrink-0" />
+                <span>Chat</span>
+              </a>
+              <button
+                onClick={() => setOpen(!open)}
+                className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-[#00416a]/30 hover:text-[#00416a] active:scale-95 transition-all"
+                aria-label={open ? "Close menu" : "Open menu"}
+                aria-expanded={open}
+              >
+                {open ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* ── Active page indicator bar ── */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#00416a]/20 to-transparent" />
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[2px]"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(0,65,106,0.15), transparent)" }}
+        />
       </header>
 
-      {/* ── Mobile Menu ───────────────────────────────────────────────── */}
+      {/* ── MOBILE MENU DRAWER ── */}
       <div
         className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${open ? "pointer-events-auto" : "pointer-events-none"}`}
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
           onClick={() => setOpen(false)}
         />
 
         {/* Drawer panel */}
         <nav
           aria-label="Mobile navigation"
-          className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-xs bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+          className={`fixed top-0 right-0 bottom-0 w-[85%] max-w-[360px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
             ${open ? "translate-x-0" : "translate-x-full"}`}
         >
-          {/* Drawer header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-[#00416a] to-[#0077b6]">
-            <Image
-              src={logo}
-              alt="Taxvio"
-              className="h-16 w-auto brightness-0 invert"
-            />
+
+          {/* ── Drawer Header ── */}
+          <div
+            className="relative flex items-center justify-between px-5 py-4 shrink-0 overflow-hidden"
+            style={{ background: "linear-gradient(135deg, #00416a 0%, #005a90 100%)" }}
+          >
+            <div className="absolute inset-0 opacity-[0.06]"
+              style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+            <Link href="/" onClick={() => setOpen(false)} className="relative">
+              <Image
+                src={logo}
+                alt="Taxvio"
+                className="h-12 w-auto brightness-0 invert"
+                priority
+              />
+            </Link>
             <button
               onClick={() => setOpen(false)}
-              className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/15 text-white hover:bg-white/25 transition"
+              className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-white/15 text-white hover:bg-white/25 transition"
               aria-label="Close menu"
             >
               <X size={18} />
             </button>
           </div>
 
-          {/* Scrollable nav links */}
-          <div className="flex-1 overflow-y-auto px-4 py-5 space-y-1">
-            {/* Quick contact strip */}
-            <div className="flex gap-2 mb-4">
-              <a href={`tel:${PHONE}`}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#00416a]/8 text-[#00416a] text-xs font-bold border border-[#00416a]/15">
-                <Phone size={13} /> Call Now
-              </a>
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-green-50 text-green-700 text-xs font-bold border border-green-200">
-                <MessageCircle size={13} /> WhatsApp
-              </a>
+          {/* ── Trust Strip ── */}
+          <div className="flex items-center justify-center gap-3 py-2 bg-[#00416a]/5 border-b border-gray-100 shrink-0">
+            <div className="flex items-center gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={11} className="fill-yellow-400 text-yellow-400" />
+              ))}
             </div>
-
-            {/* Nav links */}
-            {[
-              { href: "/", label: "Home" },
-              { href: "/about", label: "About Us" },
-              { href: "/city", label: "Cities We Serve" },
-              { href: "/contact", label: "Contact Us" },
-            ].map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all
-                  ${isActive(href)
-                    ? "bg-[#00416a]/8 text-[#00416a]"
-                    : "text-gray-700 hover:bg-gray-50 hover:text-[#00416a]"}`}
-              >
-                {label}
-              </Link>
-            ))}
-
-            {/* Services accordion */}
-            <div className="pt-2">
-              <p className="px-4 pb-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">Our Services</p>
-              <MobileServicesMenu closeMenu={() => setOpen(false)} />
-            </div>
+            <span className="text-xs font-bold text-[#00416a]">4.9★</span>
+            <span className="text-xs text-gray-400">· 2,400+ reviews</span>
+            <span className="text-gray-300">·</span>
+            <span className="flex items-center gap-1 text-xs text-gray-500">
+              <BadgeCheck size={11} className="text-[#00416a]" />
+              CA-Assisted
+            </span>
           </div>
 
-          {/* Drawer footer CTA */}
-          <div className="p-4 border-t border-gray-100 bg-gray-50">
+          {/* ── Scrollable Content ── */}
+          <div className="flex-1 overflow-y-auto overscroll-contain">
+
+            {/* Quick Contact Buttons */}
+            <div className="flex gap-2.5 px-4 pt-4 pb-3 shrink-0">
+              <a
+                href={`tel:+${PHONE}`}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#00416a]/8 text-[#00416a] text-sm font-bold border border-[#00416a]/15 hover:bg-[#00416a]/12 active:scale-95 transition-all"
+              >
+                <Phone size={16} />
+                Call Now
+              </a>
+              <a
+                href={WA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-green-50 text-green-700 text-sm font-bold border border-green-200 hover:bg-green-100 active:scale-95 transition-all"
+              >
+                <MessageCircle size={16} />
+                WhatsApp
+              </a>
+            </div>
+
+            {/* Divider */}
+            <div className="mx-4 mb-1 h-px bg-gray-100" />
+
+            {/* Primary Nav Links */}
+            <div className="px-3 py-2 space-y-0.5">
+              {[
+                { href: "/", label: "🏠  Home" },
+                { href: "/about", label: "👥  About Us" },
+                { href: "/city", label: "📍  Cities We Serve" },
+                { href: "/reviews", label: "⭐  Reviews & FAQ" },
+                { href: "/contact", label: "📞  Contact Us" },
+              ].map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all
+                    ${isActive(href)
+                      ? "bg-[#00416a]/8 text-[#00416a] border border-[#00416a]/15"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-[#00416a]"
+                    }`}
+                >
+                  {label}
+                  {isActive(href) && <span className="w-2 h-2 rounded-full bg-[#00416a]" />}
+                </Link>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="mx-4 mt-2 mb-1 h-px bg-gray-100" />
+
+            {/* Services Section */}
+            <div className="px-3 pt-3 pb-2">
+              <p className="px-2 pb-3 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                Our Services
+              </p>
+              <MobileServicesMenu closeMenu={() => setOpen(false)} />
+            </div>
+
+            {/* View All Services */}
+            <div className="px-3 pb-4">
+              <Link
+                href="/serviceslist"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-between w-full px-4 py-3.5 rounded-2xl border border-[#00416a]/20 text-[#00416a] text-sm font-bold hover:bg-[#00416a]/5 active:scale-[0.98] transition-all"
+              >
+                <span>View All 40+ Services</span>
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+
+          </div>
+
+          {/* ── Drawer Footer CTA ── */}
+          <div className="p-4 border-t border-gray-100 bg-gradient-to-b from-white to-gray-50/50 shrink-0">
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[#00416a] text-white text-sm font-bold shadow-md active:scale-[0.98] transition-all"
+              className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-[#00416a] text-white text-base font-bold shadow-lg shadow-[#00416a]/25 active:scale-[0.98] transition-all"
             >
-              Free Consultation →
+              Free Consultation
+              <ArrowRight size={16} />
             </Link>
-            <p className="text-center text-[10px] text-gray-400 mt-2">Starting ₹499 · CA-Assisted · Pan India</p>
+            <div className="flex items-center justify-center gap-3 mt-2.5 text-[11px] text-gray-400">
+              <span className="flex items-center gap-1">
+                <BadgeCheck size={11} className="text-[#00416a]" />
+                CA-Assisted
+              </span>
+              <span>·</span>
+              <span>Starting ₹499</span>
+              <span>·</span>
+              <span>Pan India</span>
+            </div>
           </div>
+
         </nav>
       </div>
     </>
