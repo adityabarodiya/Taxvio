@@ -1,3 +1,4 @@
+// app/state/delhi/page.tsx
 import React from 'react';
 
 const DelhiPage = () => {
