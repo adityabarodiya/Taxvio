@@ -593,7 +593,7 @@ export default function GSTAmendmentClient() {
                   items: ["Bank account update", "Email / mobile change", "Authorised signatory update", "HSN / nature of business change", "Instant approval — no wait"],
                 },
                 {
-                  plan: "Core Amendment", price: "₹1,499", highlight: true,
+                  plan: "Core Amendment", price: "₹1,999", highlight: true,
                   items: ["Business name / address change", "Partner / director addition or removal", "Principal place of business", "REG-03 officer notice reply", "REG-15 certificate delivery"],
                 },
                 {
@@ -695,12 +695,12 @@ export default function GSTAmendmentClient() {
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               {[
-                { title: "GST Registration",       href: "/serviceslist/gst/gst-registration",  desc: "New GSTIN in 3–7 days — ₹1,499" },
-                { title: "GST Return Filing",       href: "/serviceslist/gst/gst-return",        desc: "Monthly GSTR-1 & GSTR-3B — ₹499/month" },
-                { title: "GST Cancellation",        href: "/serviceslist/gst/gst-cancellation",  desc: "Voluntary GSTIN cancellation — ₹1,499" },
+                { title: "GST Registration",       href: "/serviceslist/gst/gst-registration",  desc: "New GSTIN in 3–7 days — ₹1,999" },
+                { title: "GST Return Filing",       href: "/serviceslist/gst/gst-return",        desc: "Monthly GSTR-1 & GSTR-3B — ₹999/month" },
+                { title: "GST Cancellation",        href: "/serviceslist/gst/gst-cancellation",  desc: "Voluntary GSTIN cancellation — ₹1,999" },
                 { title: "GST Notice Reply",        href: "/serviceslist/gst/gst-notice-reply",  desc: "ASMT-10, DRC-01, SCN reply — ₹1,999" },
                 { title: "GSTR-9 Annual Return",    href: "/serviceslist/gst/gstr-9",            desc: "Annual reconciliation & filing — ₹2,999" },
-                { title: "GST Refund",              href: "/serviceslist/gst/gst-refund",        desc: "Export & inverted duty refund — ₹2,499" },
+                { title: "GST Refund",              href: "/serviceslist/gst/gst-refund",        desc: "Export & inverted duty refund — ₹2,999" },
               ].map(({ title, href, desc }) => (
                 <Link key={title} href={href}
                   className="group flex items-start gap-3 p-5 bg-white border border-gray-100 rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">

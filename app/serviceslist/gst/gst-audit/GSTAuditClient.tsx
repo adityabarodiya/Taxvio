@@ -153,7 +153,7 @@ const serviceSchema = {
   areaServed: "India",
   offers: {
     "@type": "Offer",
-    price: "3999",
+    price: "4999",
     priceCurrency: "INR",
     description: "GST Audit Assistance — starting ₹3,999 including pre-audit reconciliation and representation.",
   },
@@ -607,15 +607,15 @@ export default function GSTAuditClient() {
             <div className="grid md:grid-cols-3 gap-5">
               {[
                 {
-                  plan: "Scrutiny Reply (Section 61)", price: "₹1,999", highlight: false,
+                  plan: "Scrutiny Reply (Section 61)", price: "₹2,999", highlight: false,
                   items: ["ASMT-10 notice analysis", "ASMT-11 reply drafting", "GSTR-1 vs GSTR-3B reconciliation", "ITC mismatch explanation", "WhatsApp support"],
                 },
                 {
-                  plan: "Departmental Audit (Section 65)", price: "₹3,999", highlight: true,
+                  plan: "Departmental Audit (Section 65)", price: "₹4,999", highlight: true,
                   items: ["ADT-01 notice review", "Pre-audit reconciliation", "Full document compilation", "CA representation during audit", "Demand reply / pre-SCN submission"],
                 },
                 {
-                  plan: "Special Audit + Demand Defence", price: "₹7,999", highlight: false,
+                  plan: "Special Audit + Demand Defence", price: "₹9,999", highlight: false,
                   items: ["Section 66 special audit handling", "Full ITC health check", "Show Cause Notice (SCN) reply", "Personal hearing representation", "First appellate (GST officer) if needed"],
                 },
               ].map(({ plan, price, highlight, items }) => (

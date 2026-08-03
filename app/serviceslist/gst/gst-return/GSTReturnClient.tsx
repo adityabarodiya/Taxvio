@@ -111,15 +111,15 @@ const STEPS = [
 
 const FEES = [
   {
-    plan: "Basic Return Filing", price: "₹499/month", highlight: false,
+    plan: "Basic Return Filing", price: "₹999/month", highlight: false,
     items: ["GSTR-1 monthly filing", "GSTR-3B monthly filing", "Up to 50 invoices/month", "ARN acknowledgement delivery", "Email/WhatsApp support"],
   },
   {
-    plan: "Professional Package", price: "₹999/month", highlight: true,
+    plan: "Professional Package", price: "₹1,999/month", highlight: true,
     items: ["GSTR-1 + GSTR-3B filing", "Up to 200 invoices/month", "GSTR-2B ITC reconciliation", "Supplier mismatch follow-up", "Priority WhatsApp support"],
   },
   {
-    plan: "Annual Compliance Bundle", price: "₹8,999/yr", highlight: false,
+    plan: "Annual Compliance Bundle", price: "₹12,999/yr", highlight: false,
     items: ["12 months GSTR-1 + GSTR-3B", "GSTR-9 annual return", "GSTR-2B reconciliation", "QRMP scheme management", "Nil return filing included"],
   },
 ];
@@ -167,7 +167,7 @@ const serviceSchema = {
   name: "GST Return Filing India",
   serviceType: "GST Return Filing",
   description:
-    "Professional GST return filing services — GSTR-1, GSTR-3B, GSTR-9, GSTR-9C, QRMP management, ITC reconciliation. Starting ₹499/month. CA-assisted, pan India.",
+    "Professional GST return filing services — GSTR-1, GSTR-3B, GSTR-9, GSTR-9C, QRMP management, ITC reconciliation. Starting ₹999/month. CA-assisted, pan India.",
   provider: {
     "@type": "ProfessionalService",
     name: "Taxvio",
@@ -183,9 +183,9 @@ const serviceSchema = {
   areaServed: "India",
   offers: {
     "@type": "Offer",
-    price: "499",
+    price: "999",
     priceCurrency: "INR",
-    description: "Monthly GST return filing (GSTR-1 + GSTR-3B) starting ₹499/month.",
+    description: "Monthly GST return filing (GSTR-1 + GSTR-3B) starting ₹999/month.",
   },
 };
 
@@ -261,7 +261,7 @@ export default function GSTReturnClient() {
                     Accurate, on-time GST return filing for traders, manufacturers, service providers,
                     e-commerce sellers, and exporters. ITC reconciliation, QRMP management, and GSTR-9
                     annual returns. CA-assisted, starting at{" "}
-                    <strong className="text-white">₹499/month</strong>.
+                    <strong className="text-white">₹999/month</strong>.
                   </motion.p>
 
                   <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
@@ -296,7 +296,7 @@ export default function GSTReturnClient() {
                     </div>
                     <div className="p-6 space-y-4">
                       {[
-                        { icon: "₹",  label: "Starting Fee",        val: "₹499/month" },
+                        { icon: "₹",  label: "Starting Fee",        val: "₹999/month" },
                         { icon: "📅", label: "GSTR-1 Due Date",     val: "11th of next month" },
                         { icon: "📅", label: "GSTR-3B Due Date",    val: "20th of next month" },
                         { icon: "📅", label: "GSTR-9 Due Date",     val: "31st December" },
@@ -312,7 +312,7 @@ export default function GSTReturnClient() {
                     <div className="px-6 pb-6">
                       <a href={WA} target="_blank" rel="noopener noreferrer"
                         className="block w-full text-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold transition hover:scale-105">
-                        Start Filing — ₹499/month →
+                        Start Filing — ₹999/month →
                       </a>
                     </div>
                   </div>
@@ -815,11 +815,11 @@ export default function GSTReturnClient() {
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               {[
-                { title: "GST Registration",     href: "/serviceslist/gst/gst-registration",  desc: "New GSTIN in 3–7 days — ₹1,499" },
+                { title: "GST Registration",     href: "/serviceslist/gst/gst-registration",  desc: "New GSTIN in 3–7 days — ₹1,999" },
                 { title: "GST LUT Filing",        href: "/serviceslist/gst/gst-lut",           desc: "Zero-rated exports without IGST — ₹999" },
                 { title: "GSTR-9 Annual Return",  href: "/serviceslist/gst/gstr-9",            desc: "Annual reconciliation & filing — ₹2,999" },
                 { title: "GST E-Invoicing",       href: "/serviceslist/gst/gst-e-invoicing",   desc: "IRN, QR code & ERP setup — ₹1,999" },
-                { title: "GST Refund",            href: "/serviceslist/gst/gst-refund",        desc: "Export & inverted duty refund — ₹2,499" },
+                { title: "GST Refund",            href: "/serviceslist/gst/gst-refund",        desc: "Export & inverted duty refund — ₹2,999" },
                 { title: "GST Notice Reply",      href: "/serviceslist/gst/gst-notice-reply",  desc: "ASMT-10, DRC-01, SCN reply — ₹1,999" },
               ].map(({ title, href, desc }) => (
                 <Link key={title} href={href}
@@ -851,7 +851,7 @@ export default function GSTReturnClient() {
             </motion.h2>
             <motion.p variants={fadeUp} className="mt-4 text-lg"
               style={{ color: "rgba(255,255,255,0.72)" }}>
-              CA-assisted GSTR-1 &amp; GSTR-3B filing from ₹499/month. ITC reconciliation, QRMP
+              CA-assisted GSTR-1 &amp; GSTR-3B filing from ₹999/month. ITC reconciliation, QRMP
               management, and GSTR-9 annual return included in packages. 100% online, pan India.
             </motion.p>
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
