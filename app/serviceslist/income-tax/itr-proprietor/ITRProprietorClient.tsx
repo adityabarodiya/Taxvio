@@ -26,7 +26,7 @@ const faqJsonLd = {
   mainEntity: [
     { "@type": "Question", name: "Which ITR form should a proprietor file?", acceptedAnswer: { "@type": "Answer", text: "File ITR-4 if opting for presumptive taxation (44AD/44ADA) within limits. File ITR-3 if maintaining regular books, exceeding presumptive limits, or liable to tax audit." } },
     { "@type": "Question", name: "What is presumptive taxation under Section 44AD?", acceptedAnswer: { "@type": "Answer", text: "Section 44AD allows eligible small businesses with turnover up to ₹3 crore (digital) or ₹2 crore (cash) to declare 6% or 8% as profit without maintaining detailed books." } },
-    { "@type": "Question", name: "What is the ITR filing due date for proprietors FY 2025-26?", acceptedAnswer: { "@type": "Answer", text: "Non-audit: 31st July 2026. Tax audit cases: 31st October 2026. Audit report due: 30th September 2026." } },
+    { "@type": "Question", name: "What is the ITR filing due date for proprietors FY 2025-26?", acceptedAnswer: { "@type": "Answer", text: "Non-audit: 31st August 2026. Tax audit cases: 31st October 2026. Audit report due: 30th September 2026." } },
   ],
 };
 
@@ -97,7 +97,7 @@ export default function ITRProprietorClient() {
                   {[
                     ["📋", "ITR-4 (presumptive) or ITR-3 (books)"],
                     ["💸", "Taxed at individual slab rates"],
-                    ["📅", "Non-audit due: 31st July 2026"],
+                    ["📅", "Non-audit due: 31st August 2026"],
                     ["🔍", "Audit due: 31st October 2026"],
                     ["⚠️", "Late = lose business loss carry-forward"],
                     ["💰", "Starting fee: ₹1,499"],
@@ -119,7 +119,7 @@ export default function ITRProprietorClient() {
             {[
               { number: "ITR-3/4", label: "Correct Form for Proprietors", icon: "📋" },
               { number: "44AD/ADA", label: "Presumptive Tax Relief Schemes", icon: "💡" },
-              { number: "31 July", label: "Non-Audit Deadline 2026", icon: "📅" },
+              { number: "31 August", label: "Non-Audit Deadline 2026", icon: "📅" },
               { number: "₹1,499", label: "Starting Filing Fee", icon: "💰" },
             ].map((s) => (
               <div key={s.label} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
@@ -586,7 +586,7 @@ export default function ITRProprietorClient() {
               <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
               <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
                 <div className="max-w-2xl text-center lg:text-left">
-                  <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">File Before 31st July 2026</p>
+                  <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">File Before 31st August 2026</p>
                   <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
                     File Your Proprietorship ITR<br />Accurately & On Time
                   </h3>
@@ -622,14 +622,14 @@ function DeadlineBanner() {
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
 
   useEffect(() => {
-    const deadline = new Date("July 31, 2026").getTime();
+    const deadline = new Date("August 31, 2026").getTime();
     const today = new Date().getTime();
     setDaysLeft(Math.ceil((deadline - today) / (1000 * 60 * 60 * 24)));
   }, []);
 
   return (
     <div className="bg-red-600 text-white text-center py-3 font-semibold text-sm px-4" role="alert" aria-live="polite">
-      ⏳ ITR Filing Deadline — Non-Audit: <strong>31st July 2026</strong> | Tax Audit: <strong>31st Oct 2026</strong>
+      ⏳ ITR Filing Deadline — Non-Audit: <strong>31st August 2026</strong> | Tax Audit: <strong>31st Oct 2026</strong>
       &nbsp;|&nbsp; {daysLeft !== null ? <strong>{daysLeft} Days Left (Non-Audit)</strong> : "Act Now"} — Late Filing = Loss of Business Loss Carry-Forward!
     </div>
   );
@@ -693,7 +693,7 @@ function FAQSection() {
     { q: "What is presumptive taxation under Section 44AD for businesses?", a: "Section 44AD allows eligible small businesses with turnover up to ₹3 crore (digital) or ₹2 crore (cash) to declare 6% or 8% of turnover as profit respectively — without maintaining detailed books of accounts. This simplifies compliance significantly. However, opting out after one year means you cannot re-enter the scheme for the next 5 years." },
     { q: "What is the Section 44ADA limit for professionals in FY 2025-26?", a: "For FY 2025-26, specified professionals (doctors, lawyers, CAs, architects, engineers, interior designers, technical consultants, film artists, etc.) with gross receipts up to ₹75 lakh (if 95% receipts are digital) or ₹50 lakh (cash) can opt for 44ADA and declare 50% of receipts as profit without maintaining detailed books." },
     { q: "Is tax audit mandatory for my proprietorship?", a: "Tax audit under Section 44AB is mandatory if business turnover exceeds ₹1 crore (₹10 crore for 95% digital transactions) or professional receipts exceed ₹50 lakh. It is also required if you opt out of presumptive taxation and declare lower profit than the prescribed rate. The audit report (Form 3CB/3CD) must be filed by 30th September." },
-    { q: "What is the ITR filing due date for proprietors for FY 2025-26?", a: "Non-audit proprietors: 31st July 2026. Tax audit cases: 31st October 2026. Tax audit report (Form 3CB/3CD): 30th September 2026. Filing after these dates attracts Section 234F penalty (up to ₹5,000) plus Section 234A interest — and permanently forfeits business loss carry-forward for that year." },
+    { q: "What is the ITR filing due date for proprietors for FY 2025-26?", a: "Non-audit proprietors: 31st August 2026. Tax audit cases: 31st October 2026. Tax audit report (Form 3CB/3CD): 30th September 2026. Filing after these dates attracts Section 234F penalty (up to ₹5,000) plus Section 234A interest — and permanently forfeits business loss carry-forward for that year." },
     { q: "Can I carry forward business loss if I miss the ITR deadline?", a: "No. Business losses (other than house property loss and unabsorbed depreciation) cannot be carried forward if the ITR is filed after the due date. This is one of the most severe consequences of late filing for proprietors — the ability to offset future profits is permanently lost for that year, resulting in higher tax in subsequent years." },
   ];
 

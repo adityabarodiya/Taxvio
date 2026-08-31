@@ -87,7 +87,7 @@ const SERVICE_CATEGORIES = [
     accentBorder: "border-sky-100",
     accentText: "text-sky-700",
     badgeColor: "bg-sky-100 text-sky-700",
-    startingPrice: "₹499",
+    startingPrice: "₹799",
     tagline: "ITR Filing, TDS & Tax Compliance",
     description:
       "ITR filing for salaried, proprietors, firms, LLPs & companies; quarterly TDS/TCS returns; tax audit; 12A/80G registration; PAN/TAN; and income tax scrutiny reply — across all MP cities.",
@@ -138,7 +138,7 @@ const SERVICE_CATEGORIES = [
     accentBorder: "border-violet-100",
     accentText: "text-violet-700",
     badgeColor: "bg-violet-100 text-violet-700",
-    startingPrice: "₹1,999",
+    startingPrice: "₹3,999",
     tagline: "Company Formation & MCA Compliance",
     description:
       "Private Limited company formation, LLP & OPC registration, Section 8, annual ROC compliance (AOC-4, MGT-7), director changes, company name change, authorised capital increase, and company closure — across all MP cities.",
@@ -208,7 +208,7 @@ const localBusinessSchema = {
     ratingValue: "4.9",
     reviewCount: "2400",
   },
-  priceRange: "₹499 - ₹9999",
+  priceRange: "₹799 - ₹3,999",
   openingHours: "Mo-Sa 09:00-19:00",
 };
 
@@ -259,7 +259,7 @@ const faqSchema = {
       name: "Is Taxvio's service available online for MP businesses?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes — Taxvio operates 100% online through a WhatsApp-first model. MP business owners can share documents on WhatsApp, get CA & CS consultation, and receive completed filings without any office visit. Services start from ₹499.",
+        text: "Yes — Taxvio operates 100% online through a WhatsApp-first model. MP business owners can share documents on WhatsApp, get CA & CS consultation, and receive completed filings without any office visit. Services start from ₹799.",
       },
     },
   ],
@@ -367,7 +367,7 @@ export default function MPPillarPage() {
                   <strong className="text-white">ROC company registration</strong> — across all{" "}
                   <strong className="text-white">{MP_CITIES.length}+</strong> cities in
                   Madhya Pradesh. CA &amp; CS assisted, 100% online, starting{" "}
-                  <strong className="text-violet-300">₹499</strong>.
+                  <strong className="text-violet-300">₹799</strong>.
                 </p>
 
                 {/* Category quick-links */}
@@ -434,7 +434,7 @@ export default function MPPillarPage() {
                     { val: "4",                    label: "Service Categories",    icon: ClipboardList },
                     { val: "30+",                  label: "Individual Services",   icon: FileText },
                     { val: "20,000+",              label: "Clients Served",        icon: Users },
-                    { val: "₹499",                 label: "Starting Price",        icon: IndianRupee },
+                    { val: "₹799",                 label: "Starting Price",        icon: IndianRupee },
                     { val: "4.9★",                 label: "Average Rating",        icon: Star },
                   ].map(({ val, label, icon: Icon }) => (
                     <div

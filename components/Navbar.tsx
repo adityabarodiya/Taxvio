@@ -31,11 +31,21 @@ export default function Navbar() {
   const [servicesOpen, setServicesOpen] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [announcementVisible, setAnnouncementVisible] = useState(true);
+  const [scrollDir, setScrollDir] = useState<"up" | "down">("up");
   const pathname = usePathname();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastY = useRef(0);
 
+  // Track scroll position + direction so the announcement bar can tuck
+  // itself away on scroll-down (more room on mobile) and return on scroll-up.
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 8);
+    const handleScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      if (y > lastY.current && y > 120) setScrollDir("down");
+      else setScrollDir("up");
+      lastY.current = y;
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -47,7 +57,9 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   const handleMouseEnter = (slug: string) => {
@@ -62,70 +74,79 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  const showAnnouncement = announcementVisible && scrollDir === "up";
+
   return (
     <>
-      {/* ── TOP ANNOUNCEMENT BAR ── */}
-      {announcementVisible && (
-        <div className="bg-gradient-to-r from-[#00416a] via-[#003560] to-[#00416a] text-white text-xs relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4">
-            <div className="hidden md:flex items-center gap-5 text-white/65">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                100% Online · CA-Assisted
-              </span>
-              <span className="text-white/25">·</span>
-              <span className="flex items-center gap-1">
-                <Clock size={10} className="text-sky-300" />
-                Mon–Sat · 9 AM – 7 PM IST
-              </span>
-              <span className="text-white/25">·</span>
-              <span className="flex items-center gap-1 text-yellow-300/80">
-                <Star size={10} className="fill-yellow-300" />
-                4.9★ Rated · 2,400+ Reviews
-              </span>
-            </div>
-            <span className="md:hidden flex items-center gap-1.5 text-white/70 text-[11px]">
+      {/* ── TOP ANNOUNCEMENT BAR (collapses on scroll-down, stays dismissible) ── */}
+      <div
+        className={`bg-gradient-to-r from-[#00416a] via-[#003560] to-[#00416a] text-white text-xs overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out motion-reduce:transition-none
+          ${showAnnouncement ? "max-h-9 opacity-100" : "max-h-0 opacity-0"}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4">
+          <div className="hidden md:flex items-center gap-5 text-white/65">
+            <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              Pan India · Online · CA-Assisted · 4.9★
+              100% Online · CA-Assisted
             </span>
-            <div className="flex items-center gap-3">
-              <a href={`tel:+${PHONE}`} className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors">
-                <Phone size={10} className="text-sky-300" />
-                +91 89379 80366
-              </a>
-              <span className="hidden sm:block text-white/25">·</span>
-              <a href="mailto:info@taxvio.in" className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors">
-                <Mail size={10} className="text-sky-300" />
-                info@taxvio.in
-              </a>
-              <button
-                onClick={() => setAnnouncementVisible(false)}
-                className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white ml-1"
-                aria-label="Dismiss announcement"
-              >
-                <X size={10} />
-              </button>
-            </div>
+            <span className="text-white/25">·</span>
+            <span className="flex items-center gap-1">
+              <Clock size={10} className="text-sky-300" />
+              Mon–Sat · 9 AM – 7 PM IST
+            </span>
+            <span className="text-white/25">·</span>
+            <span className="flex items-center gap-1 text-yellow-300/80">
+              <Star size={10} className="fill-yellow-300" />
+              4.9★ Rated · 2,400+ Reviews
+            </span>
+          </div>
+          <span className="md:hidden flex items-center gap-1.5 text-white/70 text-[11px]">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            Pan India · Online · CA-Assisted · 4.9★
+          </span>
+          <div className="flex items-center gap-3">
+            <a
+              href={`tel:+${PHONE}`}
+              className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors"
+            >
+              <Phone size={10} className="text-sky-300" />
+              +91 89379 80366
+            </a>
+            <span className="hidden sm:block text-white/25">·</span>
+            <a
+              href="mailto:info@taxvio.in"
+              className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors"
+            >
+              <Mail size={10} className="text-sky-300" />
+              info@taxvio.in
+            </a>
+            <button
+              onClick={() => setAnnouncementVisible(false)}
+              className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white ml-1 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:outline-none"
+              aria-label="Dismiss announcement"
+            >
+              <X size={10} />
+            </button>
           </div>
         </div>
-      )}
+      </div>
 
       {/* ── MAIN NAVBAR ── */}
       <header
         className={`sticky top-0 left-0 z-50 w-full bg-white/96 backdrop-blur-md transition-all duration-300
-          ${scrolled
-            ? "shadow-[0_4px_24px_rgba(0,65,106,0.10)] border-b border-gray-100"
-            : "border-b border-gray-100/80"
+          ${
+            scrolled
+              ? "shadow-[0_4px_24px_rgba(0,65,106,0.10)] border-b border-gray-100"
+              : "border-b border-gray-100/80"
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between gap-4">
-
             {/* ── Logo ── */}
             <Link
               href="/"
               aria-label="Taxvio — GST, Income Tax & Compliance"
-              className="shrink-0 flex items-center group"
+              className="shrink-0 flex items-center group rounded-lg focus-visible:ring-2 focus-visible:ring-[#00416a]/40 focus-visible:outline-none"
             >
               <Image
                 src={logo}
@@ -135,28 +156,38 @@ export default function Navbar() {
               />
             </Link>
 
-            {/* ── Desktop Nav ── */}
-            <nav className="hidden md:flex items-center gap-0.5" aria-label="Main navigation">
+            {/* ── Desktop Nav (pill-style, filled active state) ── */}
+            <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
               <Link
                 href="/"
-                className={`relative px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200
-                  ${isActive("/") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#00416a]/30 focus-visible:outline-none
+                  ${
+                    isActive("/")
+                      ? "text-white bg-[#00416a] font-semibold shadow-sm shadow-[#00416a]/20"
+                      : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"
+                  }`}
               >
                 Home
-                {isActive("/") && <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-[#00416a] rounded-full" />}
               </Link>
 
               {serviceCategories.map((category) => {
                 const hasDropdown = category.services.length > 1;
                 const isOpen = servicesOpen === category.slug;
                 const isCatActive = isActive(`/serviceslist/${category.slug}`);
+                const pillClasses = (active: boolean) =>
+                  `px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#00416a]/30 focus-visible:outline-none
+                  ${
+                    active
+                      ? "text-white bg-[#00416a] font-semibold shadow-sm shadow-[#00416a]/20"
+                      : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"
+                  }`;
 
                 if (!hasDropdown) {
                   return (
                     <Link
                       key={category.slug}
                       href={`/serviceslist/${category.slug}/${category.services[0].slug}`}
-                      className="px-3.5 py-2 text-sm font-medium text-gray-600 hover:text-[#00416a] hover:bg-gray-50 rounded-xl transition-all duration-200"
+                      className={pillClasses(isCatActive)}
                     >
                       {category.category}
                     </Link>
@@ -164,7 +195,9 @@ export default function Navbar() {
                 }
 
                 return (
-                  <div key={category.slug} className="relative"
+                  <div
+                    key={category.slug}
+                    className="relative"
                     onMouseEnter={() => handleMouseEnter(category.slug)}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -172,20 +205,27 @@ export default function Navbar() {
                       type="button"
                       aria-expanded={isOpen}
                       aria-haspopup="true"
-                      className={`flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200
-                        ${isOpen || isCatActive ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}
+                      onFocus={() => handleMouseEnter(category.slug)}
+                      onBlur={handleMouseLeave}
+                      className={`flex items-center gap-1 ${pillClasses(isOpen || isCatActive)}`}
                     >
                       {category.category}
-                      <ChevronDown size={14} className={`transition-transform duration-200 ${isOpen ? "rotate-180 text-[#00416a]" : "text-gray-400"}`} />
+                      <ChevronDown
+                        size={14}
+                        className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""} ${
+                          isOpen || isCatActive ? "text-white" : "text-gray-400"
+                        }`}
+                      />
                     </button>
                     {isOpen && <div className="absolute top-full left-0 h-4 w-full" />}
                     {isOpen && (
-                      <div className="absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2"
+                      <div
+                        className="absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 z-10"
                         onMouseEnter={() => handleMouseEnter(category.slug)}
                         onMouseLeave={handleMouseLeave}
                       >
-                        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45 z-10 shadow-sm" />
-                        <div className="relative animate-in fade-in slide-in-from-top-2 duration-150">
+                        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45 shadow-sm" />
+                        <div className="relative animate-in fade-in slide-in-from-top-2 duration-150 motion-reduce:transition-none">
                           <ServicesDrawer category={category} />
                         </div>
                       </div>
@@ -194,16 +234,43 @@ export default function Navbar() {
                 );
               })}
 
-              <Link href="/about" className={`px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${isActive("/about") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>About</Link>
-              <Link href="/city" className={`px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${isActive("/city") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>Cities</Link>
-              <Link href="/reviews" className={`px-3.5 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${isActive("/reviews") ? "text-[#00416a] bg-[#00416a]/8 font-semibold" : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"}`}>Reviews</Link>
+              <Link
+                href="/about"
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#00416a]/30 focus-visible:outline-none ${
+                  isActive("/about")
+                    ? "text-white bg-[#00416a] font-semibold shadow-sm shadow-[#00416a]/20"
+                    : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"
+                }`}
+              >
+                About
+              </Link>
+              <Link
+                href="/city"
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#00416a]/30 focus-visible:outline-none ${
+                  isActive("/city")
+                    ? "text-white bg-[#00416a] font-semibold shadow-sm shadow-[#00416a]/20"
+                    : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"
+                }`}
+              >
+                Cities
+              </Link>
+              <Link
+                href="/reviews"
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#00416a]/30 focus-visible:outline-none ${
+                  isActive("/reviews")
+                    ? "text-white bg-[#00416a] font-semibold shadow-sm shadow-[#00416a]/20"
+                    : "text-gray-600 hover:text-[#00416a] hover:bg-gray-50"
+                }`}
+              >
+                Reviews
+              </Link>
             </nav>
 
-            {/* ── Desktop CTAs ── */}
+            {/* ── Desktop CTAs (pill buttons) ── */}
             <div className="hidden md:flex items-center gap-2 shrink-0">
               <a
                 href={`tel:+${PHONE}`}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:border-[#00416a]/30 hover:text-[#00416a] hover:bg-gray-50 active:scale-[0.97] transition-all duration-200"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-gray-200 text-gray-600 text-sm font-medium hover:border-[#00416a]/30 hover:text-[#00416a] hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#00416a]/30 focus-visible:outline-none"
                 aria-label="Call Taxvio"
               >
                 <Phone size={14} className="text-[#00416a] shrink-0" />
@@ -214,40 +281,38 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp Taxvio"
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#25d366]/10 border border-[#25d366]/25 text-[#16a34a] text-sm font-semibold hover:bg-[#25d366]/15 hover:border-[#25d366]/40 active:scale-[0.97] transition-all duration-200"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#25d366]/10 border border-[#25d366]/25 text-[#16a34a] text-sm font-semibold hover:bg-[#25d366]/15 hover:border-[#25d366]/40 active:scale-[0.97] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:outline-none"
               >
                 <MessageCircle size={15} className="shrink-0" />
                 WhatsApp
               </a>
               <Link
                 href="/contact"
-                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#00416a] text-white text-sm font-bold shadow-lg shadow-[#00416a]/20 hover:bg-[#003050] hover:shadow-xl hover:shadow-[#00416a]/25 active:scale-[0.97] transition-all duration-200"
+                className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#00416a] text-white text-sm font-bold shadow-lg shadow-[#00416a]/20 hover:bg-[#003050] hover:shadow-xl hover:shadow-[#00416a]/25 active:scale-[0.97] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#00416a]/50 focus-visible:outline-none"
               >
                 Free Consultation
                 <ArrowRight size={14} className="shrink-0" />
               </Link>
             </div>
 
-            {/* ── Mobile: right side CTAs + hamburger ── */}
+            {/* ── Mobile: compact icon-only CTAs + hamburger ── */}
             <div className="flex md:hidden items-center gap-2 shrink-0">
-              {/* Inline WhatsApp button on mobile header */}
               <a
                 href={WA}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-green-50 border border-green-200 text-green-700 text-xs font-bold active:scale-95 transition-all"
                 aria-label="WhatsApp Taxvio"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 border border-green-200 text-green-700 active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:outline-none"
               >
-                <MessageCircle size={14} className="shrink-0" />
-                <span>Chat</span>
+                <MessageCircle size={17} />
               </a>
               <button
                 onClick={() => setOpen(!open)}
-                className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-[#00416a]/30 hover:text-[#00416a] active:scale-95 transition-all"
+                className="flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-[#00416a]/30 hover:text-[#00416a] active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-[#00416a]/40 focus-visible:outline-none"
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
               >
-                {open ? <X size={20} /> : <Menu size={20} />}
+                {open ? <X size={19} /> : <Menu size={19} />}
               </button>
             </div>
           </div>
@@ -255,45 +320,50 @@ export default function Navbar() {
 
         <div
           className="absolute bottom-0 left-0 right-0 h-[2px]"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(0,65,106,0.15), transparent)" }}
+          style={{
+            background: "linear-gradient(90deg, transparent, rgba(0,65,106,0.15), transparent)",
+          }}
         />
       </header>
 
       {/* ── MOBILE MENU DRAWER ── */}
       <div
-        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${open ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${
+          open ? "pointer-events-auto" : "pointer-events-none"
+        }`}
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none ${
+            open ? "opacity-100" : "opacity-0"
+          }`}
           onClick={() => setOpen(false)}
         />
 
         {/* Drawer panel */}
         <nav
           aria-label="Mobile navigation"
-          className={`fixed top-0 right-0 bottom-0 w-[85%] max-w-[360px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+          className={`fixed top-0 right-0 bottom-0 w-[85%] max-w-[360px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none
             ${open ? "translate-x-0" : "translate-x-full"}`}
         >
-
           {/* ── Drawer Header ── */}
           <div
             className="relative flex items-center justify-between px-5 py-4 shrink-0 overflow-hidden"
             style={{ background: "linear-gradient(135deg, #00416a 0%, #005a90 100%)" }}
           >
-            <div className="absolute inset-0 opacity-[0.06]"
-              style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+            <div
+              className="absolute inset-0 opacity-[0.06]"
+              style={{
+                backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+                backgroundSize: "16px 16px",
+              }}
+            />
             <Link href="/" onClick={() => setOpen(false)} className="relative">
-              <Image
-                src={logo}
-                alt="Taxvio"
-                className="h-12 w-auto brightness-0 invert"
-                priority
-              />
+              <Image src={logo} alt="Taxvio" className="h-12 w-auto brightness-0 invert" priority />
             </Link>
             <button
               onClick={() => setOpen(false)}
-              className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-white/15 text-white hover:bg-white/25 transition"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white hover:bg-white/25 transition focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
               aria-label="Close menu"
             >
               <X size={18} />
@@ -318,12 +388,11 @@ export default function Navbar() {
 
           {/* ── Scrollable Content ── */}
           <div className="flex-1 overflow-y-auto overscroll-contain">
-
             {/* Quick Contact Buttons */}
             <div className="flex gap-2.5 px-4 pt-4 pb-3 shrink-0">
               <a
                 href={`tel:+${PHONE}`}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#00416a]/8 text-[#00416a] text-sm font-bold border border-[#00416a]/15 hover:bg-[#00416a]/12 active:scale-95 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#00416a]/8 text-[#00416a] text-sm font-bold border border-[#00416a]/15 hover:bg-[#00416a]/12 active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-[#00416a]/40 focus-visible:outline-none"
               >
                 <Phone size={16} />
                 Call Now
@@ -332,7 +401,7 @@ export default function Navbar() {
                 href={WA}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-green-50 text-green-700 text-sm font-bold border border-green-200 hover:bg-green-100 active:scale-95 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-green-50 text-green-700 text-sm font-bold border border-green-200 hover:bg-green-100 active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:outline-none"
               >
                 <MessageCircle size={16} />
                 WhatsApp
@@ -355,10 +424,11 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   onClick={() => setOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all
-                    ${isActive(href)
-                      ? "bg-[#00416a]/8 text-[#00416a] border border-[#00416a]/15"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-[#00416a]"
+                  className={`flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-[#00416a]/30 focus-visible:outline-none
+                    ${
+                      isActive(href)
+                        ? "bg-[#00416a]/8 text-[#00416a] border border-[#00416a]/15"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-[#00416a]"
                     }`}
                 >
                   {label}
@@ -383,21 +453,20 @@ export default function Navbar() {
               <Link
                 href="/serviceslist"
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between w-full px-4 py-3.5 rounded-2xl border border-[#00416a]/20 text-[#00416a] text-sm font-bold hover:bg-[#00416a]/5 active:scale-[0.98] transition-all"
+                className="flex items-center justify-between w-full px-4 py-3.5 rounded-2xl border border-[#00416a]/20 text-[#00416a] text-sm font-bold hover:bg-[#00416a]/5 active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-[#00416a]/40 focus-visible:outline-none"
               >
                 <span>View All 40+ Services</span>
                 <ArrowRight size={16} />
               </Link>
             </div>
-
           </div>
 
-          {/* ── Drawer Footer CTA ── */}
-          <div className="p-4 border-t border-gray-100 bg-gradient-to-b from-white to-gray-50/50 shrink-0">
+          {/* ── Drawer Footer CTA (safe-area aware for notched phones) ── */}
+          <div className="p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] border-t border-gray-100 bg-gradient-to-b from-white to-gray-50/50 shrink-0">
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-[#00416a] text-white text-base font-bold shadow-lg shadow-[#00416a]/25 active:scale-[0.98] transition-all"
+              className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-[#00416a] text-white text-base font-bold shadow-lg shadow-[#00416a]/25 active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-[#00416a]/50 focus-visible:outline-none"
             >
               Free Consultation
               <ArrowRight size={16} />
@@ -413,7 +482,6 @@ export default function Navbar() {
               <span>Pan India</span>
             </div>
           </div>
-
         </nav>
       </div>
     </>

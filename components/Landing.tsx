@@ -3,7 +3,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   CheckCircle,
@@ -27,6 +27,7 @@ import {
   HeartHandshake,
   CalendarCheck,
   Award,
+  Sparkles,
 } from "lucide-react";
 import bg1 from "../public/service/bg1.png";
 import type { Variants } from "framer-motion";
@@ -48,7 +49,7 @@ const orgJsonLd = {
     addressCountry: "IN",
   },
   telephone: "+918937980366",
-  priceRange: "₹499 - ₹19999",
+  priceRange: "₹999 - ₹19999",
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "4.9",
@@ -84,7 +85,7 @@ const faqJsonLd = {
       name: "How can I file income tax return online through Taxvio?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Taxvio offers online income tax return filing for salaried individuals, proprietors, partnership firms, LLPs, companies, and trusts. You can upload your documents online and our expert CA team will prepare and file your ITR with maximum deductions and 100% accuracy. Services start from ₹499.",
+        text: "Taxvio offers online income tax return filing for salaried individuals, proprietors, partnership firms, LLPs, companies, and trusts. You can upload your documents online and our expert CA team will prepare and file your ITR with maximum deductions and 100% accuracy. Services start from ₹999.",
       },
     },
     {
@@ -275,7 +276,7 @@ const FAQS = [
   },
   {
     q: "How much does GST registration cost at Taxvio?",
-    a: "GST registration at Taxvio starts from ₹999 including government fees. The process typically takes 3–7 working days after document submission. We also provide post-registration support for GSTR-1 and GSTR-3B filing from ₹499/month.",
+    a: "GST registration at Taxvio starts from ₹999 including government fees. The process typically takes 3–7 working days after document submission. We also provide post-registration support for GSTR-1 and GSTR-3B filing from ₹999/month.",
   },
   {
     q: "Can Taxvio file ITR for freelancers and consultants?",
@@ -296,10 +297,6 @@ const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.92 },
   visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } },
 };
-const slideRight: Variants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
 
 export default function Landing() {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
@@ -317,11 +314,11 @@ export default function Landing() {
     <>
       <Head>
         <title>Taxvio | GST Registration, Income Tax Filing & Company Registration Services in India</title>
-        <meta name="description" content="Taxvio offers professional GST registration, GSTR-1, GSTR-3B filing, income tax return filing for individuals and businesses, company registration, TDS returns, tax audit, 12A/80G, FSSAI license, and ROC compliance services across India. Starting ₹499." />
+        <meta name="description" content="Taxvio offers professional GST registration, GSTR-1, GSTR-3B filing, income tax return filing for individuals and businesses, company registration, TDS returns, tax audit, 12A/80G, FSSAI license, and ROC compliance services across India. Starting ₹999." />
         <meta name="keywords" content="GST registration India, income tax return filing, company registration India, GST return filing, TDS return filing, tax audit India, ITR filing salaried, GST notice reply, 12A 80G registration, FSSAI license, Taxvio" />
         <link rel="canonical" href="https://www.taxvio.in" />
         <meta property="og:title" content="Taxvio | GST, Income Tax & Company Registration Services" />
-        <meta property="og:description" content="End-to-end GST, income tax, company registration and compliance services for businesses across India. Starting ₹499." />
+        <meta property="og:description" content="End-to-end GST, income tax, company registration and compliance services for businesses across India. Starting ₹999." />
         <meta property="og:url" content="https://www.taxvio.in" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://www.taxvio.in/og-home.jpg" />
@@ -369,7 +366,7 @@ export default function Landing() {
               </motion.h1>
 
               <motion.p variants={fadeUp} className="mt-6 text-white/80 text-base md:text-lg leading-relaxed" itemProp="description">
-                Taxvio delivers complete online <strong className="text-white">GST registration</strong>, <strong className="text-white">income tax return filing</strong>, company registration, TDS/TCS returns, tax audit under Section 44AB, FSSAI license, and ROC compliance — serving individuals, startups, and businesses pan-India. Starting at just <strong className="text-sky-300">₹499</strong>.
+                Taxvio delivers complete online <strong className="text-white">GST registration</strong>, <strong className="text-white">income tax return filing</strong>, company registration, TDS/TCS returns, tax audit under Section 44AB, FSSAI license, and ROC compliance — serving individuals, startups, and businesses pan-India. Starting at just <strong className="text-sky-300">₹999</strong>.
               </motion.p>
 
               <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 w-full max-w-sm">
@@ -384,7 +381,7 @@ export default function Landing() {
               <motion.div variants={fadeUp} className="mt-10 grid grid-cols-2 gap-3">
                 {[
                   { label: "GST Registration", price: "from ₹999", icon: "🏢" },
-                  { label: "ITR Filing", price: "from ₹499", icon: "📄" },
+                  { label: "ITR Filing", price: "from ₹999", icon: "📄" },
                   { label: "Company Formation", price: "from ₹6,999", icon: "🏛️" },
                   { label: "TDS Returns", price: "from ₹999", icon: "📊" },
                 ].map(({ label, price, icon }) => (
@@ -919,7 +916,7 @@ export default function Landing() {
                   {[
                     { type: "Private Limited Company", price: "from ₹6,999", features: ["Limited liability for shareholders", "Easy fundraising & investor-friendly", "Separate legal entity status", "Perpetual succession"], ideal: "Startups & growing businesses" },
                     { type: "LLP (Limited Liability Partnership)", price: "from ₹5,999", features: ["Flexible management structure", "Lower compliance burden vs Pvt Ltd", "Partners have limited liability", "No minimum capital required"], ideal: "Professional firms & consultancies" },
-                    { type: "One Person Company (OPC)", price: "from ₹5,499", features: ["Single founder structure", "Limited liability protection", "Separate legal entity", "Easier conversion to Pvt Ltd"], ideal: "Solo entrepreneurs" },
+                    { type: "One Person Company (OPC)", price: "from ₹5,999", features: ["Single founder structure", "Limited liability protection", "Separate legal entity", "Easier conversion to Pvt Ltd"], ideal: "Solo entrepreneurs" },
                   ].map(({ type, price, features, ideal }) => (
                     <div key={type} className="p-5 border border-gray-100 rounded-2xl bg-gray-50 hover:border-[#00416a]/30 hover:bg-blue-50/40 transition-all duration-200">
                       <div className="flex items-start justify-between gap-3 mb-3">

@@ -39,22 +39,22 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ROC Services Across MP | Taxvio",
-    description: "Company registration, LLP, OPC, annual ROC compliance across 400+ MP cities — from ₹1,999.",
+    description: "Company registration, LLP, OPC, annual ROC compliance across 400+ MP cities — from ₹3,999.",
   },
   robots: { index: true, follow: true },
 };
 
 /* ─── Services ──────────────────────────────────────────────────────────────── */
 const ROC_SERVICES = [
-  { label: "Pvt Ltd Formation",      price: "₹4,999",  icon: "🏢", desc: "Inc. PAN & TAN" },
-  { label: "LLP Registration",       price: "₹3,999",  icon: "🏛️", desc: "Inc. agreement" },
-  { label: "OPC Registration",       price: "₹2,999",  icon: "👤", desc: "Solo entrepreneur" },
-  { label: "Section 8 Company",      price: "₹5,999",  icon: "🤝", desc: "NGO / Charity" },
-  { label: "Annual ROC Compliance",  price: "₹2,999",  icon: "📋", desc: "AOC-4 & MGT-7" },
-  { label: "Director Change",        price: "₹1,999",  icon: "👔", desc: "Appointment / Resignation" },
+  { label: "Pvt Ltd Formation",      price: "₹8,999",  icon: "🏢", desc: "Inc. PAN & TAN" },
+  { label: "LLP Registration",       price: "₹5,999",  icon: "🏛️", desc: "Inc. agreement" },
+  { label: "OPC Registration",       price: "₹4,999",  icon: "👤", desc: "Solo entrepreneur" },
+  { label: "Section 8 Company",      price: "₹8,999",  icon: "🤝", desc: "NGO / Charity" },
+  { label: "Annual ROC Compliance",  price: "₹8,999",  icon: "📋", desc: "AOC-4 & MGT-7" },
+  { label: "Director Change",        price: "₹2,999",  icon: "👔", desc: "Appointment / Resignation" },
   { label: "Name Change",            price: "₹2,999",  icon: "✏️", desc: "MCA approval" },
   { label: "Capital Increase",       price: "₹2,499",  icon: "📈", desc: "Authorised capital" },
-  { label: "Company Closure",        price: "₹3,999",  icon: "🔒", desc: "Strike-off STK-2" },
+  { label: "Company Closure",        price: "₹7,999",  icon: "🔒", desc: "Strike-off STK-2" },
 ];
 
 const SEO_SECTIONS = [

@@ -31,7 +31,6 @@ import {
   Timer,
   HeadphonesIcon,
   Sparkles,
-  Percent,
   Gift,
   Tag,
   X,
@@ -39,6 +38,11 @@ import {
 
 const PHONE_NUMBER = "918937980366";
 const WHATSAPP_LINK = `https://wa.me/${PHONE_NUMBER}`;
+
+/* ══════════════════════ THEME ══════════════════════
+   Matches the primary Taxvio palette used sitewide:
+   deep navy #00416a, mid navy #00527f, dark navy #002b45,
+   sky-blue accent #7ecbf0 — no orange anywhere. */
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -58,13 +62,11 @@ const scaleIn: Variants = {
 };
 
 const GRADIENT_BG = {
-  background:
-    "linear-gradient(135deg, #003366 0%, #004080 50%, #0059b3 100%)",
+  background: "linear-gradient(135deg, #00416a 0%, #00527f 50%, #002b45 100%)",
 };
 
 const HERO_GRADIENT = {
-  background:
-    "linear-gradient(135deg, #002347 0%, #003366 40%, #004080 100%)",
+  background: "linear-gradient(135deg, #002b45 0%, #00416a 45%, #00527f 100%)",
 };
 
 const FAQS = [
@@ -149,7 +151,7 @@ const TESTIMONIALS = [
 
 const STATS = [
   { value: "4,800+", label: "Happy Clients", icon: Users },
-  { value: "12,500+", label: "Services Delivered", icon: CheckCircle },
+  { value: "12,000+", label: "Services Delivered", icon: CheckCircle },
   { value: "4.9/5", label: "Client Rating", icon: Star },
   { value: "15 Min", label: "Response Time", icon: Timer },
 ];
@@ -182,48 +184,48 @@ const SERVICE_CATEGORIES = [
     id: "gst",
     label: "GST Services",
     icon: FileText,
-    color: "from-[#003366] to-[#004080]",
+    color: "from-[#00416a] to-[#00527f]",
     services: [
       { name: "GST Registration", price: "₹999", discount: "50% OFF" },
       { name: "GST Return Filing (GSTR-1/3B)", price: "₹499/month", discount: "First month ₹299" },
-      { name: "GST Annual Return (GSTR-9)", price: "₹2,999", discount: "20% OFF" },
-      { name: "GST Refund Application", price: "₹1,999", discount: "" },
+      { name: "GST Annual Return (GSTR-9)", price: "₹3,999", discount: "20% OFF" },
+      { name: "GST Refund Application", price: "₹2,999", discount: "" },
       { name: "GST Notice Reply", price: "₹3,999", discount: "" },
-      { name: "GST LUT Filing", price: "₹999", discount: "" },
-      { name: "GST Cancellation", price: "₹999", discount: "" },
-      { name: "GST E-Invoicing Setup", price: "₹2,499", discount: "New launch offer" },
+      { name: "GST LUT Filing", price: "₹1,999", discount: "" },
+      { name: "GST Cancellation", price: "₹1,499", discount: "" },
+      { name: "GST E-Invoicing Setup", price: "₹3,499", discount: "New launch offer" },
       { name: "GST Amendment/Update", price: "₹799", discount: "" },
       { name: "GSTIN Verification", price: "Free", discount: "" },
       { name: "GST Audit Assistance", price: "₹9,999", discount: "" },
-      { name: "GST for E-Commerce", price: "₹1,499", discount: "" },
+      { name: "GST for E-Commerce", price: "₹1,999", discount: "" },
     ],
   },
   {
     id: "income-tax",
     label: "Income Tax",
     icon: Briefcase,
-    color: "from-[#FF6B35] to-[#ff8555]",
+    color: "from-[#002b45] to-[#00416a]",
     services: [
-      { name: "ITR Filing - Salaried", price: "₹499", discount: "Limited time offer" },
+      { name: "ITR Filing - Salaried", price: "₹799", discount: "Limited time offer" },
       { name: "ITR Filing - Business", price: "₹1,999", discount: "30% OFF" },
-      { name: "ITR Filing - Firm/LLP", price: "₹3,999", discount: "" },
-      { name: "ITR Filing - Company", price: "₹7,999", discount: "" },
-      { name: "TDS Return (24Q/26Q/27Q)", price: "₹999", discount: "" },
-      { name: "TCS Return", price: "₹999", discount: "" },
+      { name: "ITR Filing - Firm/LLP", price: "₹5,999", discount: "" },
+      { name: "ITR Filing - Company", price: "₹9,999", discount: "" },
+      { name: "TDS Return (24Q/26Q/27Q)", price: "₹1,999", discount: "" },
+      { name: "TCS Return", price: "₹1,999", discount: "" },
       { name: "Income Tax Audit", price: "₹14,999", discount: "" },
       { name: "Tax Notice Reply", price: "₹4,999", discount: "" },
       { name: "12A Registration", price: "₹9,999", discount: "" },
       { name: "80G Registration", price: "₹12,999", discount: "" },
-      { name: "Form 15G/15H Filing", price: "₹299", discount: "" },
-      { name: "PAN Card Application", price: "₹199", discount: "Free correction" },
-      { name: "TAN Application", price: "₹499", discount: "" },
+      { name: "Form 15G/15H Filing", price: "₹599", discount: "" },
+      { name: "PAN Card Application", price: "₹199" },
+      { name: "TAN Application", price: "₹999 ", discount: "" },
     ],
   },
   {
     id: "roc",
     label: "ROC / Company",
     icon: Building,
-    color: "from-[#004080] to-[#0059b3]",
+    color: "from-[#00527f] to-[#0074a8]",
     services: [
       { name: "Private Limited Registration", price: "₹6,999", discount: "Includes govt fees" },
       { name: "LLP Registration", price: "₹5,999", discount: "₹1000 cashback" },
@@ -243,7 +245,7 @@ const SERVICE_CATEGORIES = [
     id: "fssai",
     label: "FSSAI",
     icon: Award,
-    color: "from-[#FF6B35] to-[#ff4500]",
+    color: "from-[#00416a] to-[#0074a8]",
     services: [
       { name: "FSSAI Basic Registration", price: "₹1,999", discount: "Fast-track in 7 days" },
       { name: "FSSAI State License", price: "₹4,999", discount: "" },
@@ -258,7 +260,7 @@ const SERVICE_CATEGORIES = [
     id: "other",
     label: "Other Services",
     icon: Globe,
-    color: "from-[#0059b3] to-[#0073e6]",
+    color: "from-[#002b45] to-[#00527f]",
     services: [
       { name: "Trademark Registration", price: "₹4,999", discount: "Including govt fees" },
       { name: "MSME/Udyam Registration", price: "₹499", discount: "Same day service" },
@@ -345,24 +347,24 @@ const SPECIAL_OFFERS = [
     discount: "Flat 30% OFF",
     desc: "On any service above ₹2,000",
     code: "NEW30",
-    validity: "Valid till 31st Dec 2024",
-    color: "from-[#003366] to-[#004080]",
+    validity: "For new clients — mention this code on WhatsApp",
+    color: "from-[#00416a] to-[#00527f]",
   },
   {
     title: "Bundle & Save",
     discount: "Up to 40% OFF",
     desc: "GST + ITR + Company Filing together",
     code: "BUNDLE40",
-    validity: "Limited period offer",
-    color: "from-[#FF6B35] to-[#ff8555]",
+    validity: "Applies when 2+ services are combined",
+    color: "from-[#002b45] to-[#00416a]",
   },
   {
     title: "Refer & Earn",
     discount: "₹500 Cash",
     desc: "For every successful referral",
     code: "REFER500",
-    validity: "No expiry",
-    color: "from-[#004080] to-[#0059b3]",
+    validity: "No expiry — unlimited referrals",
+    color: "from-[#00527f] to-[#0074a8]",
   },
 ];
 
@@ -440,16 +442,16 @@ export default function Contact() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('.service-dropdown-container')) {
+      if (!target.closest(".service-dropdown-container")) {
         setShowServiceDropdown(false);
       }
     };
 
     if (showServiceDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
-    
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showServiceDropdown]);
 
   return (
@@ -478,8 +480,8 @@ export default function Contact() {
             "@context": "https://schema.org",
             "@type": "Organization",
             name: "Taxvio - Professional Tax & Compliance Services",
-            url: "https://taxvio.com",
-            logo: "https://taxvio.com/logo.png",
+            url: "https://taxvio.in",
+            logo: "https://taxvio.in/logo.png",
             contactPoint: {
               "@type": "ContactPoint",
               telephone: "+91-8937980366",
@@ -490,7 +492,7 @@ export default function Contact() {
             aggregateRating: {
               "@type": "AggregateRating",
               ratingValue: "4.9",
-              reviewCount: "4800",
+              reviewCount: "2400",
             },
           }),
         }}
@@ -502,6 +504,7 @@ export default function Contact() {
           href={WHATSAPP_LINK}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Chat with us on WhatsApp"
           className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl flex items-center gap-3 group"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -513,21 +516,24 @@ export default function Contact() {
           <span className="hidden md:block font-semibold text-sm pr-2 group-hover:pr-3 transition-all">
             Chat with CA
           </span>
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-300 rounded-full animate-ping" />
         </motion.a>
 
         {/* ══ TOP ANNOUNCEMENT BAR ═══════════════════════════════════════════ */}
-        <div className="bg-gradient-to-r from-[#FF6B35] to-[#ff8555] text-white py-2.5 px-4 text-center">
+        <div
+          className="text-white py-2.5 px-4 text-center"
+          style={{ background: "linear-gradient(90deg, #00416a 0%, #00527f 100%)" }}
+        >
           <div className="flex items-center justify-center gap-2 flex-wrap text-sm">
-            <Sparkles size={16} className="animate-pulse" />
+            <Sparkles size={16} className="text-[#7ecbf0] animate-pulse" />
             <span className="font-semibold">
-              🎁 Monsoon Special: Flat 30% OFF on all services 
+              Free CA Consultation This Week — No Obligation
             </span>
             <a
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline font-bold hover:text-yellow-200 transition"
+              className="underline font-bold text-[#7ecbf0] hover:text-white transition"
             >
               Claim Now
             </a>
@@ -539,13 +545,15 @@ export default function Contact() {
           className="relative overflow-hidden text-white"
           style={HERO_GRADIENT}
         >
-          {/* Animated background elements */}
+          {/* Decorative background elements */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-10"
-            style={{ background: "radial-gradient(circle, #FF6B35 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, #7ecbf0 0%, transparent 70%)" }} />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-10"
-            style={{ background: "radial-gradient(circle, #0059b3 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, #0074a8 0%, transparent 70%)" }} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none opacity-5"
-            style={{ background: "radial-gradient(circle, #004080 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, #00527f 0%, transparent 70%)" }} />
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full border border-white/10 pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full border border-white/10 pointer-events-none" />
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-12">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -568,7 +576,7 @@ export default function Contact() {
                     {[1, 2, 3].map((i) => (
                       <div
                         key={i}
-                        className="w-6 h-6 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#ff8555] border-2 border-white"
+                        className="w-6 h-6 rounded-full bg-gradient-to-br from-[#7ecbf0] to-[#00416a] border-2 border-white"
                       />
                     ))}
                   </div>
@@ -582,7 +590,7 @@ export default function Contact() {
                   className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight text-white mb-6"
                 >
                   India's Most Trusted
-                  <span className="block mt-2 bg-gradient-to-r from-[#FF6B35] to-[#ffa500] bg-clip-text text-transparent">
+                  <span className="block mt-2 text-[#7ecbf0]">
                     Tax & Compliance
                   </span>
                   <span className="block mt-2">Partner</span>
@@ -594,7 +602,7 @@ export default function Contact() {
                 >
                   Expert CA-assisted GST registration, ITR filing, company
                   formation & tax compliance services — 100% online, 100% secure.
-                  <span className="font-semibold text-[#FF6B35]">
+                  <span className="font-semibold text-[#7ecbf0]">
                     {" "}
                     Starting just ₹499
                   </span>
@@ -606,7 +614,7 @@ export default function Contact() {
                 >
                   <button
                     onClick={() => quickWhatsApp()}
-                    className="group bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-2xl hover:shadow-green-500/50 transition-all"
+                    className="group bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-2xl hover:shadow-green-500/40 transition-all"
                   >
                     <MessageCircle size={22} />
                     Chat on WhatsApp
@@ -664,7 +672,10 @@ export default function Contact() {
               >
                 <div className="bg-white rounded-3xl shadow-2xl border-2 border-white/20 overflow-hidden backdrop-blur-sm">
                   {/* Form Header */}
-                  <div className="bg-gradient-to-r from-[#003366] to-[#004080] px-6 py-6">
+                  <div
+                    className="px-6 py-6"
+                    style={{ background: "linear-gradient(90deg, #00416a 0%, #00527f 100%)" }}
+                  >
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                       <span className="text-sm text-white/80">
@@ -697,7 +708,7 @@ export default function Contact() {
                           onChange={handleChange}
                           required
                           placeholder="Enter your full name"
-                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition"
+                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00416a] focus:border-transparent transition"
                         />
                       </div>
                     </div>
@@ -720,7 +731,7 @@ export default function Contact() {
                           required
                           placeholder="+91 XXXXX XXXXX"
                           pattern="[0-9]{10}"
-                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition"
+                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00416a] focus:border-transparent transition"
                         />
                       </div>
                     </div>
@@ -740,7 +751,7 @@ export default function Contact() {
                           value={form.state}
                           onChange={handleChange}
                           required
-                          className="w-full pl-12 pr-10 py-3.5 border-2 border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition bg-white appearance-none"
+                          className="w-full pl-12 pr-10 py-3.5 border-2 border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#00416a] focus:border-transparent transition bg-white appearance-none"
                         >
                           <option value="">Select your state...</option>
                           {INDIAN_STATES.map((state) => (
@@ -756,7 +767,7 @@ export default function Contact() {
                       </div>
                     </div>
 
-                    {/* Service Selection - FIXED */}
+                    {/* Service Selection */}
                     <div className="service-dropdown-container">
                       <label className="block text-sm font-bold text-gray-700 mb-2">
                         Select Service Required *
@@ -777,7 +788,7 @@ export default function Contact() {
                             }}
                             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                               selectedCategory === cat.label
-                                ? "bg-[#003366] text-white shadow-md"
+                                ? "bg-[#00416a] text-white shadow-md"
                                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                             }`}
                           >
@@ -802,11 +813,11 @@ export default function Contact() {
                             setSelectedCategory(null);
                           }}
                           onFocus={() => setShowServiceDropdown(true)}
-                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent relative z-10 bg-white"
+                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00416a] focus:border-transparent relative z-10 bg-white"
                         />
                       </div>
 
-                      {/* Service Dropdown - FIXED POSITIONING */}
+                      {/* Service Dropdown */}
                       {showServiceDropdown && (serviceSearch || selectedCategory) && (
                         <div className="relative mt-2">
                           <div className="w-full max-h-64 overflow-y-auto bg-white border-2 border-gray-200 rounded-xl shadow-2xl">
@@ -820,11 +831,11 @@ export default function Contact() {
                                     setServiceSearch(item.service);
                                     setShowServiceDropdown(false);
                                   }}
-                                  className="w-full text-left px-4 py-3 hover:bg-blue-50 border-b border-gray-100 last:border-0 transition group"
+                                  className="w-full text-left px-4 py-3 hover:bg-[#00416a]/5 border-b border-gray-100 last:border-0 transition group"
                                 >
                                   <div className="flex items-center justify-between">
                                     <div className="flex-1">
-                                      <p className="text-sm font-semibold text-gray-800 group-hover:text-[#003366] transition">
+                                      <p className="text-sm font-semibold text-gray-800 group-hover:text-[#00416a] transition">
                                         {item.service}
                                       </p>
                                       <p className="text-xs text-gray-400 mt-0.5">
@@ -832,11 +843,11 @@ export default function Contact() {
                                       </p>
                                     </div>
                                     <div className="text-right">
-                                      <p className="text-sm font-bold text-[#003366]">
+                                      <p className="text-sm font-bold text-[#00416a]">
                                         {item.price}
                                       </p>
                                       {item.discount && (
-                                        <span className="text-xs bg-orange-100 text-[#FF6B35] px-2 py-0.5 rounded-full font-semibold">
+                                        <span className="text-xs bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-semibold">
                                           {item.discount}
                                         </span>
                                       )}
@@ -869,6 +880,7 @@ export default function Contact() {
                               setServiceSearch("");
                             }}
                             className="text-green-600 hover:text-green-700"
+                            aria-label="Clear selected service"
                           >
                             <X size={16} />
                           </button>
@@ -890,7 +902,7 @@ export default function Contact() {
                         onChange={handleChange}
                         rows={3}
                         placeholder="Tell us about your specific needs..."
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition resize-none"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00416a] focus:border-transparent transition resize-none"
                       />
                     </div>
 
@@ -904,7 +916,8 @@ export default function Contact() {
                         !form.state ||
                         !form.service
                       }
-                      className="w-full bg-gradient-to-r from-[#003366] to-[#004080] hover:from-[#002347] hover:to-[#003366] disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all duration-200"
+                      className="w-full disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all duration-200"
+                      style={{ background: "linear-gradient(90deg, #00416a 0%, #00527f 100%)" }}
                     >
                       {loading ? (
                         <>
@@ -932,7 +945,7 @@ export default function Contact() {
                       </div>
                       <div className="w-1 h-1 bg-gray-300 rounded-full" />
                       <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Zap size={14} className="text-[#003366]" />
+                        <Zap size={14} className="text-[#00416a]" />
                         15-Min Response
                       </div>
                     </div>
@@ -951,7 +964,7 @@ export default function Contact() {
             >
               {STATS.map(({ value, label, icon: Icon }) => (
                 <motion.div key={label} variants={fadeUp} className="text-center">
-                  <Icon size={32} className="mx-auto mb-3 text-[#FF6B35]" />
+                  <Icon size={32} className="mx-auto mb-3 text-[#7ecbf0]" />
                   <p className="text-3xl font-extrabold text-white mb-1">
                     {value}
                   </p>
@@ -968,7 +981,7 @@ export default function Contact() {
             <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-2 gap-4">
               {STATS.map(({ value, label, icon: Icon }) => (
                 <div key={label} className="text-center">
-                  <Icon size={24} className="mx-auto mb-2 text-[#FF6B35]" />
+                  <Icon size={24} className="mx-auto mb-2 text-[#7ecbf0]" />
                   <p className="text-xl font-extrabold text-white">{value}</p>
                   <p className="text-xs text-white/60 uppercase tracking-wider mt-0.5">
                     {label}
@@ -980,7 +993,7 @@ export default function Contact() {
         </section>
 
         {/* ══ SPECIAL OFFERS BANNER ═════════════════════════════════════════ */}
-        <section className="py-12 bg-gradient-to-r from-orange-50 via-blue-50 to-purple-50">
+        <section className="py-12 bg-gradient-to-r from-[#00416a]/5 via-blue-50 to-[#7ecbf0]/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <motion.div
               initial="hidden"
@@ -991,16 +1004,16 @@ export default function Contact() {
             >
               <motion.div
                 variants={fadeUp}
-                className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm mb-4"
+                className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm mb-4 border border-[#00416a]/10"
               >
-                <Gift size={20} className="text-[#FF6B35]" />
+                <Gift size={20} className="text-[#00416a]" />
                 <span className="font-bold text-gray-900">Limited Time Offers</span>
               </motion.div>
               <motion.h2
                 variants={fadeUp}
                 className="text-3xl sm:text-4xl font-extrabold text-gray-900"
               >
-                Save Big on Professional Tax Services
+                Save on Professional Tax Services
               </motion.h2>
             </motion.div>
 
@@ -1027,14 +1040,14 @@ export default function Contact() {
                     <Tag size={28} className="opacity-75" />
                   </div>
                   <p className="text-sm mb-4 text-white/90">{offer.desc}</p>
-                  <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg mb-3">
+                  <div className="bg-white/15 backdrop-blur-sm px-4 py-2 rounded-lg mb-3 border border-white/20">
                     <p className="text-xs text-white/70 mb-1">Promo Code</p>
                     <p className="font-mono font-bold text-lg">{offer.code}</p>
                   </div>
                   <p className="text-xs text-white/70 mb-4">{offer.validity}</p>
                   <button
                     onClick={() => quickWhatsApp(`I want to claim the ${offer.title} offer (Code: ${offer.code})`)}
-                    className="w-full bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition"
+                    className="w-full bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/40 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition"
                   >
                     <MessageCircle size={18} />
                     Claim on WhatsApp
@@ -1057,7 +1070,7 @@ export default function Contact() {
             >
               <motion.span
                 variants={fadeUp}
-                className="inline-block text-sm font-bold uppercase tracking-widest text-[#003366] bg-blue-50 px-4 py-2 rounded-full mb-4"
+                className="inline-block text-sm font-bold uppercase tracking-widest text-[#00416a] bg-[#00416a]/5 border border-[#00416a]/15 px-4 py-2 rounded-full mb-4"
               >
                 Why 4,800+ Clients Trust Us
               </motion.span>
@@ -1082,9 +1095,9 @@ export default function Contact() {
                   variants={scaleIn}
                   className="relative group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-orange-50 rounded-2xl transform group-hover:scale-105 transition-transform duration-300 opacity-50" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#00416a]/5 to-[#7ecbf0]/10 rounded-2xl transform group-hover:scale-105 transition-transform duration-300 opacity-70" />
                   <div className="relative p-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-[#003366] to-[#004080] rounded-2xl flex items-center justify-center shadow-lg">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-[#00416a] to-[#00527f] rounded-2xl flex items-center justify-center shadow-lg">
                       <Icon size={28} className="text-white" />
                     </div>
                     <h3 className="font-bold text-lg text-gray-900 mb-2">
@@ -1112,7 +1125,7 @@ export default function Contact() {
             >
               <motion.span
                 variants={fadeUp}
-                className="inline-block text-sm font-bold uppercase tracking-widest text-[#003366] bg-white px-4 py-2 rounded-full mb-4 shadow-sm"
+                className="inline-block text-sm font-bold uppercase tracking-widest text-[#00416a] bg-white border border-[#00416a]/15 px-4 py-2 rounded-full mb-4 shadow-sm"
               >
                 Simple & Fast
               </motion.span>
@@ -1141,17 +1154,17 @@ export default function Contact() {
                 <motion.div key={idx} variants={fadeUp} className="relative">
                   {/* Connector Line */}
                   {idx < PROCESS_STEPS.length - 1 && (
-                    <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-[#003366] to-transparent" />
+                    <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-[#00416a] to-transparent" />
                   )}
 
                   <div className="relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-[#003366] to-[#004080] rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg">
+                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-[#00416a] to-[#00527f] rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg">
                       {step}
                     </div>
 
                     <div className="mt-4 mb-4">
-                      <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center">
-                        <Icon size={28} className="text-[#003366]" />
+                      <div className="w-14 h-14 bg-[#00416a]/5 rounded-xl flex items-center justify-center">
+                        <Icon size={28} className="text-[#00416a]" />
                       </div>
                     </div>
 
@@ -1197,7 +1210,7 @@ export default function Contact() {
             >
               <motion.span
                 variants={fadeUp}
-                className="inline-block text-sm font-bold uppercase tracking-widest text-[#003366] bg-blue-50 px-4 py-2 rounded-full mb-4"
+                className="inline-block text-sm font-bold uppercase tracking-widest text-[#00416a] bg-[#00416a]/5 border border-[#00416a]/15 px-4 py-2 rounded-full mb-4"
               >
                 Our Services
               </motion.span>
@@ -1248,24 +1261,24 @@ export default function Contact() {
                     {category.services.map((service, idx) => (
                       <div
                         key={idx}
-                        className="group bg-white rounded-xl p-4 border border-gray-200 hover:border-[#003366] hover:shadow-md transition-all cursor-pointer"
+                        className="group bg-white rounded-xl p-4 border border-gray-200 hover:border-[#00416a] hover:shadow-md transition-all cursor-pointer"
                         onClick={() => quickWhatsApp(service.name)}
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#003366] transition flex-1">
+                          <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#00416a] transition flex-1">
                             {service.name}
                           </h4>
                           <ChevronRight
                             size={16}
-                            className="text-gray-400 group-hover:text-[#003366] group-hover:translate-x-1 transition-all"
+                            className="text-gray-400 group-hover:text-[#00416a] group-hover:translate-x-1 transition-all"
                           />
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-lg font-bold text-[#003366]">
+                          <span className="text-lg font-bold text-[#00416a]">
                             {service.price}
                           </span>
                           {service.discount && (
-                            <span className="text-xs bg-orange-100 text-[#FF6B35] px-2 py-1 rounded-full font-semibold">
+                            <span className="text-xs bg-red-50 text-red-600 px-2 py-1 rounded-full font-semibold">
                               {service.discount}
                             </span>
                           )}
@@ -1282,7 +1295,7 @@ export default function Contact() {
                       onClick={() =>
                         quickWhatsApp(`I need a custom package for ${category.label}`)
                       }
-                      className="bg-[#003366] hover:bg-[#002347] text-white px-6 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition"
+                      className="bg-[#00416a] hover:bg-[#002b45] text-white px-6 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition"
                     >
                       Get Custom Quote
                       <ArrowRight size={16} />
@@ -1294,8 +1307,8 @@ export default function Contact() {
           </div>
         </section>
 
-        {/* ══ TESTIMONIALS - ENHANCED ═══════════════════════════════════════ */}
-        <section className="py-16 bg-gradient-to-b from-blue-50 via-orange-50 to-white">
+        {/* ══ TESTIMONIALS ═══════════════════════════════════════════════════ */}
+        <section className="py-16 bg-gradient-to-b from-blue-50 via-[#7ecbf0]/10 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <motion.div
               initial="hidden"
@@ -1306,7 +1319,7 @@ export default function Contact() {
             >
               <motion.span
                 variants={fadeUp}
-                className="inline-block text-sm font-bold uppercase tracking-widest text-[#FF6B35] bg-white px-4 py-2 rounded-full mb-4 shadow-sm"
+                className="inline-block text-sm font-bold uppercase tracking-widest text-[#00416a] bg-white border border-[#00416a]/15 px-4 py-2 rounded-full mb-4 shadow-sm"
               >
                 Client Success Stories
               </motion.span>
@@ -1376,7 +1389,7 @@ export default function Contact() {
                   </p>
 
                   <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#003366] to-[#004080] flex items-center justify-center text-white font-bold text-lg shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00416a] to-[#00527f] flex items-center justify-center text-white font-bold text-lg shrink-0">
                       {name.charAt(0)}
                     </div>
                     <div className="flex-1">
@@ -1391,7 +1404,7 @@ export default function Contact() {
                   </div>
 
                   <div className="mt-3">
-                    <span className="inline-block text-xs bg-blue-50 text-[#003366] px-3 py-1 rounded-full font-semibold">
+                    <span className="inline-block text-xs bg-[#00416a]/5 text-[#00416a] border border-[#00416a]/10 px-3 py-1 rounded-full font-semibold">
                       {service}
                     </span>
                   </div>
@@ -1411,7 +1424,8 @@ export default function Contact() {
               </p>
               <button
                 onClick={() => quickWhatsApp()}
-                className="inline-flex items-center gap-3 bg-gradient-to-r from-[#FF6B35] to-[#ff8555] hover:from-[#ff4500] hover:to-[#FF6B35] text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                style={{ background: "linear-gradient(90deg, #00416a 0%, #00527f 100%)" }}
               >
                 <MessageCircle size={22} />
                 Start Your Journey Today
@@ -1421,7 +1435,7 @@ export default function Contact() {
           </div>
         </section>
 
-        {/* ══ FAQ SECTION - ENHANCED ════════════════════════════════════════ */}
+        {/* ══ FAQ SECTION ════════════════════════════════════════════════════ */}
         <section
           className="py-16 bg-white"
           aria-label="Frequently Asked Questions"
@@ -1434,7 +1448,7 @@ export default function Contact() {
               variants={stagger}
             >
               <motion.div variants={fadeUp} className="text-center mb-12">
-                <span className="inline-block text-sm font-bold uppercase tracking-widest text-[#003366] bg-blue-50 px-4 py-2 rounded-full mb-4">
+                <span className="inline-block text-sm font-bold uppercase tracking-widest text-[#00416a] bg-[#00416a]/5 border border-[#00416a]/15 px-4 py-2 rounded-full mb-4">
                   Have Questions?
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
@@ -1444,7 +1458,7 @@ export default function Contact() {
                   Can't find your answer?{" "}
                   <button
                     onClick={() => quickWhatsApp("I have a question")}
-                    className="text-[#003366] hover:text-[#004080] font-semibold underline"
+                    className="text-[#00416a] hover:text-[#00527f] font-semibold underline"
                   >
                     Ask us on WhatsApp
                   </button>
@@ -1475,7 +1489,7 @@ export default function Contact() {
                       </span>
                       <ChevronDown
                         size={20}
-                        className={`text-[#003366] shrink-0 transition-transform duration-300 ${
+                        className={`text-[#00416a] shrink-0 transition-transform duration-300 ${
                           faqOpen === i ? "rotate-180" : ""
                         }`}
                       />
@@ -1522,7 +1536,7 @@ export default function Contact() {
                 className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#FF6B35] to-[#ff8555] rounded-xl flex items-center justify-center shrink-0 shadow-md">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#00527f] to-[#0074a8] rounded-xl flex items-center justify-center shrink-0 shadow-md">
                     <MapPin size={24} className="text-white" />
                   </div>
                   <div>
@@ -1535,7 +1549,7 @@ export default function Contact() {
                     <p className="text-sm text-gray-600 mt-1 leading-relaxed">
                       Uttar Pradesh, India
                     </p>
-                    <p className="text-xs text-[#003366] font-semibold mt-2">
+                    <p className="text-xs text-[#00416a] font-semibold mt-2">
                       🌐 100% Online Services Across India
                     </p>
                   </div>
@@ -1547,7 +1561,7 @@ export default function Contact() {
                 className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#003366] to-[#004080] rounded-xl flex items-center justify-center shrink-0 shadow-md">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#00416a] to-[#002b45] rounded-xl flex items-center justify-center shrink-0 shadow-md">
                     <Clock size={24} className="text-white" />
                   </div>
                   <div>
@@ -1571,16 +1585,16 @@ export default function Contact() {
           </div>
         </section>
 
-        {/* ══ FINAL CTA - ENHANCED ══════════════════════════════════════════ */}
+        {/* ══ FINAL CTA ══════════════════════════════════════════════════════ */}
         <section
           className="py-20 relative overflow-hidden"
           style={GRADIENT_BG}
         >
           {/* Background effects */}
           <div className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none opacity-10"
-            style={{ background: "radial-gradient(circle, #FF6B35 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, #7ecbf0 0%, transparent 70%)" }} />
           <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full pointer-events-none opacity-10"
-            style={{ background: "radial-gradient(circle, #0059b3 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, #0074a8 0%, transparent 70%)" }} />
 
           <motion.div
             className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center"
@@ -1597,7 +1611,7 @@ export default function Contact() {
                 border: "1px solid rgba(255,255,255,0.25)",
               }}
             >
-              <Timer size={16} className="text-[#FF6B35]" />
+              <Timer size={16} className="text-[#7ecbf0]" />
               Limited Time: First 100 clients get 30% OFF
             </motion.div>
 
@@ -1615,7 +1629,7 @@ export default function Contact() {
               Join 4,800+ satisfied clients who trust Taxvio for hassle-free tax
               compliance. Our expert CA team is ready to help you — starting at
               just{" "}
-              <span className="font-bold text-[#FF6B35] text-2xl">₹499</span>
+              <span className="font-bold text-[#7ecbf0] text-2xl">₹499</span>
             </motion.p>
 
             <motion.div
@@ -1624,7 +1638,7 @@ export default function Contact() {
             >
               <button
                 onClick={() => quickWhatsApp()}
-                className="group bg-green-500 hover:bg-green-600 text-white px-10 py-5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-2xl hover:shadow-green-500/50 transition-all"
+                className="group bg-green-500 hover:bg-green-600 text-white px-10 py-5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-2xl hover:shadow-green-500/40 transition-all"
               >
                 <MessageCircle size={24} />
                 Chat with CA on WhatsApp

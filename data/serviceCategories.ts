@@ -566,6 +566,37 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
+        slug: "efiling-login-assistance",
+        title: "E-Filing Login & Portal Assistance",
+        shortDescription:
+          "Complete support for income tax e-filing portal registration, login issues, password reset, and portal navigation.",
+        features: [
+          "E-filing portal registration",
+          "Login credential recovery",
+          "Password reset assistance",
+          "Portal navigation guidance",
+          "Profile update support",
+          "EVC generation help",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Aadhaar card",
+          "Mobile number & email ID",
+          "Bank account details",
+        ],
+        idealFor: [
+          "First-time tax filers",
+          "Individuals facing login issues",
+          "Senior citizens needing technical support",
+        ],
+        seo: {
+          title: "E-Filing Login & Portal Assistance | Taxvio",
+          description:
+            "Expert help for income tax e-filing portal registration, login, and navigation.",
+        },
+      },
+
+      {
         slug: "itr-salaried",
         title: "Income Tax Return – Individual (Salaried)",
         shortDescription:
@@ -675,6 +706,93 @@ export const serviceCategories: ServiceCategory[] = [
       },
 
       {
+        slug: "revised-itr",
+        title: "Revised Income Tax Return",
+        shortDescription:
+          "File revised ITR to correct errors or omissions in originally filed returns with expert guidance.",
+        features: [
+          "Error identification & correction",
+          "Additional income reporting",
+          "Deduction claim revision",
+          "Updated return filing",
+        ],
+        documentsRequired: [
+          "Original ITR acknowledgement",
+          "Corrected documents",
+          "Additional income proofs",
+          "PAN & Aadhaar",
+        ],
+        idealFor: [
+          "Individuals who made filing errors",
+          "Those who missed income disclosure",
+          "Taxpayers wanting to claim additional deductions",
+        ],
+        seo: {
+          title: "Revised ITR Filing Services | Taxvio",
+          description:
+            "Expert assistance for filing revised income tax returns in India.",
+        },
+      },
+
+      {
+        slug: "belated-itr",
+        title: "Belated Income Tax Return",
+        shortDescription:
+          "File belated ITR after the due date with penalty calculation and compliance support.",
+        features: [
+          "Late fee calculation",
+          "Belated return preparation",
+          "Interest computation",
+          "Filing & verification support",
+        ],
+        documentsRequired: [
+          "PAN & Aadhaar",
+          "Income documents",
+          "Investment proofs",
+          "Bank statements",
+        ],
+        idealFor: [
+          "Individuals who missed the deadline",
+          "First-time late filers",
+          "Business owners",
+        ],
+        seo: {
+          title: "Belated ITR Filing Services | Taxvio",
+          description:
+            "Professional support for filing belated income tax returns.",
+        },
+      },
+
+      {
+        slug: "itr-verification",
+        title: "ITR Verification (EVC/Aadhaar OTP)",
+        shortDescription:
+          "Complete assistance for ITR verification through EVC, Aadhaar OTP, or physical method.",
+        features: [
+          "EVC generation support",
+          "Aadhaar OTP verification",
+          "Bank account verification",
+          "Physical ITR-V guidance",
+        ],
+        documentsRequired: [
+          "Filed ITR acknowledgement",
+          "Aadhaar card",
+          "Registered mobile number",
+          "Active email ID",
+        ],
+        idealFor: [
+          "All ITR filers",
+          "Individuals facing verification issues",
+          "Senior citizens",
+        ],
+        seo: {
+          title: "ITR Verification Services | Taxvio",
+          description:
+            "Expert help for income tax return verification through all methods.",
+        },
+      },
+
+      {
         slug: "quarterly-tds",
         title: "Quarterly TDS Return",
         shortDescription:
@@ -723,6 +841,150 @@ export const serviceCategories: ServiceCategory[] = [
         seo: {
           title: "Quarterly TCS Return Filing",
           description: "Accurate and timely TCS return filing services.",
+        },
+      },
+
+      {
+        slug: "tds-certificate",
+        title: "TDS Certificate (Form 16/16A)",
+        shortDescription:
+          "Generation and issuance of TDS certificates for employees and vendors with proper compliance.",
+        features: [
+          "Form 16 generation",
+          "Form 16A preparation",
+          "Certificate validation",
+          "Bulk certificate generation",
+        ],
+        documentsRequired: [
+          "TAN",
+          "Filed TDS returns",
+          "Deductee PAN details",
+          "Challan proofs",
+        ],
+        idealFor: [
+          "Employers",
+          "Companies",
+          "Businesses making TDS payments",
+        ],
+        seo: {
+          title: "TDS Certificate Generation Services | Taxvio",
+          description:
+            "Professional TDS certificate preparation and issuance services.",
+        },
+      },
+
+      {
+        slug: "form-26as",
+        title: "Form 26AS Download & Analysis",
+        shortDescription:
+          "Assistance in downloading and analyzing Form 26AS to verify tax credits and TDS claims.",
+        features: [
+          "26AS download support",
+          "TDS/TCS verification",
+          "Mismatch identification",
+          "Reconciliation guidance",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "E-filing login credentials",
+          "ITR details",
+        ],
+        idealFor: [
+          "All taxpayers",
+          "Businesses verifying TDS credits",
+          "Individuals facing TDS issues",
+        ],
+        seo: {
+          title: "Form 26AS Services | Taxvio",
+          description:
+            "Expert assistance for Form 26AS download and tax credit verification.",
+        },
+      },
+
+      {
+        slug: "advance-tax-calculation",
+        title: "Advance Tax Calculation & Payment",
+        shortDescription:
+          "Professional calculation and payment assistance for advance tax to avoid interest penalties.",
+        features: [
+          "Tax liability estimation",
+          "Installment calculation",
+          "Payment challan generation",
+          "Due date reminders",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Income estimates",
+          "Previous year ITR",
+          "Investment proofs",
+        ],
+        idealFor: [
+          "Self-employed individuals",
+          "Business owners",
+          "Professionals with non-salary income",
+        ],
+        seo: {
+          title: "Advance Tax Calculation Services | Taxvio",
+          description:
+            "Expert advance tax calculation and payment support in India.",
+        },
+      },
+
+      {
+        slug: "income-tax-refund",
+        title: "Income Tax Refund Status & Processing",
+        shortDescription:
+          "Track and expedite income tax refund processing with expert follow-up support.",
+        features: [
+          "Refund status tracking",
+          "Refund claim assistance",
+          "Defective return rectification",
+          "Reissue request support",
+        ],
+        documentsRequired: [
+          "ITR acknowledgement",
+          "PAN card",
+          "Bank account details",
+          "Assessment order (if any)",
+        ],
+        idealFor: [
+          "Taxpayers awaiting refunds",
+          "Individuals with defective returns",
+          "Long-pending refund cases",
+        ],
+        seo: {
+          title: "Income Tax Refund Services | Taxvio",
+          description:
+            "Professional assistance for income tax refund tracking and processing.",
+        },
+      },
+
+      {
+        slug: "income-tax-notice",
+        title: "Income Tax Notice Response & Resolution",
+        shortDescription:
+          "Expert handling of all types of income tax notices with proper documentation and representation.",
+        features: [
+          "Notice analysis & interpretation",
+          "Response drafting",
+          "Document preparation",
+          "Online/offline representation",
+        ],
+        documentsRequired: [
+          "Notice copy",
+          "ITR & supporting documents",
+          "PAN card",
+          "Relevant financial records",
+        ],
+        idealFor: [
+          "Individuals receiving notices",
+          "Businesses under scrutiny",
+          "Cases with demand notices",
+        ],
+        seo: {
+          title: "Income Tax Notice Response Services | Taxvio",
+          description:
+            "Expert assistance for handling income tax notices and demands.",
         },
       },
 
@@ -780,6 +1042,93 @@ export const serviceCategories: ServiceCategory[] = [
           title: "Income Tax Scrutiny Services",
           description:
             "Reliable assistance for income tax scrutiny and assessment proceedings.",
+        },
+      },
+
+      {
+        slug: "tax-appeal-filing",
+        title: "Tax Appeal Filing (CIT-A/ITAT/HC)",
+        shortDescription:
+          "Professional representation for filing appeals before CIT(A), ITAT, and High Court against adverse orders.",
+        features: [
+          "Grounds of appeal drafting",
+          "Legal documentation",
+          "Hearing representation",
+          "Follow-up till disposal",
+        ],
+        documentsRequired: [
+          "Assessment order",
+          "ITR & supporting documents",
+          "Previous correspondence",
+          "PAN card",
+        ],
+        idealFor: [
+          "Taxpayers with adverse orders",
+          "High-value disputes",
+          "Complex tax cases",
+        ],
+        seo: {
+          title: "Tax Appeal Filing Services | Taxvio",
+          description:
+            "Expert legal assistance for income tax appeals in India.",
+        },
+      },
+
+      {
+        slug: "rectification-request",
+        title: "Rectification Request (Section 154)",
+        shortDescription:
+          "File rectification requests for apparent errors or mistakes in assessment orders.",
+        features: [
+          "Error identification",
+          "Rectification application drafting",
+          "Supporting document compilation",
+          "Follow-up with department",
+        ],
+        documentsRequired: [
+          "Assessment order",
+          "Error proof documents",
+          "ITR copy",
+          "PAN card",
+        ],
+        idealFor: [
+          "Taxpayers with clerical errors",
+          "Cases with calculation mistakes",
+          "Wrong credit claims",
+        ],
+        seo: {
+          title: "Rectification Request Services | Taxvio",
+          description:
+            "Professional assistance for filing rectification requests under Section 154.",
+        },
+      },
+
+      {
+        slug: "tax-planning",
+        title: "Tax Planning & Optimization",
+        shortDescription:
+          "Comprehensive tax planning services to minimize tax liability through legal investment and expenditure strategies.",
+        features: [
+          "Investment planning under 80C, 80D",
+          "HRA & other deduction optimization",
+          "Capital gains tax planning",
+          "Business expense structuring",
+        ],
+        documentsRequired: [
+          "Previous ITR",
+          "Income details",
+          "Investment portfolio",
+          "Financial goals",
+        ],
+        idealFor: [
+          "High net worth individuals",
+          "Business owners",
+          "Salaried professionals",
+        ],
+        seo: {
+          title: "Tax Planning Services | Taxvio",
+          description:
+            "Expert tax planning and optimization services for individuals and businesses.",
         },
       },
 
@@ -852,6 +1201,151 @@ export const serviceCategories: ServiceCategory[] = [
         seo: {
           title: "Form 15G & 15H Services",
           description: "Assistance in filing Form 15G and 15H accurately.",
+        },
+      },
+
+      {
+        slug: "lower-tds-certificate",
+        title: "Lower TDS Certificate (Section 197)",
+        shortDescription:
+          "Application for certificate to deduct tax at lower rate or nil rate to improve cash flow.",
+        features: [
+          "Eligibility assessment",
+          "Application preparation",
+          "Supporting calculation",
+          "Certificate follow-up",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Income estimation",
+          "Previous ITR",
+          "Deductor details",
+        ],
+        idealFor: [
+          "Individuals with lower tax liability",
+          "Contractors",
+          "Professional service providers",
+        ],
+        seo: {
+          title: "Lower TDS Certificate Application | Taxvio",
+          description:
+            "Apply for lower or nil TDS certificate under Section 197.",
+        },
+      },
+
+      {
+        slug: "tax-residency-certificate",
+        title: "Tax Residency Certificate (TRC)",
+        shortDescription:
+          "Obtain Tax Residency Certificate for availing benefits under Double Taxation Avoidance Agreement (DTAA).",
+        features: [
+          "TRC application filing",
+          "Supporting document preparation",
+          "DTAA benefit guidance",
+          "Certificate tracking",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Passport",
+          "Previous ITR",
+          "Foreign income details",
+        ],
+        idealFor: [
+          "NRIs",
+          "Individuals with foreign income",
+          "Expatriates working in India",
+        ],
+        seo: {
+          title: "Tax Residency Certificate Services | Taxvio",
+          description:
+            "Professional assistance for Tax Residency Certificate application.",
+        },
+      },
+
+      {
+        slug: "nri-tax-filing",
+        title: "NRI Tax Filing & Compliance",
+        shortDescription:
+          "Specialized tax filing and compliance services for Non-Resident Indians with Indian-source income.",
+        features: [
+          "NRI ITR filing",
+          "TDS refund claims",
+          "DTAA benefit application",
+          "Foreign income reporting",
+        ],
+        documentsRequired: [
+          "PAN & passport",
+          "Form 16A/TDS certificates",
+          "Foreign income proof",
+          "Bank statements",
+        ],
+        idealFor: [
+          "NRIs with salary in India",
+          "Property rental income holders",
+          "NRIs with capital gains",
+        ],
+        seo: {
+          title: "NRI Tax Filing Services | Taxvio",
+          description:
+            "Expert NRI income tax filing and compliance services in India.",
+        },
+      },
+
+      {
+        slug: "capital-gains-computation",
+        title: "Capital Gains Tax Computation",
+        shortDescription:
+          "Accurate calculation of short-term and long-term capital gains on sale of property, stocks, and other assets.",
+        features: [
+          "STCG & LTCG calculation",
+          "Indexation benefit computation",
+          "Exemption analysis (54/54F/54EC)",
+          "Tax liability estimation",
+        ],
+        documentsRequired: [
+          "Sale deed/transaction proof",
+          "Purchase documents",
+          "Improvement cost details",
+          "PAN card",
+        ],
+        idealFor: [
+          "Property sellers",
+          "Stock market investors",
+          "Asset sellers",
+        ],
+        seo: {
+          title: "Capital Gains Tax Services | Taxvio",
+          description:
+            "Professional capital gains tax computation and filing services.",
+        },
+      },
+
+      {
+        slug: "cryptocurrency-tax",
+        title: "Cryptocurrency Tax Filing",
+        shortDescription:
+          "Specialized tax filing services for cryptocurrency transactions and virtual digital assets as per new tax provisions.",
+        features: [
+          "Crypto transaction reporting",
+          "30% tax computation on gains",
+          "1% TDS compliance",
+          "ITR filing with VDA income",
+        ],
+        documentsRequired: [
+          "Transaction statements from exchanges",
+          "Wallet addresses",
+          "Purchase & sale records",
+          "PAN card",
+        ],
+        idealFor: [
+          "Crypto traders",
+          "Crypto investors",
+          "NFT holders",
+        ],
+        seo: {
+          title: "Cryptocurrency Tax Filing Services | Taxvio",
+          description:
+            "Expert tax filing for cryptocurrency and virtual digital assets in India.",
         },
       },
     ],
