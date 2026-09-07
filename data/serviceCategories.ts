@@ -1,6 +1,156 @@
 import { ServiceCategory } from "@/types/serviceTypes";
 
 export const serviceCategories: ServiceCategory[] = [
+
+  /* ================= FSSAI ================= */
+  {
+    slug: "fssai",
+    category: "FSSAI Services",
+    description:
+      "FSSAI registration, license renewal, modification, annual return filing and food compliance support for restaurants, manufacturers and food businesses across India.",
+    services: [
+      {
+        slug: "fssai-registration",
+        title: "FSSAI Registration (Basic / State / Central)",
+        shortDescription:
+          "Complete assistance in obtaining FSSAI food license including Basic, State and Central registration with documentation and approval support.",
+        features: [
+          "Eligibility assessment",
+          "Basic FSSAI registration",
+          "State license filing",
+          "Central license filing",
+          "Document preparation",
+          "Approval tracking",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Aadhaar card",
+          "Business address proof",
+          "Food business details",
+          "Product list",
+        ],
+        idealFor: [
+          "Restaurants & cafes",
+          "Cloud kitchens",
+          "Food manufacturers",
+          "Food importers/exporters",
+          "Grocery stores",
+        ],
+        seo: {
+          title: "FSSAI Registration Services | Basic, State & Central License",
+          description:
+            "Apply for FSSAI registration online with expert support. Get Basic, State or Central food license with complete documentation assistance.",
+        },
+      },
+
+      {
+        slug: "fssai-renewal",
+        title: "FSSAI License Renewal",
+        shortDescription:
+          "Timely renewal of FSSAI license to avoid penalties and business interruption.",
+        features: [
+          "Renewal eligibility check",
+          "Document update",
+          "Online filing",
+          "Validity extension",
+        ],
+        documentsRequired: [
+          "Existing FSSAI license",
+          "Updated business details",
+        ],
+        idealFor: ["Existing food businesses"],
+        seo: {
+          title: "FSSAI Renewal Services | Renew Food License Online",
+          description:
+            "Renew your FSSAI food license easily and avoid penalties with professional support.",
+        },
+      },
+
+      {
+        slug: "fssai-modification",
+        title: "FSSAI License Modification",
+        shortDescription:
+          "Update FSSAI license details such as address, product category, or business structure.",
+        features: [
+          "Core field modification",
+          "Non-core field update",
+          "Document upload",
+          "Approval tracking",
+        ],
+        documentsRequired: ["Existing FSSAI license", "Updated business proof"],
+        idealFor: ["Food businesses with changed details"],
+        seo: {
+          title: "FSSAI License Modification Services",
+          description:
+            "Modify or update your FSSAI license details with expert compliance support.",
+        },
+      },
+
+      {
+        slug: "fssai-annual-return",
+        title: "FSSAI Annual Return Filing",
+        shortDescription:
+          "Preparation and filing of FSSAI annual return for manufacturers and importers as per FSSAI regulations.",
+        features: [
+          "Return preparation",
+          "Online filing",
+          "Compliance verification",
+          "Penalty guidance",
+        ],
+        documentsRequired: ["FSSAI license", "Production & sales data"],
+        idealFor: ["Food manufacturers", "Food importers"],
+        seo: {
+          title: "FSSAI Annual Return Filing Services",
+          description:
+            "Professional FSSAI annual return filing services for manufacturers and importers.",
+        },
+      },
+
+      {
+        slug: "fssai-notice-reply",
+        title: "FSSAI Notice Reply & Compliance",
+        shortDescription:
+          "Expert drafting and response filing for FSSAI notices and departmental queries.",
+        features: [
+          "Notice analysis",
+          "Reply drafting",
+          "Supporting document submission",
+          "Department coordination",
+        ],
+        documentsRequired: [
+          "FSSAI notice",
+          "License copy",
+          "Supporting records",
+        ],
+        idealFor: ["Food businesses receiving FSSAI notices"],
+        seo: {
+          title: "FSSAI Notice Reply Services",
+          description:
+            "Professional assistance in replying to FSSAI notices and handling compliance matters.",
+        },
+      },
+
+      {
+        slug: "fssai-search",
+        title: "FSSAI License Search & Verification",
+        shortDescription:
+          "Verify FSSAI license number and check food business registration details instantly.",
+        features: [
+          "License number verification",
+          "Business name check",
+          "License validity status",
+          "Fraud prevention support",
+        ],
+        documentsRequired: ["FSSAI license number"],
+        idealFor: ["Businesses verifying vendors", "Distributors", "Consumers"],
+        seo: {
+          title: "FSSAI License Search Online",
+          description:
+            "Verify FSSAI license number online and check registration details instantly.",
+        },
+      },
+    ],
+  },
   /* ================= GST ================= */
   {
     slug: "gst",
@@ -347,156 +497,454 @@ export const serviceCategories: ServiceCategory[] = [
             "GST registration, LUT for zero-rated foreign billing, SAC code setup, GSTR-1, GSTR-3B, ITC on business tools and RCM compliance for freelancers and independent professionals. Starting ₹1,499.",
         },
       },
-    ],
-  },
+      /**
+ * New GST services — paste these objects into the `services` array
+ * of the `gst` category, right after "gst-for-freelancers".
+ */
 
-  /* ================= FSSAI ================= */
-  {
-    slug: "fssai",
-    category: "FSSAI Services",
-    description:
-      "FSSAI registration, license renewal, modification, annual return filing and food compliance support for restaurants, manufacturers and food businesses across India.",
-    services: [
       {
-        slug: "fssai-registration",
-        title: "FSSAI Registration (Basic / State / Central)",
+        slug: "gst-composition-scheme",
+        title: "GST Composition Scheme Registration & Advisory",
         shortDescription:
-          "Complete assistance in obtaining FSSAI food license including Basic, State and Central registration with documentation and approval support.",
+          "Registration and advisory for the GST Composition Scheme, helping small businesses reduce compliance burden with lower tax rates and simplified quarterly filing.",
         features: [
-          "Eligibility assessment",
-          "Basic FSSAI registration",
-          "State license filing",
-          "Central license filing",
-          "Document preparation",
-          "Approval tracking",
+          "Composition scheme eligibility check",
+          "CMP-02 application filing",
+          "Quarterly CMP-08 payment support",
+          "Annual GSTR-4 filing",
+          "Rate applicability advisory",
         ],
         documentsRequired: [
           "PAN card",
           "Aadhaar card",
           "Business address proof",
-          "Food business details",
-          "Product list",
+          "Turnover details",
+          "Bank account details",
+        ],
+        idealFor: [
+          "Small traders & manufacturers",
+          "Restaurants & small eateries",
+          "Businesses with turnover under ₹1.5 crore",
+          "First-time GST registrants",
+        ],
+        seo: {
+          title: "GST Composition Scheme Registration Services | Taxvio",
+          description:
+            "Register under the GST Composition Scheme for lower tax rates and simplified quarterly compliance. Expert eligibility check and CMP-08/GSTR-4 filing support.",
+        },
+      },
+
+      {
+        slug: "gst-itc-reconciliation",
+        title: "GST Input Tax Credit (ITC) Reconciliation",
+        shortDescription:
+          "Systematic reconciliation of GSTR-2B and purchase books to identify ITC mismatches, ensure maximum eligible credit claim, and prevent notices.",
+        features: [
+          "GSTR-2B vs purchase register matching",
+          "Vendor-wise mismatch identification",
+          "ITC eligibility review",
+          "Reversal & reclaim advisory",
+          "Monthly reconciliation reports",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Purchase invoices",
+          "GSTR-2B statements",
+          "Books of accounts",
+        ],
+        idealFor: [
+          "Businesses with high purchase volumes",
+          "Manufacturers & traders",
+          "Companies facing ITC mismatches",
+        ],
+        seo: {
+          title: "GST ITC Reconciliation Services | Taxvio",
+          description:
+            "Accurate GSTR-2B vs books reconciliation to maximize eligible input tax credit and avoid GST notices. Monthly ITC matching for businesses.",
+        },
+      },
+
+      {
+        slug: "gst-revocation",
+        title: "GST Registration Revocation",
+        shortDescription:
+          "Assistance in filing revocation applications to restore cancelled GST registrations and resume normal business operations.",
+        features: [
+          "Cancellation order review",
+          "Revocation application (REG-21) filing",
+          "Pending return clearance support",
+          "Department follow-up",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Cancellation order copy",
+          "Pending returns",
+          "Reason for revocation",
+        ],
+        idealFor: [
+          "Businesses with suo-moto cancelled GST",
+          "Entities seeking to resume operations",
+        ],
+        seo: {
+          title: "GST Registration Revocation Services | Taxvio",
+          description:
+            "Restore your cancelled GST registration with expert revocation application filing and department follow-up support.",
+        },
+      },
+
+      {
+        slug: "gstr-10-final-return",
+        title: "GSTR-10 Final Return Filing",
+        shortDescription:
+          "Filing of the mandatory final return after GST cancellation, including stock and liability reconciliation to close compliance obligations.",
+        features: [
+          "Closing stock valuation",
+          "ITC reversal computation",
+          "GSTR-10 preparation & filing",
+          "Acknowledgement support",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Cancellation order",
+          "Closing stock details",
+          "Books of accounts",
+        ],
+        idealFor: [
+          "Businesses that have cancelled GST registration",
+          "Closed proprietorships & firms",
+        ],
+        seo: {
+          title: "GSTR-10 Final Return Filing Services | Taxvio",
+          description:
+            "File your mandatory GSTR-10 final return after GST cancellation with accurate stock and liability reconciliation.",
+        },
+      },
+
+      {
+        slug: "gst-tds-compliance",
+        title: "GST TDS Compliance (Section 51)",
+        shortDescription:
+          "Compliance support for entities required to deduct GST TDS, including GSTR-7 filing and TDS certificate issuance.",
+        features: [
+          "TDS applicability check",
+          "GSTR-7 monthly filing",
+          "TDS certificate (GSTR-7A) generation",
+          "Deductee reconciliation",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "TDS deduction records",
+          "Contract/payment details",
+          "Deductee GSTIN details",
+        ],
+        idealFor: [
+          "Government departments & PSUs",
+          "Local authorities",
+          "Notified entities under Section 51",
+        ],
+        seo: {
+          title: "GST TDS Compliance & GSTR-7 Filing Services | Taxvio",
+          description:
+            "GST TDS deduction compliance for government departments and notified entities, including GSTR-7 filing and certificate issuance.",
+        },
+      },
+
+      {
+        slug: "gst-eway-bill",
+        title: "GST E-Way Bill Generation & Compliance",
+        shortDescription:
+          "End-to-end e-way bill generation, validation, and compliance support for smooth movement of goods without transit delays.",
+        features: [
+          "E-way bill generation & updation",
+          "Vehicle & transporter detail management",
+          "Validity extension support",
+          "Compliance audit for transporters",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Invoice/delivery challan",
+          "Transporter ID",
+          "Vehicle number",
+        ],
+        idealFor: [
+          "Manufacturers & transporters",
+          "Businesses dispatching goods interstate",
+          "Logistics & distribution companies",
+        ],
+        seo: {
+          title: "GST E-Way Bill Generation Services | Taxvio",
+          description:
+            "Fast and accurate e-way bill generation and compliance support for smooth movement of goods across states.",
+        },
+      },
+
+      {
+        slug: "gst-appeal-filing",
+        title: "GST Appeal Filing",
+        shortDescription:
+          "Drafting and filing of appeals before the GST Appellate Authority against adverse orders, with representation support.",
+        features: [
+          "Order analysis & grounds preparation",
+          "Appeal (APL-01) drafting & filing",
+          "Pre-deposit computation",
+          "Hearing representation support",
+        ],
+        documentsRequired: [
+          "Impugned order copy",
+          "GST returns",
+          "Supporting evidence",
+          "Payment proof of pre-deposit",
+        ],
+        idealFor: [
+          "Businesses contesting GST demand orders",
+          "Entities facing adverse assessment orders",
+        ],
+        seo: {
+          title: "GST Appeal Filing Services | Taxvio",
+          description:
+            "Expert drafting and filing of GST appeals before the Appellate Authority, with grounds preparation and hearing support.",
+        },
+      },
+
+      {
+        slug: "gst-advance-ruling",
+        title: "GST Advance Ruling Application (AAR)",
+        shortDescription:
+          "Preparation and filing of advance ruling applications to obtain clarity on GST rate, classification, or applicability before undertaking a transaction.",
+        features: [
+          "Applicability & classification analysis",
+          "Application (ARA-01) drafting",
+          "Supporting documentation",
+          "Hearing representation support",
+        ],
+        documentsRequired: [
+          "PAN",
+          "GSTIN",
+          "Transaction details",
+          "Relevant contracts/agreements",
+        ],
+        idealFor: [
+          "Businesses planning new product lines",
+          "Entities with classification ambiguity",
+          "Companies structuring new transactions",
+        ],
+        seo: {
+          title: "GST Advance Ruling Application Services | Taxvio",
+          description:
+            "Get clarity on GST rate, classification, or applicability before your transaction with expert advance ruling application support.",
+        },
+      },
+
+      {
+        slug: "gst-job-work",
+        title: "GST Job Work Compliance (ITC-04)",
+        shortDescription:
+          "Compliance support for principal manufacturers sending goods for job work, including ITC-04 filing and challan reconciliation.",
+        features: [
+          "Job work challan tracking",
+          "ITC-04 preparation & filing",
+          "Input/capital goods reconciliation",
+          "Time-limit compliance monitoring",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Job work challans",
+          "Goods movement records",
+          "Job worker details",
+        ],
+        idealFor: [
+          "Manufacturers outsourcing production",
+          "Textile & engineering units",
+          "Businesses with job worker networks",
+        ],
+        seo: {
+          title: "GST Job Work Compliance & ITC-04 Filing | Taxvio",
+          description:
+            "ITC-04 filing and job work challan reconciliation for manufacturers sending goods to job workers under GST.",
+        },
+      },
+
+      {
+        slug: "gst-composition-to-regular",
+        title: "Composition to Regular Scheme Transition",
+        shortDescription:
+          "Support for businesses moving from the Composition Scheme to the regular GST scheme, including stock ITC claims and return transition.",
+        features: [
+          "Transition eligibility review",
+          "ITC-01 stock credit claim",
+          "CMP-04 withdrawal filing",
+          "Regular return transition support",
+        ],
+        documentsRequired: [
+          "GSTIN",
+          "Composition scheme details",
+          "Stock statement",
+          "Purchase invoices for ITC claim",
+        ],
+        idealFor: [
+          "Growing businesses crossing turnover limits",
+          "Composition dealers opting for regular scheme",
+        ],
+        seo: {
+          title: "GST Composition to Regular Scheme Transition Services | Taxvio",
+          description:
+            "Move from GST Composition Scheme to regular scheme with expert support for stock ITC claims and return transition.",
+        },
+      },
+
+      {
+        slug: "gst-hsn-sac-classification",
+        title: "HSN/SAC Code Classification Advisory",
+        shortDescription:
+          "Expert advisory on correct HSN and SAC code classification for goods and services to ensure accurate tax rates and invoice compliance.",
+        features: [
+          "Product & service classification review",
+          "Applicable GST rate determination",
+          "Invoice format correction",
+          "Classification dispute advisory",
+        ],
+        documentsRequired: [
+          "Product/service description",
+          "Existing invoices",
+          "Catalogue or specification sheets",
+        ],
+        idealFor: [
+          "Manufacturers & traders",
+          "New product launches",
+          "Businesses facing classification disputes",
+        ],
+        seo: {
+          title: "GST HSN/SAC Code Classification Advisory | Taxvio",
+          description:
+            "Accurate HSN and SAC code classification advisory to ensure correct GST rates and compliant invoicing for your goods and services.",
+        },
+      },
+
+      {
+        slug: "gst-for-restaurants",
+        title: "GST for Restaurants & Hospitality",
+        shortDescription:
+          "GST compliance tailored for restaurants, cafes, cloud kitchens and hotels — registration, composition scheme advisory, and platform reconciliation for Zomato/Swiggy sellers.",
+        features: [
+          "GST registration & composition advisory",
+          "Section 9(5) compliance for aggregator platforms",
+          "Monthly GSTR-1 & GSTR-3B filing",
+          "Zomato/Swiggy settlement reconciliation",
+          "Input tax credit review on inputs",
+        ],
+        documentsRequired: [
+          "PAN card",
+          "Aadhaar card",
+          "FSSAI license",
+          "Business address proof",
+          "Platform settlement reports",
         ],
         idealFor: [
           "Restaurants & cafes",
           "Cloud kitchens",
-          "Food manufacturers",
-          "Food importers/exporters",
-          "Grocery stores",
+          "Hotels & banquet halls",
+          "Zomato/Swiggy-listed outlets",
         ],
         seo: {
-          title: "FSSAI Registration Services | Basic, State & Central License",
+          title: "GST for Restaurants & Hospitality Businesses | Taxvio",
           description:
-            "Apply for FSSAI registration online with expert support. Get Basic, State or Central food license with complete documentation assistance.",
+            "GST registration, composition scheme advisory, Section 9(5) compliance and platform reconciliation for restaurants, cloud kitchens and hotels.",
         },
       },
 
       {
-        slug: "fssai-renewal",
-        title: "FSSAI License Renewal",
+        slug: "gst-for-manufacturers",
+        title: "GST for Manufacturers & Job Workers",
         shortDescription:
-          "Timely renewal of FSSAI license to avoid penalties and business interruption.",
+          "Comprehensive GST compliance for manufacturing units, covering input credit optimization, job work tracking, and multi-state registration support.",
         features: [
-          "Renewal eligibility check",
-          "Document update",
-          "Online filing",
-          "Validity extension",
+          "GST registration across multiple states",
+          "ITC optimization on raw materials & capital goods",
+          "Job work (ITC-04) tracking",
+          "GSTR-1 & GSTR-3B filing",
+          "E-way bill & stock transfer compliance",
         ],
         documentsRequired: [
-          "Existing FSSAI license",
-          "Updated business details",
+          "PAN card",
+          "Factory address proof",
+          "GST returns",
+          "Purchase & sales registers",
+          "Job work challans",
         ],
-        idealFor: ["Existing food businesses"],
+        idealFor: [
+          "Manufacturing units",
+          "Textile & engineering firms",
+          "Businesses with multi-state factories",
+        ],
         seo: {
-          title: "FSSAI Renewal Services | Renew Food License Online",
+          title: "GST for Manufacturers & Job Workers | Taxvio",
           description:
-            "Renew your FSSAI food license easily and avoid penalties with professional support.",
+            "End-to-end GST compliance for manufacturing units including ITC optimization, job work tracking, multi-state registration and e-way bill support.",
         },
       },
 
       {
-        slug: "fssai-modification",
-        title: "FSSAI License Modification",
+        slug: "gst-for-real-estate",
+        title: "GST for Real Estate & Construction",
         shortDescription:
-          "Update FSSAI license details such as address, product category, or business structure.",
+          "GST advisory and compliance for builders, developers and contractors, covering rate applicability, ITC restrictions, and RERA-linked filings.",
         features: [
-          "Core field modification",
-          "Non-core field update",
-          "Document upload",
-          "Approval tracking",
-        ],
-        documentsRequired: ["Existing FSSAI license", "Updated business proof"],
-        idealFor: ["Food businesses with changed details"],
-        seo: {
-          title: "FSSAI License Modification Services",
-          description:
-            "Modify or update your FSSAI license details with expert compliance support.",
-        },
-      },
-
-      {
-        slug: "fssai-annual-return",
-        title: "FSSAI Annual Return Filing",
-        shortDescription:
-          "Preparation and filing of FSSAI annual return for manufacturers and importers as per FSSAI regulations.",
-        features: [
-          "Return preparation",
-          "Online filing",
-          "Compliance verification",
-          "Penalty guidance",
-        ],
-        documentsRequired: ["FSSAI license", "Production & sales data"],
-        idealFor: ["Food manufacturers", "Food importers"],
-        seo: {
-          title: "FSSAI Annual Return Filing Services",
-          description:
-            "Professional FSSAI annual return filing services for manufacturers and importers.",
-        },
-      },
-
-      {
-        slug: "fssai-notice-reply",
-        title: "FSSAI Notice Reply & Compliance",
-        shortDescription:
-          "Expert drafting and response filing for FSSAI notices and departmental queries.",
-        features: [
-          "Notice analysis",
-          "Reply drafting",
-          "Supporting document submission",
-          "Department coordination",
+          "GST rate applicability (affordable vs regular housing)",
+          "ITC eligibility & reversal advisory",
+          "Joint development agreement structuring",
+          "GSTR-1 & GSTR-3B filing",
+          "RCM compliance on works contracts",
         ],
         documentsRequired: [
-          "FSSAI notice",
-          "License copy",
-          "Supporting records",
+          "PAN card",
+          "RERA registration",
+          "Project cost sheet",
+          "Sale agreements",
+          "Purchase invoices",
         ],
-        idealFor: ["Food businesses receiving FSSAI notices"],
+        idealFor: [
+          "Real estate developers",
+          "Building contractors",
+          "Works contract service providers",
+        ],
         seo: {
-          title: "FSSAI Notice Reply Services",
+          title: "GST for Real Estate & Construction Businesses | Taxvio",
           description:
-            "Professional assistance in replying to FSSAI notices and handling compliance matters.",
+            "GST compliance for builders, developers and contractors including rate applicability, ITC advisory and works contract RCM support.",
         },
       },
 
       {
-        slug: "fssai-search",
-        title: "FSSAI License Search & Verification",
+        slug: "gst-for-importers-exporters",
+        title: "GST for Importers & Exporters",
         shortDescription:
-          "Verify FSSAI license number and check food business registration details instantly.",
+          "Specialized GST compliance for import-export businesses, covering IGST on imports, export documentation, and refund coordination.",
         features: [
-          "License number verification",
-          "Business name check",
-          "License validity status",
-          "Fraud prevention support",
+          "IGST payment advisory on imports",
+          "Bill of Entry to GST reconciliation",
+          "Export invoice & shipping bill matching",
+          "LUT and refund coordination",
+          "RCM compliance on import of services",
         ],
-        documentsRequired: ["FSSAI license number"],
-        idealFor: ["Businesses verifying vendors", "Distributors", "Consumers"],
+        documentsRequired: [
+          "IEC code",
+          "Bill of Entry",
+          "Shipping bills",
+          "GSTIN",
+          "Import/export invoices",
+        ],
+        idealFor: [
+          "Import-export businesses",
+          "Trading companies",
+          "Merchant exporters",
+        ],
         seo: {
-          title: "FSSAI License Search Online",
+          title: "GST for Importers & Exporters | Taxvio",
           description:
-            "Verify FSSAI license number online and check registration details instantly.",
+            "GST compliance for import-export businesses including IGST advisory, Bill of Entry reconciliation, export documentation and refund coordination.",
         },
       },
+
     ],
   },
 
