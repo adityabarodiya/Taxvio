@@ -541,6 +541,92 @@ export default function FSSAISearchPage() {
           </div>
         </section>
 
+        {/* NEW: COMPLEMENTARY BUSINESS SERVICES */}
+        <section id="business-compliance-services">
+          <SectionLabel text="Complete Business Compliance" />
+          <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+            Beyond FSSAI — Complete Business Compliance Solutions
+          </h2>
+          <p className="text-gray-600 mb-10 max-w-3xl leading-relaxed">
+            Running a food business requires more than just FSSAI compliance. Taxvio provides end-to-end
+            business compliance services including <strong>GST Registration & Filing</strong>,{" "}
+            <strong>Company ROC Compliance</strong>, and <strong>Income Tax Returns</strong> — ensuring
+            your food business stays legally compliant across all regulatory domains.
+          </p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: "💼",
+                title: "GST Registration & Filing",
+                link: "/serviceslist/gst",
+                desc: "Every food business with turnover above ₹20 lakhs must register for GST. We handle GST registration, monthly/quarterly return filing, and GST compliance for food businesses.",
+                services: ["GST Registration", "GST Return Filing", "GST Notice Reply", "Input Tax Credit Reconciliation"],
+              },
+              {
+                icon: "🏢",
+                title: "ROC & Company Compliance",
+                link: "/serviceslist/roc",
+                desc: "Food businesses registered as Private Limited or LLP must file annual returns with the Ministry of Corporate Affairs. We ensure timely ROC filings and maintain your company's good standing.",
+                services: ["Annual ROC Filing", "Director KYC (DIR-3 KYC)", "AOC-4 & MGT-7 Filing", "Company Incorporation"],
+              },
+              {
+                icon: "📊",
+                title: "Income Tax Returns & TDS",
+                link: "/serviceslist/income-tax",
+                desc: "Food business owners, proprietors, and directors must file income tax returns annually. We handle ITR filing, TDS compliance, and tax planning to minimize your tax liability legally.",
+                services: ["ITR Filing for Businesses", "TDS Return Filing", "Tax Planning & Savings", "Income Tax Notice Reply"],
+              },
+            ].map((service) => (
+              <div key={service.title} className="border-2 border-gray-200 rounded-2xl p-7 hover:border-[#00416a] hover:shadow-xl transition group bg-white">
+                <div className="text-5xl mb-5">{service.icon}</div>
+                <h3 className="text-xl font-bold text-[#00416a] mb-3">{service.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed mb-5">{service.desc}</p>
+                <div className="mb-6">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">What We Handle:</p>
+                  <ul className="space-y-2">
+                    {service.services.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                        <span className="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Link
+                  href={service.link}
+                  className="inline-flex items-center gap-2 text-[#00416a] font-bold text-sm border-2 border-[#00416a] px-6 py-3 rounded-xl hover:bg-[#00416a] hover:text-white transition-all group-hover:gap-3"
+                >
+                  Explore Services <span>→</span>
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Integration Note */}
+          <div className="mt-10 bg-gradient-to-br from-[#00416a]/5 to-[#00416a]/10 border border-[#00416a]/20 rounded-2xl p-8">
+            <div className="flex items-start gap-5">
+              <div className="text-4xl flex-shrink-0">🔗</div>
+              <div>
+                <h4 className="text-lg font-bold text-[#00416a] mb-3">
+                  Integrated Compliance for Food Businesses
+                </h4>
+                <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                  A compliant food business requires coordinated management across FSSAI, GST, Income Tax,
+                  and Company Law. Taxvio provides <strong>integrated compliance packages</strong> specifically
+                  designed for food manufacturers, distributors, and restaurant businesses — managing all
+                  regulatory obligations under one roof with a single point of contact.
+                </p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 bg-[#00416a] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#002b45] transition text-sm"
+                >
+                  Get Integrated Compliance Quote →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* FAQ */}
         <section id="faq">
           <SectionLabel text="FAQs" />
@@ -576,6 +662,14 @@ export default function FSSAISearchPage() {
               {
                 q: "How do I update incorrect details on my FSSAI license?",
                 a: "If the search reveals incorrect business name, address, or product categories, you need to apply for an FSSAI License Modification through the FLRS portal. Taxvio handles the complete modification process, ensuring the updated details are accurately reflected on your FSSAI certificate.",
+              },
+              {
+                q: "Do food businesses need GST registration along with FSSAI?",
+                a: "Yes. Any food business with annual turnover exceeding ₹20 lakhs (₹10 lakhs in special category states) must register for GST. FSSAI and GST are separate compliance requirements. Taxvio helps food businesses maintain both FSSAI and GST compliance simultaneously.",
+              },
+              {
+                q: "What other compliances do food businesses need besides FSSAI?",
+                a: "Besides FSSAI, food businesses need GST registration and filing, Income Tax Returns (ITR), and if registered as a company — ROC annual filings. Taxvio provides integrated compliance services covering all regulatory requirements for food businesses.",
               },
             ].map((faq) => (
               <details key={faq.q} className="group border rounded-2xl overflow-hidden">
@@ -639,7 +733,7 @@ export default function FSSAISearchPage() {
                   Get Expert Assistance
                 </Link>
                 <Link
-                  href="tel:+919999999999"
+                  href="tel:+918937980366"
                   className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center"
                 >
                   📞 Call Now
@@ -701,6 +795,14 @@ export default function FSSAISearchPage() {
                   text: "Apply for FSSAI renewal immediately. A ₹100/day penalty accumulates from the expiry date. Taxvio can process your urgent renewal application and manage the penalty calculation.",
                 },
               },
+              {
+                "@type": "Question",
+                name: "Do food businesses need GST registration along with FSSAI?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Yes. Any food business with annual turnover exceeding ₹20 lakhs must register for GST. FSSAI and GST are separate compliance requirements.",
+                },
+              },
             ],
           }),
         }}
@@ -733,4 +835,4 @@ function SectionLabel({ text }: { text: string }) {
       {text}
     </span>
   );
-} 
+}
