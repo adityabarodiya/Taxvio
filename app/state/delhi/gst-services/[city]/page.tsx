@@ -407,6 +407,396 @@ Taxvio's GST service for freelancers in ${areaName} covers registration with the
 
 We also handle the monthly GSTR-1 and GSTR-3B filing with correct zero-rated export classification, claim Input Tax Credit on legitimate business expenses (laptops, software subscriptions, co-working space rent, internet bills), and review Reverse Charge Mechanism obligations for foreign SaaS tools (where applicable under specific notified categories). For ${areaName} freelancers nearing the QRMP threshold, we also advise on the quarterly filing scheme to reduce compliance frequency while maintaining accurate reporting.`,
     },
+
+    /* ── 14. GST Composition Scheme ── */
+    {
+      slug: "gst-composition-scheme",
+      title: `GST Composition Scheme Registration in ${areaName}`,
+      price: "₹1,499",
+      timeline: "7–10 Working Days",
+      icon: "📋",
+      gradient: "from-lime-500 to-green-600",
+      accentBg: "bg-lime-50",
+      accentBorder: "border-lime-100",
+      accentText: "text-lime-700",
+      features: [
+        "Composition scheme eligibility check",
+        "CMP-02 application filing on GST portal",
+        "Quarterly CMP-08 payment support",
+        "Annual GSTR-4 return filing",
+        "Applicable rate advisory (1%/5%/6%)",
+        "Ongoing threshold & eligibility monitoring",
+      ],
+      seoContent: `The GST Composition Scheme lets small businesses in ${areaName}, ${district}, Delhi with turnover up to ₹1.5 crore (₹75 lakh for certain special category dealings) pay tax at a flat, lower rate — typically 1% for traders and manufacturers, or 6% for eligible service providers — instead of the standard slab rates, while filing far fewer returns. It's a natural fit for small shops, local manufacturers, and eateries in ${areaName} that primarily sell to end consumers rather than claiming or passing on Input Tax Credit.
+
+Taxvio's composition scheme service for ${areaName} businesses starts with an eligibility check — composition dealers cannot supply interstate, sell through e-commerce operators required to collect TCS, or deal in specific notified goods — followed by filing Form CMP-02 to opt in for the financial year. We then manage the quarterly CMP-08 self-assessed tax payment and the mandatory annual GSTR-4 return, both of which have distinct formats and deadlines from the regular scheme.
+
+Because composition dealers forgo ITC entirely, the scheme only makes sense for ${areaName} businesses with low input costs relative to sales — we assess this trade-off upfront so you're not locked into a scheme that costs more than it saves, and we monitor your turnover through the year to flag if you're approaching the threshold where mandatory transition to the regular scheme becomes necessary.`,
+    },
+
+    /* ── 15. GST ITC Reconciliation ── */
+    {
+      slug: "gst-itc-reconciliation",
+      title: `GST Input Tax Credit (ITC) Reconciliation in ${areaName}`,
+      price: "₹1,999/month",
+      timeline: "Monthly Reconciliation",
+      icon: "🔗",
+      gradient: "from-sky-600 to-blue-700",
+      accentBg: "bg-sky-50",
+      accentBorder: "border-sky-100",
+      accentText: "text-sky-700",
+      features: [
+        "GSTR-2B vs purchase register matching",
+        "Vendor-wise mismatch identification",
+        "ITC eligibility review under Rule 36(4)",
+        "Reversal & reclaim advisory (Rule 42/43)",
+        "Monthly reconciliation reports",
+        "Proactive vendor follow-up for missing invoices",
+      ],
+      seoContent: `Input Tax Credit reconciliation matters for every ${areaName}, ${district}, Delhi business with meaningful purchase volume, because under Rule 36(4) you can only claim ITC to the extent it appears in your auto-populated GSTR-2B statement — claiming more than what your suppliers have actually reported triggers automatic mismatch flags and, eventually, an ASMT-10 scrutiny notice. Left unreconciled, ITC leakage from unreported supplier invoices quietly erodes margins month after month.
+
+Taxvio's ITC reconciliation service for ${areaName} businesses matches your purchase register, invoice by invoice, against GSTR-2B every month — identifying vendors who haven't filed, invoices with incorrect GSTINs or tax amounts, and duplicate or missing entries. Where credit is legitimately at risk because a supplier hasn't filed, we flag it early so you can follow up with the vendor before the return deadline rather than losing the credit permanently.
+
+We also review ITC that must be reversed under Rule 42/43 for exempt supplies or personal-use goods, and identify blocked credits under Section 17(5) that are sometimes claimed in error. For ${areaName} traders, manufacturers, and distributors with dozens or hundreds of monthly purchase invoices, this reconciliation-first discipline is what keeps ITC claims clean, audit-ready, and free of the retrospective demand notices that untracked mismatches eventually invite.`,
+    },
+
+    /* ── 16. GST Revocation ── */
+    {
+      slug: "gst-revocation",
+      title: `GST Registration Revocation in ${areaName}`,
+      price: "₹1,499",
+      timeline: "15–30 Working Days",
+      icon: "♻️",
+      gradient: "from-emerald-600 to-green-700",
+      accentBg: "bg-emerald-50",
+      accentBorder: "border-emerald-100",
+      accentText: "text-emerald-700",
+      features: [
+        "Cancellation order & reason review",
+        "Pending return clearance before filing",
+        "Revocation application in Form REG-21",
+        "Late fee & interest computation",
+        "Department follow-up with ward officer",
+        "Guidance to prevent repeat suo motu cancellation",
+      ],
+      seoContent: `GST registration revocation restores a GSTIN that the department has cancelled suo motu — most often in ${areaName}, ${district}, Delhi for continuous non-filing of returns over six months, or for other compliance defaults flagged during routine checks. Once cancelled, a business cannot legally issue tax invoices and its buyers cannot claim ITC on purchases from it, which makes prompt revocation critical for any ${areaName} business intending to keep operating.
+
+Taxvio's revocation service starts by reviewing the cancellation order to confirm the exact ground cited, then clears every pending return up to the cancellation date — a mandatory precondition the GST portal enforces before a revocation application can even be filed. We compute and settle any outstanding late fees and interest, prepare Form REG-21 with the required explanation, and file it within the 30-day window from the cancellation order (extendable in genuine hardship cases with departmental approval).
+
+After filing, we track the application with the jurisdictional ward officer covering ${district} until the revocation order is issued and your GSTIN is reactivated. We also set up filing reminders afterward, since the most common cause of repeat cancellation for ${areaName} businesses is simply missing consecutive return deadlines again after reinstatement.`,
+    },
+
+    /* ── 17. GSTR-10 Final Return ── */
+    {
+      slug: "gstr-10-final-return",
+      title: `GSTR-10 Final Return Filing in ${areaName}`,
+      price: "₹1,499",
+      timeline: "Within 3 Months of Cancellation",
+      icon: "🏁",
+      gradient: "from-slate-600 to-gray-700",
+      accentBg: "bg-slate-50",
+      accentBorder: "border-slate-100",
+      accentText: "text-slate-700",
+      features: [
+        "Closing stock valuation as on cancellation date",
+        "ITC reversal computation on remaining stock",
+        "GSTR-10 preparation & portal filing",
+        "Late fee avoidance guidance",
+        "Acknowledgement & closure confirmation",
+        "Support if filing after the 3-month deadline",
+      ],
+      seoContent: `GSTR-10 is the mandatory final return every business in ${areaName}, ${district}, Delhi must file within three months of GST cancellation or the cancellation order date, whichever is later — and it's the step most ${areaName} businesses forget after closing shop, assuming cancellation itself ends their GST obligations. It doesn't: GSTR-10 declares closing stock as on the date of cancellation and computes the tax payable on that stock as if it were a final outward supply.
+
+Taxvio's GSTR-10 service starts with an accurate valuation of closing stock — raw materials, work-in-progress, and finished goods — cross-checked against your last filed returns and books of accounts, then computes the exact ITC reversal or tax liability due on that stock under the applicable rate. We prepare and file the return on the GST portal and obtain the filing acknowledgement that formally closes your compliance obligations.
+
+Skipping GSTR-10 is a costly mistake for ${areaName} businesses: it attracts a late fee of ₹200 per day (capped at ₹10,000) and, more seriously, the department can issue a best-judgement assessment under Section 62 that presumes an unfavourable tax liability in the absence of your own figures. We also assist businesses filing GSTR-10 well past the original deadline, computing accumulated late fees and helping settle the matter before it escalates into a formal notice.`,
+    },
+
+    /* ── 18. GST TDS Compliance ── */
+    {
+      slug: "gst-tds-compliance",
+      title: `GST TDS Compliance (Section 51) in ${areaName}`,
+      price: "₹999/month",
+      timeline: "Monthly, before 10th",
+      icon: "🏛️",
+      gradient: "from-indigo-600 to-violet-700",
+      accentBg: "bg-indigo-50",
+      accentBorder: "border-indigo-100",
+      accentText: "text-indigo-700",
+      features: [
+        "TDS applicability check under Section 51",
+        "2% TDS deduction advisory on contracts",
+        "Monthly GSTR-7 filing — due 10th",
+        "TDS certificate (GSTR-7A) generation",
+        "Deductee-wise reconciliation",
+        "Coordination with contractors/vendors",
+      ],
+      seoContent: `GST TDS under Section 51 applies to specified deductors — government departments, local authorities, PSUs, and certain notified entities operating in or contracting with businesses in ${areaName}, ${district}, Delhi — who must deduct 2% TDS (1% CGST + 1% SGST, or 2% IGST) on payments to suppliers where the contract value exceeds ₹2.5 lakh. The deducted amount must be deposited with the government and reported via monthly GSTR-7, due by the 10th of the following month.
+
+Taxvio's GST TDS compliance service for ${areaName}-based deductors handles the complete cycle — confirming which contracts and payments attract TDS, computing the correct deduction on each invoice, and filing GSTR-7 accurately every month. We also generate Form GSTR-7A, the TDS certificate that deductees need to claim credit of the tax deducted from their payments, and reconcile deductee-wise figures to prevent disputes over the credit amount reflected in their electronic cash ledger.
+
+For ${areaName} entities that both deduct TDS on payments made and separately deal with suppliers who deduct TDS from payments received, we track both sides — ensuring your GSTR-7 filings are accurate and that TDS credited to your own electronic cash ledger by other deductors is correctly claimed and utilised against your GST liability.`,
+    },
+
+    /* ── 19. GST E-Way Bill ── */
+    {
+      slug: "gst-eway-bill",
+      title: `GST E-Way Bill Generation & Compliance in ${areaName}`,
+      price: "₹499/month",
+      timeline: "Instant Generation",
+      icon: "🚚",
+      gradient: "from-orange-500 to-amber-600",
+      accentBg: "bg-orange-50",
+      accentBorder: "border-orange-100",
+      accentText: "text-orange-700",
+      features: [
+        "E-way bill generation for goods above ₹50,000",
+        "Vehicle & transporter detail updates",
+        "Validity extension for delayed transit",
+        "Bulk generation for high-volume dispatches",
+        "Part-B updation & consolidated e-way bills",
+        "Compliance audit for transporters & consignors",
+      ],
+      seoContent: `An e-way bill is mandatory in ${areaName}, ${district}, Delhi for any movement of goods worth more than ₹50,000 — whether interstate or, in many cases, intrastate — and moving goods without a valid one exposes ${areaName} businesses to detention of goods and vehicles, plus penalties equal to the tax amount or a flat sum, whichever is higher. For manufacturers, wholesalers, and distributors moving stock regularly through Delhi's trading and warehousing corridors, e-way bill compliance is a daily operational necessity, not an occasional filing.
+
+Taxvio's e-way bill service for ${areaName} businesses covers accurate generation against your invoices or delivery challans — capturing the correct HSN codes, transporter ID, and vehicle number — along with Part-B updation when the vehicle changes mid-transit and validity extensions when a shipment is delayed beyond the originally calculated transit time. For businesses dispatching multiple consignments on one vehicle, we also handle consolidated e-way bill generation to simplify checkpoint verification.
+
+We additionally run periodic compliance audits for ${areaName} transporters and consignors, checking that e-way bills are being generated consistently and that no threshold-crossing dispatch is going out without one — since a single missed e-way bill discovered during a roadside check can trigger disproportionate penalties relative to the value of the goods involved.`,
+    },
+
+    /* ── 20. GST Appeal Filing ── */
+    {
+      slug: "gst-appeal-filing",
+      title: `GST Appeal Filing in ${areaName}`,
+      price: "₹4,999",
+      timeline: "As Per Appeal Timeline",
+      icon: "📜",
+      gradient: "from-red-600 to-rose-700",
+      accentBg: "bg-red-50",
+      accentBorder: "border-red-100",
+      accentText: "text-red-700",
+      features: [
+        "Adverse order analysis & grounds preparation",
+        "Appeal drafting in Form APL-01",
+        "Pre-deposit computation (10% of disputed tax)",
+        "Supporting evidence & annexure compilation",
+        "Filing before the Appellate Authority",
+        "Personal hearing representation",
+      ],
+      seoContent: `When a ${areaName}, ${district}, Delhi business receives an adverse order from the GST department — under Section 73, 74, or following an audit or assessment — filing an appeal before the Appellate Authority is often the only recourse to contest an excessive or incorrect demand. An appeal must be filed within 3 months of the order (extendable by 1 month for sufficient cause), along with a mandatory pre-deposit of 10% of the disputed tax amount.
+
+Taxvio's appeal filing service for ${areaName} businesses begins with a detailed analysis of the impugned order to identify factual and legal grounds for appeal — procedural lapses, incorrect interpretation of law, or unsupported factual findings by the assessing officer. We draft Form APL-01 with clear, evidence-backed grounds, compute the required pre-deposit, and compile supporting documentation — returns, invoices, correspondence, and reconciliation statements — as annexures to strengthen the case.
+
+Once filed, we represent ${areaName} businesses at personal hearings before the Appellate Authority, presenting arguments and responding to departmental submissions. Where the appellate order remains unfavourable, we also advise on the next stage of escalation — the GST Appellate Tribunal — so your defence continues without losing procedural continuity or missing further deadlines.`,
+    },
+
+    /* ── 21. GST Advance Ruling ── */
+    {
+      slug: "gst-advance-ruling",
+      title: `GST Advance Ruling Application (AAR) in ${areaName}`,
+      price: "₹9,999",
+      timeline: "60–90 Days (Statutory)",
+      icon: "🧭",
+      gradient: "from-purple-600 to-fuchsia-700",
+      accentBg: "bg-purple-50",
+      accentBorder: "border-purple-100",
+      accentText: "text-purple-700",
+      features: [
+        "Classification & applicability analysis",
+        "Application drafting in Form ARA-01",
+        "Supporting legal & factual documentation",
+        "Filing before the Authority for Advance Ruling",
+        "Hearing representation support",
+        "Ruling interpretation & implementation advisory",
+      ],
+      seoContent: `A GST Advance Ruling gives ${areaName}, ${district}, Delhi businesses binding clarity — before a transaction is undertaken — on questions like the correct tax rate, whether a supply is goods or services, classification, or ITC eligibility. It's particularly valuable when a ${areaName} business is planning a new product line, a novel supply structure, or a transaction where existing law is genuinely ambiguous, since getting the classification wrong after the fact means retrospective demand, interest, and penalty.
+
+Taxvio's advance ruling service starts with a thorough analysis of the transaction in question against GST law, rate notifications, and existing rulings on comparable facts, to assess whether an advance ruling is likely to favour the applicant before committing to the process. We then draft Form ARA-01 with a precise statement of facts and the specific question(s) referred, along with supporting contracts, product specifications, and legal submissions.
+
+Once filed with the Authority for Advance Ruling (AAR) for the relevant jurisdiction, we represent ${areaName} businesses at the hearing and respond to any clarifications sought by the Authority. Since a ruling is binding on the applicant and the jurisdictional officer for the specific transaction described, we also help translate the ruling into correct invoicing and return-filing practice once it's issued.`,
+    },
+
+    /* ── 22. GST Job Work Compliance (ITC-04) ── */
+    {
+      slug: "gst-job-work",
+      title: `GST Job Work Compliance (ITC-04) in ${areaName}`,
+      price: "₹1,499/quarter",
+      timeline: "Quarterly, via ITC-04",
+      icon: "🏭",
+      gradient: "from-stone-600 to-neutral-700",
+      accentBg: "bg-stone-50",
+      accentBorder: "border-stone-100",
+      accentText: "text-stone-700",
+      features: [
+        "Job work challan tracking & documentation",
+        "Input/capital goods movement reconciliation",
+        "ITC-04 preparation & quarterly filing",
+        "1-year (inputs) / 3-year (capital goods) time-limit monitoring",
+        "Job worker GSTIN verification",
+        "Deemed-supply risk advisory if goods aren't returned",
+      ],
+      seoContent: `Businesses in ${areaName}, ${district}, Delhi that send raw materials or semi-finished goods to a job worker for processing must track that movement under Form ITC-04, and file it quarterly (or annually for smaller taxpayers) — a compliance step commonly overlooked because the goods never technically leave the principal manufacturer's ownership, even though they physically move outside the registered premises. Failing to track this correctly creates real risk: inputs not returned within 1 year, or capital goods not returned within 3 years, are treated as a deemed supply on which GST becomes payable.
+
+Taxvio's job work compliance service for ${areaName} manufacturers — common in textile processing, engineering, and assembly-based industries across Delhi's industrial belts — tracks every job work challan issued and received, reconciles goods sent against goods returned or further supplied from the job worker's premises, and prepares and files Form ITC-04 within the applicable time limit.
+
+We also verify job worker GSTIN validity, monitor the statutory time limits for goods to be returned before deemed-supply liability kicks in, and advise on the correct treatment when finished goods are supplied directly from the job worker's premises rather than returning to the principal manufacturer first — a common but easily mishandled scenario for ${areaName} businesses running multi-stage outsourced production.`,
+    },
+
+    /* ── 23. Composition to Regular Scheme Transition ── */
+    {
+      slug: "gst-composition-to-regular",
+      title: `Composition to Regular Scheme Transition in ${areaName}`,
+      price: "₹1,999",
+      timeline: "7–15 Working Days",
+      icon: "🔄",
+      gradient: "from-teal-600 to-cyan-700",
+      accentBg: "bg-teal-50",
+      accentBorder: "border-teal-100",
+      accentText: "text-teal-700",
+      features: [
+        "Transition eligibility & trigger review",
+        "Form CMP-04 withdrawal filing",
+        "Stock statement preparation (ITC-01)",
+        "ITC claim on transition stock",
+        "Regular scheme return setup (GSTR-1/3B)",
+        "Invoice format & rate structure update",
+      ],
+      seoContent: `A ${areaName}, ${district}, Delhi business must transition out of the Composition Scheme the moment its turnover crosses ₹1.5 crore, or it starts supplying interstate, through e-commerce, or in a category excluded from composition — and this transition carries real administrative weight, since it involves both a formal withdrawal filing and a one-time opportunity to claim ITC on existing stock that wasn't previously available under composition.
+
+Taxvio manages the complete transition for ${areaName} businesses — filing Form CMP-04 to formally withdraw from the composition scheme on the applicable date, preparing the stock statement in Form ITC-01 to claim input tax credit on raw materials, semi-finished, and finished goods held as on the transition date (a claim window many businesses miss because it must be filed within 30 days), and setting up your invoicing and return-filing workflow for the regular scheme's monthly or QRMP cadence.
+
+Since composition dealers use a simplified bill of supply without charging GST separately, transitioning also means updating invoice templates, informing customers of the rate change, and training your accounts team on regular-scheme record-keeping. Getting this changeover right protects the one-time ITC claim on transition stock — a benefit that's lost entirely if the ITC-01 filing deadline is missed.`,
+    },
+
+    /* ── 24. HSN/SAC Code Classification Advisory ── */
+    {
+      slug: "gst-hsn-sac-classification",
+      title: `HSN/SAC Code Classification Advisory in ${areaName}`,
+      price: "₹999",
+      timeline: "2–3 Working Days",
+      icon: "🏷️",
+      gradient: "from-yellow-500 to-amber-600",
+      accentBg: "bg-yellow-50",
+      accentBorder: "border-yellow-100",
+      accentText: "text-yellow-700",
+      features: [
+        "Product/service classification review",
+        "Correct HSN/SAC code determination",
+        "Applicable GST rate confirmation",
+        "Invoice & e-way bill format correction",
+        "Classification dispute defence advisory",
+        "Bulk catalogue classification for large SKU lists",
+      ],
+      seoContent: `Correct HSN (for goods) and SAC (for services) classification determines the exact GST rate a ${areaName}, ${district}, Delhi business must charge — and misclassification is one of the most common triggers for GST notices, since an incorrect code can mean undercharging tax (creating a demand liability with interest and penalty) or overcharging it (creating pricing and competitiveness problems). With thousands of HSN entries and frequent rate-notification updates, classification is rarely as obvious as it first appears, especially for composite or mixed-supply products.
+
+Taxvio's classification advisory for ${areaName} businesses reviews your actual product or service catalogue against the current HSN/SAC schedule and applicable rate notifications, resolving ambiguous cases — bundled goods, composite supplies, or services that straddle two SAC categories — with a documented rationale you can rely on if the classification is ever questioned. We then correct your invoice templates, billing software master data, and e-way bill generation settings to reflect the confirmed codes.
+
+For ${areaName} manufacturers and traders launching new products, or those who've received a classification query from the department, this advisory work is best done proactively — a single incorrect code applied across months of invoices compounds into a large retrospective liability that a one-time classification review, done early, avoids entirely.`,
+    },
+
+    /* ── 25. GST for Restaurants & Hospitality ── */
+    {
+      slug: "gst-for-restaurants",
+      title: `GST for Restaurants & Hospitality in ${areaName}`,
+      price: "₹1,499",
+      timeline: "Registration in 3–7 Days",
+      icon: "🍽️",
+      gradient: "from-rose-500 to-red-600",
+      accentBg: "bg-rose-50",
+      accentBorder: "border-rose-100",
+      accentText: "text-rose-700",
+      features: [
+        "GST registration & composition scheme advisory",
+        "Section 9(5) compliance for Zomato/Swiggy",
+        "Monthly GSTR-1 & GSTR-3B filing",
+        "Aggregator settlement reconciliation",
+        "ITC review on inputs & equipment",
+        "FSSAI-linked documentation support",
+      ],
+      seoContent: `Restaurants, cafes, cloud kitchens, and hotels in ${areaName}, ${district}, Delhi face a GST landscape shaped heavily by two choices — whether to register under the Composition Scheme (5% flat rate, no ITC) or the regular scheme, and how to handle Section 9(5), under which platforms like Zomato and Swiggy are deemed the supplier for GST purposes on food delivery orders, shifting the invoicing and tax-collection responsibility away from the restaurant for those specific transactions.
+
+Taxvio's GST service for ${areaName} food and hospitality businesses starts with registration and a composition-vs-regular assessment based on your ITC needs — restaurants with significant equipment, renovation, or ingredient costs eligible for ITC often benefit from the regular scheme despite its higher compliance load. We then handle monthly GSTR-1/GSTR-3B filing, reconcile Zomato and Swiggy settlement reports against your actual order volumes (commission, packaging fees, and discounts often cause settlement figures to diverge from gross sales), and advise on correctly separating Section 9(5) aggregator-collected tax from your own dine-in and takeaway GST liability.
+
+For ${areaName} hotels and banquet operators, we also review ITC eligibility on renovation, furnishing, and equipment costs — an area where Section 17(5) restrictions frequently trip up businesses claiming credit they aren't entitled to — and coordinate documentation alongside your FSSAI license renewals where relevant to registration proof.`,
+    },
+
+    /* ── 26. GST for Manufacturers & Job Workers ── */
+    {
+      slug: "gst-for-manufacturers",
+      title: `GST for Manufacturers & Job Workers in ${areaName}`,
+      price: "₹2,499",
+      timeline: "Ongoing Compliance",
+      icon: "🏗️",
+      gradient: "from-zinc-600 to-slate-700",
+      accentBg: "bg-zinc-50",
+      accentBorder: "border-zinc-100",
+      accentText: "text-zinc-700",
+      features: [
+        "Multi-state GST registration support",
+        "ITC optimization on raw materials & capital goods",
+        "Job work (ITC-04) tracking",
+        "Monthly GSTR-1 & GSTR-3B filing",
+        "E-way bill & stock transfer compliance",
+        "Inverted duty structure refund advisory",
+      ],
+      seoContent: `Manufacturing units in ${areaName}, ${district}, Delhi — spanning textile processing, engineering, and light industrial production across Delhi's western and north-western industrial belts — carry a heavier GST compliance load than trading or services businesses, with ITC optimization on raw materials and capital goods, job work tracking, inter-state stock transfers, and e-way bill discipline all running simultaneously.
+
+Taxvio's manufacturing GST service for ${areaName} businesses covers registration across every state where you maintain a factory or depot, ongoing ITC review to ensure maximum eligible credit is claimed on raw material purchases and capital equipment (subject to Section 17(5) restrictions), and monthly GSTR-1/GSTR-3B filing reconciled against your production and dispatch records rather than just sales invoices. Where you outsource stages of production, we handle ITC-04 job work tracking to keep goods movement compliant and avoid deemed-supply exposure.
+
+Many ${areaName} manufacturers — particularly in textile processing and similar sectors — operate under an inverted duty structure, where input tax rates exceed output rates, generating a recurring refund entitlement we help identify, compute, and claim. Combined with disciplined e-way bill generation for every dispatch above ₹50,000, this end-to-end approach keeps working capital flowing and compliance risk low across a genuinely complex GST profile.`,
+    },
+
+    /* ── 27. GST for Real Estate & Construction ── */
+    {
+      slug: "gst-for-real-estate",
+      title: `GST for Real Estate & Construction in ${areaName}`,
+      price: "₹2,999",
+      timeline: "Ongoing Compliance",
+      icon: "🏢",
+      gradient: "from-amber-600 to-orange-700",
+      accentBg: "bg-amber-50",
+      accentBorder: "border-amber-100",
+      accentText: "text-amber-700",
+      features: [
+        "GST rate applicability — affordable vs regular housing",
+        "ITC eligibility & reversal advisory",
+        "Joint development agreement structuring",
+        "Monthly GSTR-1 & GSTR-3B filing",
+        "RCM compliance on works contracts",
+        "RERA-linked documentation coordination",
+      ],
+      seoContent: `Real estate developers, builders, and contractors in ${areaName}, ${district}, Delhi operate under one of the more complex GST rate structures in the entire tax framework — 1% for affordable housing and 5% for other residential projects, both without ITC eligibility under the current scheme, alongside separate rate and RCM treatment for works contracts and joint development arrangements. Getting the rate classification wrong, or claiming ITC that's blocked under the no-credit regime for these project categories, creates significant retrospective exposure given typical project values.
+
+Taxvio's GST advisory for ${areaName} developers and contractors starts with confirming correct rate applicability for each project based on carpet area, value, and affordable-housing criteria, then reviews ITC positions carefully — since most residential construction post-2019 falls under the no-ITC regime, any credit claimed against construction inputs needs a defensible basis. For joint development agreements, where a landowner transfers development rights to a builder in exchange for constructed units, we advise on the GST treatment and timing of tax liability on both sides of the transaction.
+
+We also handle monthly GSTR-1/GSTR-3B filing aligned to project-wise revenue recognition, Reverse Charge Mechanism compliance on works contract services procured from unregistered contractors, and coordinate GST documentation alongside your RERA filings — since discrepancies between RERA-declared project costs and GST returns are an increasingly common trigger for departmental scrutiny of ${areaName} real estate businesses.`,
+    },
+
+    /* ── 28. GST for Importers & Exporters ── */
+    {
+      slug: "gst-for-importers-exporters",
+      title: `GST for Importers & Exporters in ${areaName}`,
+      price: "₹2,499",
+      timeline: "Ongoing Compliance",
+      icon: "🚢",
+      gradient: "from-blue-600 to-indigo-700",
+      accentBg: "bg-blue-50",
+      accentBorder: "border-blue-100",
+      accentText: "text-blue-700",
+      features: [
+        "IGST payment advisory on imports",
+        "Bill of Entry to GST reconciliation",
+        "Export invoice & shipping bill matching",
+        "LUT filing & refund coordination",
+        "RCM compliance on import of services",
+        "ICEGATE-to-GSTIN data matching",
+      ],
+      seoContent: `Import-export businesses and merchant exporters in ${areaName}, ${district}, Delhi sit at the intersection of customs and GST law — every import attracts IGST payable at the point of customs clearance (claimable as ITC once matched to your GSTR-2B via ICEGATE), while every export is a zero-rated supply, either under LUT (no IGST charged) or with IGST paid and refunded automatically against the shipping bill. Managing both flows correctly is what keeps import ITC claims and export refunds moving without department queries.
+
+Taxvio's GST service for ${areaName} importers and exporters reconciles every Bill of Entry against the IGST reflected in GSTR-2B, ensuring the full eligible credit is claimed and none is missed due to timing mismatches between customs clearance and GST portal data population. On the export side, we match export invoices against shipping bill and Export General Manifest data — the exact linkage the department checks before releasing automatic IGST refunds — and file or renew LUT annually for exporters supplying under the without-IGST route.
+
+We also review Reverse Charge Mechanism obligations on import of services (a frequently missed liability, since no invoice from a foreign vendor makes it easy to overlook), and coordinate refund applications where accumulated ITC from export activity needs to be claimed manually rather than through the automated shipping-bill route — keeping working capital available rather than locked up in unclaimed export or import-related credit for ${areaName} trading businesses.`,
+    },
   ];
 }
 
@@ -657,7 +1047,7 @@ export default async function DelhiGSTAreaPage(
               { val: "3–7 Days", label: "GSTIN Issued",      icon: Zap          },
               { val: "4.9★",      label: "Average Rating",   icon: Star         },
               { val: "₹1,499",    label: "Starting Price",   icon: IndianRupee  },
-              { val: "13",        label: "GST Services",     icon: ClipboardList },
+              { val: "28",        label: "GST Services",     icon: ClipboardList },
             ].map(({ val, label, icon: Icon }) => (
               <div key={label} className="flex flex-col items-center gap-1.5 p-4 rounded-2xl bg-[#f2f8fc] border border-[#deeef7] text-center hover:shadow-sm transition-all">
                 <div className="w-8 h-8 rounded-lg bg-[#00416a]/10 flex items-center justify-center">
@@ -932,7 +1322,7 @@ export default async function DelhiGSTAreaPage(
                     Free Consultation <ArrowRight size={15} />
                   </Link>
                   <a href={`tel:${PHONE}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/5 px-7 py-3.5 text-white text-sm font-bold hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all">
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/5 text-white px-7 py-3.5 text-sm font-bold hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all">
                     <Phone size={15} /> Call Now
                   </a>
                 </div>

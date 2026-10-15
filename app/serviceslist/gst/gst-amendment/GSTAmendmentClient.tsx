@@ -5,6 +5,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path to match where you save InquiryFormButton.tsx
 import {
   CheckCircle, ChevronDown, ArrowRight, Phone,
   MessageCircle, Clock, Shield, Zap, FileText, AlertCircle, RefreshCw,
@@ -148,6 +149,7 @@ export default function GSTAmendmentClient() {
       <Script id="gst-amendment-faq-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
+      <InquiryFormButton />
       <main className="bg-white text-gray-800">
 
         {/* ══ HERO ══════════════════════════════════════════════════════════ */}
@@ -203,10 +205,7 @@ export default function GSTAmendmentClient() {
                   </motion.p>
 
                   <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
-                    <a href={WA} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3.5 rounded-xl font-bold shadow-xl hover:scale-105 transition-all duration-200">
-                      <MessageCircle size={18} /> Amend on WhatsApp
-                    </a>
+                    
                     <Link href="/contact"
                       className="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-xl font-bold hover:bg-white/10 transition-all"
                       style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -735,10 +734,7 @@ export default function GSTAmendmentClient() {
               100% online. REG-03 officer query handling included.
             </motion.p>
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:scale-105 transition-all">
-                <MessageCircle size={20} /> WhatsApp — Amend Now
-              </a>
+              
               <Link href="/contact"
                 className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
                 style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -759,10 +755,7 @@ export default function GSTAmendmentClient() {
         {/* Sticky CTA bar */}
         <div className="fixed bottom-0 left-0 right-0 z-40 py-3 px-4 flex justify-center gap-4"
           style={{ background: "#001e36", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-          <a href={WA} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
-            💬 WhatsApp — Start GST Amendment
-          </a>
+
           <Link href="/contact"
             className="inline-flex items-center gap-2 bg-white text-[#00416a] px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
             Free Consultation

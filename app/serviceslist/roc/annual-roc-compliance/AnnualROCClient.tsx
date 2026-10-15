@@ -9,6 +9,7 @@ import {
   Phone, MessageCircle, Star, AlertCircle, TrendingUp, Calendar,
 } from "lucide-react";
 
+import InquiryForm, {openInquiryForm} from "@/components/InquiryFormButton";
 /* ─── Constants ────────────────────────────────────────────────────────────── */
 const PHONE = "918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
@@ -32,7 +33,7 @@ const PLANS = [
   {
     entity: "OPC / Small Company",
     icon: "👤",
-    price: "₹2,999",
+    price: "₹3,999",
     badge: "Simplified Filing",
     badgeColor: "bg-violet-500",
     accentColor: "border-violet-200",
@@ -44,7 +45,7 @@ const PLANS = [
   {
     entity: "Private Limited Company",
     icon: "🏛",
-    price: "₹3,999",
+    price: "₹6,999",
     badge: "Most Popular",
     badgeColor: "bg-emerald-500",
     accentColor: "border-emerald-200",
@@ -56,7 +57,7 @@ const PLANS = [
   {
     entity: "Section 8 Company",
     icon: "🌱",
-    price: "₹4,499",
+    price: "₹8,499",
     badge: "NGO / Non-Profit",
     badgeColor: "bg-teal-500",
     accentColor: "border-teal-200",
@@ -346,7 +347,7 @@ export default function AnnualROCClient() {
               ))}
             </ol>
           </nav>
-
+          <InquiryForm />
           {/* Category pill */}
           <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-5 text-sky-300"
             style={{ background: "rgba(56,189,248,0.12)", border: "1px solid rgba(56,189,248,0.25)" }}>
@@ -380,10 +381,7 @@ export default function AnnualROCClient() {
 
               {/* CTAs */}
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a href={WA} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                  <MessageCircle size={16} /> File ROC Returns Now
-                </a>
+               
                 <Link href="/contact"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
                   Free Consultation <ArrowRight size={15} />
@@ -512,10 +510,10 @@ export default function AnnualROCClient() {
                   <p className="text-[11px] text-gray-600 leading-snug">{due}</p>
                 </div>
 
-                <a href={WA} target="_blank" rel="noopener noreferrer"
+                <button onClick={() => openInquiryForm(entity)}
                   className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#00416a] hover:bg-[#003257] py-2.5 text-white text-xs font-bold transition-all active:scale-[0.97]">
                   <MessageCircle size={12} /> Get Started
-                </a>
+                </button>
                 <Link href={href}
                   className="flex items-center justify-center gap-1 mt-2 text-[10px] font-semibold text-[#00416a] hover:underline transition">
                   About {entity} <ArrowRight size={9} />
@@ -953,18 +951,12 @@ export default function AnnualROCClient() {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                <MessageCircle size={16} /> File ROC Returns Now
-              </a>
+          
               <Link href="/contact"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
                 Free Consultation <ArrowRight size={15} />
               </Link>
-              <a href={`tel:${PHONE}`}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl border-2 border-white/40 bg-transparent px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 hover:border-white/70 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                <Phone size={15} /> Call Now
-              </a>
+              
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-5 text-xs text-white/40">

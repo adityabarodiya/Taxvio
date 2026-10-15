@@ -4,6 +4,7 @@
 import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useState } from "react";
+import InquiryFormButton from "@/components/InquiryFormButton";
 
 /* ── JSON-LD SCHEMA ── */
 const jsonLd = {
@@ -79,7 +80,7 @@ export default function GSTCompositionSchemeClient() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-
+      <InquiryFormButton />
       <main className="bg-white text-gray-800 overflow-x-hidden">
         {/* ── URGENCY BANNER ── */}
         <div
@@ -150,14 +151,7 @@ export default function GSTCompositionSchemeClient() {
                   >
                     Register Now — ₹2,999 →
                   </Link>
-                  <a
-                    href="https://wa.me/918937980366?text=Hi%2C%20I%20want%20to%20register%20under%20GST%20Composition%20Scheme"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base flex items-center justify-center gap-2"
-                  >
-                    <span className="text-xl">💬</span> WhatsApp Support
-                  </a>
+                  
                 </div>
                 <div className="mt-8 flex flex-wrap gap-4 text-sm text-white/70">
                   {[
@@ -1243,14 +1237,7 @@ export default function GSTCompositionSchemeClient() {
                   >
                     Register Now — ₹2,999
                   </Link>
-                  <a
-                    href="https://wa.me/918937980366?text=Hi%2C%20I%20want%20to%20register%20under%20GST%20Composition%20Scheme"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center flex items-center justify-center gap-2"
-                  >
-                    <span className="text-xl">💬</span> WhatsApp Us
-                  </a>
+                  
                 </div>
               </div>
             </div>

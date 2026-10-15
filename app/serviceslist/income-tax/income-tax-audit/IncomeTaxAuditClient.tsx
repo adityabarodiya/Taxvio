@@ -3,6 +3,7 @@
 import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path to match where you save InquiryFormButton.tsx
 
 /* ── JSON-LD ── */
 const jsonLd = {
@@ -15,17 +16,18 @@ const jsonLd = {
     areaServed: "India",
     address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
   },
-  description: "Professional income tax audit under Section 44AB. Form 3CA, 3CB, 3CD preparation, books review, TDS compliance, GST reconciliation. Serving Khatauli, Muzaffarnagar and pan-India.",
+  description: "Professional income tax audit under Section 44AB. Form 3CA, 3CB, 3CD preparation, books review, TDS compliance, GST reconciliation. CBDT has extended the AY 2026-27 due date to 21st October 2026. Serving Khatauli, Muzaffarnagar and pan-India.",
   serviceType: "Income Tax Audit under Section 44AB",
-  offers: { "@type": "Offer", priceCurrency: "INR", price: "4999", priceSpecification: { "@type": "UnitPriceSpecification", minPrice: "4999", maxPrice: "19999" } },
+  offers: { "@type": "Offer", priceCurrency: "INR", price: "7999", priceSpecification: { "@type": "UnitPriceSpecification", minPrice: "7,999", maxPrice: "19999" } },
 };
 
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: [
+    { "@type": "Question", name: "Has CBDT extended the tax audit due date for AY 2026-27?", acceptedAnswer: { "@type": "Answer", text: "Yes. Via a press release dated 28th September 2026, the CBDT extended the 'specified date' for furnishing the tax audit report for AY 2026-27 from 30th September 2026 to 21st October 2026, and the corresponding ITR filing due date for audit cases from 31st October 2026 to 21st November 2026. A formal order/notification giving effect to this is being issued separately." } },
     { "@type": "Question", name: "Who is liable for tax audit under Section 44AB?", acceptedAnswer: { "@type": "Answer", text: "Businesses with turnover > ₹1 crore (₹10 crore if 95%+ digital); professionals with receipts > ₹50 lakh; persons opting out of presumptive taxation declaring lower profit; all companies; and eligible cooperative societies." } },
-    { "@type": "Question", name: "What is the due date for tax audit report filing FY 2025-26?", acceptedAnswer: { "@type": "Answer", text: "Tax audit report (Form 3CA/3CB + 3CD) must be filed by 30th September 2026. ITR for audit cases must be filed by 31st October 2026. Late report attracts ₹1.5 lakh penalty under Section 271B." } },
+    { "@type": "Question", name: "What is the due date for tax audit report filing FY 2025-26 (AY 2026-27)?", acceptedAnswer: { "@type": "Answer", text: "The tax audit report (Form 3CA/3CB + 3CD) must now be filed by 21st October 2026, as extended by CBDT from the original 30th September 2026 deadline. ITR for audit cases must be filed by 21st November 2026, extended from 31st October 2026. Late filing beyond the extended date still attracts a ₹1.5 lakh penalty under Section 271B." } },
     { "@type": "Question", name: "What is the penalty for not getting accounts audited?", acceptedAnswer: { "@type": "Answer", text: "Section 271B: 0.5% of turnover/gross receipts, maximum ₹1,50,000. Section 271A: ₹25,000 for failure to maintain books. Plus 234F penalty and 234A interest for delayed ITR." } },
   ],
 };
@@ -39,6 +41,7 @@ export default function IncomeTaxAuditClient() {
 
       <main className="bg-white text-gray-800 overflow-x-hidden">
         <DeadlineBanner />
+        <InquiryFormButton />
 
         {/* ── HERO ── */}
         <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
@@ -59,8 +62,12 @@ export default function IncomeTaxAuditClient() {
 
             <div className="flex flex-col lg:flex-row items-start gap-12">
               <div className="flex-1">
-                <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-4">
                   🔍 Income Tax Audit — Section 44AB
+                </span>
+                <br />
+                <span className="inline-flex items-center gap-2 bg-green-500/20 border border-green-400/40 text-green-200 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                  🎉 Deadline Extended by CBDT — 28th Sept 2026
                 </span>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
                   Income Tax Audit<br />
@@ -70,18 +77,21 @@ export default function IncomeTaxAuditClient() {
                 <p className="text-lg text-gray-200 leading-relaxed max-w-2xl mb-10">
                   When your turnover crosses ₹1 crore (₹10 crore for digital businesses) or professional
                   receipts exceed ₹50 lakh, a <strong className="text-white">tax audit under Section 44AB</strong>
-                  is mandatory. Missing the <strong className="text-white">30th September deadline</strong> attracts
-                  a penalty of up to <strong className="text-white">₹1.5 lakh under Section 271B</strong>. Taxvio's
+                  is mandatory. The CBDT has extended the audit report deadline to
+                  <strong className="text-white"> 21st October 2026</strong> (from 30th September) and the
+                  ITR filing deadline for audit cases to <strong className="text-white">21st November 2026</strong>.
+                  Missing the extended deadline still attracts a penalty of up to
+                  <strong className="text-white"> ₹1.5 lakh under Section 271B</strong>. Taxvio's
                   CA-led team handles Form 3CA/3CB, all 44 clauses of Form 3CD, books of accounts review, GST
-                  reconciliation, and timely portal upload — starting ₹4,999.
+                  reconciliation, and timely portal upload — starting ₹7,999.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center text-base">
-                    Start Tax Audit — ₹4,999 Onwards →
-                  </Link>
-                  <Link href="tel:+918937980366" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base">
-                    📞 Free Audit Applicability Check
-                  </Link>
+                  <button onClick={() => openInquiryForm()} className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center text-base">
+                    Start Tax Audit — ₹7,999 Onwards →
+                  </button>
+                  <button onClick={() => openInquiryForm()} className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base">
+                    📝 Free Audit Applicability Check
+                  </button>
                 </div>
                 <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/70">
                   {["✅ Form 3CA / 3CB / 3CD Filing", "✅ CA-Conducted Audit", "✅ All 44 Form 3CD Clauses", "✅ GST-Books Reconciliation"].map(t => (
@@ -92,15 +102,15 @@ export default function IncomeTaxAuditClient() {
 
               {/* hero card */}
               <div className="w-full lg:w-80 bg-white/10 backdrop-blur border border-white/20 rounded-3xl p-8 flex-shrink-0">
-                <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-5">Key Deadlines</p>
+                <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-5">Key Deadlines (Extended)</p>
                 <ul className="space-y-4 text-sm text-gray-200">
                   {[
-                    ["📋", "Audit Report: 30th Sept 2026"],
-                    ["📅", "ITR (Audit): 31st Oct 2026"],
+                    ["📋", "Audit Report: 21st Oct 2026 (was 30 Sept)"],
+                    ["📅", "ITR (Audit): 21st Nov 2026 (was 31 Oct)"],
                     ["💸", "271B Penalty: up to ₹1.5 lakh"],
                     ["🏢", "Threshold: ₹1 Cr / ₹10 Cr digital"],
                     ["👨‍💼", "Professional: ₹50 lakh receipts"],
-                    ["✅", "Starting fee: ₹4,999"],
+                    ["✅", "Starting fee: ₹7,999"],
                   ].map(([icon, text]) => (
                     <li key={text as string} className="flex items-start gap-3">
                       <span className="text-base">{icon}</span>
@@ -117,10 +127,10 @@ export default function IncomeTaxAuditClient() {
         <section className="bg-gray-50 py-14 border-b">
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
-              { number: "30 Sept", label: "Audit Report Deadline 2026", icon: "📅" },
+              { number: "21 Oct", label: "Audit Report Deadline (Extended)", icon: "📅" },
+              { number: "21 Nov", label: "ITR Deadline — Audit Cases (Extended)", icon: "🗓️" },
               { number: "₹1.5L", label: "Max Penalty u/s 271B", icon: "⚠️" },
-              { number: "44", label: "Clauses in Form 3CD", icon: "📋" },
-              { number: "₹4,999", label: "Starting Audit Fee", icon: "💰" },
+              { number: "₹7,999", label: "Starting Audit Fee", icon: "💰" },
             ].map((s) => (
               <div key={s.label} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
                 <div className="text-3xl mb-2">{s.icon}</div>
@@ -142,6 +152,83 @@ export default function IncomeTaxAuditClient() {
 
         {/* ── MAIN CONTENT ── */}
         <article className="max-w-6xl mx-auto px-6 py-20 space-y-24">
+
+          {/* CBDT EXTENSION UPDATE — NEW */}
+          <section id="cbdt-extension-update" className="bg-green-50 border border-green-200 rounded-3xl p-8 md:p-12">
+            <SectionLabel text="Breaking Update — 28th September 2026" />
+            <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-6">
+              CBDT Extends Tax Audit & ITR Due Dates for AY 2026-27
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8 text-gray-700 leading-relaxed mb-8">
+              <div className="space-y-4">
+                <p>
+                  In a press release dated <strong>28th September 2026</strong>, the Central Board of
+                  Direct Taxes (CBDT) announced relief for taxpayers whose accounts are subject to audit
+                  under the Income-tax Act, 1961. The <strong>'specified date' for furnishing the tax
+                  audit report</strong> for Assessment Year (AY) 2026-27 — originally 30th September
+                  2026 — has been <strong>extended to 21st October 2026</strong>, giving chartered
+                  accountants and taxpayers 21 additional days to complete books review, Form 3CD
+                  clause verification, and portal upload.
+                </p>
+                <p>
+                  As a direct consequence, the <strong>due date for furnishing the Return of Income</strong>
+                  for persons referred to at Serial No. 2 in the Table below Explanation 2 to Section
+                  139(1) of the Act — i.e., taxpayers covered by audit provisions — has also been
+                  <strong> extended from 31st October 2026 to 21st November 2026</strong>. The CBDT has
+                  clarified that a formal order or notification giving legal effect to this extension
+                  is being issued separately.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <p>
+                  This extension matters for every proprietor, firm, LLP, and company whose turnover or
+                  professional receipts cross the Section 44AB threshold, as well as those who opted out
+                  of presumptive taxation under Sections 44AD, 44ADA, or 44AE. If your CA was racing
+                  against the original 30th September deadline, this relief removes the immediate
+                  pressure — but it does not remove the requirement itself.
+                </p>
+                <p>
+                  <strong>Our recommendation:</strong> use the additional 21 days to strengthen your
+                  filing rather than delay it further. Late audit reports filed after the new 21st
+                  October 2026 deadline still attract the full <strong>Section 271B penalty of up to
+                  ₹1.5 lakh</strong>, and any further slippage risks last-minute portal congestion closer
+                  to the new date, as seen in previous extension cycles.
+                </p>
+              </div>
+            </div>
+            <div className="overflow-x-auto rounded-2xl border border-green-200 bg-white">
+              <table className="min-w-full text-sm">
+                <thead className="bg-green-700 text-white">
+                  <tr>
+                    {["Compliance", "Original Due Date", "Extended Due Date (CBDT, 28 Sept 2026)"].map((h) => (
+                      <th key={h} className="px-5 py-4 text-left font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  <tr className="bg-white">
+                    <td className="px-5 py-4 font-medium text-gray-800">Tax Audit Report (Form 3CA/3CB + 3CD)</td>
+                    <td className="px-5 py-4 text-gray-500 line-through">30th September 2026</td>
+                    <td className="px-5 py-4 font-bold text-green-700">21st October 2026</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="px-5 py-4 font-medium text-gray-800">ITR Filing — Audit Cases</td>
+                    <td className="px-5 py-4 text-gray-500 line-through">31st October 2026</td>
+                    <td className="px-5 py-4 font-bold text-green-700">21st November 2026</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-gray-500 mt-4">
+              Source: CBDT Press Release, Ministry of Finance, Government of India, dated 28th September 2026.
+              A formal notification is awaited; Taxvio will update this page immediately upon release.
+            </p>
+            <div className="mt-6">
+              <button onClick={() => openInquiryForm()} className="inline-block bg-green-700 text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200">
+                Get Audit-Ready Before 21st October →
+              </button>
+            </div>
+          </section>
 
           {/* WHAT IS TAX AUDIT */}
           <section id="what-is-tax-audit">
@@ -165,12 +252,13 @@ export default function IncomeTaxAuditClient() {
                   (the auditor's main report) and <strong>Form 3CD</strong> — a comprehensive 44-clause
                   statement covering every aspect of financial and tax compliance. These are uploaded
                   by the CA on the Income Tax e-filing portal and must be filed before
-                  <strong> 30th September 2026</strong> for FY 2025-26.
+                  <strong> 21st October 2026</strong> for FY 2025-26 (AY 2026-27), as per the CBDT's
+                  extended deadline.
                 </p>
               </div>
               <div className="space-y-4">
                 <p>
-                  Failure to file the audit report by 30th September attracts a penalty of
+                  Failure to file the audit report by 21st October 2026 attracts a penalty of
                   <strong> 0.5% of turnover — up to ₹1,50,000 — under Section 271B</strong>. Since
                   audit-liable taxpayers cannot file their ITR until the audit report is uploaded,
                   audit delays also trigger Section 234F late filing fees and Section 234A interest
@@ -181,7 +269,7 @@ export default function IncomeTaxAuditClient() {
                   tax audit services for proprietors, firms, LLPs, and companies. Our CA-led team
                   handles books of accounts review, Form 3CA/3CB and all 44 clauses of Form 3CD,
                   GST-books reconciliation, TDS Clause 34 verification, and timely portal upload
-                  — across Uttar Pradesh and pan-India — starting ₹4,999.
+                  — across Uttar Pradesh and pan-India — starting ₹7,999.
                 </p>
               </div>
             </div>
@@ -225,35 +313,36 @@ export default function IncomeTaxAuditClient() {
             </h2>
             <p className="text-gray-600 mb-8 max-w-2xl">
               Audit liability can arise even at low turnover if presumptive taxation is opted out.
-              Review every applicable row for your entity type.
+              Review every applicable row for your entity type. Deadlines below reflect the CBDT
+              extension announced 28th September 2026.
             </p>
             <div className="overflow-x-auto rounded-2xl border shadow-sm">
               <table className="min-w-full text-sm">
                 <thead className="bg-[#00416a] text-white">
                   <tr>
-                    {["Category", "Section", "Threshold / Condition", "Audit Form", "Deadline"].map((h) => (
+                    {["Category", "Section", "Threshold / Condition", "Audit Form", "Deadline (Extended)"].map((h) => (
                       <th key={h} className="px-5 py-4 text-left font-semibold">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {[
-                    ["Business (general)", "44AB(a)", "Turnover > ₹1 crore", "3CB + 3CD", "30 Sept 2026"],
-                    ["Business (digital — 95% non-cash)", "44AB(a) proviso", "Turnover > ₹10 crore", "3CB + 3CD", "30 Sept 2026"],
-                    ["Profession", "44AB(b)", "Gross receipts > ₹50 lakh", "3CB + 3CD", "30 Sept 2026"],
-                    ["Presumptive 44AD opt-out", "44AB(e)", "Profit < 6%/8%; any turnover", "3CB + 3CD", "30 Sept 2026"],
-                    ["Presumptive 44ADA opt-out", "44AB(e)", "Profit < 50% of receipts; any amount", "3CB + 3CD", "30 Sept 2026"],
-                    ["Presumptive 44AE opt-out", "44AB(e)", "Income < prescribed per-vehicle amount", "3CB + 3CD", "30 Sept 2026"],
-                    ["Companies (all)", "44AB(a)/(d)", "No threshold — all companies", "3CA + 3CD", "30 Sept 2026"],
-                    ["Cooperative Societies", "44AB(d)", "Income > basic exemption, no other audit", "3CB + 3CD", "30 Sept 2026"],
-                    ["LLPs — IT Act audit", "44AB(a)", "Turnover > ₹1 Cr (or > ₹10 Cr digital)", "3CB + 3CD", "30 Sept 2026"],
+                    ["Business (general)", "44AB(a)", "Turnover > ₹1 crore", "3CB + 3CD", "21 Oct 2026"],
+                    ["Business (digital — 95% non-cash)", "44AB(a) proviso", "Turnover > ₹10 crore", "3CB + 3CD", "21 Oct 2026"],
+                    ["Profession", "44AB(b)", "Gross receipts > ₹50 lakh", "3CB + 3CD", "21 Oct 2026"],
+                    ["Presumptive 44AD opt-out", "44AB(e)", "Profit < 6%/8%; any turnover", "3CB + 3CD", "21 Oct 2026"],
+                    ["Presumptive 44ADA opt-out", "44AB(e)", "Profit < 50% of receipts; any amount", "3CB + 3CD", "21 Oct 2026"],
+                    ["Presumptive 44AE opt-out", "44AB(e)", "Income < prescribed per-vehicle amount", "3CB + 3CD", "21 Oct 2026"],
+                    ["Companies (all)", "44AB(a)/(d)", "No threshold — all companies", "3CA + 3CD", "21 Oct 2026"],
+                    ["Cooperative Societies", "44AB(d)", "Income > basic exemption, no other audit", "3CB + 3CD", "21 Oct 2026"],
+                    ["LLPs — IT Act audit", "44AB(a)", "Turnover > ₹1 Cr (or > ₹10 Cr digital)", "3CB + 3CD", "21 Oct 2026"],
                   ].map(([cat, sec, threshold, form, deadline], i) => (
                     <tr key={cat} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                       <td className="px-5 py-4 font-medium text-gray-800">{cat}</td>
                       <td className="px-5 py-4 font-bold text-[#00416a]">{sec}</td>
                       <td className="px-5 py-4 text-gray-700">{threshold}</td>
                       <td className="px-5 py-4 font-semibold text-gray-700">{form}</td>
-                      <td className="px-5 py-4 font-medium text-red-600">{deadline}</td>
+                      <td className="px-5 py-4 font-medium text-green-700">{deadline}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -440,11 +529,11 @@ export default function IncomeTaxAuditClient() {
             </h2>
             <p className="text-gray-700 mb-8 max-w-3xl">
               Non-compliance triggers a cascade of penalties and interest charges that far exceed the
-              audit fee itself. Act before the 30th September deadline.
+              audit fee itself. Act before the CBDT-extended 21st October 2026 deadline.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
-                { section: "Section 271B", risk: "No Audit / Late Report", penalty: "0.5% of turnover, max ₹1,50,000", desc: "Levied when audit not conducted or report not filed by 30th September." },
+                { section: "Section 271B", risk: "No Audit / Late Report", penalty: "0.5% of turnover, max ₹1,50,000", desc: "Levied when audit not conducted or report not filed by 21st October 2026 (extended from 30th September)." },
                 { section: "Section 271A", risk: "Books Not Maintained", penalty: "₹25,000 penalty", desc: "Failure to maintain books of accounts as required under Section 44AA." },
                 { section: "Section 234F", risk: "Late ITR (Audit Case)", penalty: "₹5,000 late filing fee", desc: "Audit delay directly delays ITR filing — triggering automatic 234F penalty." },
                 { section: "Section 234A", risk: "Tax Outstanding Interest", penalty: "1% per month interest", desc: "Interest on outstanding tax for every month of delay after due date." },
@@ -480,7 +569,7 @@ export default function IncomeTaxAuditClient() {
                   { step: "03", title: "GST-to-Books Reconciliation", desc: "Turnover as per books is reconciled with GSTR-1, GSTR-3B, and GSTR-9. Discrepancies between GST returns and income tax books are identified, explained, and documented — this is a primary risk area in current scrutiny assessments." },
                   { step: "04", title: "TDS / TCS Compliance Verification (Clause 34)", desc: "Complete TDS deducted vs deposited reconciliation across all sections. All payments subject to TDS are verified for correct deduction and timely deposit. Shortfalls are flagged for rectification before Form 3CD Clause 34 reporting — preventing 40(a)(ia) disallowances." },
                   { step: "05", title: "Form 3CD Clause-by-Clause Completion", desc: "All 44 clauses of Form 3CD are completed — disallowances under 40(a) and 40A, cash payment violations under 40A(3), MSME payment compliance under 43B(h), IT Act depreciation schedules, related party transactions, Chapter VI-A deductions, and brought-forward loss set-offs." },
-                  { step: "06", title: "Form 3CA / 3CB Preparation, Signing & Portal Upload", desc: "Form 3CA (for company/statutory audit cases) or Form 3CB (for other cases) is prepared, reviewed, and signed by the practicing CA. The complete audit package — 3CA/3CB + 3CD — is uploaded on the Income Tax portal before 30th September with acknowledgement preserved for records." },
+                  { step: "06", title: "Form 3CA / 3CB Preparation, Signing & Portal Upload", desc: "Form 3CA (for company/statutory audit cases) or Form 3CB (for other cases) is prepared, reviewed, and signed by the practicing CA. The complete audit package — 3CA/3CB + 3CD — is uploaded on the Income Tax portal before 21st October 2026, the CBDT-extended deadline, with acknowledgement preserved for records." },
                 ].map((step, i) => (
                   <div key={step.step} className="relative md:pl-16 flex gap-6 items-start">
                     <div className="hidden md:flex absolute left-0 w-10 h-10 bg-[#00416a] text-white rounded-full items-center justify-center font-bold text-sm flex-shrink-0 z-10 border-4 border-white shadow-md">
@@ -559,9 +648,9 @@ export default function IncomeTaxAuditClient() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { name: "Ramesh Traders", location: "Khatauli", text: "Our turnover crossed ₹1 crore for the first time. Taxvio guided us through the full tax audit — books preparation, Form 3CD, and portal upload — all done before September end." },
+                { name: "Ramesh Traders", location: "Khatauli", text: "Our turnover crossed ₹1 crore for the first time. Taxvio guided us through the full tax audit — books preparation, Form 3CD, and portal upload — all done well within the deadline." },
                 { name: "Sharma & Associates LLP", location: "Muzaffarnagar", text: "Complex audit with multiple partner remuneration and TDS issues. Taxvio identified and corrected Clause 34 gaps before reporting — no disallowances in our assessment." },
-                { name: "Tech Solutions Pvt. Ltd.", location: "Meerut", text: "Company audit including GST reconciliation with books. Taxvio completed the full audit — statutory and tax — before the September deadline. Highly professional team." },
+                { name: "Tech Solutions Pvt. Ltd.", location: "Meerut", text: "Company audit including GST reconciliation with books. Taxvio completed the full audit — statutory and tax — comfortably before the deadline. Highly professional team." },
               ].map((r, i) => (
                 <div key={i} className="border rounded-2xl p-6 hover:shadow-lg transition bg-white">
                   <div className="flex mb-3">
@@ -629,23 +718,22 @@ export default function IncomeTaxAuditClient() {
               <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
               <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
                 <div className="max-w-2xl text-center lg:text-left">
-                  <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">Deadline: 30th September 2026</p>
+                  <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">Deadline Extended: 21st October 2026</p>
                   <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
-                    Complete Your Tax Audit<br />Before the September Deadline
+                    Don't Let a ₹1.5 Lakh Penalty<br />Undo a Good Financial Year
                   </h3>
                   <p className="text-lg text-gray-200 leading-relaxed">
-                    Avoid ₹1.5 lakh Section 271B penalty, prevent scrutiny additions from Form 3CD errors,
-                    and stay 100% compliant. Taxvio's CA-led tax audit starts at ₹4,999. Serving Khatauli,
-                    Muzaffarnagar, Meerut and all of India online.
+                    CBDT has given you 21 extra days — audit report by 21st October 2026, ITR by 21st
+                    November 2026. Most delays aren't the CA's fault, they're missing books or last-minute
+                    reconciliation gaps. Send us your documents today and our CA team will flag every gap,
+                    complete all 44 Form 3CD clauses, and upload before the deadline — starting ₹7,999,
+                    no surprise add-ons. Serving Khatauli, Muzaffarnagar, Meerut and all of India online.
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto flex-shrink-0">
-                  <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center">
-                    Start Tax Audit — ₹4,999 Onwards
-                  </Link>
-                  <Link href="tel:+918937980366" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
-                    📞 Free Applicability Check
-                  </Link>
+                  <button onClick={() => openInquiryForm()} className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center">
+                    Get My Audit Started — ₹7,999 Onwards
+                  </button>
                 </div>
               </div>
             </div>
@@ -665,20 +753,20 @@ function DeadlineBanner() {
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
 
   useEffect(() => {
-    const deadline = new Date("September 30, 2026").getTime();
+    const deadline = new Date("October 21, 2026").getTime();
     const today = new Date().getTime();
     const days = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
     setDaysLeft(days);
   }, []);
 
-  const urgency = daysLeft !== null && daysLeft <= 60;
+  const urgency = daysLeft !== null && daysLeft <= 30;
 
   return (
-    <div className={`${urgency ? "bg-red-600" : "bg-red-500"} text-white text-center py-3 font-semibold text-sm px-4`} role="alert" aria-live="polite">
-      ⏳ Tax Audit Report Deadline: <strong>30th September 2026</strong> &nbsp;|&nbsp;
-      ITR (Audit Cases): <strong>31st October 2026</strong> &nbsp;|&nbsp;
+    <div className={`${urgency ? "bg-red-600" : "bg-green-700"} text-white text-center py-3 font-semibold text-sm px-4`} role="alert" aria-live="polite">
+      🎉 CBDT Extended: Tax Audit Report Deadline now <strong>21st October 2026</strong> (was 30 Sept) &nbsp;|&nbsp;
+      ITR (Audit Cases): <strong>21st November 2026</strong> (was 31 Oct) &nbsp;|&nbsp;
       {daysLeft !== null ? <strong>{daysLeft} Days Left</strong> : "Act Now"} &nbsp;|&nbsp;
-      Penalty up to ₹1.5 Lakh Under Section 271B
+      Late Filing Penalty up to ₹1.5 Lakh Under Section 271B
     </div>
   );
 }
@@ -697,20 +785,20 @@ function AuditFeeCalculator() {
   const calculate = () => {
     const t = Number(turnover);
     if (!t) return;
-    let fee = 4999;
+    let fee = 7999;
     let label = "";
 
     if (entityType === "proprietor") {
-      if (t <= 10000000) { fee = 4999; label = "Proprietor / Individual (Turnover ≤ ₹1 Cr)"; }
-      else if (t <= 50000000) { fee = 7999; label = "Proprietor / Individual (Turnover ₹1–5 Cr)"; }
+      if (t <= 10000000) { fee = 7999; label = "Proprietor / Individual (Turnover ≤ ₹1 Cr)"; }
+      else if (t <= 50000000) { fee = 9999; label = "Proprietor / Individual (Turnover ₹1–5 Cr)"; }
       else { fee = 12999; label = "Proprietor / Individual (Turnover > ₹5 Cr)"; }
     } else if (entityType === "firm") {
-      if (t <= 10000000) { fee = 5999; label = "Partnership Firm / LLP (Turnover ≤ ₹1 Cr)"; }
-      else if (t <= 50000000) { fee = 9999; label = "Partnership Firm / LLP (Turnover ₹1–5 Cr)"; }
-      else { fee = 14999; label = "Partnership Firm / LLP (Turnover > ₹5 Cr)"; }
+      if (t <= 10000000) { fee = 9999; label = "Partnership Firm / LLP (Turnover ≤ ₹1 Cr)"; }
+      else if (t <= 50000000) { fee = 14999; label = "Partnership Firm / LLP (Turnover ₹1–5 Cr)"; }
+      else { fee = 17999; label = "Partnership Firm / LLP (Turnover > ₹5 Cr)"; }
     } else {
-      if (t <= 10000000) { fee = 7999; label = "Private Limited / OPC (Turnover ≤ ₹1 Cr)"; }
-      else if (t <= 100000000) { fee = 12999; label = "Private Limited / OPC (Turnover ₹1–10 Cr)"; }
+      if (t <= 10000000) { fee = 11999; label = "Private Limited / OPC (Turnover ≤ ₹1 Cr)"; }
+      else if (t <= 100000000) { fee = 19999; label = "Private Limited / OPC (Turnover ₹1–10 Cr)"; }
       else { fee = 19999; label = "Private Limited / OPC (Turnover > ₹10 Cr)"; }
     }
     setResult({ fee, label });
@@ -752,9 +840,9 @@ function AuditFeeCalculator() {
             </p>
             <p className="text-sm text-gray-500 mt-1">{result.label}</p>
             <p className="text-xs text-gray-400 mt-2">* Includes books review, Form 3CA/3CB & 3CD preparation, and portal upload. ITR filing is additional. Transfer pricing (Section 92E) charged separately. GST extra.</p>
-            <Link href="/contact" className="mt-4 inline-block bg-[#00416a] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#002b45] transition">
+            <button onClick={() => openInquiryForm()} className="mt-4 inline-block bg-[#00416a] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#002b45] transition">
               Start Audit Process →
-            </Link>
+            </button>
           </div>
         )}
       </div>
@@ -765,9 +853,10 @@ function AuditFeeCalculator() {
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(null);
   const faqs = [
+    { q: "Has CBDT extended the tax audit due date for AY 2026-27?", a: "Yes. Via a press release dated 28th September 2026, CBDT extended the specified date for furnishing the tax audit report for AY 2026-27 from 30th September 2026 to 21st October 2026. The corresponding ITR filing due date for audit cases was also extended, from 31st October 2026 to 21st November 2026. A formal order/notification giving effect to this is being issued separately." },
     { q: "What is income tax audit under Section 44AB?", a: "A tax audit requires eligible taxpayers to get books of accounts examined by a practicing CA. The CA submits Form 3CA or 3CB (audit report) along with Form 3CD (44-clause statement) on the Income Tax portal. It verifies income correctness, TDS compliance, disallowable expenses, and ensures accurate ITR filing." },
     { q: "Who is required to get a tax audit for FY 2025-26?", a: "Tax audit is mandatory for: businesses with turnover > ₹1 crore (or > ₹10 crore if 95%+ transactions are digital); professionals with gross receipts > ₹50 lakh; persons opting out of presumptive taxation (44AD/44ADA) and declaring lower profit; all companies; and eligible cooperative societies." },
-    { q: "What is the due date for the tax audit report?", a: "Form 3CA/3CB + Form 3CD must be uploaded by 30th September 2026 for FY 2025-26. ITR for audit-liable taxpayers must be filed by 31st October 2026. Late audit report attracts Section 271B penalty (up to ₹1.5 lakh) and delays ITR causing 234F and 234A charges." },
+    { q: "What is the due date for the tax audit report now?", a: "Form 3CA/3CB + Form 3CD must be uploaded by 21st October 2026 for FY 2025-26 (AY 2026-27), as extended by CBDT from the original 30th September 2026 deadline. ITR for audit-liable taxpayers must be filed by 21st November 2026, extended from 31st October 2026. Late filing beyond these extended dates still attracts Section 271B penalty (up to ₹1.5 lakh) and delays cause 234F and 234A charges." },
     { q: "What is the difference between Form 3CA and Form 3CB?", a: "Form 3CA is for taxpayers already audited under another law — primarily companies under the Companies Act. Form 3CB is for taxpayers whose audit obligation arises only under Section 44AB — proprietors, firms, HUFs, and LLPs. Both are filed with the same Form 3CD statement." },
     { q: "What is Form 3CD and why is it critical?", a: "Form 3CD is a 44-clause statement that forms the core of every tax audit. It covers disallowances under 40(a) (TDS failures), 40A(2)(b) (related party payments), 40A(3) (cash violations), 43B(h) (MSME payments), depreciation, TDS Clause 34 compliance, brought-forward losses, and Chapter VI-A deductions. Errors here are the primary trigger for scrutiny additions." },
     { q: "What is the penalty for not getting tax audit done?", a: "Section 271B: 0.5% of turnover/gross receipts — maximum ₹1,50,000. Section 271A: ₹25,000 for not maintaining books. Plus Section 234F (₹5,000) and Section 234A interest for delayed ITR caused by audit delay. These combined can significantly exceed the audit fee." },

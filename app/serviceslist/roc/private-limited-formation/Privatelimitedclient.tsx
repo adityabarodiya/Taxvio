@@ -8,6 +8,8 @@ import {
   Users, Zap, Clock, FileText, Building2, Phone, MessageCircle,
   Star, AlertCircle, TrendingUp,
 } from "lucide-react";
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton";
+
 
 /* ─── Static Data ────────────────────────────────────────────────────────────── */
 
@@ -221,14 +223,7 @@ export default function PrivateLimitedClient() {
 
               {/* CTAs */}
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a
-                  href={WA}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-                >
-                  <MessageCircle size={16} /> WhatsApp Us
-                </a>
+                
                 <Link
                   href="/contact"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]"
@@ -278,20 +273,13 @@ export default function PrivateLimitedClient() {
                     <span className="text-white/40 text-xs">(486+)</span>
                   </div>
                 </div>
-                <a
-                  href={WA}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full rounded-xl bg-green-500 hover:bg-green-600 py-3 text-white text-sm font-bold transition-all active:scale-[0.97]"
-                >
-                  <MessageCircle size={14} /> Get Started on WhatsApp
-                </a>
+               
               </div>
             </div>
           </div>
         </div>
       </section>
-
+                <InquiryFormButton />
       {/* ══════════════ STATS STRIP ══════════════ */}
       <section className="bg-[#00416a] py-8" aria-label="Taxvio incorporation statistics">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
@@ -685,26 +673,14 @@ export default function PrivateLimitedClient() {
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href={WA}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-            >
-              <MessageCircle size={16} /> WhatsApp Us
-            </a>
+            
             <Link
               href="/contact"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]"
             >
-              Free Consultation <ArrowRight size={15} />
+              Request a Free Consultation <ArrowRight size={15} />
             </Link>
-            <a
-              href={`tel:${PHONE}`}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl border-2 border-white/40 bg-transparent px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 hover:border-white/70 active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-            >
-              <Phone size={15} /> Call Now
-            </a>
+           
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center gap-5 text-xs text-white/40">

@@ -5,6 +5,7 @@ import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useState } from "react";
 
+import InquiryForm from "@/components/InquiryFormButton";
 /* ── JSON-LD SCHEMA ── */
 const jsonLd = {
   "@context": "https://schema.org",
@@ -79,7 +80,7 @@ export default function GSTRevocationClient() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-
+      <InquiryForm /> 
       <main className="bg-white text-gray-800 overflow-x-hidden">
         {/* ── URGENCY BANNER ── */}
         <div

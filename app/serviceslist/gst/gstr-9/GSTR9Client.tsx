@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Footar from "@/components/Footar";
 
+import InquiryForm from "@/components/InquiryFormButton";
 const PHONE = "918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with GSTR-9 Annual Return filing.")}`;
 const DARK = { background: "linear-gradient(135deg,#00416a 0%,#003257 55%,#001e36 100%)" };
@@ -149,7 +150,7 @@ export default function GSTR9Client() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <Script id="gstr9-faq-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-
+      <InquiryForm /> 
       <main className="bg-white text-gray-800">
 
         {/* ══ HERO ══════════════════════════════════════════════════════════ */}
@@ -203,10 +204,7 @@ export default function GSTR9Client() {
                   </motion.p>
 
                   <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
-                    <a href={WA} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3.5 rounded-xl font-bold shadow-xl hover:scale-105 transition-all duration-200">
-                      <MessageCircle size={18} /> File GSTR-9 on WhatsApp
-                    </a>
+                   
                     <Link href="/contact"
                       className="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-xl font-bold hover:bg-white/10 transition-all"
                       style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -400,10 +398,7 @@ export default function GSTR9Client() {
                     </p>
                   </div>
 
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="mt-4 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition hover:scale-105 text-sm">
-                    <MessageCircle size={16} /> WhatsApp — Minimise Your Late Fee
-                  </a>
+               
                 </div>
               </motion.div>
 
@@ -621,7 +616,7 @@ export default function GSTR9Client() {
                 <h2 className="text-3xl font-extrabold text-[#00416a] mt-4">
                   Frequently Asked Questions — GSTR-9 Annual Return
                 </h2>
-                <p className="text-gray-500 mt-2 text-sm">Have questions? WhatsApp us — we reply within 15 minutes.</p>
+                <p className="text-gray-500 mt-2 text-sm">Have questions? Contact us — we reply within 15 minutes.</p>
               </motion.div>
               <motion.div variants={stagger} className="space-y-3">
                 {FAQS.map((f, i) => (
@@ -700,10 +695,7 @@ export default function GSTR9Client() {
               for turnover above ₹5 crore. CA-assisted. Starting ₹2,999. Pan India.
             </motion.p>
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:scale-105 transition-all">
-                <MessageCircle size={20} /> WhatsApp — File GSTR-9 Now
-              </a>
+             
               <Link href="/contact"
                 className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
                 style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -723,10 +715,7 @@ export default function GSTR9Client() {
         {/* Sticky CTA */}
         <div className="fixed bottom-0 left-0 right-0 z-40 py-3 px-4 flex justify-center gap-4"
           style={{ background: "#001e36", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-          <a href={WA} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
-            💬 WhatsApp — File GSTR-9 Today
-          </a>
+         
           <Link href="/contact"
             className="inline-flex items-center gap-2 bg-white text-[#00416a] px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
             Free Consultation

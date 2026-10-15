@@ -9,6 +9,8 @@ import {
   Phone, MessageCircle, Star, AlertCircle, TrendingUp,
 } from "lucide-react";
 
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton";
+
 /* ─── Constants ──────────────────────────────────────────────────────────────── */
 const PHONE = "918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
@@ -331,10 +333,7 @@ export default function LLPFormationClient() {
 
               {/* CTA */}
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a href={WA} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                  <MessageCircle size={16} /> Register LLP — ₹5,999
-                </a>
+                
                 <Link href="/contact"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
                   Free Consultation <ArrowRight size={15} />
@@ -850,10 +849,7 @@ export default function LLPFormationClient() {
               <p className="text-white font-bold text-sm">📋 Post-Incorporation Reminder</p>
               <p className="text-white/65 text-xs mt-0.5">LLP Agreement (Form 3) must be filed with MCA within <strong className="text-white">30 days of incorporation</strong>. Penalty: ₹100/day.</p>
             </div>
-            <a href={WA} target="_blank" rel="noopener noreferrer"
-              className="shrink-0 inline-flex items-center gap-2 bg-white text-[#00416a] text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-gray-100 transition-all active:scale-[0.97]">
-              <MessageCircle size={13} /> File Now
-            </a>
+            
           </div>
 
           <div className="text-center">
@@ -874,20 +870,14 @@ export default function LLPFormationClient() {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                <MessageCircle size={16} /> Register LLP — ₹5,999
-              </a>
+              
               <Link href="/contact"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                Free Consultation <ArrowRight size={15} />
+                Request a Callback <ArrowRight size={15} />
               </Link>
-              <a href={`tel:${PHONE}`}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl border-2 border-white/40 bg-transparent px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 hover:border-white/70 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                <Phone size={15} /> Call Now
-              </a>
+              
             </div>
-
+            <InquiryFormButton />
             <div className="mt-8 flex flex-wrap justify-center gap-5 text-xs text-white/40">
               <span className="flex items-center gap-1.5"><Shield size={12} /> 100% Confidential</span>
               <span className="flex items-center gap-1.5"><CheckCircle size={12} /> CA & CS Assisted</span>

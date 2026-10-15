@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Script from "next/script";
 import Footar from "@/components/Footar";
+import InquiryFormButton from "@/components/InquiryFormButton";
 import type { Metadata } from "next";
 import {
   MapPin, ArrowRight, Phone, MessageCircle, Shield, Zap,

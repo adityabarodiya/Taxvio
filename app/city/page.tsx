@@ -3,6 +3,8 @@
   import Script from "next/script";
   import Footar from "@/components/Footar";
   import type { Metadata } from "next";
+  import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton";
+
   import {
     MapPin,
     ArrowRight,
@@ -1217,19 +1219,7 @@
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0 w-full md:w-auto">
-                    <a
-                      href="https://wa.me/918937980366?text=Hello%20Taxvio%2C%20I%20need%20help%20with%20tax%20services."
-                      target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-xl hover:bg-gray-50 hover:shadow-2xl active:scale-[0.97] transition-all min-h-[52px]"
-                    >
-                      <MessageCircle size={16} /> WhatsApp Us
-                    </a>
-                    <a
-                      href="tel:918937980366"
-                      className="inline-flex items-center justify-center gap-2.5 rounded-xl border-2 border-white/40 bg-white/5 text-white px-7 py-3.5 text-sm font-bold hover:bg-white/10 hover:border-white/70 active:scale-[0.97] transition-all min-h-[52px]"
-                    >
-                      <Phone size={16} /> Call Now
-                    </a>
+                    
                     <Link
                       href="/contact"
                       className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-white/15 border border-white/30 text-white px-7 py-3.5 text-sm font-bold hover:bg-white/25 active:scale-[0.97] transition-all min-h-[52px]"
@@ -1241,7 +1231,7 @@
               </div>
             </div>
           </section>
-
+          <InquiryFormButton />
           <Footar />
         </main>
       </>

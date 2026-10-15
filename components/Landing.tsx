@@ -1,1057 +1,654 @@
 "use client";
 
-import Head from "next/head";
+import Footar from "@/components/Footar";
 import Link from "next/link";
-import Image from "next/image";
-import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import {
-  CheckCircle,
-  ArrowRight,
-  Phone,
-  MessageCircle,
-  Star,
-  Shield,
-  Clock,
-  Users,
-  TrendingUp,
-  FileText,
-  Building2,
-  Receipt,
-  ChevronDown,
-  BadgeCheck,
-  Landmark,
-  Zap,
-  Globe,
-  Lock,
-  HeartHandshake,
-  CalendarCheck,
-  Award,
-  Sparkles,
-} from "lucide-react";
-import bg1 from "../public/service/bg1.png";
-import type { Variants } from "framer-motion";
-
-// ─── JSON-LD structured data ──────────────────────────────────────────────────
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "Taxvio",
-  url: "https://www.taxvio.in",
-  logo: "https://www.taxvio.in/logo.png",
-  description:
-    "Taxvio is a trusted online tax and legal consultancy providing GST registration, income tax filing, company registration, TDS compliance, and business compliance services across India.",
-  areaServed: "India",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Khatauli",
-    addressRegion: "Uttar Pradesh",
-    addressCountry: "IN",
-  },
-  telephone: "+918937980366",
-  priceRange: "₹999 - ₹19999",
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    reviewCount: "2400",
-  },
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Tax & Compliance Services",
-    itemListElement: [
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "GST Registration" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Income Tax Return Filing" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "GST Return Filing" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Company Registration" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "TDS Return Filing" } },
-    ],
-  },
-};
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What GST services does Taxvio provide?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Taxvio provides end-to-end GST services including GST registration, monthly and quarterly GSTR-1 and GSTR-3B return filing, GST refund applications, GST annual return (GSTR-9), GST cancellation, GST amendment, LUT filing for exporters, e-invoicing setup, GST audit assistance, and GST notice reply services across India.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How can I file income tax return online through Taxvio?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Taxvio offers online income tax return filing for salaried individuals, proprietors, partnership firms, LLPs, companies, and trusts. You can upload your documents online and our expert CA team will prepare and file your ITR with maximum deductions and 100% accuracy. Services start from ₹999.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Does Taxvio provide company registration services?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. Taxvio provides complete company registration services including Private Limited Company, LLP, One Person Company (OPC), and Section 8 Company registration through the MCA portal. We also handle annual ROC compliance, director changes, and company closure.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can Taxvio handle GST notices and income tax scrutiny?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. Taxvio's expert team handles GST notices, departmental queries, income tax scrutiny assessments, Section 143(1)/143(2)/148 notices, and appeal filings before CIT(A). Our CA-assisted team prepares comprehensive responses and represents clients in faceless assessment proceedings.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What areas does Taxvio serve?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Taxvio is headquartered in Khatauli, Muzaffarnagar, Uttar Pradesh and provides 100% online services to clients across all states in India including Delhi NCR, Mumbai, Bangalore, Kolkata, Chennai, Hyderabad, Pune, and all tier-2 and tier-3 cities.",
-      },
-    },
-  ],
-};
-
-// ─── Constants ────────────────────────────────────────────────────────────────
-const PHONE_NUMBER = "918937980366";
-
-const SERVICES_HIGHLIGHT = [
-  {
-    icon: Receipt,
-    title: "GST Services",
-    desc: "Registration, GSTR-1, GSTR-3B, GSTR-9, LUT filing, e-invoicing, refunds, and notice replies for all GST-registered businesses across India.",
-    href: "/serviceslist/gst",
-    count: "11 Services",
-    color: "from-emerald-500 to-teal-600",
-    bg: "bg-emerald-50",
-  },
-  {
-    icon: FileText,
-    title: "Income Tax",
-    desc: "ITR filing for individuals, proprietors, firms, LLPs, and companies. TDS/TCS returns, tax audit, scrutiny, 12A/80G, Form 15G/15H, and PAN/TAN services.",
-    href: "/serviceslist/income-tax",
-    count: "14 Services",
-    color: "from-blue-500 to-indigo-600",
-    bg: "bg-blue-50",
-  },
-  {
-    icon: Building2,
-    title: "Company Registration",
-    desc: "Pvt Ltd, LLP, OPC, and Section 8 company formation with complete ROC compliance, annual returns, director changes, and company closure services.",
-    href: "/serviceslist/roc",
-    count: "9 Services",
-    color: "from-violet-500 to-purple-600",
-    bg: "bg-violet-50",
-  },
-  {
-    icon: Shield,
-    title: "FSSAI License",
-    desc: "Basic, State, and Central FSSAI food license registration, annual return filing, license renewal, modification, and FSSAI notice reply services.",
-    href: "/serviceslist/fssai",
-    count: "6 Services",
-    color: "from-orange-500 to-amber-600",
-    bg: "bg-orange-50",
-  },
-];
-
-const STATS = [
-  { value: "12,000+", label: "Returns Filed", icon: FileText, suffix: "" },
-  { value: "4,800+", label: "Businesses Served", icon: Building2, suffix: "" },
-  { value: "₹2.4 Cr+", label: "Tax Saved for Clients", icon: TrendingUp, suffix: "" },
-  { value: "4.9★", label: "Average Rating", icon: Star, suffix: "" },
-];
-
-const WHY_TAXVIO = [
-  { text: "Expert CA & Legal Team", icon: Award },
-  { text: "100% Online — No Office Visit Needed", icon: Globe },
-  { text: "Affordable & Transparent Pricing", icon: BadgeCheck },
-  { text: "GST, Income Tax & ROC Under One Roof", icon: Landmark },
-  { text: "Timely Filing & Deadline Reminders", icon: CalendarCheck },
-  { text: "All India Coverage — Including Tier-2 Cities", icon: Users },
-  { text: "Confidential & Secure Document Handling", icon: Lock },
-  { text: "Dedicated Support via Call & WhatsApp", icon: HeartHandshake },
-];
-
-const GST_SERVICES = [
-  { name: "GST Registration", href: "serviceslist/gst/gst-registration", desc: "GSTIN in 3–7 days" },
-  { name: "GST Return Filing", href: "serviceslist/gst/gst-return", desc: "GSTR-1, 3B, QRMP" },
-  { name: "GST Refund", href: "serviceslist/gst/gst-refund", desc: "Export & ITC refunds" },
-  { name: "GST Annual Return", href: "serviceslist/gst/gstr-9", desc: "GSTR-9 filing" },
-  { name: "GST Cancellation", href: "serviceslist/gst/gst-cancellation", desc: "Surrender GSTIN" },
-  { name: "GST LUT Filing", href: "serviceslist/gst/gst-lut", desc: "Export without IGST" },
-  { name: "GST Amendment", href: "serviceslist/gst/gst-amendment", desc: "Update details" },
-  { name: "GST Notice Reply", href: "serviceslist/gst/gst-notice-reply", desc: "Departmental queries" },
-  { name: "GST E-Invoicing", href: "serviceslist/gst/gst-e-invoicing", desc: "IRN & compliance" },
-  { name: "GST Audit", href: "serviceslist/gst/gst-audit", desc: "Audit assistance" },
-  { name: "GSTIN Verification", href: "serviceslist/gst/gst-search", desc: "Vendor check" },
-];
-
-const ITR_SERVICES = [
-  { name: "ITR – Salaried", href: "serviceslist/income-tax/itr-salaried", desc: "Form 16 based filing" },
-  { name: "ITR – Proprietor", href: "serviceslist/income-tax/itr-proprietor", desc: "Business income ITR" },
-  { name: "ITR – Firm / LLP", href: "serviceslist", desc: "Partnership ITR" },
-  { name: "ITR – Company / Trust", href: "serviceslist/income-tax/itr-trust-company", desc: "Corporate ITR-6/7" },
-  { name: "TDS Return (24Q/26Q)", href: "serviceslist/income-tax/quarterly-tds", desc: "Quarterly TDS" },
-  { name: "TCS Return", href: "serviceslist/income-tax/quarterly-tcs", desc: "Form 27EQ" },
-  { name: "Tax Audit (44AB)", href: "serviceslist/income-tax/income-tax-audit", desc: "Form 3CA/3CB/3CD" },
-  { name: "Income Tax Scrutiny", href: "serviceslist/income-tax/income-tax-scrutiny", desc: "Notice handling" },
-  { name: "12A Registration", href: "serviceslist/income-tax/12a-application", desc: "Trust exemption" },
-  { name: "80G Approval", href: "serviceslist/income-tax/80g-application", desc: "Donor deduction" },
-  { name: "Form 15G / 15H", href: "serviceslist/income-tax/15g-15h", desc: "Stop TDS on FD" },
-  { name: "PAN Card", href: "serviceslist/income-tax/pan-card", desc: "New / correction" },
-  { name: "TAN Application", href: "serviceslist/income-tax/tan-application", desc: "For TDS deductors" },
-];
-
-const HOW_IT_WORKS = [
-  {
-    step: "01",
-    title: "Share Your Requirements",
-    desc: "Contact us via WhatsApp, call, or our online form. Tell us which service you need — GST registration, ITR filing, company registration, or any other compliance requirement.",
-    icon: MessageCircle,
-  },
-  {
-    step: "02",
-    title: "Upload Your Documents",
-    desc: "Our team sends you a simple checklist. Upload your documents securely via WhatsApp or email. No physical visits required — everything is handled 100% online.",
-    icon: FileText,
-  },
-  {
-    step: "03",
-    title: "Expert Review & Filing",
-    desc: "Our CA-led team reviews your documents, prepares your application or return with 100% accuracy, and files it with the relevant authority — GST portal, Income Tax portal, or MCA.",
-    icon: BadgeCheck,
-  },
-  {
-    step: "04",
-    title: "Done — Get Your Acknowledgement",
-    desc: "Receive your ARN, GSTIN, ITR acknowledgement, or company certificate directly. We also handle follow-ups, corrections, and any departmental queries at no extra cost.",
-    icon: Award,
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Rahul Sharma",
-    role: "Small Business Owner, Delhi",
-    text: "Taxvio handled our GST registration and monthly return filing with complete professionalism. The team is responsive on WhatsApp and never misses a filing deadline. Highly recommended for any business owner.",
-    rating: 5,
-  },
-  {
-    name: "Priya Mehta",
-    role: "Salaried Professional, Bangalore",
-    text: "I used Taxvio for my ITR filing with capital gains from mutual funds and property sale. They maximized my deductions and filed accurately within 24 hours. The pricing is very reasonable compared to local CAs.",
-    rating: 5,
-  },
-  {
-    name: "Amit Gupta",
-    role: "Startup Founder, Noida",
-    text: "We incorporated our Private Limited company and set up GST through Taxvio. The entire process was smooth, online, and completed faster than expected. Now they handle all our ROC compliance too.",
-    rating: 5,
-  },
-];
-
-const FAQS = [
-  {
-    q: "What GST services does Taxvio provide?",
-    a: "Taxvio provides end-to-end GST services including GST registration, monthly and quarterly GSTR-1 and GSTR-3B return filing, GST refund applications, GST annual return (GSTR-9), GST cancellation, LUT filing for exporters, e-invoicing setup, GST audit assistance, and GST notice reply services pan-India.",
-  },
-  {
-    q: "How can I file my income tax return online through Taxvio?",
-    a: "Simply upload your documents (Form 16, bank statements, investment proofs) through WhatsApp or email. Our CA team prepares and files your ITR within 24–48 hours with maximum deductions. Services are available for salaried individuals, proprietors, firms, LLPs, and companies.",
-  },
-  {
-    q: "Does Taxvio provide company registration services?",
-    a: "Yes. We handle complete company formation — Private Limited, LLP, OPC, and Section 8 (NGO) — through the MCA portal. We also manage ongoing ROC compliance including annual returns, director changes, capital increase, and company closure.",
-  },
-  {
-    q: "Can Taxvio help with GST notices and income tax scrutiny?",
-    a: "Absolutely. Our expert team handles all types of GST and income tax notices — Section 143(1), 143(2), 148, GST SCN — with comprehensive written responses, AIS reconciliation, and representation in faceless assessment proceedings.",
-  },
-  {
-    q: "What areas does Taxvio serve?",
-    a: "Taxvio is based in Khatauli, Muzaffarnagar, Uttar Pradesh and serves clients 100% online across all states in India including Delhi NCR, Mumbai, Bangalore, Kolkata, Chennai, Hyderabad, Pune, and all tier-2 and tier-3 cities.",
-  },
-  {
-    q: "How much does GST registration cost at Taxvio?",
-    a: "GST registration at Taxvio starts from ₹999 including government fees. The process typically takes 3–7 working days after document submission. We also provide post-registration support for GSTR-1 and GSTR-3B filing from ₹999/month.",
-  },
-  {
-    q: "Can Taxvio file ITR for freelancers and consultants?",
-    a: "Yes. Taxvio files ITR for freelancers, independent consultants, and self-employed professionals under ITR-3 or ITR-4 (Presumptive Taxation Scheme). We also handle TDS reconciliation, advance tax computation, and Form 26AS/AIS mismatch resolution.",
-  },
-];
-
-// ─── Animation variants ───────────────────────────────────────────────────────
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 36 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.25, 0.1, 0.25, 1] } },
-};
-const stagger: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.92 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } },
-};
+import { useState } from "react";
+import { serviceCategories } from "@/data/serviceCategories"; // ← adjust this import path to match where serviceCategories.ts actually lives in your repo
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path to match where you save InquiryFormButton.tsx
 
 export default function Landing() {
-  const [faqOpen, setFaqOpen] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"gst" | "itr">("gst");
-  const statsRef = useRef<HTMLDivElement>(null);
-  const statsInView = useInView(statsRef, { once: true });
+  return (
+    <main className="bg-white text-gray-800 overflow-x-hidden">
+      <Hero />
+      <InquiryFormButton />
 
-  const handleCall = () => { window.location.href = `tel:${PHONE_NUMBER}`; };
-  const handleWhatsApp = () => {
-    const msg = encodeURIComponent("Hello Taxvio, I want to enquire about GST, Income Tax and Company Registration services.");
-    window.open(`https://wa.me/${PHONE_NUMBER}?text=${msg}`, "_blank");
-  };
+      <StatsBar />
+      <IntroSection />
+      <ServicesOverview />
+      <PopularServices />
+      <FounderNote />
+      <TrustBadges />
+      <ProcessSection />
+      <ComplianceGuide />
+      <WhoWeServe />
+      <ComparisonSection />
+      <DeadlinesSection />
+      <Testimonials />
+      <CoverageSection />
+      <FAQSection />
+      <FinalCTA />
+
+      
+    </main>
+  );
+}
+
+/* ══════════════════════ HERO ══════════════════════ */
+
+function Hero() {
+  return (
+    <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full border border-white/10" />
+      <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full border border-white/10" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full border border-white/5 -translate-x-1/2 translate-y-1/2" />
+
+      <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-28 text-center">
+        <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+          🏢 CA-Led GST, Tax & Compliance Platform
+        </span>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+          Compliance Shouldn't Need<br />Three Different Consultants
+        </h1>
+        <p className="text-lg text-gray-200 leading-relaxed max-w-2xl mx-auto mb-10">
+          GST, Income Tax, ROC and FSSAI — one CA-supervised team, transparent pricing,
+          and a single point of contact from registration to your next annual filing.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onClick={() => openInquiryForm()}
+            className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center"
+          >
+            Get a Free Consultation →
+          </button>
+          <Link
+            href="/serviceslist"
+            className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center"
+          >
+            Browse All Services
+          </Link>
+        </div>
+        <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm text-white/70">
+          {["✅ CA-Supervised Filings", "✅ Transparent Pricing", "✅ Pan-India Service", "✅ On-Time Deadline Tracking"].map((t) => (
+            <span key={t} className="bg-white/10 border border-white/20 px-3 py-1 rounded-full">{t}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ INTRO / ABOUT ══════════════════════ */
+
+function IntroSection() {
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <SectionLabel text="About Taxvio" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
+        A Single CA-Led Team for Every Compliance Need
+      </h2>
+      <div className="grid md:grid-cols-2 gap-10 text-gray-700 leading-relaxed">
+        <div className="space-y-4">
+          <p>
+            Running a business in India means juggling more regulatory touchpoints than most
+            founders expect. A new venture typically needs company or LLP incorporation through
+            the ROC, a GST registration before the first invoice goes out, an FSSAI license if
+            food is involved in any way, and — once revenue starts flowing — income tax
+            planning, advance tax payments, and annual return filing. Each of these usually
+            means a different consultant, a different fee structure, and a different person to
+            chase when a deadline is approaching.
+          </p>
+          <p>
+            Taxvio was built to collapse that complexity into one relationship. Instead of
+            juggling a GST consultant, a separate CA for income tax, a company secretary for ROC
+            filings, and a food-license agent, you work with one CA-supervised team that already
+            has your documents, your history, and your compliance calendar on file. That means
+            fewer repeated conversations, fewer documents re-submitted from scratch, and nobody
+            falling through the cracks between two consultants who don't talk to each other.
+          </p>
+        </div>
+        <div className="space-y-4">
+          <p>
+            We work with proprietors filing their first ITR, growing partnerships and LLPs
+            navigating ROC annual compliance, private limited companies handling statutory
+            audits and board resolutions, and food businesses — from cloud kitchens to
+            manufacturers — that need FSSAI licensing sorted correctly the first time. Every
+            filing that leaves our team is reviewed by a practicing Chartered Accountant before
+            submission, not just assembled from a template and sent off.
+          </p>
+          <p>
+            Pricing is quoted upfront, before any engagement begins, so there are no
+            surprise add-ons once the work is underway. And because deadlines in Indian
+            compliance — GST returns, ROC annual filings, income tax audit due dates — carry
+            real financial penalties when missed, our process is built around a compliance
+            calendar that tracks what's due for your business well before it becomes urgent.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ STATS ══════════════════════ */
+
+function StatsBar() {
+  const stats = [
+    { number: "5,000+", label: "Businesses Served", icon: "🏢" },
+    { number: "50+", label: "Cities Covered Pan-India", icon: "📍" },
+    { number: "4", label: "Compliance Verticals", icon: "📋" },
+    { number: "100%", label: "CA-Reviewed Filings", icon: "👨‍💼" },
+  ];
+  return (
+    <section className="bg-gray-50 py-14 border-b">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        {stats.map((s) => (
+          <div key={s.label} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+            <div className="text-3xl mb-2">{s.icon}</div>
+            <p className="text-2xl font-extrabold text-[#00416a] mb-1">{s.number}</p>
+            <p className="text-gray-500 text-sm font-medium">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ SERVICES OVERVIEW ══════════════════════ */
+
+function ServicesOverview() {
+  const lines = [
+    { title: "GST Services", icon: "🧾", link: "/serviceslist/gst", desc: "New registration, monthly and quarterly return filing, refund applications, LUT for exporters, GST audits, notice replies, and compliance built specifically for e-commerce sellers and freelancers billing foreign clients." },
+    { title: "Income Tax", icon: "📊", link: "/serviceslist/income-tax", desc: "ITR filing for salaried individuals, proprietors, firms, LLPs, trusts and companies, Section 44AB tax audits, quarterly TDS/TCS returns, income tax notice handling, and specialized NRI taxation support." },
+    { title: "ROC / Company Law", icon: "🏢", link: "/serviceslist/roc", desc: "Private limited, LLP, OPC and Section 8 company incorporation, annual ROC compliance filings, director appointments and resignations, registered office changes, company closures and entity conversions." },
+    { title: "FSSAI Licensing", icon: "🍽️", link: "/serviceslist/fssai", desc: "Basic, State and Central FSSAI food licenses for restaurants, cloud kitchens and manufacturers, license renewals before expiry, modifications for changed business details, and annual return filing." },
+  ];
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <SectionLabel text="What We Handle" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-6">
+        One Firm for Every Compliance Need
+      </h2>
+      <p className="text-gray-600 max-w-3xl mb-10 leading-relaxed">
+        Most compliance firms specialize in one area and refer everything else elsewhere.
+        Taxvio's team covers all four major compliance verticals a growing Indian business
+        typically needs — GST, Income Tax, Registrar of Companies filings, and FSSAI food
+        licensing — so the same team that registered your company can also handle its first
+        GST return, and the same people who filed last year's ITR already know your
+        business when ROC's annual compliance deadline comes around.
+      </p>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {lines.map((l) => (
+          <Link key={l.title} href={l.link} className="block bg-white border rounded-2xl p-6 hover:shadow-lg hover:border-[#00416a]/40 transition group">
+            <div className="text-3xl mb-3">{l.icon}</div>
+            <h3 className="font-bold text-[#00416a] mb-2">{l.title}</h3>
+            <p className="text-sm text-gray-600 mb-4">{l.desc}</p>
+            <span className="text-sm text-[#00416a] font-semibold group-hover:underline">Explore Services →</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ POPULAR SERVICES ══════════════════════ */
+
+function PopularServices() {
+  // Hand-picked high-intent services, pulled live from serviceCategories by slug
+  // so titles/links/SEO data never drift out of sync with the rest of the site.
+  const picks: { categorySlug: string; serviceSlug: string }[] = [
+    { categorySlug: "gst", serviceSlug: "gst-registration" },
+    { categorySlug: "income-tax", serviceSlug: "itr-proprietor" },
+    { categorySlug: "roc", serviceSlug: "private-limited-formation" },
+    { categorySlug: "fssai", serviceSlug: "fssai-registration" },
+    { categorySlug: "income-tax", serviceSlug: "income-tax-audit" },
+    { categorySlug: "roc", serviceSlug: "llp-formation" },
+  ];
+
+  const resolved = picks
+    .map(({ categorySlug, serviceSlug }) => {
+      const category = serviceCategories.find((c) => c.slug === categorySlug);
+      const service = category?.services.find((s) => s.slug === serviceSlug);
+      return service && category ? { ...service, categorySlug: category.slug } : null;
+    })
+    .filter((s): s is NonNullable<typeof s> => s !== null);
 
   return (
-    <>
-      <Head>
-        <title>Taxvio | GST Registration, Income Tax Filing & Company Registration Services in India</title>
-        <meta name="description" content="Taxvio offers professional GST registration, GSTR-1, GSTR-3B filing, income tax return filing for individuals and businesses, company registration, TDS returns, tax audit, 12A/80G, FSSAI license, and ROC compliance services across India. Starting ₹999." />
-        <meta name="keywords" content="GST registration India, income tax return filing, company registration India, GST return filing, TDS return filing, tax audit India, ITR filing salaried, GST notice reply, 12A 80G registration, FSSAI license, Taxvio" />
-        <link rel="canonical" href="https://www.taxvio.in" />
-        <meta property="og:title" content="Taxvio | GST, Income Tax & Company Registration Services" />
-        <meta property="og:description" content="End-to-end GST, income tax, company registration and compliance services for businesses across India. Starting ₹999." />
-        <meta property="og:url" content="https://www.taxvio.in" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://www.taxvio.in/og-home.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      </Head>
-
-      <main className="min-h-screen bg-white text-gray-800 font-sans">
-
-        {/* ════════════ HERO ════════════ */}
-        <section
-          className="relative overflow-hidden bg-[#00416a] text-white min-h-[92vh] flex items-center"
-          aria-label="Taxvio — GST, Income Tax & Company Registration Services"
-          itemScope itemType="https://schema.org/WebPage"
-        >
-          {/* Multi-layer gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00416a] via-[#003257] to-[#001e36]" />
-
-          {/* Decorative grid lines */}
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-            backgroundSize: "60px 60px"
-          }} />
-
-          {/* Glow blobs */}
-          <div className="absolute top-[-100px] right-[-100px] w-[700px] h-[700px] rounded-full bg-sky-400/10 blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-[-80px] left-[-80px] w-[500px] h-[500px] rounded-full bg-teal-400/10 blur-[100px] pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-blue-500/5 blur-[60px] pointer-events-none" />
-
-          <div className="relative w-full mx-auto max-w-6xl px-6 py-28 md:py-36 grid md:grid-cols-2 gap-14 items-center">
-            {/* LEFT */}
-            <motion.div initial="hidden" animate="visible" variants={stagger} className="z-10">
-              <motion.span variants={fadeUp} className="inline-flex items-center gap-2 mb-6 rounded-full bg-white/10 border border-white/20 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shrink-0" />
-                Trusted Online Tax & Compliance Consultancy — India
-              </motion.span>
-
-              <motion.h1 variants={fadeUp} className="text-4xl md:text-[3.2rem] font-extrabold leading-[1.12] tracking-tight text-white" itemProp="name">
-                GST, Income Tax &amp; Company Registration
-                <span className="block mt-2 bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent">
-                  Services Across India
-                </span>
-              </motion.h1>
-
-              <motion.p variants={fadeUp} className="mt-6 text-white/80 text-base md:text-lg leading-relaxed" itemProp="description">
-                Taxvio delivers complete online <strong className="text-white">GST registration</strong>, <strong className="text-white">income tax return filing</strong>, company registration, TDS/TCS returns, tax audit under Section 44AB, FSSAI license, and ROC compliance — serving individuals, startups, and businesses pan-India. Starting at just <strong className="text-sky-300">₹999</strong>.
-              </motion.p>
-
-              <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 w-full max-w-sm">
-                <Link href="/contact" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 hover:shadow-xl active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                  Free Consultation <ArrowRight size={15} className="shrink-0" />
-                </Link>
-                <Link href="/serviceslist" className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/50 bg-white/5 backdrop-blur-sm px-7 py-4 text-sm font-semibold text-white hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                  View All 40+ Services
-                </Link>
-              </motion.div>
-
-              <motion.div variants={fadeUp} className="mt-10 grid grid-cols-2 gap-3">
-                {[
-                  { label: "GST Registration", price: "from ₹999", icon: "🏢" },
-                  { label: "ITR Filing", price: "from ₹999", icon: "📄" },
-                  { label: "Company Formation", price: "from ₹6,999", icon: "🏛️" },
-                  { label: "TDS Returns", price: "from ₹999", icon: "📊" },
-                ].map(({ label, price, icon }) => (
-                  <div key={label} className="flex items-center gap-2.5 bg-white/8 border border-white/12 rounded-xl px-3 py-2.5 backdrop-blur-sm hover:bg-white/12 transition">
-                    <span className="text-lg shrink-0">{icon}</span>
-                    <div>
-                      <p className="text-white text-xs font-semibold leading-tight">{label}</p>
-                      <p className="text-sky-300 text-[11px] font-medium mt-0.5">{price}</p>
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            </motion.div>
-
-            {/* RIGHT */}
-            <motion.div
-              initial={{ opacity: 0, x: 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, delay: 0.3, ease: "easeOut" }}
-              className="hidden md:flex items-center justify-center z-10"
-            >
-              <div className="relative w-full max-w-lg">
-                {/* Decorative ring */}
-                <div className="absolute inset-[-16px] rounded-[40px] border border-white/10" />
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-sky-400/15 to-teal-400/10 blur-2xl scale-110" />
-
-                {/* Floating badge — top right */}
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                  className="absolute -top-5 -right-5 bg-white rounded-2xl px-4 py-3 shadow-2xl z-20 flex items-center gap-2.5"
+    <section className="bg-gray-50 py-20 border-y">
+      <div className="max-w-6xl mx-auto px-6">
+        <SectionLabel text="Popular Right Now" />
+        <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+          Start With a Service, Not a Guess
+        </h2>
+        <p className="text-gray-600 max-w-3xl mb-10 leading-relaxed">
+          If you already know what you need, these are the services businesses ask us about
+          most — from a first GST registration to incorporating a private limited company.
+          Each one links to a full breakdown of the process, documents required, and fees, or
+          you can tap "Enquire" to have a CA call you back about that specific service directly.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {resolved.map((s) => (
+            <div key={s.slug} className="bg-white border rounded-2xl p-6 hover:shadow-md transition flex flex-col">
+              <h3 className="font-bold text-[#00416a] mb-2">{s.title}</h3>
+              <p className="text-sm text-gray-600 mb-5 flex-1">{s.shortDescription}</p>
+              <div className="flex items-center gap-3">
+                <Link
+                  href={`/serviceslist/${s.categorySlug}/${s.slug}`}
+                  className="text-sm font-semibold text-[#00416a] hover:underline"
                 >
-                  <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                    <CheckCircle size={16} className="text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-gray-500 font-medium">Filing Complete</p>
-                    <p className="text-xs font-bold text-gray-800">GSTR-3B Submitted</p>
-                  </div>
-                </motion.div>
-
-                {/* Floating badge — bottom left */}
-                <motion.div
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
-                  className="absolute -bottom-5 -left-5 bg-[#00416a] rounded-2xl px-4 py-3 shadow-2xl z-20 flex items-center gap-2.5"
+                  Learn More →
+                </Link>
+                <button
+                  onClick={() => openInquiryForm(s.title)}
+                  className="ml-auto text-sm font-semibold bg-[#00416a] text-white px-4 py-2 rounded-lg hover:bg-[#002b45] transition"
                 >
-                  <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center shrink-0">
-                    <Star size={16} className="text-yellow-300 fill-yellow-300" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-white/70 font-medium">Client Rating</p>
-                    <p className="text-xs font-bold text-white">4.9 / 5.0 ⭐</p>
-                  </div>
-                </motion.div>
-
-                <Image
-                  src={bg1}
-                  alt="Online GST registration, income tax filing, and company registration services in India — Taxvio"
-                  priority
-                  className="relative w-full h-auto object-contain drop-shadow-2xl"
-                />
+                  Enquire
+                </button>
               </div>
-            </motion.div>
-          </div>
-
-          {/* Bottom wave */}
-          <div className="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-              <path d="M0 60L1440 60L1440 30C1200 60 900 0 720 20C540 40 240 60 0 30L0 60Z" fill="white" />
-            </svg>
-          </div>
-        </section>
-
-        {/* ════════════ STATS RIBBON ════════════ */}
-        <section className="bg-white py-10 border-b border-gray-100" ref={statsRef} aria-label="Taxvio at a glance">
-          <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6">
-            {STATS.map(({ value, label, icon: Icon }) => (
-              <motion.div
-                key={label}
-                initial="hidden"
-                animate={statsInView ? "visible" : "hidden"}
-                variants={scaleIn}
-                className="flex flex-col items-center gap-2 p-5 rounded-2xl bg-[#f2f8fc] border border-[#deeef7] text-center hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#00416a]/10 flex items-center justify-center">
-                  <Icon size={20} className="text-[#00416a]" />
-                </div>
-                <p className="text-2xl md:text-3xl font-extrabold text-[#00416a]">{value}</p>
-                <p className="text-xs text-gray-500 font-medium">{label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* ════════════ ABOUT + SEO CONTENT ════════════ */}
-        <motion.section
-          className="py-24 bg-white"
-          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-          aria-label="About Taxvio — India's Trusted Online Tax Consultancy"
-          itemScope itemType="https://schema.org/AboutPage"
-        >
-          <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-16 items-center">
-            <motion.div variants={scaleIn} className="relative">
-              {/* Decorative bg accent */}
-              <div className="absolute -top-6 -left-6 w-48 h-48 rounded-full bg-[#00416a]/5 blur-2xl pointer-events-none" />
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-sky-400/10 blur-xl pointer-events-none" />
-              <Image
-                src={bg1}
-                alt="Taxvio CA expert team providing online tax and compliance services across India"
-                className="relative rounded-3xl shadow-2xl border border-gray-100"
-              />
-              {/* Trust badge overlay */}
-              <div className="absolute bottom-5 left-5 bg-white rounded-2xl px-4 py-3 shadow-lg flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#00416a] flex items-center justify-center shrink-0">
-                  <BadgeCheck size={18} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Verified CA Team</p>
-                  <p className="text-sm font-bold text-[#00416a]">ICAI Certified Experts</p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div variants={stagger}>
-              <motion.span variants={fadeUp} className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                About Taxvio
-              </motion.span>
-              <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-extrabold text-[#00416a] mt-4 leading-tight" itemProp="name">
-                India's Trusted Online Tax &amp; Compliance Partner
-              </motion.h2>
-              <motion.div variants={fadeUp} className="mt-5 space-y-4 text-gray-600 leading-relaxed text-[15px]" itemProp="description">
-                <p>
-                  <strong className="text-gray-800">Taxvio</strong> is a leading online tax and legal consultancy headquartered in Khatauli, Muzaffarnagar, Uttar Pradesh. We specialize in <strong>GST registration</strong>, <strong>income tax return filing</strong>, <strong>TDS/TCS return filing</strong>, <strong>company registration</strong>, and <strong>FSSAI license</strong> services — delivering professional compliance support to businesses, startups, individuals, and NGOs across all states in India.
-                </p>
-                <p>
-                  Our CA-led expert team handles the complete compliance lifecycle — from <strong>GST return filing</strong> (GSTR-1, GSTR-3B, GSTR-9) and <strong>tax audit under Section 44AB</strong> to <strong>income tax scrutiny notice replies</strong>, <strong>Section 12A/80G trust registration</strong>, and <strong>ROC annual compliance</strong> for private limited companies and LLPs. Every service is delivered 100% online — no office visit required, no paperwork hassle.
-                </p>
-                <p>
-                  Taxvio was built on one belief: <em>expert CA support should be accessible and affordable for every Indian business</em> — not just large corporations. Whether you're a first-time entrepreneur needing <strong>GST registration</strong>, a salaried employee filing <strong>ITR with Form 16</strong>, or an exporter applying for <strong>LUT filing</strong> to export without IGST payment — Taxvio is your one-stop online compliance partner.
-                </p>
-              </motion.div>
-              <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
-                <Link href="/contact" className="inline-flex items-center gap-2 bg-[#00416a] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#002b45] transition shadow-lg shadow-[#00416a]/20">
-                  Talk to Our Expert <ArrowRight size={15} />
-                </Link>
-                <Link href="/serviceslist" className="inline-flex items-center gap-2 border border-[#00416a] text-[#00416a] px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition">
-                  View All Services
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* ════════════ SEO CONTENT BLOCK — GST GUIDE ════════════ */}
-        <section className="py-20 bg-[#f8fbfd] border-y border-gray-100" aria-label="Complete Guide to GST Services in India">
-          <div className="max-w-6xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-14">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-blue-100">
-                  GST Compliance Guide
-                </span>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-[#00416a] mt-4">
-                  Everything You Need to Know About GST in India
-                </h2>
-                <p className="text-gray-600 mt-3 max-w-3xl mx-auto">
-                  A comprehensive guide to GST registration, return filing, compliance obligations, and how Taxvio simplifies GST for businesses of all sizes across India.
-                </p>
-              </motion.div>
-
-              <div className="grid md:grid-cols-3 gap-6">
-                {[
-                  {
-                    title: "Who Needs GST Registration?",
-                    icon: "📋",
-                    content: "GST registration is mandatory for businesses with annual turnover exceeding ₹40 lakh (₹20 lakh for service providers, ₹10 lakh for special category states). Additionally, businesses engaged in inter-state supply of goods/services, e-commerce sellers, casual taxable persons, non-resident taxable persons, and those liable to pay tax under reverse charge mechanism must register for GST regardless of their turnover. Exporters and importers also require GST registration to claim ITC and file LUT for zero-rated exports.",
-                  },
-                  {
-                    title: "GST Return Filing Obligations",
-                    icon: "📅",
-                    content: "Every GST-registered business must file regular returns: GSTR-1 (outward supply details — monthly or quarterly under QRMP), GSTR-3B (monthly summary return with tax payment), GSTR-9 (annual return), and GSTR-9C (reconciliation statement for turnover above ₹5 crore). Non-filing attracts late fees of ₹50/day (₹20/day for nil returns) plus 18% interest on outstanding tax liability. Taxvio's expert team ensures 100% timely filing, ITC reconciliation, and GSTR-2A/2B matching to avoid demand notices.",
-                  },
-                  {
-                    title: "GST Notice & Audit Assistance",
-                    icon: "🛡️",
-                    content: "GST authorities issue Show Cause Notices (SCN) for discrepancies in returns, excess ITC claims, non-payment of taxes, or mismatches identified through ASMT-10. Taxvio's CA team provides comprehensive GST notice reply services — analyzing the notice, preparing a detailed written response with supporting documents, and representing you in departmental proceedings. We also assist with GST audit under Section 65/66, GST refund applications for exporters and inverted duty structure, and GST appeal filing before the Appellate Authority.",
-                  },
-                ].map(({ title, icon, content }) => (
-                  <motion.div key={title} variants={fadeUp} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-                    <div className="text-3xl mb-4">{icon}</div>
-                    <h3 className="text-lg font-bold text-[#00416a] mb-3">{title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{content}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ════════════ SERVICE CATEGORIES ════════════ */}
-        <section className="py-20 bg-white" aria-label="GST, Income Tax, Company Registration and FSSAI Services">
-          <motion.div className="max-w-6xl mx-auto px-6" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.div variants={fadeUp} className="text-center mb-14">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 px-3 py-1 rounded-full">
-                Our Services
-              </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-[#00416a] mt-4">
-                Complete Tax &amp; Compliance Services
-              </h2>
-              <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
-                Taxvio offers 40+ professional tax and compliance services for individuals, startups, SMEs, and large enterprises — all delivered online across India.
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {SERVICES_HIGHLIGHT.map(({ icon: Icon, title, desc, href, count, color, bg }) => (
-                <motion.div key={title} variants={fadeUp}>
-                  <Link href={href} className={`group relative flex gap-5 p-6 ${bg} border border-transparent rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden`}>
-                    {/* Subtle corner accent */}
-                    <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-[60px] bg-gradient-to-br ${color} opacity-5`} />
-                    <div className={`shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg`}>
-                      <Icon size={26} className="text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-1.5">
-                        <h3 className="text-lg font-bold text-gray-800 group-hover:text-[#00416a] transition">{title}</h3>
-                        <span className="text-xs text-gray-400 bg-white px-2 py-0.5 rounded-full border border-gray-200 shrink-0">{count}</span>
-                      </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
-                      <span className="inline-flex items-center gap-1 mt-3 text-[#00416a] text-sm font-semibold group-hover:gap-2 transition-all">
-                        View All Services <ArrowRight size={14} />
-                      </span>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
             </div>
-          </motion.div>
-        </section>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* ════════════ TABBED SERVICES LIST ════════════ */}
-        <section className="py-20 bg-gray-50" aria-label="GST and Income Tax Services India — Full List">
-          <div className="max-w-6xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-10">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-blue-100">
-                  All Services
-                </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-                  Browse All GST &amp; Income Tax Services
-                </h2>
-                <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
-                  From GST registration to income tax audit — find every compliance service you need under one roof.
-                </p>
-              </motion.div>
+/* ══════════════════════ FOUNDER NOTE ══════════════════════ */
 
-              {/* Tab switcher */}
-              <motion.div variants={fadeUp} className="flex gap-2 justify-center mb-8">
-                {[
-                  { key: "gst", label: "GST Services", icon: Receipt },
-                  { key: "itr", label: "Income Tax Services", icon: FileText },
-                ].map(({ key, label, icon: Icon }) => (
-                  <button
-                    key={key}
-                    onClick={() => setActiveTab(key as "gst" | "itr")}
-                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                      activeTab === key
-                        ? "bg-[#00416a] text-white shadow-lg shadow-[#00416a]/20"
-                        : "bg-white text-gray-600 border border-gray-200 hover:border-[#00416a] hover:text-[#00416a]"
-                    }`}
-                  >
-                    <Icon size={15} />
-                    {label}
-                  </button>
-                ))}
-              </motion.div>
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -16 }}
-                  transition={{ duration: 0.3 }}
-                  className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"
-                >
-                  {(activeTab === "gst" ? GST_SERVICES : ITR_SERVICES).map(({ name, href, desc }) => (
-                    <Link
-                      key={name}
-                      href={href}
-                      className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-xl hover:border-[#00416a] hover:bg-blue-50 hover:shadow-sm transition-all duration-200 group"
-                    >
-                      <div>
-                        <p className="font-semibold text-gray-800 group-hover:text-[#00416a] text-sm transition">{name}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
-                      </div>
-                      <div className="w-7 h-7 rounded-lg bg-gray-50 group-hover:bg-[#00416a] flex items-center justify-center transition-all duration-200 shrink-0 ml-3">
-                        <ArrowRight size={13} className="text-gray-300 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                      </div>
-                    </Link>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
+function FounderNote() {
+  return (
+    <section className="max-w-5xl mx-auto px-6 py-20">
+      <div className="bg-gray-50 border rounded-3xl p-8 md:p-12">
+        <SectionLabel text="Why Taxvio Exists" />
+        <div className="grid md:grid-cols-[auto,1fr] gap-6 items-start mt-2">
+          <div className="w-16 h-16 rounded-full bg-[#00416a] text-white flex items-center justify-center text-2xl font-bold flex-shrink-0">
+            A
           </div>
-        </section>
-
-        {/* ════════════ HOW IT WORKS ════════════ */}
-        <section className="py-24 bg-white" aria-label="How Taxvio Works — 4 Simple Steps">
-          <div className="max-w-6xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-16">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 px-3 py-1 rounded-full">
-                  Our Process
-                </span>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-[#00416a] mt-4">
-                  Get Your Tax Work Done in 4 Simple Steps
-                </h2>
-                <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
-                  Taxvio's streamlined online process makes GST registration, ITR filing, and company registration fast, accurate, and completely paperless.
-                </p>
-              </motion.div>
-
-              <div className="relative grid md:grid-cols-4 gap-8">
-                {/* Connector line (desktop) */}
-                <div className="hidden md:block absolute top-8 left-[12%] right-[12%] h-px bg-gradient-to-r from-transparent via-[#00416a]/20 to-transparent" />
-
-                {HOW_IT_WORKS.map(({ step, title, desc, icon: Icon }, i) => (
-                  <motion.div key={step} variants={fadeUp} className="flex flex-col items-center text-center relative">
-                    <div className="relative mb-5">
-                      <div className="w-16 h-16 rounded-2xl bg-[#00416a] flex items-center justify-center shadow-xl shadow-[#00416a]/25 z-10 relative">
-                        <Icon size={24} className="text-white" />
-                      </div>
-                      <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-sky-400 text-white text-[10px] font-extrabold flex items-center justify-center shadow-md">
-                        {i + 1}
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-[#00416a] text-base mb-2">{title}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+          <div>
+            <p className="text-lg text-gray-700 leading-relaxed italic mb-4">
+              "I started Taxvio because I kept hearing the same frustration from business
+              owners — compliance felt scattered, confusing, and expensive to coordinate
+              across different consultants. I wanted to build a platform where someone could
+              come for any FSSAI, GST, Income Tax, or ROC need and get a clear process, honest
+              pricing, and real professional support behind it — not just a form to fill out."
+            </p>
+            <p className="font-bold text-[#00416a]">Aditya</p>
+            <p className="text-sm text-gray-500">Founder, Taxvio</p>
           </div>
-        </section>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* ════════════ SEO CONTENT BLOCK — INCOME TAX GUIDE ════════════ */}
-        <section className="py-20 bg-[#f2f8fc]" aria-label="Income Tax Return Filing Guide — Taxvio">
-          <div className="max-w-6xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="mb-12 text-center">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-blue-100">
-                  ITR Filing Guide
-                </span>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-[#00416a] mt-4">
-                  Income Tax Return Filing in India — Everything Explained
-                </h2>
-                <p className="text-gray-600 mt-3 max-w-3xl mx-auto">
-                  Understand ITR filing deadlines, applicable forms, and why professional CA-assisted filing with Taxvio maximizes your refunds and minimizes scrutiny risk.
-                </p>
-              </motion.div>
+/* ══════════════════════ TRUST BADGES ══════════════════════ */
 
-              <div className="grid md:grid-cols-2 gap-8">
-                <motion.div variants={fadeUp} className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
-                  <h3 className="text-xl font-bold text-[#00416a] mb-4 flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                      <FileText size={16} className="text-[#00416a]" />
-                    </span>
-                    Which ITR Form Do You Need?
-                  </h3>
-                  <div className="space-y-3">
-                    {[
-                      { form: "ITR-1 (Sahaj)", for: "Salaried individuals with income up to ₹50 lakh, one house property, and other sources" },
-                      { form: "ITR-2", for: "Individuals/HUF with capital gains, more than one house property, or foreign income" },
-                      { form: "ITR-3", for: "Individuals/HUF having income from business or profession (including freelancers)" },
-                      { form: "ITR-4 (Sugam)", for: "Individuals/HUF/Firms under presumptive taxation scheme (44AD/44ADA/44AE)" },
-                      { form: "ITR-5", for: "Partnership firms, LLPs, AOPs, BOIs" },
-                      { form: "ITR-6", for: "Companies other than claiming exemption under Section 11" },
-                      { form: "ITR-7", for: "Trusts, political parties, institutions claiming exemption under 12A/80G" },
-                    ].map(({ form, for: desc }) => (
-                      <div key={form} className="flex gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                        <span className="text-xs font-bold text-[#00416a] bg-blue-100 px-2 py-0.5 rounded-lg shrink-0 mt-0.5 h-fit">{form}</span>
-                        <p className="text-xs text-gray-600">{desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-
-                <motion.div variants={fadeUp} className="space-y-5">
-                  <div className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
-                    <h3 className="text-xl font-bold text-[#00416a] mb-4 flex items-center gap-2">
-                      <span className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
-                        <CalendarCheck size={16} className="text-green-600" />
-                      </span>
-                      ITR Filing Deadlines
-                    </h3>
-                    <div className="space-y-2.5">
-                      {[
-                        { deadline: "July 31", desc: "Individuals, HUF, firms not liable to tax audit" },
-                        { deadline: "October 31", desc: "Businesses liable to tax audit under Section 44AB" },
-                        { deadline: "November 30", desc: "Transfer pricing reports (Section 92E)" },
-                        { deadline: "December 31", desc: "Belated return filing for the financial year" },
-                      ].map(({ deadline, desc }) => (
-                        <div key={deadline} className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition">
-                          <span className="text-xs font-bold text-white bg-[#00416a] px-2.5 py-1 rounded-lg shrink-0">{deadline}</span>
-                          <p className="text-sm text-gray-600">{desc}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="bg-[#00416a] rounded-2xl p-7 text-white">
-                    <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                      <TrendingUp size={18} className="text-sky-300" />
-                      Why CA-Assisted ITR Filing?
-                    </h3>
-                    <ul className="space-y-2.5">
-                      {[
-                        "Maximum deductions under 80C, 80D, 80G, HRA, LTA",
-                        "Correct ITR form selection to avoid defective returns",
-                        "AIS/TIS reconciliation to prevent mismatch notices",
-                        "Capital gains tax optimization (LTCG/STCG)",
-                        "Business income, depreciation & presumptive tax planning",
-                      ].map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-sm text-white/85">
-                          <CheckCircle size={14} className="text-green-400 shrink-0 mt-0.5" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
+function TrustBadges() {
+  const items = [
+    { icon: "👨‍💼", title: "CA-Supervised Filings", desc: "Every return, registration and audit report is reviewed by a practicing Chartered Accountant before submission — not just assembled from a template and sent off without a second look." },
+    { icon: "💰", title: "Transparent Pricing", desc: "Upfront quotes before any engagement begins, so you know exactly what you're paying for. No surprise add-ons once the paperwork is already underway." },
+    { icon: "📋", title: "One Simple Enquiry Form", desc: "No app downloads, no account setup, no separate logins for each service — tell us what you need once in a single form and a CA calls you back." },
+    { icon: "🇮🇳", title: "Pan-India Coverage", desc: "Headquartered in Khatauli, Muzaffarnagar, with clients across Delhi NCR, Meerut, Mumbai and every Indian state served fully online where an in-person visit isn't needed." },
+    { icon: "⏱️", title: "On-Time Filing Focus", desc: "Deadline tracking built into our process, so your GST returns, ROC annual filings and income tax audit due dates never slip past the date that triggers a penalty." },
+    { icon: "🔒", title: "Confidential by Default", desc: "Your financial documents, PAN, Aadhaar and business records are used only to deliver the service you've requested — never shared or sold to third parties." },
+  ];
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <SectionLabel text="Why Taxvio" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-10">
+        Built to Be Your Long-Term Compliance Partner
+      </h2>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {items.map((item) => (
+          <div key={item.title} className="p-6 rounded-2xl border bg-gray-50 hover:bg-white hover:shadow-md hover:border-[#00416a]/30 transition">
+            <div className="text-3xl mb-3">{item.icon}</div>
+            <p className="font-semibold text-[#00416a] mb-1">{item.title}</p>
+            <p className="text-sm text-gray-600">{item.desc}</p>
           </div>
-        </section>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-        {/* ════════════ WHY TAXVIO ════════════ */}
-        <motion.section
-          className="py-20 bg-white"
-          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-          aria-label="Why Choose Taxvio for GST and Income Tax Services"
-        >
-          <div className="max-w-5xl mx-auto px-6">
-            <motion.div variants={fadeUp} className="text-center mb-12">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                Why Taxvio
-              </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-[#00416a] mt-4">
-                Why 4,800+ Businesses Trust Taxvio
-              </h2>
-              <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
-                Affordable pricing, expert CA team, and 100% online service delivery make Taxvio the preferred compliance partner for businesses across India.
-              </p>
-            </motion.div>
-            <motion.ul variants={stagger} className="grid md:grid-cols-2 gap-4">
-              {WHY_TAXVIO.map(({ text, icon: Icon }) => (
-                <motion.li key={text} variants={fadeUp} className="flex items-start gap-4 p-5 bg-[#f8fbfd] rounded-2xl border border-[#deeef7] hover:border-[#00416a]/30 hover:shadow-sm transition-all duration-200 group">
-                  <div className="w-10 h-10 rounded-xl bg-[#00416a]/10 flex items-center justify-center shrink-0 group-hover:bg-[#00416a] transition-all duration-200">
-                    <Icon size={18} className="text-[#00416a] group-hover:text-white transition-all duration-200" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm leading-relaxed mt-1">{text}</span>
-                </motion.li>
+/* ══════════════════════ PROCESS ══════════════════════ */
+
+function ProcessSection() {
+  const steps = [
+    { step: "01", title: "Share Your Requirement", desc: "Fill the enquiry form with what you need — GST registration, an ITR filing, a ROC compliance matter, or an FSSAI license — and your preferred state and contact number." },
+    { step: "02", title: "Free Consultation Call", desc: "A CA from our team reviews your case, explains what's actually required for your situation, and calls you back with a clear quote, usually within a few business hours." },
+    { step: "03", title: "Documentation & Filing", desc: "Once you confirm, share the required documents over email or a shared upload link — our team prepares, cross-checks and files everything on your behalf with the correct authority." },
+    { step: "04", title: "Confirmation & Ongoing Support", desc: "You receive acknowledgement copies and filing receipts for your records, and we keep track of your business's future compliance deadlines so the next one doesn't catch you off guard." },
+  ];
+  return (
+    <section className="bg-gray-50 py-20 border-y">
+      <div className="max-w-6xl mx-auto px-6">
+        <SectionLabel text="How It Works" />
+        <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-12">
+          From Enquiry to Filed — In Four Steps
+        </h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((s) => (
+            <div key={s.step} className="bg-white border rounded-2xl p-6 hover:shadow-md transition relative">
+              <span className="text-4xl font-extrabold text-[#00416a]/10 absolute top-4 right-5">{s.step}</span>
+              <h3 className="text-lg font-bold text-[#00416a] mb-2 relative">{s.title}</h3>
+              <p className="text-sm text-gray-600 relative">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ COMPLIANCE GUIDE ══════════════════════ */
+
+function ComplianceGuide() {
+  const topics = [
+    {
+      title: "GST Compliance in India",
+      icon: "🧾",
+      body: "Any business with turnover above the GST threshold — or one that wants to claim input tax credit and look credible to larger buyers — needs GST registration before raising its first tax invoice. Once registered, monthly or quarterly GSTR-1 and GSTR-3B returns become mandatory regardless of whether the business made any sales that period, and missing them accrues late fees and interest from day one. Businesses crossing higher turnover thresholds also face an annual GSTR-9 reconciliation and, in some cases, a GST audit. E-commerce sellers and freelancers billing clients abroad have their own additional layer of compliance — TCS credit matching for marketplace sellers, and LUT filing for exporters who want to invoice without charging IGST.",
+    },
+    {
+      title: "Income Tax & ITR Filing",
+      icon: "📊",
+      body: "Every individual and entity earning above the basic exemption limit is required to file an income tax return each year, and the form required — ITR-1 through ITR-7 — depends on the nature and source of income. Proprietors and professionals with turnover or receipts above the Section 44AB threshold additionally need a tax audit conducted by a practicing Chartered Accountant, with a hard deadline that, if missed, triggers a penalty of up to ₹1.5 lakh. Businesses deducting tax at source on salaries, contractor payments or rent must also file quarterly TDS returns and issue Form 16 or 16A certificates to the people they deducted from.",
+    },
+    {
+      title: "ROC & Company Law Compliance",
+      icon: "🏢",
+      body: "Incorporating a private limited company, LLP, OPC or Section 8 company is only the starting point — every registered entity then carries ongoing obligations to the Registrar of Companies regardless of whether it did any business that year. These include annual filings such as AOC-4 and MGT-7 for companies or Form 11 and Form 8 for LLPs, director KYC through DIR-3 KYC, auditor appointment filings, and event-based filings whenever a director changes, the registered office moves, or share capital is altered. Skipping these doesn't just risk penalties — prolonged non-compliance can lead to the company being struck off the register entirely, which then requires a far more expensive restoration process to reverse.",
+    },
+    {
+      title: "FSSAI Food Licensing",
+      icon: "🍽️",
+      body: "Any business that manufactures, stores, transports, distributes or sells food in India — from a home-based tiffin service to a full-scale manufacturing unit — needs an FSSAI license or registration, with the category (Basic, State, or Central) determined by annual turnover and the scale of operations. Getting the wrong category, or missing the renewal window before an existing license expires, can halt operations until it's corrected. License holders above the Basic tier also need to file an FSSAI annual return each year, and any change to the business — a new product line, a change of address — requires a formal modification filing rather than being updated informally.",
+    },
+  ];
+
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <SectionLabel text="Compliance Basics" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+        Understanding Business Compliance in India
+      </h2>
+      <p className="text-gray-600 max-w-3xl mb-10 leading-relaxed">
+        If you're new to running a registered business, here's a plain-language overview of
+        what each compliance area actually involves — and why leaving any one of them unmanaged
+        tends to get expensive.
+      </p>
+      <div className="grid md:grid-cols-2 gap-6">
+        {topics.map((t) => (
+          <div key={t.title} className="bg-gray-50 border rounded-2xl p-6 hover:bg-white hover:shadow-md transition">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="text-2xl">{t.icon}</span>
+              <h3 className="font-bold text-[#00416a]">{t.title}</h3>
+            </div>
+            <p className="text-sm text-gray-600 leading-relaxed">{t.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ WHO WE SERVE ══════════════════════ */
+
+function WhoWeServe() {
+  const audiences = [
+    { icon: "🏪", title: "Retailers & Traders", desc: "From a single shop to a multi-branch trading business, with GST return filing, input tax credit reconciliation, and income tax support built around cash-and-credit sales cycles." },
+    { icon: "🏭", title: "Manufacturers", desc: "GST compliance across multiple states, job work ITC-04 filings, e-way bill management, and tax audits that account for inventory valuation and depreciation on plant and machinery." },
+    { icon: "💻", title: "Freelancers & Consultants", desc: "GST registration and LUT filing for billing foreign clients without IGST, SAC code mapping, and ITR filing that correctly claims deductions on laptops, software and home office expenses." },
+    { icon: "🛒", title: "E-Commerce Sellers", desc: "Amazon, Flipkart, Meesho and D2C sellers get marketplace settlement reconciliation, GST TCS credit matching, and GSTR-8 compliance handled alongside their regular monthly returns." },
+    { icon: "🍴", title: "Restaurants & Food Businesses", desc: "FSSAI licensing paired with GST composition scheme advisory and Section 9(5) compliance for businesses listed on Zomato or Swiggy, so food-specific and tax compliance aren't handled by two separate people." },
+    { icon: "🚀", title: "Startups & New Companies", desc: "Private limited, LLP or OPC incorporation followed immediately by GST registration, PAN/TAN application, and a compliance calendar set up from day one instead of being figured out after the first missed deadline." },
+  ];
+  return (
+    <section className="bg-gray-50 py-20 border-y">
+      <div className="max-w-6xl mx-auto px-6">
+        <SectionLabel text="Who We Serve" />
+        <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+          Built for the Way Different Businesses Actually Operate
+        </h2>
+        <p className="text-gray-600 max-w-3xl mb-10 leading-relaxed">
+          Compliance needs look different for a trading shop than they do for a software
+          freelancer or a cloud kitchen. Rather than offering one generic package, our team
+          tailors the filings and advisory to how your specific business actually makes money.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {audiences.map((a) => (
+            <div key={a.title} className="bg-white border rounded-2xl p-6 hover:shadow-md transition">
+              <div className="text-3xl mb-3">{a.icon}</div>
+              <p className="font-semibold text-[#00416a] mb-1">{a.title}</p>
+              <p className="text-sm text-gray-600">{a.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ COMPARISON ══════════════════════ */
+
+function ComparisonSection() {
+  const rows = [
+    { label: "Response time", diy: "You figure it out alone", localCA: "Days, often by appointment only", taxvio: "Usually within a few business hours" },
+    { label: "Pricing clarity", diy: "Free, but mistakes cost penalties", localCA: "Often quoted verbally, can shift later", taxvio: "Fixed quote upfront, in writing" },
+    { label: "Services covered", diy: "Whatever you can learn yourself", localCA: "Usually one specialty (GST or ITR, rarely both)", taxvio: "GST, Income Tax, ROC and FSSAI under one team" },
+    { label: "Deadline tracking", diy: "Entirely on you to remember", localCA: "Varies by individual practitioner", taxvio: "Built into our process for every client" },
+    { label: "Review before filing", diy: "No second set of eyes", localCA: "Depends on the individual's workload", taxvio: "CA-reviewed before every submission" },
+  ];
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <SectionLabel text="How We Compare" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+        DIY Filing vs. a Local CA vs. Taxvio
+      </h2>
+      <p className="text-gray-600 max-w-3xl mb-10 leading-relaxed">
+        Filing your own GST returns or hiring a local Chartered Accountant both work for some
+        businesses — here's an honest look at the trade-offs, and where a CA-led platform like
+        Taxvio tends to fit in between the two.
+      </p>
+      <div className="overflow-x-auto rounded-2xl border shadow-sm">
+        <table className="min-w-full text-sm">
+          <thead className="bg-[#00416a] text-white">
+            <tr>
+              {["", "Doing It Yourself", "A Local CA", "Taxvio"].map((h) => (
+                <th key={h} className="px-5 py-4 text-left font-semibold">{h}</th>
               ))}
-            </motion.ul>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {rows.map((r, i) => (
+              <tr key={r.label} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                <td className="px-5 py-4 font-semibold text-gray-800">{r.label}</td>
+                <td className="px-5 py-4 text-gray-600">{r.diy}</td>
+                <td className="px-5 py-4 text-gray-600">{r.localCA}</td>
+                <td className="px-5 py-4 font-medium text-[#00416a]">{r.taxvio}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ KEY DEADLINES ══════════════════════ */
+
+function DeadlinesSection() {
+  const deadlines = [
+    { date: "11th / 13th / 20th of every month", item: "GSTR-1, IFF and GSTR-3B", desc: "Monthly or quarterly GST return filing, depending on your scheme and turnover slab." },
+    { date: "30th September*", item: "Income Tax Audit Report", desc: "Form 3CA/3CB and 3CD for taxpayers subject to Section 44AB audit, for the previous financial year." },
+    { date: "31st October*", item: "ITR for Audit Cases", desc: "Income tax return filing for taxpayers whose accounts required a tax audit." },
+    { date: "30th May", item: "ROC Form DPT-3", desc: "Annual return of deposits and outstanding loans for companies, as of 31st March." },
+    { date: "On or before AGM + 30 days", item: "ROC Form AOC-4 & MGT-7", desc: "Annual financial statements and annual return filing with the Registrar of Companies." },
+    { date: "Varies by license validity", item: "FSSAI License Renewal", desc: "Must be filed before expiry — typically 1 to 5 years from the date of issue, depending on the license type." },
+  ];
+  return (
+    <section className="bg-gray-50 py-20 border-y">
+      <div className="max-w-6xl mx-auto px-6">
+        <SectionLabel text="Plan Ahead" />
+        <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+          Key Compliance Deadlines to Keep On Your Radar
+        </h2>
+        <p className="text-gray-600 max-w-3xl mb-10 leading-relaxed">
+          These are the recurring deadlines that catch businesses off guard most often. Dates
+          marked with an asterisk are sometimes extended by the CBDT — our team tracks the
+          official notifications so your filing date is always current, not just the statutory
+          default.
+        </p>
+        <div className="grid sm:grid-cols-2 gap-5">
+          {deadlines.map((d) => (
+            <div key={d.item} className="bg-white border rounded-2xl p-5 flex gap-4">
+              <div className="flex-shrink-0 w-28 text-xs font-bold text-[#00416a] uppercase tracking-wide pt-1">{d.date}</div>
+              <div>
+                <p className="font-semibold text-gray-800 text-sm mb-1">{d.item}</p>
+                <p className="text-sm text-gray-600">{d.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ TESTIMONIALS ══════════════════════ */
+
+function Testimonials() {
+  const reviews = [
+    { name: "Priya Enterprises", location: "Meerut", text: "We filled the form expecting a slow reply like every other consultant website, and got a callback the same afternoon instead. GST registration was done within days, with no back-and-forth confusion about which documents we'd already sent." },
+    { name: "Verma Traders", location: "Muzaffarnagar", text: "We've used three different consultants before Taxvio, and every single one added some charge we weren't told about upfront. This is the first time pricing was clear from the first call, with nothing added once the work was underway." },
+    { name: "Singh & Associates", location: "Ghaziabad", text: "Our ROC annual filing and income tax return used to go to two different people who never coordinated with each other. Having the same team handle both this year saved us a lot of repeated explaining and chasing." },
+  ];
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <SectionLabel text="Client Stories" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-10">
+        Trusted by Businesses Across India
+      </h2>
+      <div className="grid md:grid-cols-3 gap-6">
+        {reviews.map((r, i) => (
+          <div key={i} className="border rounded-2xl p-6 hover:shadow-lg transition bg-white">
+            <div className="flex mb-3">
+              {[...Array(5)].map((_, j) => <span key={j} className="text-yellow-400 text-lg">★</span>)}
+            </div>
+            <p className="mb-4 text-gray-700 text-sm leading-relaxed italic">"{r.text}"</p>
+            <p className="font-bold text-[#00416a]">{r.name}</p>
+            <p className="text-sm text-gray-500">{r.location}</p>
           </div>
-        </motion.section>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-        {/* ════════════ TESTIMONIALS ════════════ */}
-        <section className="py-20 bg-gray-50 border-y border-gray-100" aria-label="Client Testimonials — Taxvio Reviews">
-          <div className="max-w-6xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-12">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-gray-200">
-                  Client Reviews
-                </span>
-                <h2 className="text-3xl font-extrabold text-[#00416a] mt-4">
-                  What Our Clients Say
-                </h2>
-                <p className="text-gray-600 mt-3">Rated 4.9★ by 2,400+ businesses and individuals across India.</p>
-              </motion.div>
+/* ══════════════════════ COVERAGE ══════════════════════ */
 
-              <motion.div variants={stagger} className="grid md:grid-cols-3 gap-6">
-                {TESTIMONIALS.map(({ name, role, text, rating }) => (
-                  <motion.div key={name} variants={scaleIn} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                    <div className="flex mb-3">
-                      {Array.from({ length: rating }).map((_, i) => (
-                        <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
-                      ))}
-                    </div>
-                    <p className="text-gray-600 text-sm leading-relaxed flex-1">"{text}"</p>
-                    <div className="flex items-center gap-3 mt-5 pt-5 border-t border-gray-100">
-                      <div className="w-9 h-9 rounded-full bg-[#00416a] flex items-center justify-center shrink-0 text-white text-sm font-bold">
-                        {name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800 text-sm">{name}</p>
-                        <p className="text-xs text-gray-400">{role}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
+function CoverageSection() {
+  const cities = ["Khatauli", "Muzaffarnagar", "Noida", "Delhi NCR", "Meerut", "Mumbai"];
+  return (
+    <section className="bg-gray-50 py-20 border-y">
+      <div className="max-w-6xl mx-auto px-6">
+        <SectionLabel text="Our Reach" />
+        <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
+          Serving Businesses Across India
+        </h2>
+        <p className="text-gray-600 mb-8 max-w-3xl leading-relaxed">
+          Headquartered in <strong>Khatauli, Muzaffarnagar, UP</strong>, with dedicated client
+          coverage across <strong>Noida</strong>, <strong>Delhi NCR</strong>, <strong>Meerut</strong>,
+          {" "}<strong>Ghaziabad</strong>, and <strong>Mumbai</strong> — and full compliance support
+          online for every state and union territory in India.
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          {cities.map((city) => (
+            <div key={city} className="bg-white border rounded-xl p-4 text-center text-sm font-semibold text-[#00416a] hover:bg-[#00416a] hover:text-white transition cursor-default">
+              📍 {city}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ FAQ ══════════════════════ */
+
+function FAQSection() {
+  const [open, setOpen] = useState<number | null>(0);
+  const faqs = [
+    { q: "What services does Taxvio offer?", a: "GST registration and returns, Income Tax filing and audits, ROC/company law compliance, and FSSAI food licensing — all under one CA-led team, so you don't need separate consultants for each." },
+    { q: "How quickly will I get a response?", a: "Most enquiries are responded to within a few business hours, Monday to Saturday. Fill the enquiry form and our team will call you back." },
+    { q: "Is the initial consultation really free?", a: "Yes. The first consultation call to understand your requirement and give you a clear quote is completely free, with no obligation to proceed." },
+    { q: "Do you serve businesses outside Uttar Pradesh?", a: "Yes. While we're headquartered in Khatauli, Muzaffarnagar, our services are delivered fully online to clients across every Indian state." },
+    { q: "Is my information kept confidential?", a: "Yes. Your personal and financial details are used only to respond to your enquiry and deliver the service you request — never shared or sold to third parties." },
+    { q: "I already have a CA — can Taxvio just handle one specific filing?", a: "Yes. Plenty of our clients come to us for a single service, like an FSSAI license or a one-off ROC filing, without switching their entire compliance relationship. There's no requirement to move everything over at once." },
+    { q: "What happens if I miss a GST or ROC deadline before reaching out?", a: "Tell us the situation honestly in the enquiry form. Most late filings can still be completed with applicable late fees — the sooner it's addressed, the less interest and penalty accumulates, so reaching out immediately helps even after a deadline has passed." },
+    { q: "Do you only work with companies, or also with proprietors and individuals?", a: "Both. A large share of our clients are individual proprietors and professionals filing ITR or registering for GST for the first time — you don't need to be an incorporated company to work with us." },
+  ];
+
+  return (
+    <section className="max-w-4xl mx-auto px-6 py-20">
+      <SectionLabel text="FAQs" />
+      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-10">
+        Common Questions
+      </h2>
+      <div className="space-y-4">
+        {faqs.map((f, i) => (
+          <details key={i} className="group border rounded-2xl overflow-hidden bg-white"
+            open={open === i}
+            onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open ? i : null)}>
+            <summary className="flex items-center justify-between px-6 py-5 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50 transition list-none">
+              <span>{f.q}</span>
+              <span className="text-[#00416a] text-xl group-open:rotate-45 transition-transform duration-200 flex-shrink-0 ml-4">+</span>
+            </summary>
+            <div className="px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t pt-4">{f.a}</div>
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ FINAL CTA ══════════════════════ */
+
+function FinalCTA() {
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <div className="bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] rounded-3xl shadow-2xl px-8 py-14 md:px-14 md:py-16 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
+        <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
+          <div className="max-w-2xl text-center lg:text-left">
+            <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
+              Ready to Get Your Compliance Sorted?
+            </h3>
+            <p className="text-lg text-gray-200 leading-relaxed">
+              Tell us what you need — GST, Income Tax, ROC or FSSAI — and a CA from our team
+              will call you back with a clear plan and honest pricing.
+            </p>
           </div>
-        </section>
-
-        {/* ════════════ SEO CONTENT — COMPANY REGISTRATION ════════════ */}
-        <section className="py-20 bg-white" aria-label="Company Registration Services in India — Taxvio">
-          <div className="max-w-6xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="grid md:grid-cols-2 gap-12 items-start">
-                <div>
-                  <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                    Company Registration
-                  </span>
-                  <h2 className="text-3xl font-extrabold text-[#00416a] mt-4 leading-tight">
-                    Register Your Company in India — Pvt Ltd, LLP, OPC &amp; NGO
-                  </h2>
-                  <p className="text-gray-600 mt-4 leading-relaxed text-[15px]">
-                    Starting a business in India requires choosing the right legal structure. Taxvio provides complete company registration services through the Ministry of Corporate Affairs (MCA) portal — from Digital Signature Certificates (DSC) and Director Identification Numbers (DIN) to Certificate of Incorporation (COI) and post-incorporation compliance.
-                  </p>
-                  <p className="text-gray-600 mt-4 leading-relaxed text-[15px]">
-                    Our CA and CS team handles <strong>Private Limited Company registration</strong> (ideal for startups seeking funding), <strong>LLP formation</strong> (for professional partnerships with limited liability), <strong>One Person Company (OPC)</strong> registration (for solo entrepreneurs), and <strong>Section 8 Company registration</strong> for NGOs and non-profit organizations. All registrations are completed within 7–10 working days, 100% online.
-                  </p>
-                  <Link href="/serviceslist/roc" className="inline-flex items-center gap-2 mt-6 bg-[#00416a] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#002b45] transition shadow-lg shadow-[#00416a]/20">
-                    Explore Company Services <ArrowRight size={15} />
-                  </Link>
-                </div>
-
-                <div className="space-y-3">
-                  {[
-                    { type: "Private Limited Company", price: "from ₹6,999", features: ["Limited liability for shareholders", "Easy fundraising & investor-friendly", "Separate legal entity status", "Perpetual succession"], ideal: "Startups & growing businesses" },
-                    { type: "LLP (Limited Liability Partnership)", price: "from ₹5,999", features: ["Flexible management structure", "Lower compliance burden vs Pvt Ltd", "Partners have limited liability", "No minimum capital required"], ideal: "Professional firms & consultancies" },
-                    { type: "One Person Company (OPC)", price: "from ₹5,999", features: ["Single founder structure", "Limited liability protection", "Separate legal entity", "Easier conversion to Pvt Ltd"], ideal: "Solo entrepreneurs" },
-                  ].map(({ type, price, features, ideal }) => (
-                    <div key={type} className="p-5 border border-gray-100 rounded-2xl bg-gray-50 hover:border-[#00416a]/30 hover:bg-blue-50/40 transition-all duration-200">
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <div>
-                          <h3 className="font-bold text-gray-800 text-sm">{type}</h3>
-                          <p className="text-xs text-gray-400 mt-0.5">Ideal for: {ideal}</p>
-                        </div>
-                        <span className="text-xs font-bold text-[#00416a] bg-blue-100 px-2.5 py-1 rounded-lg shrink-0">{price}</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {features.map((f) => (
-                          <span key={f} className="text-[11px] text-gray-600 bg-white border border-gray-200 px-2 py-0.5 rounded-full">{f}</span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </motion.div>
+          <div className="flex-shrink-0">
+            <button
+              onClick={() => openInquiryForm()}
+              className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center"
+            >
+              Get a Free Consultation →
+            </button>
           </div>
-        </section>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* ════════════ FAQ ════════════ */}
-        <section className="py-20 bg-gray-50" aria-label="Frequently Asked Questions — GST and Income Tax Services">
-          <div className="max-w-3xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-12">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-gray-200">
-                  FAQ
-                </span>
-                <h2 className="text-3xl font-extrabold text-[#00416a] mt-4">Frequently Asked Questions</h2>
-                <p className="text-gray-600 mt-3">Answers to the most common questions about Taxvio's GST, Income Tax, and Company Registration services.</p>
-              </motion.div>
-              <motion.div variants={stagger} className="space-y-3" itemScope itemType="https://schema.org/FAQPage">
-                {FAQS.map((f, i) => (
-                  <motion.div key={i} variants={fadeUp} className={`border rounded-2xl overflow-hidden transition-all duration-200 ${faqOpen === i ? "border-[#00416a]/30 shadow-md" : "border-gray-200"}`} itemScope itemType="https://schema.org/Question">
-                    <button
-                      className="w-full text-left p-5 flex justify-between items-center font-semibold text-gray-800 hover:bg-gray-50 transition"
-                      onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                      aria-expanded={faqOpen === i}
-                    >
-                      <span className="text-sm pr-4" itemProp="name">{f.q}</span>
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${faqOpen === i ? "bg-[#00416a] rotate-180" : "bg-gray-100"}`}>
-                        <ChevronDown size={15} className={faqOpen === i ? "text-white" : "text-gray-500"} />
-                      </div>
-                    </button>
-                    <AnimatePresence>
-                      {faqOpen === i && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                          itemScope itemType="https://schema.org/Answer"
-                        >
-                          <p className="px-5 pb-5 text-gray-600 leading-relaxed text-sm border-t border-gray-100 pt-4" itemProp="text">{f.a}</p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
+/* ══════════════════════ HELPERS ══════════════════════ */
 
-        {/* ════════════ CONTACT CTA ════════════ */}
-        <section className="py-24 bg-[#00416a] relative overflow-hidden" aria-label="Contact Taxvio — Free Tax Consultation">
-          {/* Background accents */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00416a] via-[#003257] to-[#001e36]" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-            backgroundSize: "40px 40px"
-          }} />
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-sky-400/10 blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-teal-400/10 blur-[80px] pointer-events-none" />
-
-          <motion.div
-            className="relative max-w-4xl mx-auto px-6 text-center text-white"
-            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-          >
-            <motion.span variants={fadeUp} className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full text-sm mb-6 backdrop-blur-sm">
-              <Users size={14} /> 4,800+ Businesses Served Across India
-            </motion.span>
-            <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-extrabold leading-tight">
-              Get Expert GST, Income Tax &amp; Compliance Support — Anywhere in India
-            </motion.h2>
-            <motion.p variants={fadeUp} className="mt-5 text-white/75 max-w-2xl mx-auto leading-relaxed text-[15px]">
-              Whether you need <strong className="text-white">GST registration</strong>, <strong className="text-white">ITR filing</strong>, <strong className="text-white">company registration</strong>, <strong className="text-white">TDS compliance</strong>, or <strong className="text-white">notice handling</strong> — our CA-led team is available on call and WhatsApp with affordable, transparent pricing and 100% online service delivery.
-            </motion.p>
-
-            {/* Trust indicators */}
-            <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-              {[
-                { label: "12,000+ Returns Filed", icon: FileText },
-                { label: "4.9★ Rated", icon: Star },
-                { label: "100% Online", icon: Globe },
-                { label: "CA-Certified Team", icon: BadgeCheck },
-              ].map(({ label, icon: Icon }) => (
-                <div key={label} className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-sm">
-                  <Icon size={12} className="text-sky-300" />
-                  {label}
-                </div>
-              ))}
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                onClick={handleCall}
-                aria-label="Call Taxvio now"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-8 py-4 text-[#00416a] text-sm font-bold shadow-xl hover:bg-gray-50 hover:shadow-2xl active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-              >
-                <Phone size={16} className="shrink-0" /> Call Now
-              </button>
-              <button
-                onClick={handleWhatsApp}
-                aria-label="WhatsApp Taxvio"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl border-2 border-white/60 bg-transparent px-8 py-4 text-sm font-bold text-white hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-              >
-                <MessageCircle size={16} className="shrink-0" /> WhatsApp Us
-              </button>
-              <Link
-                href="/contact"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white/15 border border-white/30 px-8 py-4 text-sm font-bold text-white hover:bg-white/25 active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-              >
-                Free Consultation <ArrowRight size={15} className="shrink-0" />
-              </Link>
-            </motion.div>
-            <motion.p variants={fadeUp} className="mt-8 text-white/40 text-xs">
-              Serving Khatauli, Muzaffarnagar, Meerut, Delhi NCR and all states of India — 100% Online
-            </motion.p>
-          </motion.div>
-        </section>
-      </main>
-    </>
+function SectionLabel({ text }: { text: string }) {
+  return (
+    <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#00416a]/60 mb-3 border border-[#00416a]/20 px-3 py-1 rounded-full bg-[#00416a]/5">
+      {text}
+    </span>
   );
 }

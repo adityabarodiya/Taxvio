@@ -10,6 +10,7 @@ import {
   MessageCircle, Clock, Shield, Zap, FileText, AlertCircle, Search,
 } from "lucide-react";
 import Footar from "@/components/Footar";
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton";
 
 const PHONE = "918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with GST Audit Assistance.")}`;
@@ -137,7 +138,7 @@ const serviceSchema = {
   name: "GST Audit Assistance India",
   serviceType: "GST Audit Assistance",
   description:
-    "Expert GST audit assistance — Section 65 departmental audit, Section 66 special audit, ASMT-10 scrutiny reply, ITC reconciliation, audit representation and demand dispute. Starting ₹3,999. CA-assisted, pan India.",
+    "Expert GST audit assistance — Section 65 departmental audit, Section 66 special audit, ASMT-10 scrutiny reply, ITC reconciliation, audit representation and demand dispute. Starting ₹5,999. CA-assisted, pan India.",
   provider: {
     "@type": "ProfessionalService",
     name: "Taxvio",
@@ -155,7 +156,7 @@ const serviceSchema = {
     "@type": "Offer",
     price: "4999",
     priceCurrency: "INR",
-    description: "GST Audit Assistance — starting ₹3,999 including pre-audit reconciliation and representation.",
+    description: "GST Audit Assistance — starting ₹5,999 including pre-audit reconciliation and representation.",
   },
 };
 
@@ -219,14 +220,11 @@ export default function GSTAuditClient() {
                     Expert CA assistance for GST departmental audits (Section 65), special audits
                     (Section 66), return scrutiny (Section 61 / ASMT-10), ITC reconciliation,
                     pre-audit preparation, and demand dispute representation. Starting at{" "}
-                    <strong className="text-white">₹3,999</strong>.
+                    <strong className="text-white">₹5,999</strong>.
                   </motion.p>
 
                   <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
-                    <a href={WA} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3.5 rounded-xl font-bold shadow-xl hover:scale-105 transition-all duration-200">
-                      <MessageCircle size={18} /> Get Audit Help on WhatsApp
-                    </a>
+                    
                     <Link href="/contact"
                       className="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-xl font-bold hover:bg-white/10 transition-all"
                       style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -254,7 +252,7 @@ export default function GSTAuditClient() {
                     </div>
                     <div className="p-6 space-y-4">
                       {[
-                        { icon: "₹",  label: "Starting Fee",                val: "₹3,999" },
+                        { icon: "₹",  label: "Starting Fee",                val: "₹5,999" },
                         { icon: "⚖️", label: "Section 65 (Departmental)",   val: "Notice ADT-01 — 15 days" },
                         { icon: "👨‍⚖️", label: "Section 66 (Special Audit)", val: "90-day CA audit report" },
                         { icon: "📋", label: "Section 61 (Scrutiny)",       val: "ASMT-10 notice reply" },
@@ -268,10 +266,7 @@ export default function GSTAuditClient() {
                       ))}
                     </div>
                     <div className="px-6 pb-6">
-                      <a href={WA} target="_blank" rel="noopener noreferrer"
-                        className="block w-full text-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold transition hover:scale-105">
-                        Get Audit Assistance — ₹3,999 →
-                      </a>
+                  
                     </div>
                   </div>
                 </motion.div>
@@ -513,10 +508,7 @@ export default function GSTAuditClient() {
                 <div>
                   <p className="font-bold text-red-800">Is your business showing any of these triggers?</p>
                   <p className="text-red-700 text-sm mt-1">A proactive GST health check can identify and resolve issues before the department does. Taxvio&apos;s audit readiness review identifies risk areas, reconciles data, and prepares your compliance position — before you receive a notice.</p>
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 mt-3 bg-[#00416a] text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#002b45] transition">
-                    Book Audit Readiness Review <ArrowRight size={12} />
-                  </a>
+                  
                 </div>
               </motion.div>
             </motion.div>
@@ -587,7 +579,7 @@ export default function GSTAuditClient() {
             </motion.div>
           </div>
         </section>
-
+                <InquiryFormButton/>
         {/* ══ PRICING ══════════════════════════════════════════════════════ */}
         <section className="py-16" style={{ background: "#00416a" }}
           aria-label="GST Audit Assistance Pricing">
@@ -611,11 +603,11 @@ export default function GSTAuditClient() {
                   items: ["ASMT-10 notice analysis", "ASMT-11 reply drafting", "GSTR-1 vs GSTR-3B reconciliation", "ITC mismatch explanation", "WhatsApp support"],
                 },
                 {
-                  plan: "Departmental Audit (Section 65)", price: "₹4,999", highlight: true,
+                  plan: "Departmental Audit (Section 65)", price: "₹5,999", highlight: true,
                   items: ["ADT-01 notice review", "Pre-audit reconciliation", "Full document compilation", "CA representation during audit", "Demand reply / pre-SCN submission"],
                 },
                 {
-                  plan: "Special Audit + Demand Defence", price: "₹9,999", highlight: false,
+                  plan: "Special Audit + Demand Defence", price: "₹11,999", highlight: false,
                   items: ["Section 66 special audit handling", "Full ITC health check", "Show Cause Notice (SCN) reply", "Personal hearing representation", "First appellate (GST officer) if needed"],
                 },
               ].map(({ plan, price, highlight, items }) => (
@@ -639,14 +631,14 @@ export default function GSTAuditClient() {
                       </li>
                     ))}
                   </ul>
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
+                  <button onClick={() => window.location.href = "/contact"}
                     className="mt-6 block text-center py-3 rounded-xl font-bold text-sm transition hover:scale-105"
                     style={{
                       background: highlight ? "#fff" : "rgba(255,255,255,0.15)",
                       color: highlight ? "#00416a" : "#fff",
                     }}>
                     Get Started →
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>
@@ -751,7 +743,7 @@ export default function GSTAuditClient() {
               style={{ color: "rgba(255,255,255,0.72)" }}>
               CA-assisted GST audit support — Section 65 departmental audit, Section 66 special audit,
               ASMT-10 scrutiny reply, ITC reconciliation, demand dispute, and personal hearing
-              representation. Starting ₹3,999. 100% online. Pan India.
+              representation. Starting ₹5,999. 100% online. Pan India.
             </motion.p>
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
               <a href={WA} target="_blank" rel="noopener noreferrer"

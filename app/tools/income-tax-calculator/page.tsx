@@ -81,7 +81,7 @@ function calculateTax(input: TaxInput): TaxResult {
     totalDeductions = stdDed + sec80C + sec80D + input.hra + input.lta +
       Math.min(input.homeLoanInterest, 200000) + nps + input.otherDeductions;
   } else {
-    // New regime: only standard deduction of ₹75,000 (FY 2024-25)
+    // New regime: only standard deduction of ₹75,000 (FY 2025-26)
     totalDeductions = Math.min(75000, grossIncome);
   }
 
@@ -92,7 +92,7 @@ function calculateTax(input: TaxInput): TaxResult {
   const slabBreakdown: { slab: string; tax: number; rate: string }[] = [];
 
   if (regime === "new") {
-    // New tax regime slabs FY 2024-25
+    // New tax regime slabs FY 2025-26
     const slabs = [
       { limit: 300000, rate: 0, label: "Up to ₹3,00,000" },
       { limit: 700000, rate: 0.05, label: "₹3,00,001 – ₹7,00,000" },
@@ -226,16 +226,16 @@ function InputField({
 
 const FAQS = [
   {
-    q: "What is the difference between old and new tax regime in FY 2024-25?",
-    a: "The old tax regime allows taxpayers to claim deductions under Section 80C (up to ₹1.5 lakh), Section 80D (health insurance), HRA exemption, LTA, home loan interest (Section 24B), and other deductions to reduce taxable income. The new tax regime (default from FY 2023-24) offers lower slab rates but does not allow most deductions. From FY 2024-25, the standard deduction under the new regime has been increased to ₹75,000, and the rebate under Section 87A covers income up to ₹7 lakh.",
+    q: "What is the difference between old and new tax regime in FY 2025-26?",
+    a: "The old tax regime allows taxpayers to claim deductions under Section 80C (up to ₹1.5 lakh), Section 80D (health insurance), HRA exemption, LTA, home loan interest (Section 24B), and other deductions to reduce taxable income. The new tax regime (default from FY 2023-24) offers lower slab rates but does not allow most deductions. From FY 2025-26, the standard deduction under the new regime has been increased to ₹75,000, and the rebate under Section 87A covers income up to ₹7 lakh.",
   },
   {
-    q: "Who is eligible for Section 87A rebate in FY 2024-25?",
+    q: "Who is eligible for Section 87A rebate in FY 2025-26?",
     a: "Under the new tax regime, individual taxpayers with taxable income up to ₹7,00,000 are eligible for a rebate of up to ₹25,000 under Section 87A, effectively making income up to ₹7 lakh tax-free. Under the old tax regime, the rebate of ₹12,500 applies to taxable income up to ₹5,00,000. The rebate reduces tax payable to nil — it does not create a refund if tax is already zero.",
   },
   {
-    q: "What are the income tax slab rates under the new regime for FY 2024-25?",
-    a: "Under the new tax regime for FY 2024-25: income up to ₹3 lakh is nil; ₹3–7 lakh at 5%; ₹7–10 lakh at 10%; ₹10–12 lakh at 15%; ₹12–15 lakh at 20%; above ₹15 lakh at 30%. A standard deduction of ₹75,000 applies for salaried individuals. The new regime is now the default — taxpayers must explicitly opt for the old regime when filing ITR.",
+    q: "What are the income tax slab rates under the new regime for FY 2025-26?",
+    a: "Under the new tax regime for FY 2025-26: income up to ₹3 lakh is nil; ₹3–7 lakh at 5%; ₹7–10 lakh at 10%; ₹10–12 lakh at 15%; ₹12–15 lakh at 20%; above ₹15 lakh at 30%. A standard deduction of ₹75,000 applies for salaried individuals. The new regime is now the default — taxpayers must explicitly opt for the old regime when filing ITR.",
   },
   {
     q: "Which tax regime is better — old or new?",
@@ -335,25 +335,25 @@ export default function IncomeTaxCalculatorPage() {
 
             <motion.span variants={fadeUp} className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full text-xs font-semibold mb-5 backdrop-blur-sm uppercase tracking-wide">
               <Calculator size={12} className="text-sky-300" />
-              FY 2024-25 · AY 2025-26 · Updated
+              FY 2025-26 · AY 2025-26 · Updated
             </motion.span>
 
             <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
               Income Tax Calculator
               <span className="block mt-1.5 bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent">
-                FY 2024-25 — Old &amp; New Regime
+                FY 2025-26 — Old &amp; New Regime
               </span>
             </motion.h1>
 
             <motion.p variants={fadeUp} className="mt-5 text-white/70 text-base md:text-lg leading-relaxed">
-              Calculate your exact income tax liability for FY 2024-25 (AY 2025-26) under both old and new tax regimes. Compare regimes, maximise deductions, and get CA-assisted ITR filing from just ₹499.
+              Calculate your exact income tax liability for FY 2025-26 (AY 2025-26) under both old and new tax regimes. Compare regimes, maximise deductions, and get CA-assisted ITR filing from just ₹499.
             </motion.p>
 
             <motion.div variants={fadeUp} className="mt-6 flex flex-wrap justify-center gap-2">
               {[
                 { icon: Zap, label: "Instant Calculation" },
                 { icon: RefreshCw, label: "Old & New Regime" },
-                { icon: BadgeCheck, label: "FY 2024-25 Updated" },
+                { icon: BadgeCheck, label: "FY 2025-26 Updated" },
                 { icon: Shield, label: "100% Accurate" },
               ].map(({ icon: Icon, label }) => (
                 <span key={label} className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 text-white/80 text-xs font-medium px-3 py-1.5 rounded-full">
@@ -390,7 +390,7 @@ export default function IncomeTaxCalculatorPage() {
                     Tax Regime
                   </label>
                   <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-2xl">
-                    {([["new", "New Regime", "FY 2024-25 default"], ["old", "Old Regime", "More deductions"]] as const).map(
+                    {([["new", "New Regime", "FY 2025-26 default"], ["old", "Old Regime", "More deductions"]] as const).map(
                       ([val, title, sub]) => (
                         <button
                           key={val}
@@ -524,7 +524,7 @@ export default function IncomeTaxCalculatorPage() {
                     <div>
                       <p className="text-sm font-bold text-[#00416a] mb-1">New Regime — Standard Deduction of ₹75,000</p>
                       <p className="text-xs text-gray-500 leading-relaxed">
-                        Under the new tax regime (FY 2024-25), a standard deduction of <strong>₹75,000</strong> is automatically applied
+                        Under the new tax regime (FY 2025-26), a standard deduction of <strong>₹75,000</strong> is automatically applied
                         for salaried individuals. Most other deductions (80C, HRA, home loan interest) are not available.
                         The new regime is the default from FY 2023-24 onwards.
                       </p>
@@ -729,7 +729,7 @@ export default function IncomeTaxCalculatorPage() {
                 Income Tax Guide
               </span>
               <h2 className="text-3xl font-extrabold text-[#00416a] mt-4">
-                Income Tax in India — Complete Guide for FY 2024-25
+                Income Tax in India — Complete Guide for FY 2025-26
               </h2>
               <p className="text-gray-500 mt-3 max-w-2xl mx-auto text-sm leading-relaxed">
                 Everything you need to know about income tax slabs, deductions, regimes, and filing for Assessment Year 2025-26.
@@ -741,10 +741,10 @@ export default function IncomeTaxCalculatorPage() {
               <motion.div variants={fadeUp} className="grid md:grid-cols-2 gap-8 items-start">
                 <div>
                   <h3 className="text-xl font-extrabold text-[#00416a] mb-4">
-                    Income Tax Slabs FY 2024-25 — New Tax Regime
+                    Income Tax Slabs FY 2025-26 — New Tax Regime
                   </h3>
                   <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                    The new tax regime is the default for FY 2024-25 (AY 2025-26). The Budget 2024 increased the standard deduction for salaried individuals from ₹50,000 to <strong>₹75,000</strong> under the new regime, and the Section 87A rebate threshold remains at ₹7,00,000 — making income up to ₹7 lakh effectively tax-free for most salaried individuals.
+                    The new tax regime is the default for FY 2025-26 (AY 2025-26). The Budget 2024 increased the standard deduction for salaried individuals from ₹50,000 to <strong>₹75,000</strong> under the new regime, and the Section 87A rebate threshold remains at ₹7,00,000 — making income up to ₹7 lakh effectively tax-free for most salaried individuals.
                   </p>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     The new regime does not allow deductions under Section 80C, 80D, HRA exemption, LTA, home loan interest under Section 24B, or most other exemptions. However, it offers lower slab rates and reduced compliance burden — making it ideal for individuals with limited investments or who are in their early career stages.
@@ -752,7 +752,7 @@ export default function IncomeTaxCalculatorPage() {
                 </div>
                 <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
                   <div className="bg-[#00416a] px-5 py-3">
-                    <p className="text-white font-bold text-sm">New Regime — Tax Slabs FY 2024-25</p>
+                    <p className="text-white font-bold text-sm">New Regime — Tax Slabs FY 2025-26</p>
                   </div>
                   <div className="divide-y divide-gray-100">
                     {[
@@ -777,7 +777,7 @@ export default function IncomeTaxCalculatorPage() {
               <motion.div variants={fadeUp} className="grid md:grid-cols-2 gap-8 items-start">
                 <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden order-2 md:order-1">
                   <div className="bg-emerald-600 px-5 py-3">
-                    <p className="text-white font-bold text-sm">Old Regime — Tax Slabs FY 2024-25 (Below 60)</p>
+                    <p className="text-white font-bold text-sm">Old Regime — Tax Slabs FY 2025-26 (Below 60)</p>
                   </div>
                   <div className="divide-y divide-gray-100">
                     {[
@@ -1018,7 +1018,7 @@ export default function IncomeTaxCalculatorPage() {
                 File ITR in 24–48 Hours
               </span>
               <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">
-                Ready to File Your ITR for FY 2024-25?
+                Ready to File Your ITR for FY 2025-26?
               </h2>
               <p className="mt-4 text-white/70 max-w-xl mx-auto text-sm leading-relaxed">
                 Let Taxvio's CA team handle your ITR filing — maximum deductions, 100% accurate, AIS reconciliation included. Share your documents on WhatsApp and get it done in 24 hours.

@@ -10,6 +10,7 @@ import {
   MessageCircle, Clock, Shield, Zap, FileText, AlertCircle, QrCode,
 } from "lucide-react";
 import Footar from "@/components/Footar";
+import InquiryForm from "@/components/InquiryFormButton";
 
 const PHONE = "918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with GST E-Invoicing setup.")}`;
@@ -144,6 +145,8 @@ export default function GSTEInvoicingClient() {
       <Script id="gst-einvoice-faq-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
+        <InquiryForm />
+
       <main className="bg-white text-gray-800">
 
         {/* ══ HERO ══════════════════════════════════════════════════════════ */}
@@ -196,10 +199,7 @@ export default function GSTEInvoicingClient() {
                   </motion.p>
 
                   <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
-                    <a href={WA} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3.5 rounded-xl font-bold shadow-xl hover:scale-105 transition-all duration-200">
-                      <MessageCircle size={18} /> Setup on WhatsApp
-                    </a>
+                    
                     <Link href="/contact"
                       className="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-xl font-bold hover:bg-white/10 transition-all"
                       style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -683,7 +683,7 @@ export default function GSTEInvoicingClient() {
                 <h2 className="text-3xl font-extrabold text-[#00416a] mt-4">
                   Frequently Asked Questions — GST E-Invoicing
                 </h2>
-                <p className="text-gray-500 mt-2 text-sm">Have more questions? WhatsApp us — we reply within 15 minutes.</p>
+                <p className="text-gray-500 mt-2 text-sm">Have more questions? Contact us — we reply within 15 minutes.</p>
               </motion.div>
               <motion.div variants={stagger} className="space-y-3">
                 {FAQS.map((f, i) => (

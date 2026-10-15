@@ -1,4 +1,4 @@
-// app/state/uttar-pradesh/roc-services/page.tsx
+// app/state/uttar-pradesh/roc/page.tsx
 import Link from "next/link";
 import Script from "next/script";
 import Footar from "@/components/Footar";
@@ -27,11 +27,11 @@ export const metadata: Metadata = {
     "MCA filing UP",
     "Taxvio ROC UP",
   ],
-  alternates: { canonical: "https://www.taxvio.in/state/uttar-pradesh/roc-services" },
+  alternates: { canonical: "https://www.taxvio.in/state/uttar-pradesh/roc" },
   openGraph: {
     title: "Company Registration & ROC Services Across 800+ UP Cities | Taxvio",
     description: "Expert company formation, annual ROC compliance, director changes & company closure across all UP cities — CA-assisted, from ₹2,999.",
-    url: "https://www.taxvio.in/state/uttar-pradesh/roc-services",
+    url: "https://www.taxvio.in/state/uttar-pradesh/roc",
     siteName: "Taxvio",
     type: "website",
   },
@@ -89,14 +89,14 @@ const itemListSchema = {
     "@type": "ListItem",
     position: i + 1,
     name: `${c.name} — ROC Services`,
-    url: `https://www.taxvio.in/state/uttar-pradesh/roc-services/${slugifyCity(c.name)}`,
+    url: `https://www.taxvio.in/state/uttar-pradesh/roc/${slugifyCity(c.name)}`,
   })),
 };
 
 /* ─── Sub-components ─────────────────────────────────────────────────────── */
 function MajorCityCard({ name, district, region }: { name: string; district: string; region: string }) {
   return (
-    <Link href={`/state/uttar-pradesh/roc-services/${slugifyCity(name)}`}
+    <Link href={`/state/uttar-pradesh/roc/${slugifyCity(name)}`}
       aria-label={`ROC services in ${name}`}
       className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00416a] to-[#0077b6] text-white border border-[#005a94] shadow-lg hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300">
       <div className="absolute inset-0 opacity-[0.07] pointer-events-none"
@@ -121,7 +121,7 @@ function MajorCityCard({ name, district, region }: { name: string; district: str
 
 function CityLink({ name }: { name: string }) {
   return (
-    <Link href={`/state/uttar-pradesh/roc-services/${slugifyCity(name)}`}
+    <Link href={`/state/uttar-pradesh/roc/${slugifyCity(name)}`}
       className="group flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-medium text-gray-600 hover:text-[#00416a] hover:bg-[#00416a]/5 transition-all duration-150">
       <MapPin size={9} className="text-gray-300 group-hover:text-[#00416a] shrink-0 transition-colors" />
       <span className="truncate">{name}</span>
@@ -280,7 +280,7 @@ export default function UPROCIndexPage() {
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {TIER2_CITIES.map((c) => (
-                <Link key={c.name} href={`/state/uttar-pradesh/roc-services/${slugifyCity(c.name)}`}
+                <Link key={c.name} href={`/state/uttar-pradesh/roc/${slugifyCity(c.name)}`}
                   className="group flex items-center gap-2.5 p-3.5 bg-[#f8fbfd] border border-[#deeef7] rounded-xl hover:border-[#00416a]/30 hover:shadow-sm hover:bg-white transition-all">
                   <div className="w-8 h-8 rounded-lg bg-[#00416a]/10 flex items-center justify-center shrink-0 group-hover:bg-[#00416a] transition-all">
                     <MapPin size={13} className="text-[#00416a] group-hover:text-white transition-all" />
@@ -416,7 +416,7 @@ export default function UPROCIndexPage() {
             <div className="flex flex-wrap justify-center gap-2">
               {UP_CITIES.map((c, i) => (
                 <Link key={`${c.name}-${i}`}
-                  href={`/state/uttar-pradesh/roc-services/${slugifyCity(c.name)}`}
+                  href={`/state/uttar-pradesh/roc/${slugifyCity(c.name)}`}
                   className="group inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 hover:scale-105 hover:bg-white hover:text-[#00416a]"
                   style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.80)" }}>
                   <MapPin size={9} className="text-sky-400 group-hover:text-[#00416a] shrink-0 transition-colors" />

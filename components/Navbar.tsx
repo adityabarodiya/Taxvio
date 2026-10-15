@@ -78,59 +78,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── TOP ANNOUNCEMENT BAR (collapses on scroll-down, stays dismissible) ── */}
-      <div
-        className={`bg-gradient-to-r from-[#00416a] via-[#003560] to-[#00416a] text-white text-xs overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out motion-reduce:transition-none
-          ${showAnnouncement ? "max-h-9 opacity-100" : "max-h-0 opacity-0"}`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4">
-          <div className="hidden md:flex items-center gap-5 text-white/65">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              100% Online · CA-Assisted
-            </span>
-            <span className="text-white/25">·</span>
-            <span className="flex items-center gap-1">
-              <Clock size={10} className="text-sky-300" />
-              Mon–Sat · 9 AM – 7 PM IST
-            </span>
-            <span className="text-white/25">·</span>
-            <span className="flex items-center gap-1 text-yellow-300/80">
-              <Star size={10} className="fill-yellow-300" />
-              4.9★ Rated · 2,400+ Reviews
-            </span>
-          </div>
-          <span className="md:hidden flex items-center gap-1.5 text-white/70 text-[11px]">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            Pan India · Online · CA-Assisted · 4.9★
-          </span>
-          <div className="flex items-center gap-3">
-            <a
-              href={`tel:+${PHONE}`}
-              className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors"
-            >
-              <Phone size={10} className="text-sky-300" />
-              +91 89379 80366
-            </a>
-            <span className="hidden sm:block text-white/25">·</span>
-            <a
-              href="mailto:info@taxvio.in"
-              className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors"
-            >
-              <Mail size={10} className="text-sky-300" />
-              info@taxvio.in
-            </a>
-            <button
-              onClick={() => setAnnouncementVisible(false)}
-              className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white ml-1 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:outline-none"
-              aria-label="Dismiss announcement"
-            >
-              <X size={10} />
-            </button>
-          </div>
-        </div>
-      </div>
-
+     
       {/* ── MAIN NAVBAR ── */}
       <header
         className={`sticky top-0 left-0 z-50 w-full bg-white/96 backdrop-blur-md transition-all duration-300

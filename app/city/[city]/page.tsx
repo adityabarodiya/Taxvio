@@ -3,6 +3,8 @@ import Script from "next/script";
 import Footar from "@/components/Footar";
 import { serviceCategories } from "@/data/serviceCategories";
 import type { Metadata } from "next";
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton";
+
 import {
   MapPin, ArrowRight, CheckCircle, Phone, MessageCircle,
   Shield, Zap, Users, Star, Clock, BadgeCheck, TrendingUp,
@@ -831,21 +833,14 @@ export default async function CityServicesPage({ params }: { params: Promise<{ c
 
                 {/* CTAs */}
                 <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25d366] hover:bg-[#1ebe5d] px-7 py-4 text-white text-sm font-bold shadow-xl shadow-green-900/20 active:scale-[0.97] transition-all min-h-[52px]">
-                    <MessageCircle size={16} className="shrink-0" /> WhatsApp Us
-                  </a>
+                
                   <Link href="/contact"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-[#00416a] text-sm font-bold shadow-xl hover:bg-gray-50 hover:shadow-2xl active:scale-[0.97] transition-all min-h-[52px]">
                     Free Consultation <ArrowRight size={15} className="shrink-0" />
                   </Link>
-                  <a href={`tel:${PHONE}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/5 px-7 py-4 text-white text-sm font-semibold hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all min-h-[52px]">
-                    <Phone size={15} className="shrink-0" /> Call Now
-                  </a>
+                
                 </div>
               </div>
-
               {/* Right — Quick info card */}
               <div className="rounded-2xl overflow-hidden shadow-2xl border"
                 style={{ background: "rgba(255,255,255,0.07)", borderColor: "rgba(255,255,255,0.14)" }}>
@@ -1170,18 +1165,12 @@ export default async function CityServicesPage({ params }: { params: Promise<{ c
                 </p>
 
                 <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#25d366] hover:bg-[#1ebe5d] px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all min-h-[52px]">
-                    <MessageCircle size={16} /> WhatsApp Us
-                  </a>
+                  
                   <Link href="/contact"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 hover:shadow-xl active:scale-[0.97] transition-all min-h-[52px]">
                     Free Consultation <ArrowRight size={15} />
                   </Link>
-                  <a href={`tel:${PHONE}`}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/5 px-7 py-3.5 text-white text-sm font-bold hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all min-h-[52px]">
-                    <Phone size={15} /> Call Now
-                  </a>
+                 
                 </div>
 
                 {/* Bottom trust row */}
@@ -1201,7 +1190,7 @@ export default async function CityServicesPage({ params }: { params: Promise<{ c
             </div>
           </div>
         </section>
-
+        <InquiryFormButton />
         <Footar />
       </main>
     </>

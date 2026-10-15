@@ -24,6 +24,7 @@ import {
     Globe,
     Briefcase,
 } from "lucide-react";
+import InquiryForm from "@/components/InquiryFormButton";
 
 /* ─── Constants ──────────────────────────────────────────────────────────────── */
 const PHONE = "918937980366";
@@ -538,14 +539,7 @@ export default function GstForFreelancerClient() {
                             </div>
 
                             <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                                <a
-                                    href={WA}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-                                >
-                                    <MessageCircle size={16} /> Start GST Setup — ₹1,499
-                                </a>
+                                
                                 <Link
                                     href="/contact"
                                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]"
@@ -629,14 +623,7 @@ export default function GstForFreelancerClient() {
                                     </div>
                                 </div>
 
-                                <a
-                                    href={WA}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-2 w-full rounded-xl bg-green-500 hover:bg-green-600 py-3 text-white text-sm font-bold transition-all active:scale-[0.97] mt-3"
-                                >
-                                    <MessageCircle size={14} /> Get Started on WhatsApp
-                                </a>
+                               
                             </div>
                         </div>
                     </div>
@@ -1500,14 +1487,7 @@ export default function GstForFreelancerClient() {
                                 refund.
                             </p>
                         </div>
-                        <a
-                            href={WA}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="shrink-0 inline-flex items-center gap-2 bg-white text-[#00416a] text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-gray-100 transition-all active:scale-[0.97]"
-                        >
-                            <MessageCircle size={13} /> File LUT Now
-                        </a>
+                        
                     </div>
 
                     <div className="text-center">
@@ -1537,14 +1517,7 @@ export default function GstForFreelancerClient() {
                         </p>
 
                         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                            <a
-                                href={WA}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]"
-                            >
-                                <MessageCircle size={16} /> Start GST Setup — ₹1,499
-                            </a>
+                           
                             <Link
                                 href="/contact"
                                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]"
@@ -1576,7 +1549,7 @@ export default function GstForFreelancerClient() {
                     </div>
                 </div>
             </section>
-
+                <InquiryForm />
             <Footar />
         </main>
     );

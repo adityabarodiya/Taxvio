@@ -10,6 +10,7 @@ import {
   MessageCircle, Clock, Shield, Zap, FileText, AlertCircle, XCircle, RefreshCw,
 } from "lucide-react";
 import Footar from "@/components/Footar";
+import InquiryFormButton from "@/components/InquiryFormButton";
 
 const PHONE = "918937980366";
 const WA_CANCEL = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with GST Cancellation.")}`;
@@ -202,6 +203,7 @@ export default function GSTCancellationClient() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <Script id="gst-cancel-faq-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <InquiryFormButton />
 
       <main className="bg-white text-gray-800">
 

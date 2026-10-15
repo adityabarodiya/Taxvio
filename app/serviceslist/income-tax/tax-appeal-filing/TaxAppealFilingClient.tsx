@@ -4,6 +4,7 @@ import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useState } from "react";
 
+import InquiryForm from "@/components/InquiryFormButton";
 const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -85,7 +86,7 @@ export default function TaxAppealFilingClient() {
           __html: JSON.stringify(faqJsonLd),
         }}
       />
-
+      <InquiryForm />
       <main className="bg-white text-gray-800 overflow-x-hidden">
         {/* URGENCY BANNER */}
         <div

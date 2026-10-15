@@ -5,6 +5,7 @@ import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useState } from "react";
 
+import InquiryForm from "@/components/InquiryFormButton";
 const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -89,7 +90,7 @@ export default function AdvanceTaxClient() {
           __html: JSON.stringify(faqJsonLd),
         }}
       />
-
+      <InquiryForm />
       <main className="bg-white text-gray-800 overflow-x-hidden">
         {/* URGENCY BANNER */}
         <div
@@ -159,12 +160,7 @@ export default function AdvanceTaxClient() {
                     Calculate Advance Tax — ₹999 →
                   </Link>
 
-                  <Link
-                    href="tel:+918937980366"
-                    className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base"
-                  >
-                    📞 Free Tax Estimate
-                  </Link>
+                  
                 </div>
 
                 <div className="mt-8 flex flex-wrap gap-4 text-sm text-white/70">
@@ -1095,12 +1091,7 @@ export default function AdvanceTaxClient() {
                     Calculate Now — ₹999
                   </Link>
 
-                  <Link
-                    href="tel:+918937980366"
-                    className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center"
-                  >
-                    📞 Free Estimate
-                  </Link>
+                  
                 </div>
               </div>
             </div>

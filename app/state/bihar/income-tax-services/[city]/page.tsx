@@ -4,14 +4,12 @@ import Script from "next/script";
 import Footar from "@/components/Footar";
 import type { Metadata } from "next";
 import {
-  MapPin, ArrowRight, Phone, MessageCircle, Shield, Zap,
+  MapPin, ArrowRight, Shield, Zap,
   CheckCircle, Clock, BadgeCheck, Star, Users, TrendingUp,
   FileText, IndianRupee, AlertCircle, BookOpen, ClipboardList,
   Calculator, Receipt,
 } from "lucide-react";
-import {
-  BIHAR_AREAS, slugifyArea,
-} from "@/data/bihar-cities";
+import { BIHAR_AREAS, slugifyArea } from "@/data/bihar-cities"; // ← adjust path if needed
 
 /* ─── Helpers ───────────────────────────────────────────────────────────── */
 function findArea(slug: string) {
@@ -28,46 +26,56 @@ export async function generateMetadata(
   { params }: { params: Promise<{ city: string }> }
 ): Promise<Metadata> {
   const { city } = await params;
-  const area     = findArea(city);
-  const areaName = area?.name     ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const area = findArea(city);
+  const areaName = area?.name ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
   const district = area?.district ?? areaName;
 
   return {
     title: `Income Tax Return Filing in ${areaName}, Bihar | Taxvio`,
-    description: `Expert ITR filing for salaried, proprietors, firms & companies; TDS/TCS returns; income tax audit; scrutiny reply; 12A/80G registration; PAN/TAN; and Form 15G/15H in ${areaName}, ${district}, Bihar. CA-assisted, 100% online, starting ₹699.`,
+    description: `Expert ITR filing for salaried, proprietors, firms & companies; TDS/TCS returns; income tax audit; scrutiny reply; 12A/80G registration; PAN/TAN; capital gains, crypto tax, NRI filing and more in ${areaName}, ${district}, Bihar. CA-assisted, 100% online, starting ₹199.`,
     keywords: [
-      `income tax return filing ${areaName}`,
-      `ITR filing ${areaName} Bihar`,
-      `TDS return ${areaName}`,
-      `income tax audit ${areaName}`,
-      `income tax consultant ${areaName} ${district}`,
-      `12A 80G registration ${areaName}`,
-      `PAN card ${areaName}`,
-      `IT scrutiny notice ${areaName}`,
-      `online ITR ${areaName} Bihar`,
-      `CA income tax ${district} Bihar`,
+      `income tax return filing ${areaName}`, `ITR filing ${areaName} Bihar`, `TDS return ${areaName}`,
+      `income tax audit ${areaName}`, `income tax consultant ${areaName} ${district}`,
+      `12A 80G registration ${areaName}`, `PAN card ${areaName}`, `IT scrutiny notice ${areaName}`,
+      `online ITR ${areaName} Bihar`, `CA income tax ${district} Bihar`,
     ],
-    alternates: {
-      canonical: `https://www.taxvio.in/state/bihar/income-tax-services/${city}`,
-    },
+    alternates: { canonical: `https://www.taxvio.in/state/bihar/income-tax-services/${city}` },
     openGraph: {
       title: `Income Tax Services in ${areaName}, Bihar | Taxvio`,
-      description: `ITR filing, TDS returns, tax audit, scrutiny reply & 12A/80G in ${areaName}, ${district}, Bihar — CA-assisted, from ₹699.`,
+      description: `ITR filing, TDS returns, tax audit, scrutiny reply & 12A/80G in ${areaName}, ${district}, Bihar — CA-assisted, from ₹199.`,
       url: `https://www.taxvio.in/state/bihar/income-tax-services/${city}`,
       siteName: "Taxvio",
       type: "website",
     },
-    twitter: {
-      card: "summary_large_image",
-      title: `Income Tax Services in ${areaName}, Bihar | Taxvio`,
-    },
+    twitter: { card: "summary_large_image", title: `Income Tax Services in ${areaName}, Bihar | Taxvio` },
     robots: { index: true, follow: true },
   };
 }
 
+/* ─── Extra palette for the 17 newly-added services below ────────────────── */
+const PALETTE = [
+  { gradient: "from-slate-500 to-gray-600",     accentBg: "bg-slate-50",    accentBorder: "border-slate-100",    accentText: "text-slate-700" },
+  { gradient: "from-purple-500 to-fuchsia-600", accentBg: "bg-purple-50",   accentBorder: "border-purple-100",   accentText: "text-purple-700" },
+  { gradient: "from-red-500 to-orange-600",     accentBg: "bg-red-50",      accentBorder: "border-red-100",      accentText: "text-red-700" },
+  { gradient: "from-lime-500 to-emerald-600",   accentBg: "bg-lime-50",     accentBorder: "border-lime-100",     accentText: "text-lime-700" },
+  { gradient: "from-stone-500 to-neutral-600",  accentBg: "bg-stone-50",    accentBorder: "border-stone-100",    accentText: "text-stone-700" },
+  { gradient: "from-yellow-500 to-amber-600",   accentBg: "bg-yellow-50",   accentBorder: "border-yellow-100",   accentText: "text-yellow-700" },
+  { gradient: "from-green-500 to-teal-600",     accentBg: "bg-green-50",    accentBorder: "border-green-100",    accentText: "text-green-700" },
+  { gradient: "from-fuchsia-500 to-pink-600",   accentBg: "bg-fuchsia-50",  accentBorder: "border-fuchsia-100",  accentText: "text-fuchsia-700" },
+  { gradient: "from-indigo-500 to-violet-600",  accentBg: "bg-indigo-50",   accentBorder: "border-indigo-100",   accentText: "text-indigo-700" },
+  { gradient: "from-cyan-500 to-teal-600",      accentBg: "bg-cyan-50",     accentBorder: "border-cyan-100",     accentText: "text-cyan-700" },
+  { gradient: "from-orange-500 to-amber-600",   accentBg: "bg-orange-50",   accentBorder: "border-orange-100",   accentText: "text-orange-700" },
+  { gradient: "from-blue-600 to-cyan-700",      accentBg: "bg-blue-50",     accentBorder: "border-blue-100",     accentText: "text-blue-700" },
+  { gradient: "from-rose-500 to-red-600",       accentBg: "bg-rose-50",     accentBorder: "border-rose-100",     accentText: "text-rose-700" },
+  { gradient: "from-sky-500 to-blue-600",       accentBg: "bg-sky-50",      accentBorder: "border-sky-100",      accentText: "text-sky-700" },
+  { gradient: "from-violet-500 to-purple-600",  accentBg: "bg-violet-50",   accentBorder: "border-violet-100",   accentText: "text-violet-700" },
+  { gradient: "from-amber-500 to-orange-600",   accentBg: "bg-amber-50",    accentBorder: "border-amber-100",    accentText: "text-amber-700" },
+  { gradient: "from-teal-500 to-green-600",     accentBg: "bg-teal-50",     accentBorder: "border-teal-100",     accentText: "text-teal-700" },
+];
+
 /* ─── Service Content Generator ─────────────────────────────────────────── */
 function getServiceContent(areaName: string, district: string, region: string) {
-  return [
+  const original = [
 
     /* ── 1. PAN Card Application ── */
     {
@@ -407,26 +415,369 @@ Form 15G applies to individuals below 60 years of age (and HUFs) whose estimated
 For ${areaName} residents holding fixed deposits, post office time deposits, KVP, NSC, or savings accounts with annual interest above ₹40,000 (₹50,000 for senior citizens), banks are required to deduct 10% TDS under Section 194A unless a valid Form 15G or 15H is submitted at the beginning of the financial year. Failure to submit timely results in avoidable TDS deductions that must then be reclaimed through ITR filing — an unnecessary compliance burden and cash-flow disruption. Taxvio assists ${areaName} residents with complete 15G/15H filing — computing estimated total income across all sources to confirm genuine nil-tax or below-threshold eligibility (filing an incorrect 15G/15H when not actually eligible constitutes tax evasion under Section 277), preparing the correct form, and guiding submission to every relevant financial institution. For taxpayers where annual 15G/15H submission becomes cumbersome across multiple banks, we advise on Section 197 lower/nil TDS certificate applications as a more durable, single-application alternative.`,
     },
   ];
+
+  // ── Newly added services — same template pattern, colors from PALETTE ──
+  const additions = [
+    {
+      slug: "efiling-login-assistance",
+      title: `E-Filing Login & Portal Assistance in ${areaName}`,
+      price: "₹199",
+      timeline: "Same Day",
+      icon: "🔐",
+      features: [
+        "E-filing portal registration & first-time setup",
+        "Login credential recovery",
+        "Password reset via Aadhaar OTP or email",
+        "Profile & bank account validation",
+        "EVC generation troubleshooting",
+        "DSC registration for companies/audit cases",
+      ],
+      seoContent: `A surprising number of taxpayers in ${areaName}, ${district}, Bihar — particularly senior citizens, first-time filers, and small business owners unfamiliar with government portals — get stuck not on the tax computation itself but on the income tax e-filing portal: a forgotten password, an unlinked mobile number, a PAN that won't validate against Aadhaar, or an EVC that refuses to generate.
+
+Taxvio helps ${areaName} residents through portal registration and recovery — resetting credentials via Aadhaar OTP or registered email, correcting mismatched profile details that block filing, validating bank accounts for refund credit, and troubleshooting EVC generation failures that commonly occur when mobile numbers linked to Aadhaar and the bank account differ.
+
+For ${district} businesses and audit-case taxpayers who need Digital Signature Certificate (DSC) registration on the portal — mandatory for company ITRs and tax audit report uploads — we handle the DSC registration process end-to-end, including renewal before expiry so a lapsed signature doesn't block a filing deadline for your ${areaName} business at the worst possible moment.`,
+    },
+    {
+      slug: "revised-itr",
+      title: `Revised Income Tax Return Filing in ${areaName}`,
+      price: "₹699",
+      timeline: "1–2 Working Days",
+      icon: "✏️",
+      features: [
+        "Section 139(5) revised return filing",
+        "Error identification in originally filed ITR",
+        "Additional income disclosure",
+        "Missed deduction claim correction",
+        "Multiple revisions supported if needed",
+        "Filed before the statutory revision deadline",
+      ],
+      seoContent: `Under Section 139(5), any taxpayer in ${areaName}, ${district}, Bihar who discovers an error or omission in their originally filed return — a missed Form 16 from a second employer, an uncaptured bank interest entry, a wrongly claimed deduction, or an incorrect bank account for refund — can file a revised return, and can do so more than once if further errors surface, provided the revision is filed before 3 months prior to the end of the relevant assessment year or before the assessment is completed, whichever is earlier.
+
+Taxvio reviews the originally filed return for ${areaName} clients against bank statements, Form 26AS, and AIS data to catch exactly what went wrong, then prepares and files the corrected return — carrying forward unchanged figures and amending only what needs correction, so the revision doesn't introduce new discrepancies.
+
+A revised return completely replaces the original for assessment purposes, so for ${district} taxpayers who've spotted a mistake, filing promptly rather than waiting matters — the original return remains the basis for any processing or notice until the revision is filed and processed.`,
+    },
+    {
+      slug: "belated-itr",
+      title: `Belated Income Tax Return Filing in ${areaName}`,
+      price: "₹999",
+      timeline: "1–2 Working Days",
+      icon: "⏰",
+      features: [
+        "Section 139(4) belated return filing",
+        "Late fee computation (Sec. 234F)",
+        "Interest on outstanding tax (Sec. 234A)",
+        "Available until 31st December of AY",
+        "Loss carry-forward restriction advisory",
+        "Compliance history clean-up guidance",
+      ],
+      seoContent: `Missing the original July 31 ITR deadline in ${areaName}, ${district}, Bihar isn't the end of the road — a belated return under Section 139(4) can still be filed until December 31 of the assessment year (or until assessment completion, if earlier), though it comes at a cost: a late filing fee under Section 234F of ₹5,000 (reduced to ₹1,000 for taxpayers with total income below ₹5 lakh), plus Section 234A interest at 1% per month on any outstanding tax from the original due date.
+
+Taxvio files belated returns for ${areaName} taxpayers who've missed the deadline, computing the exact late fee and interest due, and flagging an important consequence many taxpayers in ${district} aren't aware of — business losses and capital losses in a belated return generally cannot be carried forward to future years (unlike a return filed on time), which can mean real money for ${areaName} business owners with a loss-making year they'd planned to offset against future profits.
+
+If you've missed even the belated deadline, we also advise on whether an updated return (ITR-U) under Section 139(8A) remains available — a separate, later window with its own additional tax cost, covering up to 4 years after the relevant assessment year.`,
+    },
+    {
+      slug: "itr-verification",
+      title: `ITR Verification (EVC / Aadhaar OTP) in ${areaName}`,
+      price: "₹199",
+      timeline: "Instant",
+      icon: "✅",
+      features: [
+        "Aadhaar OTP e-verification",
+        "Net banking EVC generation",
+        "Bank account / demat account EVC",
+        "Physical ITR-V postal guidance (if needed)",
+        "30-day verification deadline tracking",
+        "Re-verification for rejected/expired EVC",
+      ],
+      seoContent: `An ITR filed in ${areaName}, ${district}, Bihar is not legally complete until it's verified — and the return is treated as not filed at all if verification isn't completed within 30 days of e-filing, triggering the same consequences as a missed deadline. Most ${areaName} taxpayers verify instantly through Aadhaar OTP, but several alternative routes exist: net banking-linked EVC, a pre-validated bank account or demat account EVC, or — for taxpayers without any digital verification option — physically signing the ITR-V and posting it to CPC Bengaluru.
+
+Taxvio helps ${areaName} taxpayers complete verification the same day their return is filed, troubleshoots the common Aadhaar OTP failures (unregistered mobile number, Aadhaar-PAN name mismatch), and sets up bank or demat EVC as a backup verification method so a single point of failure doesn't cost a taxpayer their filing.
+
+For ${district} clients whose Aadhaar OTP consistently fails due to an outdated registered mobile number, we also guide the Aadhaar mobile update process at the nearest enrolment centre, since this is frequently the actual root cause rather than anything wrong with the ITR itself.`,
+    },
+    {
+      slug: "tds-certificate",
+      title: `TDS Certificate (Form 16 / 16A) Generation in ${areaName}`,
+      price: "₹499",
+      timeline: "Same Day",
+      icon: "📜",
+      features: [
+        "Form 16 — annual salary TDS certificate",
+        "Form 16A — quarterly non-salary TDS certificate",
+        "TRACES portal download & digital signing",
+        "Bulk certificate generation for employers",
+        "Part A/Part B consolidation",
+        "Certificate validation for deductees",
+      ],
+      seoContent: `Form 16 and Form 16A are the TDS certificates that employers and businesses in ${areaName}, ${district}, Bihar must issue to employees and vendors as proof of tax already deducted and deposited on their behalf — Form 16 annually by June 15 for salary TDS, and Form 16A quarterly within 15 days of the TDS return due date for non-salary deductions like contractor payments, rent, or professional fees.
+
+Taxvio generates TRACES-compliant TDS certificates for ${areaName} employers — downloading Part A (deduction summary) directly from the TRACES portal, preparing Part B with complete salary breakup, exemptions, and deductions for Form 16, and digitally signing certificates in bulk for businesses with large employee or vendor counts.
+
+Accurate, timely certificates matter directly to the people receiving them — a ${district} employee or vendor can only claim credit for TDS already deducted when it correctly appears in their Form 26AS, which depends on the deductor's return being filed accurately and the certificate matching it exactly; discrepancies here are a common source of avoidable disputes between ${areaName} businesses and the people they've paid.`,
+    },
+    {
+      slug: "form-26as",
+      title: `Form 26AS Download & Analysis in ${areaName}`,
+      price: "₹299",
+      timeline: "Same Day",
+      icon: "📑",
+      features: [
+        "Form 26AS download via e-filing portal/TRACES",
+        "TDS/TCS credit verification against Form 16/16A",
+        "AIS/TIS cross-reconciliation",
+        "Mismatch identification before ITR filing",
+        "Advance tax & self-assessment tax verification",
+        "Guidance for correcting deductor-side errors",
+      ],
+      seoContent: `Form 26AS is the consolidated annual tax statement every taxpayer in ${areaName}, ${district}, Bihar should check before filing ITR — it shows every TDS and TCS credit linked to your PAN, advance tax and self-assessment tax paid, and (for high-value cases) specified financial transactions reported by banks and other institutions, now substantially supplemented by the more detailed Annual Information Statement (AIS) and Taxpayer Information Summary (TIS).
+
+Taxvio downloads and reviews Form 26AS alongside AIS/TIS for ${areaName} clients before filing, cross-checking every TDS entry against the Form 16/16A the client actually received, and flagging discrepancies — a common issue in ${district} where a deductor has deposited TDS but filed the return late or with an incorrect PAN, meaning the credit doesn't yet appear even though tax was genuinely deducted.
+
+Filing an ITR claiming TDS credit that doesn't match Form 26AS is one of the most common triggers for a Section 143(1) processing mismatch — catching the gap before filing, and following up with the deductor to correct their return, saves ${areaName} taxpayers from a notice and the delay of a later rectification request.`,
+    },
+    {
+      slug: "advance-tax-calculation",
+      title: `Advance Tax Calculation & Payment in ${areaName}`,
+      price: "₹999/quarter",
+      timeline: "Before Each Due Date",
+      icon: "🧮",
+      features: [
+        "Quarterly liability estimation (15%/45%/75%/100%)",
+        "Challan 280 generation & payment guidance",
+        "Section 234B/234C interest avoidance",
+        "Business income & capital gains projection",
+        "Due date reminders — 15 Jun/Sep/Dec/Mar",
+        "Year-end true-up reconciliation",
+      ],
+      seoContent: `Any taxpayer in ${areaName}, ${district}, Bihar whose estimated tax liability for the year exceeds ₹10,000 — after TDS credit — is required to pay advance tax in instalments rather than as a single payment at year-end: 15% by June 15, 45% cumulative by September 15, 75% cumulative by December 15, and 100% by March 15. This applies to business owners, professionals, and anyone with significant non-salary income (capital gains, rental income, interest) where TDS doesn't already cover the liability.
+
+Taxvio estimates quarterly tax liability for ${areaName} businesses and professionals based on income projections updated each quarter — particularly important for ${district}'s seasonal trading businesses (agricultural commodity trading, festival-season retail) where income is uneven across the year and a flat quarterly estimate would either overpay or trigger interest.
+
+Missing instalments or underpaying triggers interest under Section 234B (1% per month for shortfall from the annual requirement) and Section 234C (1% per month for shortfall at each specific instalment) — both avoidable with proactive quarterly planning, which is the core value Taxvio provides for ${areaName} clients with variable income.`,
+    },
+    {
+      slug: "income-tax-refund",
+      title: `Income Tax Refund Status & Processing in ${areaName}`,
+      price: "₹499",
+      timeline: "Status Check Same Day",
+      icon: "💰",
+      features: [
+        "Refund status tracking on e-filing portal",
+        "Processing delay diagnosis",
+        "Defective return (139(9)) rectification",
+        "Refund re-issue request for failed credit",
+        "Interest on delayed refund (Sec. 244A) verification",
+        "Bank account validation for refund credit",
+      ],
+      seoContent: `When TDS deducted during the year exceeds actual tax liability, taxpayers in ${areaName}, ${district}, Bihar are due a refund processed after the return is reviewed under Section 143(1) — but refunds can stall for reasons ranging from an unvalidated bank account to a defective return notice under Section 139(9) that must be corrected before processing continues.
+
+Taxvio tracks refund status for ${areaName} clients on the e-filing portal, diagnoses the specific hold-up when a refund is delayed beyond the normal processing window, and files refund re-issue requests when a refund attempt fails due to bank account mismatches — a frequent issue for ${district} taxpayers who've changed banks or whose account isn't pre-validated on the portal.
+
+When refunds are delayed beyond the statutory processing timeline, taxpayers are entitled to interest under Section 244A — we verify this interest has been correctly computed and credited, and where a return has been marked defective, we prepare and file the Section 139(9) correction within the response window so the refund isn't lost to a lapsed deadline.`,
+    },
+    {
+      slug: "income-tax-notice",
+      title: `Income Tax Notice Response & Resolution in ${areaName}`,
+      price: "₹1,499",
+      timeline: "As Per Notice Timeline",
+      icon: "📨",
+      features: [
+        "Section 139(9) defective return notice",
+        "Section 156 demand notice response",
+        "Section 245 refund adjustment objection",
+        "General notice triage & interpretation",
+        "Document preparation & online response",
+        "Escalation to scrutiny defence if required",
+      ],
+      seoContent: `Beyond formal scrutiny, taxpayers in ${areaName}, ${district}, Bihar receive several other categories of income tax communication that need a timely, correct response — a Section 139(9) defective return notice flagging an incomplete or inconsistent filing, a Section 156 demand notice following processing adjustments, or a Section 245 intimation proposing to adjust a current refund against an outstanding past demand.
+
+Taxvio triages whatever notice a ${areaName} taxpayer receives — reading the specific section cited and the reason stated, rather than treating every notice as equally serious — and prepares the appropriate response: correcting and re-filing for a defective return, verifying and either paying or contesting a demand, or objecting to a Section 245 adjustment within the response window if the underlying past demand is itself disputed or incorrect.
+
+For ${district} clients, the most costly mistake is ignoring a notice because it looks routine or confusing — unanswered defective return notices result in the return being treated as invalid, and unanswered Section 245 proposals are deemed accepted after the response window closes, silently reducing a refund a taxpayer was otherwise entitled to.`,
+    },
+    {
+      slug: "tax-appeal-filing",
+      title: `Tax Appeal Filing (CIT-A / ITAT / HC) in ${areaName}`,
+      price: "₹4,999",
+      timeline: "Within Statutory Window",
+      icon: "👨‍⚖️",
+      features: [
+        "Form 35 appeal to CIT(Appeals) — within 30 days",
+        "Form 36 appeal to ITAT — within 60 days of CIT(A) order",
+        "Grounds of appeal & legal documentation drafting",
+        "Stay of demand application",
+        "Hearing representation",
+        "High Court appeal coordination for substantial legal questions",
+      ],
+      seoContent: `When an assessment order against a ${areaName}, ${district}, Bihar taxpayer remains adverse after notice response or scrutiny, the next recourse is a formal appeal — first to the Commissioner of Income Tax (Appeals) via Form 35 within 30 days of the order, and if that outcome is also unfavourable, to the Income Tax Appellate Tribunal (ITAT) via Form 36 within 60 days of the CIT(A) order.
+
+Taxvio prepares appeal documentation for ${areaName} taxpayers — drafting grounds of appeal grounded in the specific factual or legal error in the assessment, compiling supporting evidence, and where the demand creates genuine hardship, filing a stay of demand application so recovery proceedings don't begin while the appeal is pending.
+
+We represent ${district} clients at CIT(A) and ITAT hearings, and for cases turning on a substantial question of law rather than facts, coordinate further appeal to the Patna High Court — a path reserved for genuinely significant disputes given the time and cost involved, which we discuss candidly with ${areaName} clients before recommending it.`,
+    },
+    {
+      slug: "rectification-request",
+      title: `Rectification Request (Section 154) in ${areaName}`,
+      price: "₹699",
+      timeline: "Filed Same Day",
+      icon: "🔧",
+      features: [
+        "Apparent mistake identification in CPC intimation",
+        "Online rectification request filing",
+        "TDS credit mismatch correction",
+        "Arithmetic/computation error correction",
+        "Rectification status tracking",
+        "Escalation if rectification is rejected",
+      ],
+      seoContent: `When a Section 143(1) intimation received by a ${areaName}, ${district}, Bihar taxpayer contains a clear factual or computational error — a TDS credit that was correctly claimed but not matched, an arithmetic mistake in the tax computation, or a deduction disallowed due to a data-matching glitch rather than genuine ineligibility — Section 154 allows a rectification request rather than a full appeal, a faster and simpler correction route for genuinely apparent mistakes.
+
+Taxvio files rectification requests for ${areaName} taxpayers through the e-filing portal, clearly identifying the specific error being corrected and attaching supporting evidence (the actual Form 16A, the correct 26AS entry) so CPC's automated review can resolve it without manual escalation.
+
+Rectification only covers mistakes apparent from the record — not matters of interpretation or disputed facts, which require the full appeal route instead. For ${district} clients, we assess upfront whether a given error genuinely qualifies for rectification or needs an appeal, so time isn't lost filing the wrong remedy.`,
+    },
+    {
+      slug: "tax-planning",
+      title: `Tax Planning & Optimisation in ${areaName}`,
+      price: "₹1,999",
+      timeline: "Advisory — Before Year-End",
+      icon: "📈",
+      features: [
+        "80C/80D/NPS deduction planning",
+        "Old vs new regime projection",
+        "Capital gains exemption planning (54/54F/54EC)",
+        "HRA & home loan interest structuring",
+        "Business expense & depreciation planning",
+        "Multi-year tax strategy for HNIs",
+      ],
+      seoContent: `Effective tax planning for ${areaName}, ${district}, Bihar taxpayers happens before the financial year ends, not while filing the return months later — by which point most legal tax-saving opportunities have already closed. Taxvio reviews income projections for ${areaName} salaried and self-employed clients mid-year, well ahead of the March 31 deadline for most deduction-linked investments, to identify what still fits within 80C (₹1.5 lakh across PPF, ELSS, life insurance, and similar instruments), 80D (health insurance premiums), and the additional ₹50,000 NPS deduction under 80CCD(1B).
+
+For ${areaName} property owners and investors anticipating a capital gains event — selling land, a house, or securities — we plan exemption routes under Sections 54, 54F, or 54EC (capital gains bonds) in advance, since these exemptions typically require reinvestment within specific timelines that can't be retrofitted after the sale has already happened.
+
+For ${district} business owners and high-net-worth individuals, we also build a multi-year view — comparing old versus new regime projections as income grows, planning depreciation and expense timing for business income, and structuring HRA and home loan interest claims correctly from the start of the year rather than reconstructing them at filing time.`,
+    },
+    {
+      slug: "lower-tds-certificate",
+      title: `Lower TDS Certificate (Section 197) in ${areaName}`,
+      price: "₹2,999",
+      timeline: "15–30 Working Days",
+      icon: "📉",
+      features: [
+        "Form 13 application to Assessing Officer",
+        "Income & tax liability projection",
+        "Lower/nil deduction certificate for contractors",
+        "NRI rental & capital gains TDS reduction",
+        "Validity period tracking & renewal",
+        "Deductor communication support",
+      ],
+      seoContent: `For ${areaName}, ${district}, Bihar taxpayers whose actual tax liability is consistently lower than what standard TDS rates would deduct — contractors with thin margins, professionals with significant deductible expenses, or NRIs selling property where TDS would otherwise apply on the full sale value rather than the actual capital gain — Section 197 allows applying for a certificate authorising the payer to deduct tax at a lower rate, or not at all.
+
+Taxvio prepares Form 13 applications for ${areaName} clients, projecting actual annual income and tax liability with supporting computation to justify the requested lower rate to the Assessing Officer, and once issued, communicates the certificate to the relevant deductor (an employer, a contracting business, or a property buyer) so the reduced rate is actually applied rather than the certificate sitting unused.
+
+This is a particularly high-value service for ${district} businesses in low-margin contracting work and for NRIs with Bihar-origin property sales, where standard TDS rates would otherwise lock up a significant share of sale proceeds or payments until recovered later through an ITR refund — a multi-month cash-flow cost a lower TDS certificate avoids entirely.`,
+    },
+    {
+      slug: "tax-residency-certificate",
+      title: `Tax Residency Certificate (TRC) in ${areaName}`,
+      price: "₹2,999",
+      timeline: "15–30 Working Days",
+      icon: "🌍",
+      features: [
+        "Form 10FA application for resident TRC",
+        "Form 10FB certificate issuance",
+        "DTAA benefit eligibility review",
+        "Foreign TRC + Form 10F for NRI deductors",
+        "Supporting residency documentation",
+        "Coordination with foreign tax advisors where needed",
+      ],
+      seoContent: `Residents of ${areaName}, ${district}, Bihar earning income from a country India has a Double Taxation Avoidance Agreement with — consulting fees, foreign employment income, or investment returns — need a Tax Residency Certificate to claim DTAA benefits (reduced withholding, exemption from double taxation) in that foreign jurisdiction, obtained in India by filing Form 10FA and receiving the certificate via Form 10FB.
+
+Taxvio prepares TRC applications for ${areaName} residents, compiling the residency and income documentation the Indian tax authority requires to issue Form 10FB, and separately assists Bihar-origin NRIs on the reverse scenario — where an NRI needs a TRC from their country of residence plus Form 10F to give to an Indian deductor (a tenant, a property buyer, a bank) so DTAA-reduced TDS rates apply instead of the higher standard rate.
+
+For ${district} professionals and businesses with recurring cross-border income, we also track TRC validity (typically one financial year) and handle annual renewal, since an expired TRC on file with a foreign payer can mean DTAA benefits quietly lapse until a fresh certificate is submitted.`,
+    },
+    {
+      slug: "nri-tax-filing",
+      title: `NRI Tax Filing & Compliance in ${areaName}`,
+      price: "₹3,999",
+      timeline: "5–7 Working Days",
+      icon: "✈️",
+      features: [
+        "ITR filing for India-source NRI income",
+        "TDS refund claims on rental/property sale",
+        "DTAA benefit application with foreign TRC",
+        "Form 10F filing for reduced TDS",
+        "Repatriation (Form 15CA/15CB) coordination",
+        "NRE/NRO account tax treatment advisory",
+      ],
+      seoContent: `Non-Resident Indians with roots in ${areaName}, ${district}, Bihar — a significant population given Bihar's large diaspora working across the Gulf, the US, UK, and elsewhere — remain liable to Indian income tax on India-source income: rental income from property left behind, capital gains from selling that property, and interest on NRO accounts, even though their global income outside India isn't taxed in India.
+
+Taxvio files ITRs for Bihar-origin NRIs, computing tax on rental and capital gains income correctly, claiming DTAA relief where a foreign TRC and Form 10F are available to reduce TDS that would otherwise apply at standard high rates, and handling the specific case of property sales — where the buyer must deduct TDS on the full sale consideration unless a lower-TDS certificate is obtained in advance.
+
+For NRIs repatriating sale proceeds from ${district} property out of India, we coordinate the Form 15CA/15CB process required by banks before releasing foreign remittances, and advise on the differing tax treatment of NRE versus NRO account interest — NRE account interest is generally exempt, while NRO interest is taxable, a distinction that affects many ${areaName}-origin NRIs' banking choices.`,
+    },
+    {
+      slug: "capital-gains-computation",
+      title: `Capital Gains Tax Computation in ${areaName}`,
+      price: "₹1,999",
+      timeline: "2–4 Working Days",
+      icon: "🏠",
+      features: [
+        "STCG & LTCG computation — property, shares, mutual funds",
+        "Current capital gains rate & indexation rules applied",
+        "Exemption planning (Sec. 54/54F/54EC)",
+        "Agricultural land conversion gains review",
+        "Sale deed & cost-of-acquisition documentation",
+        "ITR schedule CG accurate population",
+      ],
+      seoContent: `Capital gains computation for ${areaName}, ${district}, Bihar residents selling property, land, shares, or mutual fund units requires applying the current capital gains rules correctly — long-term capital gains on listed equity and equity mutual funds above ₹1.25 lakh in a financial year are taxed at 12.5%, short-term gains on the same at 20%, while gains on property and other assets follow their own holding-period and rate rules, with indexation benefit available only in specific circumstances following the 2024 revision to the capital gains framework — getting this wrong is common and can mean paying substantially more tax than legally required.
+
+Taxvio computes capital gains for ${areaName} clients on property sales (a frequent transaction in ${district} given ongoing land value appreciation near Bihar's expanding commercial corridors), share and mutual fund redemptions, and the specific case of agricultural land — where gains may be fully exempt depending on the land's location relative to municipal limits, a rule Bihar sellers in peri-urban areas near growing towns frequently need clarified.
+
+We plan exemption claims under Sections 54 (reinvestment in residential property), 54F (reinvestment of other asset sale proceeds into residential property), and 54EC (capital gains bonds) in advance of the sale where possible, since these exemptions require reinvestment within fixed timelines, and prepare complete supporting documentation — sale deed, cost of acquisition and improvement records, valuation reports where needed — for accurate Schedule CG reporting in the ITR.`,
+    },
+    {
+      slug: "cryptocurrency-tax",
+      title: `Cryptocurrency & Virtual Digital Asset Tax Filing in ${areaName}`,
+      price: "₹1,999",
+      timeline: "2–4 Working Days",
+      icon: "₿",
+      features: [
+        "Flat 30% tax computation on VDA gains (Sec. 115BBH)",
+        "1% TDS reconciliation (Sec. 194S)",
+        "No loss set-off/carry-forward advisory",
+        "Exchange transaction statement compilation",
+        "Schedule VDA accurate ITR reporting",
+        "NFT and multi-exchange portfolio handling",
+      ],
+      seoContent: `Cryptocurrency and other virtual digital assets are taxed under a distinct, stricter regime in India that catches many ${areaName}, ${district}, Bihar crypto investors off guard — Section 115BBH imposes a flat 30% tax on gains from VDA transfers regardless of holding period or the investor's income slab, with no deduction permitted for any expense other than the cost of acquisition, and critically, no provision to set off VDA losses against gains from other VDAs or carry them forward to future years.
+
+Taxvio compiles transaction statements across exchanges for ${areaName} crypto traders and investors, computes gains transaction-by-transaction under the no-set-off rule (losses on one coin cannot reduce tax on gains from another), reconciles the 1% TDS that exchanges deduct under Section 194S against what's reflected in Form 26AS, and accurately populates Schedule VDA in the ITR — a schedule many ${district} taxpayers either skip entirely or complete incorrectly when self-filing.
+
+Given the Income Tax Department's increasing data access to exchange records, under-reporting VDA transactions is a growing source of notices for ${areaName} investors — we recommend complete and accurate disclosure even for small transactions, since the 30% flat rate applies regardless of amount and the compliance risk of omission generally outweighs the tax saved.`,
+    },
+  ];
+
+  return [
+    ...original,
+    ...additions.map((svc, i) => ({ ...svc, ...PALETTE[i % PALETTE.length] })),
+  ];
 }
 
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 export default async function BiharIncomeTaxAreaPage(
   { params }: { params: Promise<{ city: string }> }
 ) {
-  const { city }  = await params;
-  const areaData  = findArea(city);
-  const areaName  = areaData?.name     ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-  const district  = areaData?.district ?? areaName;
-  const region    = areaData?.region   ?? "Bihar";
-
-  const PHONE = "918937980366";
-  const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
-    `Hello Taxvio, I need income tax services in ${areaName}, ${district}, Bihar.`
-  )}`;
+  const { city } = await params;
+  const areaData = findArea(city);
+  const areaName = areaData?.name ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const district = areaData?.district ?? areaName;
+  const region = areaData?.region ?? "Bihar";
 
   const services = getServiceContent(areaName, district, region);
 
-  /* ── Nearby areas ── */
   const nearbyAreas = BIHAR_AREAS
     .filter((c) => c.district === district && slugifyArea(c.name) !== city)
     .slice(0, 6);
@@ -434,15 +785,15 @@ export default async function BiharIncomeTaxAreaPage(
     ? BIHAR_AREAS.filter((c) => c.region === region && slugifyArea(c.name) !== city).slice(0, 6)
     : nearbyAreas;
 
-  /* ── JSON-LD ── */
+  /* ── JSON-LD (telephone/email here are structured business data for search — not a UI call/chat feature) ── */
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: "Taxvio",
     url: "https://www.taxvio.in",
-    telephone: `+${PHONE}`,
-    email: "support@taxvio.in",
-    description: `Taxvio provides ITR filing, TDS/TCS returns, income tax audit, scrutiny reply, 12A/80G registration, PAN/TAN, and Form 15G/15H services in ${areaName}, ${district}, Bihar.`,
+    telephone: "+918937980366",
+    email: "info@taxvio.in",
+    description: `Taxvio provides ITR filing, TDS/TCS returns, income tax audit, scrutiny reply, 12A/80G registration, PAN/TAN, capital gains, crypto tax, NRI filing and more in ${areaName}, ${district}, Bihar.`,
     areaServed: [
       {
         "@type": "Place",
@@ -454,17 +805,8 @@ export default async function BiharIncomeTaxAreaPage(
         },
       },
     ],
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "3100",
-    },
+    address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
+    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "3100" },
     priceRange: "₹199 - ₹4,999",
     openingHours: "Mo-Sa 09:00-19:00",
   };
@@ -473,9 +815,9 @@ export default async function BiharIncomeTaxAreaPage(
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home",             item: "https://www.taxvio.in" },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.taxvio.in" },
       { "@type": "ListItem", position: 2, name: "Income Tax Bihar", item: "https://www.taxvio.in/state/bihar/income-tax-services" },
-      { "@type": "ListItem", position: 3, name: district,           item: `https://www.taxvio.in/state/bihar/income-tax-services#${district.toLowerCase()}` },
+      { "@type": "ListItem", position: 3, name: district, item: `https://www.taxvio.in/state/bihar/income-tax-services#${district.toLowerCase()}` },
       { "@type": "ListItem", position: 4, name: `${areaName} Income Tax`, item: `https://www.taxvio.in/state/bihar/income-tax-services/${city}` },
     ],
   };
@@ -500,40 +842,27 @@ export default async function BiharIncomeTaxAreaPage(
       {
         "@type": "Question",
         name: `What is the ITR filing due date for individuals in ${areaName}, Bihar?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `For salaried individuals and non-audit cases in ${areaName}: July 31. For businesses and professionals requiring tax audit under Section 44AB: October 31. Companies must file by November 30. Belated returns can be filed until December 31 with a late fee of ₹5,000 (₹1,000 if income is below ₹5 lakh).`,
-        },
+        acceptedAnswer: { "@type": "Answer", text: `For salaried individuals and non-audit cases in ${areaName}: July 31. For businesses and professionals requiring tax audit under Section 44AB: October 31. Companies must file by November 30. Belated returns can be filed until December 31 with a late fee of ₹5,000 (₹1,000 if income is below ₹5 lakh).` },
       },
       {
         "@type": "Question",
         name: `Is ITR filing mandatory in ${areaName} if income is below ₹5 lakh?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Filing is legally mandatory only when gross total income exceeds the basic exemption limit (₹2.5L/₹3L/₹5L depending on age and regime). However, ${areaName} residents below the threshold still benefit from filing to claim TDS refunds, obtain income proof for loans, and maintain a clean compliance record.`,
-        },
+        acceptedAnswer: { "@type": "Answer", text: `Filing is legally mandatory only when gross total income exceeds the basic exemption limit (₹2.5L/₹3L/₹5L depending on age and regime). However, ${areaName} residents below the threshold still benefit from filing to claim TDS refunds, obtain income proof for loans, and maintain a clean compliance record.` },
       },
       {
         "@type": "Question",
         name: `Which ITR form should I use in ${areaName}, Bihar?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `ITR-1 (Sahaj): salary + single house property + other income ≤₹50L. ITR-2: salary + capital gains or foreign income. ITR-3: business/profession with regular books. ITR-4 (Sugam): presumptive taxation 44AD/44ADA. ITR-5: firms and LLPs. ITR-6: companies. ITR-7: trusts and NGOs. Taxvio's CA team determines the correct form for every ${areaName} taxpayer.`,
-        },
+        acceptedAnswer: { "@type": "Answer", text: `ITR-1 (Sahaj): salary + single house property + other income ≤₹50L. ITR-2: salary + capital gains or foreign income. ITR-3: business/profession with regular books. ITR-4 (Sugam): presumptive taxation 44AD/44ADA. ITR-5: firms and LLPs. ITR-6: companies. ITR-7: trusts and NGOs. Taxvio's CA team determines the correct form for every ${areaName} taxpayer.` },
       },
     ],
   };
 
   return (
     <>
-      <Script id="lb-schema"  type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
-      <Script id="bc-schema"  type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Script id="sl-schema"  type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceListSchema) }} />
-      <Script id="faq-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <Script id="lb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+      <Script id="bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="sl-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceListSchema) }} />
+      <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <main className="bg-[#f8fbfd] text-gray-800 font-sans">
 
@@ -548,18 +877,16 @@ export default async function BiharIncomeTaxAreaPage(
             style={{ background: "radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 65%)" }} />
 
           <div className="relative max-w-6xl mx-auto px-6 pt-16 pb-10 md:pt-24 md:pb-14">
-            {/* Breadcrumb */}
             <nav className="mb-7" aria-label="Breadcrumb">
               <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/45">
                 {[
-                  { href: "/",                                       label: "Home" },
-                  { href: "/state/bihar/income-tax-services",        label: "Income Tax — Bihar" },
-                  { href: null,                                       label: areaName },
+                  { href: "/", label: "Home" },
+                  { href: "/state/bihar/income-tax-services", label: "Income Tax — Bihar" },
+                  { href: null, label: areaName },
                 ].map(({ href, label }, i, arr) => (
                   <li key={label} className="flex items-center gap-1.5">
-                    {href
-                      ? <Link href={href} className="hover:text-white/80 transition">{label}</Link>
-                      : <span className="text-white/80 font-semibold">{label}</span>}
+                    {href ? <Link href={href} className="hover:text-white/80 transition">{label}</Link>
+                          : <span className="text-white/80 font-semibold">{label}</span>}
                     {i < arr.length - 1 && <span className="text-white/25">›</span>}
                   </li>
                 ))}
@@ -567,8 +894,6 @@ export default async function BiharIncomeTaxAreaPage(
             </nav>
 
             <div className="grid md:grid-cols-[1fr_300px] gap-10 items-start">
-
-              {/* Left */}
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-5 backdrop-blur-sm"
                   style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)" }}>
@@ -585,12 +910,10 @@ export default async function BiharIncomeTaxAreaPage(
 
                 <p className="mt-5 text-white/75 text-base md:text-lg leading-relaxed max-w-2xl">
                   Expert <strong className="text-white">ITR filing</strong> for salaried, proprietors,
-                  firms &amp; companies;{" "}
-                  <strong className="text-white">TDS / TCS quarterly returns</strong>; income tax audit;
-                  scrutiny reply; 12A/80G; PAN/TAN; and Form 15G/15H in{" "}
-                  <strong className="text-white">{areaName}, {district}, Bihar</strong> — 100% online
-                  by CA professionals. Starting{" "}
-                  <strong className="text-sky-300">₹699</strong>.
+                  firms &amp; companies; <strong className="text-white">TDS / TCS quarterly returns</strong>;
+                  income tax audit; scrutiny reply; 12A/80G; PAN/TAN; and {services.length - 6} other services
+                  in <strong className="text-white">{areaName}, {district}, Bihar</strong> — 100% online by
+                  CA professionals. Starting <strong className="text-sky-300">₹199</strong>.
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-2">
@@ -609,27 +932,18 @@ export default async function BiharIncomeTaxAreaPage(
                   ))}
                 </div>
 
-                <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25d366] hover:bg-[#1ebe5d] px-7 py-4 text-white text-sm font-bold shadow-xl active:scale-[0.97] transition-all">
-                    <MessageCircle size={16} className="shrink-0" /> WhatsApp for ITR Help
-                  </a>
+                <div className="mt-8">
                   <Link href="/contact"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-[#00416a] text-sm font-bold shadow-xl hover:bg-gray-50 active:scale-[0.97] transition-all">
                     Free Consultation <ArrowRight size={15} className="shrink-0" />
                   </Link>
-                  <a href={`tel:${PHONE}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/5 px-7 py-4 text-white text-sm font-bold hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all">
-                    <Phone size={15} /> Call Now
-                  </a>
                 </div>
               </div>
 
               {/* Right — services panel */}
               <div className="rounded-2xl overflow-hidden shadow-2xl border"
                 style={{ background: "rgba(255,255,255,0.07)", borderColor: "rgba(255,255,255,0.14)" }}>
-                <div className="px-5 py-4 border-b flex items-center justify-between"
-                  style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+                <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.10)" }}>
                   <div>
                     <p className="font-bold text-white text-sm">Income Tax Services — {areaName}</p>
                     <p className="text-[11px] text-white/50 mt-0.5">{district} · {services.length} services</p>
@@ -646,15 +960,7 @@ export default async function BiharIncomeTaxAreaPage(
                       style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
                       <span className="flex items-center gap-2 text-[11px] font-semibold text-white/75">
                         <span>{svc.icon}</span>
-                        <span className="truncate">
-                          {svc.title
-                            .replace(` in ${areaName}`, "")
-                            .replace(` for Salaried Individuals`, " – Salaried")
-                            .replace(` for Trusts & NGOs`, "")
-                            .replace(` for Donor Tax Benefits`, "")
-                            .replace(` (24Q/26Q/27Q)`, "")
-                            .replace(` (Form 27EQ)`, "")}
-                        </span>
+                        <span className="truncate">{svc.title.replace(` in ${areaName}`, "")}</span>
                       </span>
                       <span className="text-[10px] font-bold text-sky-300 shrink-0 ml-2">{svc.price}</span>
                     </a>
@@ -664,7 +970,7 @@ export default async function BiharIncomeTaxAreaPage(
                   style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
                   <div>
                     <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wide">Starting Price</p>
-                    <p className="text-sky-300 text-2xl font-extrabold leading-tight">₹699</p>
+                    <p className="text-sky-300 text-2xl font-extrabold leading-tight">₹199</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wide">Same-day</p>
@@ -679,10 +985,10 @@ export default async function BiharIncomeTaxAreaPage(
           <div className="border-t border-white/10">
             <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
               {[
-                { icon: BadgeCheck,  label: "CA-Certified Team"        },
-                { icon: TrendingUp,  label: "3,800+ Bihar Businesses"  },
-                { icon: Users,       label: "200+ Bihar Areas"         },
-                { icon: IndianRupee, label: "Transparent Pricing"      },
+                { icon: BadgeCheck, label: "CA-Certified Team" },
+                { icon: TrendingUp, label: "3,800+ Bihar Businesses" },
+                { icon: Users,      label: "200+ Bihar Areas" },
+                { icon: IndianRupee, label: "Transparent Pricing" },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-1.5 text-white/45 text-xs">
                   <Icon size={11} className="text-sky-400 shrink-0" /> {label}
@@ -700,13 +1006,12 @@ export default async function BiharIncomeTaxAreaPage(
         <section className="py-8 bg-white border-b border-gray-100">
           <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { val: "1–2 Days",  label: "Salaried ITR",        icon: Zap           },
-              { val: "4.9★",      label: "Average Rating",      icon: Star          },
-              { val: "₹699",      label: "Starting Price",      icon: IndianRupee   },
-              { val: "13",        label: "Services Available",  icon: ClipboardList },
+              { val: "1–2 Days", label: "Salaried ITR",       icon: Zap },
+              { val: "4.9★",     label: "Average Rating",     icon: Star },
+              { val: "₹199",     label: "Starting Price",     icon: IndianRupee },
+              { val: String(services.length), label: "Services Available", icon: ClipboardList },
             ].map(({ val, label, icon: Icon }) => (
-              <div key={label}
-                className="flex flex-col items-center gap-1.5 p-4 rounded-2xl bg-[#f2f8fc] border border-[#deeef7] text-center hover:shadow-sm transition-all">
+              <div key={label} className="flex flex-col items-center gap-1.5 p-4 rounded-2xl bg-[#f2f8fc] border border-[#deeef7] text-center hover:shadow-sm transition-all">
                 <div className="w-8 h-8 rounded-lg bg-[#00416a]/10 flex items-center justify-center">
                   <Icon size={15} className="text-[#00416a]" />
                 </div>
@@ -724,7 +1029,6 @@ export default async function BiharIncomeTaxAreaPage(
               <article key={svc.slug} id={svc.slug}
                 className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
 
-                {/* Header */}
                 <div className={`bg-gradient-to-r ${svc.gradient} p-6 md:p-8`}>
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex items-center gap-4">
@@ -735,9 +1039,7 @@ export default async function BiharIncomeTaxAreaPage(
                         <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-1">
                           Income Tax Service #{String(idx + 1).padStart(2, "0")}
                         </p>
-                        <h2 className="text-lg md:text-2xl font-extrabold text-white leading-tight">
-                          {svc.title}
-                        </h2>
+                        <h2 className="text-lg md:text-2xl font-extrabold text-white leading-tight">{svc.title}</h2>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-3 shrink-0">
@@ -753,25 +1055,16 @@ export default async function BiharIncomeTaxAreaPage(
                   </div>
                 </div>
 
-                {/* Body */}
                 <div className="p-6 md:p-8">
                   <div className="grid md:grid-cols-[1fr_280px] gap-8 items-start">
-
-                    {/* SEO / AI content */}
                     <div>
                       <h3 className="text-xs font-bold text-[#00416a] uppercase tracking-widest mb-4 flex items-center gap-2">
                         <BookOpen size={13} /> About This Service in {areaName}
                       </h3>
                       <div className="space-y-4 text-gray-600 text-sm leading-relaxed">
-                        {svc.seoContent.split("\n\n").map((para, i) => (
-                          <p key={i}>{para}</p>
-                        ))}
+                        {svc.seoContent.split("\n\n").map((para, i) => <p key={i}>{para}</p>)}
                       </div>
                       <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-100">
-                        <a href={WA} target="_blank" rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-[#25d366] hover:bg-[#1ebe5d] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-[0.97] shadow-md shadow-green-500/20">
-                          <MessageCircle size={14} /> WhatsApp Us
-                        </a>
                         <Link href="/contact"
                           className="inline-flex items-center gap-2 bg-[#00416a] hover:bg-[#002b45] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-[0.97]">
                           Get Quote <ArrowRight size={13} />
@@ -779,7 +1072,6 @@ export default async function BiharIncomeTaxAreaPage(
                       </div>
                     </div>
 
-                    {/* Features sidebar */}
                     <div className={`${svc.accentBg} rounded-2xl p-5 border ${svc.accentBorder}`}>
                       <p className="text-[11px] font-bold text-[#00416a] uppercase tracking-widest mb-4 flex items-center gap-2">
                         <CheckCircle size={13} /> What&apos;s Included
@@ -800,10 +1092,10 @@ export default async function BiharIncomeTaxAreaPage(
                             <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Service Fee</p>
                             <p className={`text-2xl font-extrabold ${svc.accentText}`}>{svc.price}</p>
                           </div>
-                          <a href={WA} target="_blank" rel="noopener noreferrer"
+                          <Link href="/contact"
                             className="inline-flex items-center gap-1.5 bg-[#00416a] text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-[#002b45] transition-all">
                             Start Now <ArrowRight size={11} />
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -827,45 +1119,14 @@ export default async function BiharIncomeTaxAreaPage(
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
-                {
-                  icon: Users,
-                  title: "CA-Certified Tax Professionals",
-                  desc: `Every ITR and compliance service for ${areaName} taxpayers is delivered by practising Chartered Accountants — real CA sign-off on every return, not automated software.`,
-                  color: "bg-blue-100 text-blue-700",
-                },
-                {
-                  icon: Zap,
-                  title: "100% Online — No Office Visit",
-                  desc: `Share Form 16, bank statements, and investment proofs on WhatsApp from ${areaName}. We prepare, review, and file your ITR with Aadhaar OTP e-verification — no office visit ever.`,
-                  color: "bg-emerald-100 text-emerald-700",
-                },
-                {
-                  icon: Calculator,
-                  title: "Old vs New Regime Optimisation",
-                  desc: `We compute your tax liability under both regimes for every ${areaName} client before filing — ensuring you always select the lower-tax option.`,
-                  color: "bg-violet-100 text-violet-700",
-                },
-                {
-                  icon: AlertCircle,
-                  title: "Proactive Notice Management",
-                  desc: `We monitor your income tax dashboard for 143(1) intimations and AIS/TIS discrepancies — alerting ${areaName} clients before a mismatch becomes a demand notice.`,
-                  color: "bg-orange-100 text-orange-700",
-                },
-                {
-                  icon: CheckCircle,
-                  title: "Transparent Pricing from ₹699",
-                  desc: `No consultation charges, no surprise fees. Clear all-inclusive pricing for every income tax service in ${areaName} — quoted before we file.`,
-                  color: "bg-teal-100 text-teal-700",
-                },
-                {
-                  icon: Receipt,
-                  title: `Bihar Ward & AO Familiarity`,
-                  desc: `Deep familiarity with Bihar's income tax circles and ${district} jurisdiction processing patterns — built from years of filing across the Patna CCIT region.`,
-                  color: "bg-sky-100 text-sky-700",
-                },
+                { icon: Users, title: "CA-Certified Tax Professionals", desc: `Every ITR and compliance service for ${areaName} taxpayers is delivered by practising Chartered Accountants — real CA sign-off on every return, not automated software.`, color: "bg-blue-100 text-blue-700" },
+                { icon: Zap, title: "100% Online — No Office Visit", desc: `Share Form 16, bank statements, and investment proofs with us from ${areaName}. We prepare, review, and file your ITR with Aadhaar OTP e-verification — no office visit ever.`, color: "bg-emerald-100 text-emerald-700" },
+                { icon: Calculator, title: "Old vs New Regime Optimisation", desc: `We compute your tax liability under both regimes for every ${areaName} client before filing — ensuring you always select the lower-tax option.`, color: "bg-violet-100 text-violet-700" },
+                { icon: AlertCircle, title: "Proactive Notice Management", desc: `We monitor your income tax dashboard for 143(1) intimations and AIS/TIS discrepancies — alerting ${areaName} clients before a mismatch becomes a demand notice.`, color: "bg-orange-100 text-orange-700" },
+                { icon: CheckCircle, title: "Transparent Pricing from ₹199", desc: `No consultation charges, no surprise fees. Clear all-inclusive pricing for every income tax service in ${areaName} — quoted before we file.`, color: "bg-teal-100 text-teal-700" },
+                { icon: Receipt, title: "Bihar Ward & AO Familiarity", desc: `Deep familiarity with Bihar's income tax circles and ${district} jurisdiction processing patterns — built from years of filing across the Patna CCIT region.`, color: "bg-sky-100 text-sky-700" },
               ].map(({ icon: Icon, title, desc, color }) => (
-                <div key={title}
-                  className="group flex items-start gap-4 p-5 bg-[#f8fbfd] border border-[#deeef7] rounded-2xl hover:border-[#00416a]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                <div key={title} className="group flex items-start gap-4 p-5 bg-[#f8fbfd] border border-[#deeef7] rounded-2xl hover:border-[#00416a]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                   <div className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
                     <Icon size={17} />
                   </div>
@@ -892,13 +1153,12 @@ export default async function BiharIncomeTaxAreaPage(
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { step: "01", title: "Share Documents",       desc: "Send Form 16, bank statement, investment proofs & PAN/Aadhaar on WhatsApp" },
+                { step: "01", title: "Share Documents", desc: "Submit Form 16, bank statement, investment proofs & PAN/Aadhaar through our enquiry form" },
                 { step: "02", title: "CA Review & Computation", desc: "Our CA prepares tax computation, compares regimes, and identifies all eligible deductions" },
-                { step: "03", title: "Your Approval",          desc: "We share the computed ITR summary for your review and approval before filing" },
-                { step: "04", title: "E-Filed & Verified",     desc: "ITR is e-filed and e-verified via Aadhaar OTP. You receive ITR-V acknowledgement instantly" },
+                { step: "03", title: "Your Approval", desc: "We share the computed ITR summary for your review and approval before filing" },
+                { step: "04", title: "E-Filed & Verified", desc: "ITR is e-filed and e-verified via Aadhaar OTP. You receive ITR-V acknowledgement instantly" },
               ].map(({ step, title, desc }) => (
-                <div key={step}
-                  className="relative p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                <div key={step} className="relative p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
                   <div className="w-10 h-10 rounded-xl bg-[#00416a] text-white text-sm font-extrabold flex items-center justify-center mb-3">
                     {step}
                   </div>
@@ -917,14 +1177,10 @@ export default async function BiharIncomeTaxAreaPage(
         <section className="py-16 bg-white border-b border-gray-100">
           <div className="max-w-3xl mx-auto px-6">
             <div className="text-center mb-8">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-                FAQ
-              </span>
-              <h2 className="text-2xl font-extrabold text-[#00416a] mt-3">
-                Income Tax FAQs for {areaName}, Bihar Taxpayers
-              </h2>
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">FAQ</span>
+              <h2 className="text-2xl font-extrabold text-[#00416a] mt-3">Income Tax FAQs for {areaName}, Bihar Taxpayers</h2>
             </div>
-            <div className="space-y-3" itemScope itemType="https://schema.org/FAQPage">
+            <div className="space-y-3">
               {[
                 {
                   q: `What is the ITR filing due date in ${areaName}, Bihar?`,
@@ -939,18 +1195,14 @@ export default async function BiharIncomeTaxAreaPage(
                   a: `ITR-1 (Sahaj): salary + single house property + other income ≤₹50L. ITR-2: salary + capital gains or foreign income. ITR-3: business/profession with regular books. ITR-4 (Sugam): presumptive 44AD/44ADA. ITR-5: firms and LLPs. ITR-6: companies. ITR-7: trusts and NGOs. Taxvio's CA team advises the correct form for every ${areaName} taxpayer based on income sources.`,
                 },
               ].map((f) => (
-                <div key={f.q}
-                  className="border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm"
-                  itemScope itemType="https://schema.org/Question">
+                <div key={f.q} className="border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm">
                   <div className="px-5 py-4 flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-[#00416a]/10 flex items-center justify-center shrink-0 mt-0.5">
                       <FileText size={11} className="text-[#00416a]" />
                     </span>
                     <div>
-                      <p className="text-sm font-semibold text-gray-800" itemProp="name">{f.q}</p>
-                      <div itemScope itemType="https://schema.org/Answer">
-                        <p className="text-xs text-gray-600 mt-2 leading-relaxed" itemProp="text">{f.a}</p>
-                      </div>
+                      <p className="text-sm font-semibold text-gray-800">{f.q}</p>
+                      <p className="text-xs text-gray-600 mt-2 leading-relaxed">{f.a}</p>
                     </div>
                   </div>
                 </div>
@@ -966,12 +1218,8 @@ export default async function BiharIncomeTaxAreaPage(
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-7 rounded-full bg-gradient-to-b from-[#00416a] to-sky-400" />
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-[#00416a]">
-                    {district} &amp; {region}
-                  </p>
-                  <h2 className="text-lg font-extrabold text-gray-800">
-                    Income Tax Services in Nearby Bihar Areas
-                  </h2>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-[#00416a]">{district} &amp; {region}</p>
+                  <h2 className="text-lg font-extrabold text-gray-800">Income Tax Services in Nearby Bihar Areas</h2>
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
@@ -999,8 +1247,7 @@ export default async function BiharIncomeTaxAreaPage(
             <div className="relative bg-[#00416a] rounded-3xl overflow-hidden p-10 md:p-14 text-white text-center">
               <div className="absolute inset-0 bg-gradient-to-br from-[#00416a] to-[#001e36]" />
               <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-sky-400/10 blur-[80px] pointer-events-none" />
-              <div className="absolute inset-0 opacity-[0.04]"
-                style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "24px 24px" }} />
+              <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "24px 24px" }} />
               <div className="relative">
                 <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full text-xs font-semibold mb-5">
                   <MapPin size={11} className="text-sky-300" />
@@ -1010,23 +1257,15 @@ export default async function BiharIncomeTaxAreaPage(
                   File Your ITR in {areaName} — Fast &amp; Accurate
                 </h2>
                 <p className="mt-4 text-white/70 max-w-xl mx-auto text-sm leading-relaxed">
-                  ITR filing, TDS returns, income tax audit, scrutiny reply, 12A/80G, PAN/TAN, and
-                  Form 15G/15H — all delivered online for taxpayers in {areaName}, {district}, Bihar.
-                  Starting ₹699. CA-assisted, same-day WhatsApp response.
+                  ITR filing, TDS returns, income tax audit, scrutiny reply, 12A/80G, PAN/TAN, capital gains,
+                  crypto tax, NRI filing and more — all delivered online for taxpayers in {areaName}, {district}, Bihar.
+                  Starting ₹199. CA-assisted, same-day response.
                 </p>
-                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25d366] hover:bg-[#1ebe5d] px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all">
-                    <MessageCircle size={16} /> WhatsApp Us
-                  </a>
+                <div className="mt-8 flex items-center justify-center">
                   <Link href="/contact"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all">
                     Free Consultation <ArrowRight size={15} />
                   </Link>
-                  <a href={`tel:${PHONE}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/5 px-7 py-3.5 text-white text-sm font-bold hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all">
-                    <Phone size={15} /> Call Now
-                  </a>
                 </div>
               </div>
             </div>

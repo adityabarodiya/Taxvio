@@ -9,6 +9,7 @@ import {
   Phone, MessageCircle, Star, AlertCircle, TrendingUp, UserPlus, UserMinus,
 } from "lucide-react";
 
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; 
 /* ─── Constants ────────────────────────────────────────────────────────────── */
 const PHONE = "918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
@@ -356,7 +357,7 @@ export default function DirectorFilingClient() {
 
   return (
     <main className="bg-white text-gray-800">
-
+      <InquiryFormButton />
       {/* ══════ DEADLINE BANNER ══════ */}
       <div className="bg-amber-500 text-white text-xs font-semibold py-2.5 px-4 text-center leading-relaxed">
         ⚡ Director change? File <strong>DIR-12 within 30 days</strong> of board resolution or resignation | Penalty: <strong>₹100/day — no upper cap</strong> | Resigning directors: file <strong>DIR-11 independently</strong> to protect yourself
@@ -427,10 +428,7 @@ export default function DirectorFilingClient() {
 
               {/* CTAs */}
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a href={WA} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                  <MessageCircle size={16} /> File DIR-12 Now — ₹2,999
-                </a>
+              
                 <Link href="/contact"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
                   Free Consultation <ArrowRight size={15} />
@@ -484,10 +482,7 @@ export default function DirectorFilingClient() {
                     <span className="text-white/40 text-xs">(634+)</span>
                   </div>
                 </div>
-                <a href={WA} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full rounded-xl bg-green-500 hover:bg-green-600 py-3 text-white text-sm font-bold transition-all active:scale-[0.97]">
-                  <MessageCircle size={14} /> Get Started on WhatsApp
-                </a>
+                
               </div>
             </div>
           </div>
@@ -565,10 +560,7 @@ export default function DirectorFilingClient() {
                   </ul>
                 </div>
 
-                <a href={WA} target="_blank" rel="noopener noreferrer"
-                  className="mt-auto flex items-center justify-center gap-2 w-full rounded-xl bg-[#00416a] hover:bg-[#003257] py-3 text-white text-sm font-bold transition-all active:scale-[0.97]">
-                  <MessageCircle size={14} /> File {type} — {price}
-                </a>
+              
               </div>
             ))}
           </div>
@@ -981,10 +973,7 @@ export default function DirectorFilingClient() {
                 Every day of delay = <strong className="text-white">₹100 penalty</strong> — no upper cap.
               </p>
             </div>
-            <a href={WA} target="_blank" rel="noopener noreferrer"
-              className="shrink-0 inline-flex items-center gap-2 bg-white text-[#00416a] text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-gray-100 transition-all active:scale-[0.97]">
-              <MessageCircle size={13} /> File DIR-12 Now
-            </a>
+           
           </div>
 
           <div className="text-center">
@@ -1005,18 +994,12 @@ export default function DirectorFilingClient() {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-green-500 hover:bg-green-600 px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                <MessageCircle size={16} /> File DIR-12 — ₹2,999
-              </a>
+             
               <Link href="/contact"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
                 Free Consultation <ArrowRight size={15} />
               </Link>
-              <a href={`tel:${PHONE}`}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl border-2 border-white/40 bg-transparent px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 hover:border-white/70 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                <Phone size={15} /> Call Now
-              </a>
+              
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-5 text-xs text-white/40">

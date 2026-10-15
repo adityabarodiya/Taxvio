@@ -5,6 +5,7 @@ import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useState } from "react";
 
+import InquiryForm from "@/components/InquiryFormButton";
 /* ── JSON-LD SCHEMA ── */
 const jsonLd = {
   "@context": "https://schema.org",
@@ -79,7 +80,7 @@ export default function CryptocurrencyTaxClient() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-
+      <InquiryForm />
       <main className="bg-white text-gray-800 overflow-x-hidden">
         {/* ── URGENCY BANNER ── */}
         <div
@@ -147,16 +148,9 @@ export default function CryptocurrencyTaxClient() {
                     href="/contact"
                     className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center text-base"
                   >
-                    File Crypto Tax — ₹3,999 →
+                    File Crypto Tax — ₹2,999 →
                   </Link>
-                  <a
-                    href="https://wa.me/918937980366?text=Hi%2C%20I%20need%20help%20with%20Cryptocurrency%20Tax%20Filing"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center text-base flex items-center justify-center gap-2"
-                  >
-                    <span className="text-xl">💬</span> WhatsApp Support
-                  </a>
+                  
                 </div>
                 <div className="mt-8 flex flex-wrap gap-4 text-sm text-white/70">
                   {[
@@ -187,7 +181,7 @@ export default function CryptocurrencyTaxClient() {
                     ["❌", "NO loss set-off or carry forward allowed"],
                     ["📊", "Schedule VDA mandatory in ITR-2"],
                     ["🎨", "NFTs, staking rewards, airdrops all taxable"],
-                    ["🚀", "Filing fee: ₹3,999 onwards"],
+                    ["🚀", "Filing fee: ₹2,999 onwards"],
                   ].map(([icon, text]) => (
                     <li key={text as string} className="flex items-start gap-3">
                       <span className="text-base">{icon}</span>
@@ -207,7 +201,7 @@ export default function CryptocurrencyTaxClient() {
               { number: "500+", label: "Crypto ITRs Filed", icon: "✅" },
               { number: "30%", label: "Flat Tax Rate", icon: "💰" },
               { number: "1%", label: "TDS on Transfers", icon: "🔻" },
-              { number: "₹3,999", label: "Starting Fee", icon: "₿" },
+              { number: "₹2,999", label: "Starting Fee", icon: "₿" },
             ].map((s) => (
               <div
                 key={s.label}
@@ -930,7 +924,7 @@ export default function CryptocurrencyTaxClient() {
                   icon: "₿",
                   title: "Basic Crypto Tax Filing (Buy-Sell Only)",
                   desc: "For simple crypto investors with buy-sell transactions on 1-2 exchanges. Includes transaction reconciliation, FIFO computation, 1% TDS credit, and ITR-2 filing with Schedule VDA.",
-                  price: "₹3,999",
+                  price: "₹2,999",
                 },
                 {
                   icon: "🔄",
@@ -1007,7 +1001,7 @@ export default function CryptocurrencyTaxClient() {
                 {[
                   {
                     package: "Basic Trader",
-                    price: "₹3,999",
+                    price: "₹2,999",
                     includes: [
                       "Buy-sell transactions only",
                       "1-2 exchanges",
@@ -1209,7 +1203,7 @@ export default function CryptocurrencyTaxClient() {
                   <p className="text-lg text-gray-200 leading-relaxed">
                     Expert tax filing for Bitcoin, Ethereum, NFTs, DeFi, and all
                     crypto transactions. 30% tax computation, 1% TDS reconciliation,
-                    Schedule VDA preparation, and ITR-2 filing. Starting ₹3,999.
+                    Schedule VDA preparation, and ITR-2 filing. Starting ₹2,999.
                     Avoid AIS mismatch notices and penalties.
                   </p>
                 </div>
@@ -1218,16 +1212,9 @@ export default function CryptocurrencyTaxClient() {
                     href="/contact"
                     className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center"
                   >
-                    File Now — ₹3,999
+                    File Now — ₹2,999
                   </Link>
-                  <a
-                    href="https://wa.me/918937980366?text=Hi%2C%20I%20need%20help%20with%20Cryptocurrency%20Tax%20Filing"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center flex items-center justify-center gap-2"
-                  >
-                    <span className="text-xl">💬</span> WhatsApp Us
-                  </a>
+                 
                 </div>
               </div>
             </div>

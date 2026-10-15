@@ -4,6 +4,7 @@ import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useState } from "react";
 
+import InquiryForm from "@/components/InquiryFormButton";
 /* ── JSON-LD ── */
 const jsonLd = {
   "@context": "https://schema.org",
@@ -36,7 +37,7 @@ export default function IncomeTaxScrutinyClient() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-
+      <InquiryForm />
       <main className="bg-white text-gray-800 overflow-x-hidden">
 
         {/* ── URGENCY BANNER ── */}
@@ -560,9 +561,7 @@ export default function IncomeTaxScrutinyClient() {
                   <Link href="/contact" className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center">
                     Get Immediate Help Now
                   </Link>
-                  <Link href="tel:+918937980366" className="border-2 border-white/60 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
-                    📞 Free Notice Review
-                  </Link>
+                 
                 </div>
               </div>
             </div>

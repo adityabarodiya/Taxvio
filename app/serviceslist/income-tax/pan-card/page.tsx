@@ -30,6 +30,8 @@ import {
 import { type Variants } from "framer-motion";
 import Footer from "@/components/Footar";
 
+import InquiryForm from "@/components/InquiryFormButton";
+
 // ─── Animation variants ───────────────────────────────────────────────────────
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
@@ -254,7 +256,7 @@ export default function PanCardPage() {
 
   return (
     <main className="min-h-screen bg-[#f8fbfd] font-sans text-gray-800">
-
+      <InquiryForm />
       {/* ════════════ HERO ════════════ */}
       <section className="relative bg-[#00416a] text-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#00416a] via-[#003257] to-[#001e36]" />

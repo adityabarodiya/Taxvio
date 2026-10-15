@@ -4,6 +4,7 @@ import Footar from "@/components/Footar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import InquiryForm from "@/components/InquiryFormButton";
 /* ── JSON-LD ── */
 const jsonLd = {
   "@context": "https://schema.org",
@@ -36,7 +37,7 @@ export default function ITRNRIClient() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-
+<InquiryForm />
       <main className="bg-white text-gray-800 overflow-x-hidden">
         <DeadlineBanner />
 

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Footar from "@/components/Footar";
 
+import InquiryForm from "@/components/InquiryFormButton";
 const PHONE = "918937980366";
 const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with FSSAI Annual Return (Form D1) filing.")}`;
 const DARK = { background: "linear-gradient(135deg,#1a5c1a 0%,#14431a 55%,#0d2e10 100%)" };
@@ -183,7 +184,7 @@ export default function FSSAIAnnualReturnClient() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <Script id="fssai-ar-faq-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-
+      <InquiryForm />
       <main className="bg-white text-gray-800">
 
         {/* ══ HERO ══════════════════════════════════════════════════════════ */}
@@ -237,10 +238,7 @@ export default function FSSAIAnnualReturnClient() {
                   </motion.p>
 
                   <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
-                    <a href={WA} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3.5 rounded-xl font-bold shadow-xl hover:scale-105 transition-all duration-200">
-                      <MessageCircle size={18} /> File on WhatsApp
-                    </a>
+                    
                     <Link href="/contact"
                       className="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-xl font-bold hover:bg-white/10 transition-all"
                       style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -284,10 +282,8 @@ export default function FSSAIAnnualReturnClient() {
                       ))}
                     </div>
                     <div className="px-6 pb-6">
-                      <a href={WA} target="_blank" rel="noopener noreferrer"
-                        className="block w-full text-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold transition hover:scale-105">
-                        File Form D1 Now — ₹699/year →
-                      </a>
+                     
+
                     </div>
                   </div>
                 </motion.div>
@@ -437,10 +433,7 @@ export default function FSSAIAnnualReturnClient() {
                             </div>
                           </div>
                           <div className="px-6 pb-5">
-                            <a href={WA} target="_blank" rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition hover:scale-105">
-                              <MessageCircle size={13} /> File This Return
-                            </a>
+                            
                           </div>
                         </motion.div>
                       )}
@@ -653,14 +646,7 @@ export default function FSSAIAnnualReturnClient() {
                       </li>
                     ))}
                   </ul>
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="mt-6 block text-center py-3 rounded-xl font-bold text-sm transition hover:scale-105"
-                    style={{
-                      background: highlight ? "#fff" : "rgba(255,255,255,0.15)",
-                      color: highlight ? "#14532d" : "#fff",
-                    }}>
-                    Get Started →
-                  </a>
+                  
                 </div>
               ))}
             </div>
@@ -758,10 +744,7 @@ export default function FSSAIAnnualReturnClient() {
               Pan India.
             </motion.p>
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:scale-105 transition-all">
-                <MessageCircle size={20} /> WhatsApp — File Form D1 Now
-              </a>
+             
               <Link href="/contact"
                 className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
                 style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
@@ -781,10 +764,7 @@ export default function FSSAIAnnualReturnClient() {
         {/* Sticky CTA */}
         <div className="fixed bottom-0 left-0 right-0 z-40 py-3 px-4 flex justify-center gap-4"
           style={{ background: "#0d2e10", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-          <a href={WA} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
-            💬 WhatsApp — File FSSAI Form D1
-          </a>
+          
           <Link href="/contact"
             className="inline-flex items-center gap-2 bg-white text-green-800 px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
             Free Consultation
