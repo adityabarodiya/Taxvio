@@ -2,15 +2,15 @@
 import Link from "next/link";
 import Script from "next/script";
 import Footar from "@/components/Footar";
-import InquiryFormButton from "@/components/InquiryFormButton";
 import type { Metadata } from "next";
 import {
-  MapPin, ArrowRight, Phone, MessageCircle, Shield, Zap,
+  MapPin, ArrowRight, Shield, Zap,
   CheckCircle, Clock, BadgeCheck, Star, Users, TrendingUp,
   FileText, IndianRupee, AlertCircle, BookOpen, ClipboardList,
-  Building2, RefreshCw, Landmark,
+  RefreshCw, Landmark,
 } from "lucide-react";
-import { BIHAR_AREAS, slugifyArea } from "@/data/bihar-cities";
+import { BIHAR_AREAS, slugifyArea } from "@/data/bihar-cities"; // ← adjust path if needed
+import InquiryFormButton from "@/components/InquiryFormButton";
 
 /* ─── Helpers ───────────────────────────────────────────────────────────── */
 function findArea(slug: string) {
@@ -27,46 +27,57 @@ export async function generateMetadata(
   { params }: { params: Promise<{ city: string }> }
 ): Promise<Metadata> {
   const { city } = await params;
-  const area     = findArea(city);
-  const areaName = area?.name     ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const area = findArea(city);
+  const areaName = area?.name ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
   const district = area?.district ?? areaName;
 
   return {
     title: `Company Registration & ROC Compliance in ${areaName}, Bihar | Taxvio`,
-    description: `Expert Private Limited, LLP, OPC & Section 8 Company formation; annual ROC compliance (AOC-4, MGT-7); director changes; company name change; capital increase; and company closure in ${areaName}, ${district}, Bihar. CA-assisted, 100% online, starting ₹3,999.`,
+    description: `Expert Private Limited, LLP, OPC, Nidhi, Producer & Section 8 Company formation; annual ROC compliance; director changes; charge registration; share transfer; CSR-1; FC-GPR and more in ${areaName}, ${district}, Bihar. CA-assisted, 100% online, starting ₹1,499.`,
     keywords: [
-      `company registration ${areaName}`,
-      `private limited company ${areaName} Bihar`,
-      `LLP registration ${areaName}`,
-      `ROC compliance ${areaName}`,
-      `OPC registration ${areaName}`,
-      `Section 8 company ${areaName}`,
-      `annual filing AOC-4 ${areaName}`,
-      `director appointment ${areaName}`,
-      `company name change ${areaName}`,
+      `company registration ${areaName}`, `private limited company ${areaName} Bihar`, `LLP registration ${areaName}`,
+      `ROC compliance ${areaName}`, `OPC registration ${areaName}`, `Section 8 company ${areaName}`,
+      `annual filing AOC-4 ${areaName}`, `director appointment ${areaName}`, `company name change ${areaName}`,
       `MCA filing ${district} Bihar`,
     ],
-    alternates: {
-      canonical: `https://www.taxvio.in/state/bihar/roc/${city}`,
-    },
+    alternates: { canonical: `https://www.taxvio.in/state/bihar/roc/${city}` },
     openGraph: {
       title: `ROC & Company Registration in ${areaName}, Bihar | Taxvio`,
-      description: `Company formation, LLP, OPC, annual ROC compliance & MCA filings in ${areaName}, ${district}, Bihar — CA-assisted, from ₹3,999.`,
+      description: `Company formation, LLP, OPC, annual ROC compliance & MCA filings in ${areaName}, ${district}, Bihar — CA-assisted, from ₹1,499.`,
       url: `https://www.taxvio.in/state/bihar/roc/${city}`,
       siteName: "Taxvio",
       type: "website",
     },
-    twitter: {
-      card: "summary_large_image",
-      title: `ROC & Company Registration in ${areaName}, Bihar | Taxvio`,
-    },
+    twitter: { card: "summary_large_image", title: `ROC & Company Registration in ${areaName}, Bihar | Taxvio` },
     robots: { index: true, follow: true },
   };
 }
 
+/* ─── Extra palette for the 18 newly-added services below ────────────────── */
+const PALETTE = [
+  { gradient: "from-slate-500 to-gray-700",     accentBg: "bg-slate-50",    accentBorder: "border-slate-100",    accentText: "text-slate-700" },
+  { gradient: "from-lime-500 to-green-600",     accentBg: "bg-lime-50",     accentBorder: "border-lime-100",     accentText: "text-lime-700" },
+  { gradient: "from-yellow-500 to-amber-600",   accentBg: "bg-yellow-50",   accentBorder: "border-yellow-100",   accentText: "text-yellow-700" },
+  { gradient: "from-fuchsia-500 to-pink-600",   accentBg: "bg-fuchsia-50",  accentBorder: "border-fuchsia-100",  accentText: "text-fuchsia-700" },
+  { gradient: "from-cyan-500 to-sky-600",       accentBg: "bg-cyan-50",     accentBorder: "border-cyan-100",     accentText: "text-cyan-700" },
+  { gradient: "from-red-500 to-rose-600",       accentBg: "bg-red-50",      accentBorder: "border-red-100",      accentText: "text-red-700" },
+  { gradient: "from-purple-500 to-indigo-600",  accentBg: "bg-purple-50",   accentBorder: "border-purple-100",   accentText: "text-purple-700" },
+  { gradient: "from-green-500 to-teal-600",     accentBg: "bg-green-50",    accentBorder: "border-green-100",    accentText: "text-green-700" },
+  { gradient: "from-stone-500 to-neutral-600",  accentBg: "bg-stone-50",    accentBorder: "border-stone-100",    accentText: "text-stone-700" },
+  { gradient: "from-orange-500 to-red-600",     accentBg: "bg-orange-50",   accentBorder: "border-orange-100",   accentText: "text-orange-700" },
+  { gradient: "from-blue-600 to-indigo-700",    accentBg: "bg-blue-50",     accentBorder: "border-blue-100",     accentText: "text-blue-700" },
+  { gradient: "from-rose-500 to-pink-600",      accentBg: "bg-rose-50",     accentBorder: "border-rose-100",     accentText: "text-rose-700" },
+  { gradient: "from-amber-500 to-orange-600",   accentBg: "bg-amber-50",    accentBorder: "border-amber-100",    accentText: "text-amber-700" },
+  { gradient: "from-teal-500 to-emerald-600",   accentBg: "bg-teal-50",     accentBorder: "border-teal-100",     accentText: "text-teal-700" },
+  { gradient: "from-sky-500 to-blue-600",       accentBg: "bg-sky-50",      accentBorder: "border-sky-100",      accentText: "text-sky-700" },
+  { gradient: "from-violet-500 to-purple-600",  accentBg: "bg-violet-50",   accentBorder: "border-violet-100",   accentText: "text-violet-700" },
+  { gradient: "from-emerald-500 to-green-600",  accentBg: "bg-emerald-50",  accentBorder: "border-emerald-100",  accentText: "text-emerald-700" },
+  { gradient: "from-indigo-500 to-violet-600",  accentBg: "bg-indigo-50",   accentBorder: "border-indigo-100",   accentText: "text-indigo-700" },
+];
+
 /* ─── Service Content Generator ─────────────────────────────────────────── */
 function getServiceContent(areaName: string, district: string, region: string) {
-  return [
+  const original = [
 
     /* ── 1. Private Limited Company Formation ── */
     {
@@ -301,474 +312,375 @@ A company with a registered office in ${areaName} qualifies for voluntary strike
 
 A critically important and frequently overlooked eligibility condition for ${areaName} companies is that all pending annual returns (MGT-7) and financial statement filings (AOC-4) must be brought fully current before the STK-2 application is submitted — even for completely dormant companies that conducted zero business throughout the years in question. RoC Patna routinely rejects STK-2 applications that have unfiled annual compliance in arrears. Taxvio conducts a complete compliance audit for every ${areaName} company seeking closure — clearing all pending annual filings, preparing the required Statement of Accounts (certified by a CA, dated not more than 30 days before STK-2 filing, showing NIL or negligible assets and liabilities), coordinating the notarised Indemnity Bond and Affidavit from all directors, obtaining bank account closure proof, and managing the STK-2 filing and RoC Patna correspondence through to the final Dissolution Certificate.`,
     },
-    /* ── 10. Public Limited Company Formation ── */
+  ];
+
+  // ── Newly added services — same template pattern, colors from PALETTE ──
+  const additions = [
     {
       slug: "public-limited-company-formation",
       title: `Public Limited Company Formation in ${areaName}`,
       price: "₹14,999",
-      timeline: "15–20 Working Days",
+      timeline: "15–25 Working Days",
       icon: "🏛️",
-      gradient: "from-blue-600 to-cyan-600",
-      accentBg: "bg-blue-50",
-      accentBorder: "border-blue-100",
-      accentText: "text-blue-700",
       features: [
-        "SPICe+ integrated incorporation — minimum 7 shareholders, 3 directors",
-        "MOA & AOA drafted for public company governance norms",
-        "Certificate of Incorporation with 'Limited' suffix",
-        "Statutory registers & minute books setup",
-        "Guidance on IPO/listing pathway where applicable",
-        "Compliance roadmap for enhanced disclosure requirements",
+        "Minimum 3 directors & 7 shareholders",
+        "SPICe+ incorporation with expanded MOA/AOA",
+        "Statutory compliance setup for public entity",
+        "PAN, TAN & Certificate of Incorporation",
+        "SEBI compliance advisory if listing planned",
+        "Independent director requirement guidance",
       ],
-      seoContent: `Public Limited Company formation suits larger-scale businesses in ${areaName}, ${district}, Bihar planning significant capital raises, multiple institutional investors, or an eventual path toward public listing — a structure that permits unrestricted share transferability and an unlimited number of shareholders, distinguishing it from the restrictive 200-member cap applicable to private companies. Under the Companies Act 2013, a Public Limited Company requires a minimum of 7 shareholders and 3 directors, and its name must end with "Limited" rather than "Private Limited." While still relatively uncommon among ${areaName}'s predominantly small and mid-sized enterprise base, this structure is increasingly relevant for established Bihar businesses in manufacturing, infrastructure, and processing sectors seeking larger-scale institutional capital or planning a future public offering.
+      seoContent: `A Public Limited Company structure suits ${areaName}, ${district}, Bihar businesses planning to raise capital from the public, take on institutional investors at scale, or eventually pursue a stock exchange listing — requiring a minimum of 3 directors and 7 shareholders, against a Private Limited's 2 and 2, along with a more extensive set of governance obligations from day one.
 
-Incorporation follows the same SPICe+ integrated framework used for private companies — name reservation, DIN allotment, DSC procurement, and MOA/AOA filing — but with materially enhanced governance obligations built in from day one: mandatory independent directors above certain capital thresholds, more rigorous board composition norms, enhanced related-party transaction disclosure, and statutory requirement to hold an AGM with proper public notice. RoC Patna processes these incorporations with the same SPICe+ workflow applicable across Bihar and Jharkhand, though scrutiny of MOA object clauses and governance provisions tends to be more detailed given the public capital-raising intent.
+Taxvio incorporates Public Limited Companies for ${areaName} businesses through the same SPICe+ process used for Private Limited formation, but with MOA and AOA drafted for the expanded shareholder base and governance structure a public company requires, and sets up the additional statutory compliance — independent director considerations, expanded board committee structures where applicable — that distinguish a public company's obligations from a private one's from incorporation onward.
 
-Taxvio guides ${areaName} promoters through the complete Public Limited Company formation process — structuring the minimum shareholder and director composition, drafting MOA and AOA aligned with public company governance standards, securing DSC and DIN for all directors, and managing the SPICe+ filing through to Certificate of Incorporation. We also brief founders on the materially higher ongoing compliance burden — board meeting frequency, statutory auditor rotation rules, and enhanced AOC-4/MGT-7 disclosure requirements — ensuring the business is governance-ready from incorporation rather than discovering compliance gaps later.`,
+For ${district} businesses genuinely planning a future listing or large-scale public fundraising, we also provide upfront advisory on the practical implications of public company status — the governance overhead involved and when conversion from an existing Private Limited company might be the more appropriate sequencing rather than incorporating as public from day one.`,
     },
-
-    /* ── 11. Nidhi Company Registration ── */
     {
       slug: "nidhi-company-registration",
       title: `Nidhi Company Registration in ${areaName}`,
-      price: "₹12,999",
+      price: "₹14,999",
       timeline: "15–25 Working Days",
-      icon: "🏦",
-      gradient: "from-green-500 to-emerald-600",
-      accentBg: "bg-green-50",
-      accentBorder: "border-green-100",
-      accentText: "text-green-700",
+      icon: "💰",
       features: [
-        "Minimum 7 shareholders, 3 directors — public company structure",
-        "MOA & AOA restricted to member lending/borrowing objects",
-        "NDH-4 declaration filing within 1 year",
-        "Minimum 200 members within 1 year of incorporation",
-        "Net Owned Funds (NOF) & deposit ratio compliance guidance",
-        "RBI-exempt mutual benefit structure",
+        "Minimum 7 members at incorporation (200 within 1 year)",
+        "SPICe+ incorporation with \"Nidhi Limited\" naming",
+        "NDH-4 declaration within 60 days of 1-year mark",
+        "₹20 lakh net owned funds eligibility planning",
+        "Deposit and lending bylaws drafting",
+        "RBI non-banking status compliance guidance",
       ],
-      seoContent: `Nidhi Company registration offers a regulator-recognised structure for community-based savings and lending mutual benefit societies in ${areaName}, ${district}, Bihar — a model historically popular in Tamil Nadu but increasingly relevant to Bihar's close-knit community and cooperative lending traditions, particularly in semi-urban and rural pockets where formal banking penetration remains uneven. A Nidhi Company operates exclusively for the purpose of cultivating thrift and savings among its members, and lending only to its own members — a structure that is specifically exempted from the core provisions of the RBI Act applicable to NBFCs, provided it strictly confines its business to borrowing from and lending to members only.
+      seoContent: `Nidhi Companies — a mutual benefit structure under Section 406 of the Companies Act, historically significant in community-based savings and lending, and increasingly relevant to ${areaName}, ${district}, Bihar's growing cooperative finance sector — allow members to deposit and borrow from each other within a regulated corporate structure, without the full RBI licensing burden of a non-banking financial company.
 
-Incorporating a Nidhi Company in ${areaName} requires a minimum of 7 shareholders and 3 directors at formation — structured as a public limited company under Section 406 of the Companies Act 2013 read with the Nidhi Rules 2014 — with the MOA and AOA carefully restricted to member-only deposit and lending objects, excluding any provision for chit funds, hire purchase, insurance, or leasing business, which Nidhi Companies are expressly barred from conducting. Within one year of incorporation, the company must achieve a minimum of 200 members, Net Owned Funds of at least ₹20 lakh, an NOF-to-deposits ratio of not more than 1:20, and unencumbered term deposits of not less than 10% of outstanding deposits — all certified and declared via Form NDH-4 filed with the Regional Director.
+Taxvio incorporates Nidhi Companies for ${areaName} promoters, starting with the mandatory "Nidhi Limited" company name, incorporation with the minimum 7 members, and a compliance roadmap to reach the 200-member threshold and ₹20 lakh net owned funds requirement within the first year — both mandatory for filing the NDH-4 declaration that formally confirms Nidhi status with RoC Patna within 60 days of completing one year of operations.
 
-Taxvio manages the complete Nidhi Company incorporation process for ${areaName} promoters — structuring the founding shareholder and director base, drafting restrictive MOA and AOA objects compliant with Nidhi Rules, coordinating SPICe+ filing through RoC Patna, and subsequently guiding the business through the critical first-year compliance milestones: member enrolment tracking, Net Owned Funds computation, and timely NDH-4 filing — without which the company risks losing its Nidhi status and associated RBI exemption.`,
+For ${district} promoters building a Nidhi from the ground up, we draft the deposit and lending bylaws within the statutory limits (deposits capped relative to net owned funds, loans restricted to members), and clarify the boundary between permitted Nidhi activities and activities that would require full RBI non-banking finance company licensing — a distinction that matters significantly for ongoing regulatory exposure.`,
     },
-
-    /* ── 12. Producer Company Registration ── */
     {
       slug: "producer-company-registration",
       title: `Producer Company Registration in ${areaName}`,
-      price: "₹13,999",
-      timeline: "20–30 Working Days",
+      price: "₹12,999",
+      timeline: "15–20 Working Days",
       icon: "🌾",
-      gradient: "from-lime-500 to-green-600",
-      accentBg: "bg-lime-50",
-      accentBorder: "border-lime-100",
-      accentText: "text-lime-700",
       features: [
-        "Minimum 10 producer-members (individuals) or 2 producer institutions",
-        "MOA & AOA drafted for collective production/marketing objects",
-        "Certificate of Incorporation as a Producer Company",
-        "Member share structuring & patronage bonus framework",
-        "FPO scheme & NABARD funding linkage guidance",
-        "Board structured with minimum 5, maximum 15 directors",
+        "Minimum 10 individual producers or 2 producer institutions",
+        "Formed under Chapter XXIA, Companies Act 2013",
+        "MOA/AOA for primary produce activity",
+        "Member share structuring for farmer collectives",
+        "No minimum paid-up capital requirement",
+        "Agricultural marketing and processing object clauses",
       ],
-      seoContent: `Producer Company registration is a purpose-built corporate structure for farmers, agriculturists, artisans, and primary producers in ${areaName}, ${district}, Bihar to collectively formalise procurement, processing, marketing, and value-addition activities — directly relevant to Bihar's overwhelmingly agrarian economy spanning paddy and wheat cultivation in the Gangetic plains, litchi and mango orchards in Muzaffarpur and Darbhanga, makhana production in Mithilanchal, and vegetable and dairy farming clusters across nearly every district. Governed by Part IXA (now Sections 378A–378ZU) of the Companies Act, a Producer Company combines cooperative society principles — one-member-one-vote regardless of shareholding, restricted share transferability, patronage-based bonus distribution — with the corporate governance rigor, legal personality, and institutional credibility of a company structure.
+      seoContent: `Producer Company registration is purpose-built for farmer collectives, agricultural cooperatives, and primary producer groups across ${areaName}, ${district}, Bihar's extensive agricultural economy — allowing a minimum of 10 individual producers (or 2 producer institutions) to incorporate a formal company structure around primary produce activities: production, harvesting, procurement, grading, pooling, handling, marketing, or processing of members' produce.
 
-A Producer Company in ${areaName} can be incorporated by a minimum of 10 individual producers, or 2 or more producer institutions, or a combination of both — with no upper limit on membership, making it uniquely scalable for large farmer-producer organisations (FPOs) aggregating hundreds of smallholder farmers. The MOA must restrict the company's objects to specified producer activities — production, harvesting, procurement, grading, pooling, handling, marketing, selling, or export of members' primary produce, along with activities like manufacturing, processing, and the supply of inputs like seeds, fertilisers, and farm machinery. The Board must comprise between 5 and 15 directors, and the structure enables access to targeted government schemes — NABARD's FPO Promotion Scheme, SFAC equity grants, and Bihar state agricultural department subsidies specifically channelled through registered Producer Companies.
+Taxvio registers Producer Companies for ${areaName} farmer groups and agricultural collectives — common in Bihar's rice, litchi, sugarcane, and vegetable-growing belts across ${district} — drafting MOA and AOA around the specific agricultural activity the collective is organising, structuring member shareholding proportionate to patronage rather than conventional equity logic, and managing the SPICe+ incorporation with producer-specific object clauses.
 
-Taxvio supports ${areaName} farmer groups, cooperatives, and producer collectives through the complete Producer Company registration process — member eligibility structuring, MOA and AOA drafting aligned with the intended produce and processing activities, SPICe+ filing with RoC Patna, and post-incorporation guidance on patronage bonus policy, member share certificate issuance, and documentation required for NABARD and SFAC funding applications that are frequently the primary motivation behind FPO formation.`,
+This structure gives ${district} farmer groups a formal entity that can access institutional agricultural credit, enter supply contracts with larger buyers and processors, and apply for government agricultural scheme benefits that require a registered legal entity — advantages typically unavailable to informal cooperative arrangements operating without corporate registration.`,
     },
-
-    /* ── 13. Change in Registered Office Address ── */
     {
       slug: "registered-office-change",
       title: `Change in Registered Office Address in ${areaName}`,
-      price: "₹3,999",
-      timeline: "7–15 Working Days",
+      price: "₹2,499",
+      timeline: "7–15 Working Days (longer for inter-state)",
       icon: "📍",
-      gradient: "from-orange-500 to-red-500",
-      accentBg: "bg-orange-50",
-      accentBorder: "border-orange-100",
-      accentText: "text-orange-700",
       features: [
-        "INC-22 filing within 15/30 days of the change",
-        "Board resolution for intra-city/intra-state shift",
-        "Special resolution & RD approval for inter-state shift",
-        "New address proof & NOC documentation",
-        "MOA situation clause update where state changes",
-        "Statutory register and stationery update guidance",
+        "INC-22 filing for intra-city/intra-RoC moves",
+        "Board resolution & new address proof",
+        "NOC from property owner",
+        "INC-23 Regional Director approval for inter-state moves",
+        "Special resolution & public notice (inter-state)",
+        "MOA address clause update where applicable",
       ],
-      seoContent: `Changing a company's registered office address requires formal RoC filing regardless of whether the shift is within the same city in ${areaName}, to a different city within ${district}, or across state lines — with the procedural complexity and approval authority varying significantly based on the nature and extent of the move. For a shift within the local limits of the same city, town, or village, only a Board Resolution and Form INC-22 (filed within 15 days, supported by new address proof and a No Objection Certificate from the property owner) is required. A move to a different city within the same RoC jurisdiction — still under RoC Patna if remaining within Bihar — additionally requires a Special Resolution passed by shareholders.
+      seoContent: `Shifting a company's registered office requires formal ROC intimation for any business relocating within ${areaName}, ${district}, Bihar — the process and timeline differ significantly depending on whether the move stays within the same RoC jurisdiction or crosses state lines, since RoC Patna covers both Bihar and Jharkhand.
 
-A registered office shift that crosses state lines — for instance, relocating a company's registered office out of ${areaName}, Bihar to another state, or vice versa — is considerably more involved, requiring a Special Resolution, alteration of the MOA's State Clause, and formal approval from the Regional Director under Section 13(4) before the change can be registered with the destination RoC. The Regional Director application must demonstrate that the move does not prejudice creditors or employees, and a public notice period and objection window applies before approval is granted — extending the overall timeline for inter-state shifts considerably compared to intra-city or intra-state moves.
+For a move within ${areaName} or elsewhere within Bihar under RoC Patna's jurisdiction, Taxvio files Form INC-22 within 15 days of the board resolution authorising the change, along with new address proof and a no-objection certificate from the property owner — a relatively straightforward process typically completed within 7-15 working days.
 
-Taxvio handles registered office changes for ${areaName} companies across all three scenarios — preparing board and shareholder resolutions, drafting the NOC and address proof documentation, filing INC-22 within statutory timelines, and where an inter-state shift is involved, preparing and prosecuting the Regional Director application through to final approval. We also coordinate the downstream administrative updates every address change triggers — GST registration amendment, PAN/TAN address update, bank account records, and letterhead and signage changes — ensuring the transition is complete and consistent across every statutory record.`,
+Moving a company's registered office to a different state is considerably more involved, requiring a special resolution, a public notice in newspapers, Regional Director approval via Form INC-23, and only then the INC-22 filing to reflect the new address — a multi-month process we manage end-to-end for ${district} companies relocating operations across state boundaries, including coordinating the mandatory creditor and member notice period before Regional Director approval is granted.`,
     },
-
-    /* ── 14. DIN KYC (DIR-3 KYC) Filing ── */
     {
       slug: "dir-3-kyc",
       title: `DIN KYC (DIR-3 KYC) Filing in ${areaName}`,
-      price: "₹999/director",
-      timeline: "1–2 Working Days",
+      price: "₹999 per director",
+      timeline: "Annually by September 30",
       icon: "🪪",
-      gradient: "from-sky-500 to-indigo-500",
-      accentBg: "bg-sky-50",
-      accentBorder: "border-sky-100",
-      accentText: "text-sky-700",
       features: [
-        "DIR-3 KYC / Web-KYC filing before September 30 deadline",
-        "OTP-based mobile & email verification",
-        "DIN status check and deactivation review",
-        "Reactivation filing for already-deactivated DINs",
-        "Applicable for FY 2025-26 annual KYC cycle",
-        "Late fee avoidance — ₹5,000 per DIN if missed",
+        "DIR-3 KYC (first-time/changed details) filing",
+        "DIR-3 KYC-WEB (no-change annual confirmation)",
+        "OTP verification — mobile & email",
+        "Late fee (₹5,000) avoidance guidance",
+        "Deactivated DIN reactivation support",
+        "Bulk filing for multi-director companies",
       ],
-      seoContent: `DIR-3 KYC filing is a mandatory annual compliance requirement for every individual holding a Director Identification Number (DIN) with a status of "Approved" — applicable to all directors of companies and designated partners of LLPs with any connection to ${areaName}, ${district}, Bihar, regardless of whether the company itself is actively operating. Introduced by the MCA to maintain an accurate and current database of all individuals holding directorships across India, the filing must be completed every year by September 30, and a director's DIN is automatically marked "Deactivated due to non-filing of DIR-3 KYC" the moment this deadline passes without compliance — immediately preventing that individual from being appointed as a director in any new company and blocking their signing authority on filings for all their existing directorships.
+      seoContent: `Every individual holding a Director Identification Number — whether actively serving as a director in an ${areaName}, ${district}, Bihar company or not — must complete DIR-3 KYC annually by September 30, or the DIN is marked "Deactivated due to non-filing of DIR-3 KYC" on the MCA portal, which then blocks that individual from being appointed or continuing as a director in any company until the KYC is filed along with a ₹5,000 late fee.
 
-For the FY 2025-26 compliance cycle, every director who obtained a DIN on or before March 31, 2025 must complete DIR-3 KYC by the September 30, 2025 deadline. First-time KYC filers, or directors whose personal details (mobile number, email, address, or PAN) have changed since the last filing, must complete the full DIR-3 KYC e-form with fresh OTP verification of both mobile number and email ID. Directors who filed in the previous year with no change in particulars may instead use the simpler DIR-3 KYC-WEB service, which only requires OTP re-verification. Missing the deadline attracts a flat late fee of ₹5,000 per DIN for reactivation, regardless of how many days late the filing occurs.
+Taxvio files DIR-3 KYC for ${areaName} directors every year before the deadline — using the simpler DIR-3 KYC-WEB form for directors with no change in previously filed details (requiring only OTP verification on the registered mobile and email), and the full DIR-3 KYC e-form with fresh documentation for directors filing for the first time or updating any personal details.
 
-Taxvio provides efficient DIR-3 KYC filing support for directors and designated partners connected to ${areaName} companies and LLPs — verifying current DIN status on the MCA portal, preparing and filing the appropriate form (full KYC or KYC-WEB) before the statutory deadline, and for directors who have already missed a prior year's deadline, managing the reactivation filing along with the applicable late fee payment to restore active DIN status promptly.`,
+For ${district} companies whose directors' DINs have already been deactivated from a missed prior year, we handle reactivation — filing the overdue KYC along with the penalty — and set up annual reminders well before the September 30 deadline so the same lapse doesn't recur, since a deactivated DIN effectively freezes that person's ability to act as director anywhere, not just in the ${areaName} company in question.`,
     },
-
-    /* ── 15. Return of Deposits (DPT-3) Filing ── */
     {
       slug: "dpt-3-filing",
       title: `Return of Deposits (DPT-3) Filing in ${areaName}`,
       price: "₹2,999",
-      timeline: "3–5 Working Days",
-      icon: "💰",
-      gradient: "from-yellow-500 to-amber-600",
-      accentBg: "bg-yellow-50",
-      accentBorder: "border-yellow-100",
-      accentText: "text-yellow-700",
+      timeline: "Annually by June 30",
+      icon: "📑",
       features: [
-        "Applicability assessment for your company structure",
-        "Compilation of loans, advances & deposits as on March 31",
-        "Auditor certificate coordination for applicable thresholds",
-        "DPT-3 filing by June 30 annual deadline",
-        "Covers FY 2025-26 annual return of deposits",
-        "Exempt-deposit classification guidance",
+        "Applicability assessment for outstanding loans",
+        "Director/shareholder loan classification review",
+        "DPT-3 preparation & filing",
+        "Auditor's certificate coordination for high-value returns",
+        "Exempted deposit category verification",
+        "Annual deadline tracking",
       ],
-      seoContent: `Form DPT-3 is an annual return that every company (other than a Government Company) registered in ${areaName}, ${district}, Bihar must file with RoC Patna, disclosing details of outstanding loans, advances, and monies received that are not classified as "deposits" under the Companies (Acceptance of Deposits) Rules 2014 — covering director loans, unsecured loans from shareholders and promoters, inter-corporate loans, advances against supply of goods or services, and share application money pending allotment, among several other specifically exempted categories. The filing is required annually by June 30, covering the position as of the preceding financial year ending March 31 — meaning for FY 2025-26 compliance, companies must report figures as of March 31, 2025 by the June 30, 2025 deadline, with the cycle repeating each subsequent year.
+      seoContent: `DPT-3 is an annual return every company registered in ${areaName}, ${district}, Bihar must file with RoC Patna, disclosing outstanding loans, advances, and amounts received that are not classified as "deposits" under the Companies (Acceptance of Deposits) Rules — covering director loans, inter-corporate loans, advances from shareholders, and various other receivables as of March 31 each year, due by June 30.
 
-Many ${areaName} business owners mistakenly believe DPT-3 applies only to companies that have accepted public deposits in the conventional sense — but the MCA's broad definition captures routine transactions common across nearly every small and mid-sized company, including unsecured director loans used for working capital, outstanding inter-company loans within group structures, and even advances received from customers against future supply where the supply has not been completed within 365 days. This broad scope means the large majority of active private companies in Bihar have at least some disclosure obligation under DPT-3 each year, even where the company has never accepted a "deposit" in the commonly understood sense.
+Taxvio assesses DPT-3 applicability for ${areaName} companies, correctly classifying each outstanding amount — a loan from a director is typically exempt from deposit rules if specific conditions are met and disclosed, while unsecured loans from unrelated parties can fall squarely within deposit rules if not properly structured, carrying serious penal consequences under Section 73/76 if misclassified.
 
-Taxvio conducts a thorough applicability assessment for every ${areaName} company client, reviewing loan ledgers, advance receipts, and inter-company balances to correctly classify amounts under the appropriate DPT-3 categories, coordinates the statutory auditor's certificate required where outstanding amounts exceed specified thresholds, and files the completed DPT-3 return well ahead of the June 30 deadline — avoiding both the compliance risk of non-filing and the common error of misclassifying genuinely exempt transactions as reportable deposits.`,
+For ${district} companies with outstanding amounts above the threshold requiring auditor certification, we coordinate with the statutory auditor to obtain the certificate before filing, and track this often-overlooked annual deadline — DPT-3 is frequently missed by companies focused only on AOC-4 and MGT-7, even though it carries its own independent penalty exposure for late or non-filing.`,
     },
-
-    /* ── 16. Charge Creation & Satisfaction ── */
     {
       slug: "charge-registration-satisfaction",
-      title: `Charge Creation & Satisfaction Filing in ${areaName}`,
-      price: "₹3,499",
-      timeline: "5–10 Working Days",
+      title: `Charge Creation & Satisfaction (CHG-1/CHG-4) in ${areaName}`,
+      price: "₹2,999",
+      timeline: "Within 30 Days of Event",
       icon: "🔗",
-      gradient: "from-stone-500 to-neutral-600",
-      accentBg: "bg-stone-50",
-      accentBorder: "border-stone-100",
-      accentText: "text-stone-700",
       features: [
-        "CHG-1 filing within 30 days of charge creation",
-        "CHG-4 filing on full repayment/satisfaction",
-        "Lender coordination for sanction letter & agreement",
-        "Register of Charges maintenance",
-        "Condonation application for delayed filings",
-        "Charge status verification on MCA portal",
+        "CHG-1 charge creation filing on secured borrowing",
+        "CHG-4 satisfaction filing on loan repayment",
+        "Charge register maintenance",
+        "Lender/bank documentation coordination",
+        "Condonation application for delayed filing",
+        "ROC charge search for due diligence",
       ],
-      seoContent: `Every charge — mortgage, hypothecation, or pledge — created by a company in ${areaName}, ${district}, Bihar on its assets to secure a loan, whether from a bank, NBFC, or any other secured lender, must be registered with RoC Patna via Form CHG-1 within 30 days of creation under Section 77 of the Companies Act 2013. This registration is not merely an administrative formality — an unregistered charge is void against the liquidator and other creditors in the event of company insolvency, meaning the lender effectively loses its secured priority status and is reduced to an unsecured creditor if the charge was never properly filed with the ROC. For ${areaName} businesses availing working capital loans, term loans, or equipment financing secured against company assets, timely CHG-1 filing is therefore a critical condition that most lenders independently verify before and after loan disbursement.
+      seoContent: `Whenever an ${areaName}, ${district}, Bihar company secures a bank loan or other financing against company assets — property, plant, machinery, or receivables — the lender's charge over those assets must be registered with RoC Patna in Form CHG-1 within 30 days of creation, and once the loan is fully repaid, the charge must be formally satisfied through Form CHG-4, also within 30 days.
 
-Once a secured loan is fully repaid, the corresponding charge must be formally released through Form CHG-4 (satisfaction of charge), also filed with RoC Patna — typically within 30 days of the full and final repayment, supported by a no-dues or satisfaction letter from the lending bank or institution. Many ${areaName} companies that have closed out old loans years ago continue to carry "open" charges on their MCA master data simply because CHG-4 was never filed — an oversight that creates unnecessary complications during due diligence for subsequent fundraising, asset sales, or new loan applications, where the presence of an apparently unsatisfied historical charge raises immediate red flags for the new lender or investor's legal team.
+Taxvio files CHG-1 for ${areaName} companies taking secured loans, working directly with the lending bank's documentation to ensure the charge details — amount, assets covered, terms — are accurately reflected, and files CHG-4 once a loan is cleared, since an unsatisfied charge on MCA records continues to show the company's asset as encumbered even after the debt no longer exists, complicating any future sale, refinancing, or due diligence process.
 
-Taxvio manages the complete charge compliance lifecycle for ${areaName} companies — coordinating with lenders for the loan agreement, sanction letter, and security documents needed for CHG-1 filing at the time of loan disbursement, and separately, obtaining the satisfaction or no-dues certificate and filing CHG-4 promptly upon loan closure. Where historical charges remain unsatisfied on MCA records despite the underlying loan being repaid years earlier, we also handle the condonation application process required for delayed CHG-4 filings beyond the normal statutory window.`,
+For ${district} companies that missed the 30-day filing window, we handle the condonation application process required to register a delayed charge, and maintain the company's charge register so lenders, auditors, and potential investors reviewing the company's MCA filings see an accurate, current picture of its secured obligations.`,
     },
-
-    /* ── 17. Share Transfer & Transmission ── */
     {
       slug: "share-transfer",
       title: `Share Transfer & Transmission in ${areaName}`,
-      price: "₹2,999",
-      timeline: "5–7 Working Days",
+      price: "₹2,499",
+      timeline: "7–15 Working Days",
       icon: "📜",
-      gradient: "from-purple-500 to-fuchsia-600",
-      accentBg: "bg-purple-50",
-      accentBorder: "border-purple-100",
-      accentText: "text-purple-700",
       features: [
-        "Share transfer deed (Form SH-4) drafting & stamping",
-        "Board resolution approving transfer",
-        "Share certificate endorsement / reissue",
+        "Share transfer deed (SH-4) preparation",
+        "Stamp duty computation (0.25% of consideration)",
+        "Board approval processing",
+        "Share certificate endorsement/reissue",
+        "Transmission by operation of law (death/insolvency)",
         "Register of Members update",
-        "Transmission documentation for inheritance cases",
-        "Stamp duty computation on consideration value",
       ],
-      seoContent: `Share transfer and transmission procedures formalise changes in company ownership for Private Limited Companies registered in ${areaName}, ${district}, Bihar — whether arising from a sale of shares between existing shareholders, induction of a new investor or business partner, an internal family restructuring, or transmission of shares to legal heirs following a shareholder's death. A voluntary share transfer requires execution of Form SH-4 (the share transfer deed) by both the transferor and transferee, duly stamped with Bihar stamp duty computed at 0.25% of the consideration value or the market value of the shares, whichever is higher, followed by Board approval and endorsement on the physical share certificate reflecting the new owner's name.
+      seoContent: `Transferring shares between existing or new shareholders in an ${areaName}, ${district}, Bihar company requires a formally executed instrument of transfer in Form SH-4, stamped at the applicable rate (0.25% of the consideration value under the Indian Stamp Act), board approval, and an updated entry in the company's Register of Members — a process distinct from "transmission," which applies when shares pass by operation of law following a shareholder's death or insolvency rather than a voluntary sale.
 
-Transmission of shares — which occurs automatically by operation of law upon a shareholder's death, insolvency, or lunacy, rather than through a voluntary transaction — follows a materially different process. Here, the legal heir or successor must submit a transmission request supported by a succession certificate, probate, letter of administration, or legal heir certificate (as applicable under the circumstances), along with the original share certificate and the deceased shareholder's death certificate. Unlike a transfer, transmission does not require a stamped transfer deed, since no sale transaction has occurred — the Board simply approves recording the legal successor as the new member based on the supporting legal documentation.
+Taxvio prepares share transfer documentation for ${areaName} companies — drafting the SH-4 transfer deed, computing and arranging stamp duty payment, processing board approval of the transfer, and either endorsing the existing share certificate or issuing a fresh one in the transferee's name.
 
-Taxvio manages both processes for ${areaName} companies with full attention to procedural accuracy — drafting the SH-4 transfer deed and computing correct Bihar stamp duty for voluntary transfers, preparing board resolution documentation for either transfer or transmission approval, updating the statutory Register of Members, and arranging endorsement or reissue of share certificates reflecting the ownership change. We also advise on AOA restrictions — many private companies include pre-emption rights or board-approval conditions on share transfers that must be satisfied before a transfer can be validly registered, and we verify compliance with these provisions before proceeding.`,
+For transmission cases in ${district} companies — where a shareholder has passed away or become insolvent — we guide the legal heir or successor through the simplified transmission process, which doesn't require a transfer deed or stamp duty but does need succession certificate or probate documentation (depending on the estate's circumstances) before the Register of Members can be updated to reflect the new holder.`,
     },
-
-    /* ── 18. Private to Public Company Conversion ── */
     {
       slug: "company-conversion-private-to-public",
       title: `Private to Public Company Conversion in ${areaName}`,
       price: "₹9,999",
       timeline: "20–30 Working Days",
-      icon: "🔓",
-      gradient: "from-blue-500 to-sky-600",
-      accentBg: "bg-blue-50",
-      accentBorder: "border-blue-100",
-      accentText: "text-blue-700",
+      icon: "🔁",
       features: [
-        "Eligibility & shareholder/director structure review",
-        "Special resolution — MOA & AOA alteration",
-        "MGT-14 filing for altered AOA",
-        "INC-27 application for conversion",
-        "Fresh Certificate of Incorporation as Public Company",
-        "Post-conversion governance compliance briefing",
+        "Eligibility & minimum member/director review",
+        "Special resolution & MGT-14 filing",
+        "MOA & AOA alteration (remove private restrictions)",
+        "INC-27 conversion application",
+        "Name change — removal of \"Private\"",
+        "Expanded governance compliance setup",
       ],
-      seoContent: `Converting a Private Limited Company to a Public Limited Company becomes a strategic necessity for growing businesses in ${areaName}, ${district}, Bihar that have outgrown the 200-shareholder cap applicable to private companies, or that are preparing for larger institutional fundraising rounds, strategic investor entry, or an eventual public listing pathway. The conversion requires the company to first satisfy the baseline eligibility conditions for a public company — minimum 7 shareholders and 3 directors — and formally remove the restrictive clauses from its Articles of Association that define it as a private company: the restriction on share transferability, the 200-member cap, and the prohibition on public invitation to subscribe for securities.
+      seoContent: `When a Private Limited Company in ${areaName}, ${district}, Bihar has grown to the point of needing a broader shareholder base or planning a future public fundraise, converting to a Public Limited Company under Section 14 is the formal route — requiring a special resolution, the minimum member and director thresholds a public company requires (3 directors, 7 shareholders), and alteration of the MOA and AOA to remove the restrictive clauses that define "private" status.
 
-The conversion process begins with a Board Meeting recommending the change, followed by an Extraordinary General Meeting at which shareholders pass a Special Resolution approving alteration of the AOA to remove all private company restrictive clauses. This Special Resolution must be filed with RoC Patna in Form MGT-14 within 30 days. The company then files Form INC-27 — the specific application form for conversion from private to public or vice versa — along with the altered AOA, the EGM resolution, and a list confirming the increased shareholder and director count where applicable. Once RoC Patna approves the application, a fresh Certificate of Incorporation is issued confirming the company's new status as a Public Limited Company, and the word "Private" is dropped from the company name across all records.
+Taxvio manages private-to-public conversion for ${areaName} companies — confirming eligibility, drafting and filing the special resolution in MGT-14, preparing the altered MOA and AOA, and filing Form INC-27 with RoC Patna to formally record the conversion, including the company's name change to drop "Private" from its registered name.
 
-Taxvio guides ${areaName} companies through the complete conversion process — assessing readiness against public company eligibility norms, drafting the altered AOA and EGM resolution, managing MGT-14 and INC-27 filings with RoC Patna, and critically, briefing the board on the substantially elevated compliance obligations that apply immediately upon conversion — including enhanced related-party transaction norms, statutory auditor rotation requirements, and more rigorous board composition rules that private companies are otherwise exempted from.`,
+For ${district} companies undertaking this conversion, we also set up the expanded governance compliance a public company requires from the conversion date onward — broader board composition considerations and the additional procedural formality public company status brings — so the transition is operationally ready, not just legally completed on paper.`,
     },
-
-    /* ── 19. LLP to Private Limited Company Conversion ── */
     {
       slug: "llp-to-company-conversion",
       title: `LLP to Private Limited Company Conversion in ${areaName}`,
-      price: "₹11,999",
-      timeline: "25–35 Working Days",
-      icon: "🔃",
-      gradient: "from-violet-500 to-indigo-600",
-      accentBg: "bg-violet-50",
-      accentBorder: "border-violet-100",
-      accentText: "text-violet-700",
+      price: "₹12,999",
+      timeline: "20–30 Working Days",
+      icon: "♻️",
       features: [
-        "Eligibility assessment & partner consent collection",
-        "Name reservation via SPICe+ Part A",
+        "Eligibility assessment & partner consent",
+        "Name approval for the converted entity",
         "Form URC-1 filing with RoC Patna",
-        "MOA & AOA drafting for the converted entity",
-        "Statement of accounts & asset/liability transfer",
-        "Fresh Certificate of Incorporation as Pvt Ltd",
+        "MOA & AOA drafting for the new company",
+        "Certificate of Incorporation for converted entity",
+        "Asset & liability transfer documentation",
       ],
-      seoContent: `Converting an LLP to a Private Limited Company is an increasingly common growth transition for professional partnerships and LLPs in ${areaName}, ${district}, Bihar that have reached a stage where raising equity funding from investors becomes necessary — a structural need the LLP form cannot accommodate, since LLPs cannot issue equity shares, cannot have investors as non-managing stakeholders in the conventional sense, and are generally viewed less favourably by venture capital and private equity investors who require a share-based capital structure to invest formally. The conversion is governed by Section 366 of the Companies Act 2013 read with the Companies (Authorised to Register) Rules 2014, and results in a completely new corporate entity — a new PAN, new CIN, and new Certificate of Incorporation — with all assets, liabilities, interests, rights, and obligations of the erstwhile LLP vesting automatically in the converted company.
+      seoContent: `LLPs in ${areaName}, ${district}, Bihar that have reached a point where they need to raise equity funding from investors — something the LLP structure doesn't readily accommodate, since LLPs can't straightforwardly issue equity shares to external investors — can convert into a Private Limited Company under Section 366 and Part I of the Companies Act, using Form URC-1.
 
-The conversion process for an ${areaName} LLP begins with obtaining consent from all partners, publishing a public notice in a local newspaper (with circulation in ${district}) and the Official Gazette inviting objections, and securing a No Objection Certificate from the Registrar of LLPs. Following this, name reservation is secured via SPICe+ Part A, and the core conversion application is filed in Form URC-1, accompanied by a statement of consideration, a list of partners, the LLP's latest financial statements, and a statement of assets and liabilities certified by a practising Chartered Accountant. MOA and AOA for the newly formed company must also be drafted and filed as part of the SPICe+ Part B process.
+Taxvio manages LLP-to-company conversion for ${areaName} businesses — confirming unanimous partner consent (a mandatory precondition), handling name approval for the new company, preparing Form URC-1 with the required partner and asset declarations, drafting fresh MOA and AOA for the converted entity, and filing with RoC Patna through to the new Certificate of Incorporation.
 
-Taxvio manages the complete LLP-to-Company conversion journey for ${areaName} businesses — from partner consent documentation and public notice publication, through URC-1 and SPICe+ filing with RoC Patna, to receipt of the fresh Certificate of Incorporation. We also handle the essential post-conversion steps frequently overlooked in this transition — fresh GST registration under the new PAN, bank account migration, employee and vendor contract novation, and transfer of existing statutory registrations (Shops & Establishment, Professional Tax, MSME Udyam) to the newly incorporated company.`,
+The conversion transfers all assets, liabilities, and ongoing contracts from the LLP to the new company by operation of law, and we document this transfer carefully for ${district} businesses to ensure continuity — existing bank accounts, vendor agreements, and statutory registrations (GST, PAN) need coordinated updates to reflect the new corporate entity once conversion is complete.`,
     },
-
-    /* ── 20. Statutory Auditor Appointment (ADT-1) ── */
     {
       slug: "adt-1-auditor-appointment",
       title: `Statutory Auditor Appointment (ADT-1) in ${areaName}`,
-      price: "₹1,999",
-      timeline: "2–4 Working Days",
+      price: "₹1,499",
+      timeline: "Within 15 Days of AGM",
       icon: "🧾",
-      gradient: "from-cyan-500 to-blue-500",
-      accentBg: "bg-cyan-50",
-      accentBorder: "border-cyan-100",
-      accentText: "text-cyan-700",
       features: [
-        "Auditor eligibility & consent letter (Form ADT-1)",
-        "Board resolution for first auditor appointment",
-        "AGM resolution for reappointment/rotation",
-        "ADT-1 filing within 15 days of appointment",
-        "Covers FY 2025-26 auditor compliance cycle",
-        "Auditor tenure & rotation tracking",
+        "ADT-1 filing for appointment/reappointment",
+        "Auditor consent & eligibility certificate",
+        "Board/AGM resolution drafting",
+        "5-year tenure tracking & ratification reminders",
+        "First auditor appointment guidance (within 30 days)",
+        "Auditor rotation compliance (where applicable)",
       ],
-      seoContent: `Appointment of a statutory auditor is mandatory for every company registered in ${areaName}, ${district}, Bihar, and must be formally reported to RoC Patna through Form ADT-1 within 15 days of the appointment being made — whether this is the company's first auditor appointed by the Board within 30 days of incorporation, or a subsequent appointment or reappointment made by shareholders at the Annual General Meeting under Section 139 of the Companies Act 2013. The first auditor holds office until the conclusion of the first AGM, after which auditors are typically appointed for a term of 5 years, subject to ratification considerations and, for specific categories of larger companies, mandatory auditor rotation requirements.
+      seoContent: `Every company in ${areaName}, ${district}, Bihar must appoint a statutory auditor and formally notify RoC Patna via Form ADT-1 within 15 days of the AGM at which the appointment is made — a requirement distinct from the first auditor, who is appointed directly by the board within 30 days of incorporation (not through ADT-1) and holds office only until the first AGM.
 
-For the FY 2025-26 compliance cycle, ${areaName} companies holding their AGM for FY 2024-25 (by September 30, 2025 for most companies) must ensure the auditor appointment or reappointment resolution is passed at that AGM, and ADT-1 filed with RoC Patna within the subsequent 15-day window — meaning by mid-October 2025 for most Bihar companies following the standard financial year. A frequently overlooked compliance gap among smaller ${areaName} companies is the assumption that auditor reappointment is "automatic" year to year — in reality, while the Companies Act does not require a fresh ADT-1 filing every single year once an auditor is appointed for a 5-year term (subject to ratification language removed by 2018 amendment), any change in auditor, whether due to resignation, removal, or the end of the 5-year term, triggers a fresh ADT-1 filing obligation that is frequently missed.
+Taxvio coordinates statutory auditor appointment for ${areaName} companies — preparing the auditor's written consent and eligibility certificate (confirming they're not disqualified under Section 141), drafting the appointing resolution, and filing ADT-1 with RoC Patna within the 15-day window, which is one of the more commonly missed post-AGM filings since it falls outside the AOC-4/MGT-7 cycle most companies focus on.
 
-Taxvio manages the complete auditor appointment compliance process for ${areaName} companies — collecting the auditor's written consent and eligibility certificate confirming they are not disqualified under Section 141, drafting the Board or AGM resolution as applicable, and filing Form ADT-1 with RoC Patna within the statutory 15-day window. We also maintain auditor tenure tracking across our client base, proactively flagging when a 5-year term is approaching completion so that reappointment or fresh appointment processes begin well ahead of the relevant AGM date.`,
+Since a statutory auditor's appointment typically runs for a 5-year term (subject to annual ratification where the AOA requires it), we track the tenure for ${district} clients and flag when reappointment or rotation becomes due — relevant for companies that fall under the mandatory auditor rotation requirements based on their size and structure.`,
     },
-
-    /* ── 21. SBO Declaration & BEN-2 Filing ── */
     {
       slug: "sbo-ben-2-filing",
-      title: `SBO Declaration & BEN-2 Filing in ${areaName}`,
-      price: "₹3,999",
-      timeline: "7–10 Working Days",
-      icon: "🔍",
-      gradient: "from-red-500 to-rose-600",
-      accentBg: "bg-red-50",
-      accentBorder: "border-red-100",
-      accentText: "text-red-700",
+      title: `Significant Beneficial Owner (SBO) Declaration & BEN-2 Filing in ${areaName}`,
+      price: "₹3,499",
+      timeline: "Within 30 Days of BEN-1 Receipt",
+      icon: "🕵️",
       features: [
-        "SBO threshold analysis (10%+ ownership/control)",
-        "BEN-1 declaration collection from identified SBOs",
-        "BEN-2 e-form preparation & filing with RoC Patna",
-        "Register of Significant Beneficial Owners maintenance",
-        "Layered shareholding structure review",
-        "BEN-4 notice drafting where disclosure is withheld",
+        "SBO identification across layered shareholding",
+        "10% threshold analysis (shares/voting/dividend rights)",
+        "BEN-1 declaration collection from SBOs",
+        "BEN-2 preparation & filing with RoC Patna",
+        "Register of SBOs maintenance",
+        "Non-compliance penalty risk advisory",
       ],
-      seoContent: `Significant Beneficial Owner (SBO) identification and BEN-2 filing is a beneficial ownership transparency requirement applicable to companies registered in ${areaName}, ${district}, Bihar wherever an individual — who may not appear as a direct registered shareholder at all — exercises significant influence or control through indirect holdings, layered corporate structures, trusts, partnership interests, or agreements. Under Section 90 of the Companies Act 2013 and the Companies (Significant Beneficial Owners) Rules 2018, an individual qualifies as an SBO if, acting alone or with others, they hold 10% or more of shares, voting rights, or rights to receive distributable dividends, whether held directly or indirectly through other corporate entities, partnership firms, trusts, or pooled investment vehicles.
+      seoContent: `Under Section 90 of the Companies Act, companies in ${areaName}, ${district}, Bihar with layered or indirect shareholding structures must identify any individual who qualifies as a Significant Beneficial Owner — broadly, someone holding 10% or more of shares, voting rights, or dividend entitlement indirectly, or who otherwise exercises significant influence or control, even without appearing as a direct shareholder on paper.
 
-While most straightforward ${areaName} private companies with simple, direct shareholding structures have no SBOs beyond their directly registered shareholders, SBO filing becomes genuinely relevant and often complex where a company's shares are held by another company, an LLP, a trust, or a layered holding structure — common in group company arrangements, family business restructurings, and investments routed through holding entities. In such cases, the ultimate individual exercising control through that intermediate layer must be identified, issue a BEN-1 declaration confirming their SBO status, and the company must file this declaration with RoC Patna in Form BEN-2 within 30 days of receiving the declaration.
+Taxvio conducts SBO analysis for ${areaName} companies with holding structures, group entities, or trust-linked ownership — tracing indirect holdings through intermediate layers to identify who actually crosses the 10% threshold in substance, collecting the mandatory BEN-1 declaration from each identified SBO, and filing Form BEN-2 with RoC Patna within 30 days of receiving that declaration.
 
-Taxvio conducts a thorough shareholding structure analysis for ${areaName} companies to determine whether any SBO reporting obligation exists — tracing indirect holdings through intermediate corporate or trust layers, collecting BEN-1 declarations from identified significant beneficial owners, preparing and filing Form BEN-2 with RoC Patna, and maintaining the statutory Register of Significant Beneficial Owners. Where a company reasonably believes an SBO exists but the individual has not come forward with the required declaration, we also assist in drafting and issuing the Form BEN-4 notice compelling disclosure, as required under the Rules.`,
+This is a frequently overlooked compliance for ${district} companies that don't have an obviously complex ownership structure but still have one or two layers of holding — a company owned by another company owned by an individual, for instance, still requires SBO analysis, and both the company and the individual SBO face penalties for non-declaration, making this worth a proper review even for seemingly straightforward Bihar businesses.`,
     },
-
-    /* ── 22. MSME-1 Half-Yearly Return Filing ── */
     {
       slug: "msme-1-filing",
       title: `MSME-1 Half-Yearly Return Filing in ${areaName}`,
-      price: "₹1,999/half-year",
-      timeline: "2–3 Working Days",
+      price: "₹1,499/half-year",
+      timeline: "April 30 & October 31",
       icon: "🏭",
-      gradient: "from-amber-500 to-yellow-600",
-      accentBg: "bg-amber-50",
-      accentBorder: "border-amber-100",
-      accentText: "text-amber-700",
       features: [
         "Vendor MSME (Udyam) status verification",
-        "Overdue payment identification (beyond 45 days)",
-        "MSME-1 filing for April–September by October 31",
-        "MSME-1 filing for October–March by April 30",
-        "Applicable for FY 2025-26 half-yearly cycles",
-        "Vendor ledger reconciliation support",
+        "Outstanding payment compilation beyond 45 days",
+        "MSME-1 half-yearly preparation & filing",
+        "October 31 (Apr–Sep) & April 30 (Oct–Mar) deadlines",
+        "Vendor payment-term policy advisory",
+        "Interest exposure under MSMED Act awareness",
       ],
-      seoContent: `MSME-1 is a half-yearly return that companies registered in ${areaName}, ${district}, Bihar must file with RoC Patna whenever they have outstanding payments to micro or small enterprise suppliers that remain unpaid for more than 45 days from the date of acceptance of goods or services — a disclosure requirement introduced specifically to improve payment discipline toward India's MSME supplier base, which forms the backbone of Bihar's manufacturing, trading, and services supply chains. The return must be filed twice yearly — covering the April to September period by October 31, and the October to March period by April 30 — for every financial year, including the FY 2025-26 cycle currently applicable to all companies with qualifying overdue dues.
+      seoContent: `Companies in ${areaName}, ${district}, Bihar that purchase goods or services from micro and small enterprise vendors (registered on the Udyam portal) must file MSME-1 half-yearly, disclosing any outstanding payment to such vendors beyond 45 days from the date of acceptance of goods or services — a disclosure requirement specifically designed to shine light on delayed payments to small suppliers.
 
-The obligation applies specifically to payments owed to suppliers registered under the Udyam Registration portal as Micro or Small enterprises (Medium enterprises are excluded from this specific reporting requirement), and the 45-day computation runs from the date of acceptance of goods or services, or the date deemed accepted under the terms of the purchase agreement, in line with Section 15 of the MSMED Act 2006. For ${areaName} companies sourcing raw materials, components, packaging, or services from small local vendors and manufacturers — common across Bihar's food processing, textile, and light engineering sectors — accurate tracking of supplier MSME status and payment ageing is essential to correctly identify reportable dues each half-year.
+Taxvio verifies vendor MSME/Udyam status for ${areaName} companies, compiles outstanding payments crossing the 45-day threshold for the relevant half-year (April to September, filed by October 31; October to March, filed by April 30), and files MSME-1 with RoC Patna within each deadline.
 
-Taxvio supports ${areaName} companies with the complete MSME-1 compliance cycle — verifying Udyam registration status for all active vendors through the government MSME database, reconciling purchase and payment ledgers to identify genuinely overdue amounts beyond the 45-day threshold, preparing accurate MSME-1 disclosures, and filing with RoC Patna before each half-yearly deadline. We also advise on practical measures to reduce future reportable dues — adjusting vendor payment cycles and purchase order terms to stay within the 45-day window wherever commercially feasible.`,
+For ${district} companies working extensively with small local vendors — common in Bihar's trading and manufacturing supply chains — we also flag that outstanding dues beyond 45 days attract compound interest under the MSMED Act at three times the RBI bank rate, independent of the MCA disclosure requirement, making prompt vendor payment not just an MSME-1 compliance matter but a real financial exposure if consistently delayed.`,
     },
-
-    /* ── 23. Annual General Meeting (AGM) Compliance ── */
     {
       slug: "agm-compliance",
       title: `Annual General Meeting (AGM) Compliance in ${areaName}`,
-      price: "₹4,499",
-      timeline: "10–15 Working Days",
-      icon: "🗓️",
-      gradient: "from-teal-500 to-green-600",
-      accentBg: "bg-teal-50",
-      accentBorder: "border-teal-100",
-      accentText: "text-teal-700",
+      price: "₹2,999",
+      timeline: "Within 6 Months of FY End",
+      icon: "🗳️",
       features: [
-        "AGM notice drafting with statutory 21-day notice period",
+        "AGM notice drafting with 21 clear days' notice",
         "Agenda & ordinary/special resolution preparation",
-        "Minutes drafting & signing coordination",
-        "Extension application (INC/GNL filings) where needed",
-        "Shorter notice consent documentation",
-        "Proxy & attendance register preparation",
+        "Minutes drafting within 30 days",
+        "Quorum & proxy requirement compliance",
+        "Extension application (if genuinely needed)",
+        "Coordination with AOC-4/MGT-7 filing",
       ],
-      seoContent: `Holding the Annual General Meeting (AGM) within statutory timelines is a core governance obligation for every Private Limited Company, Public Limited Company, and OPC (where applicable) registered in ${areaName}, ${district}, Bihar — required to be convened within 6 months of the close of the financial year (by September 30 for companies following the April–March year), with the gap between two consecutive AGMs not exceeding 15 months. The AGM is the forum at which shareholders formally approve the company's audited financial statements, consider the Director's Report and Auditor's Report, appoint or reappoint statutory auditors, declare dividends where applicable, and approve any other business requiring shareholder sanction, including director appointments and remuneration matters.
+      seoContent: `Holding a compliant Annual General Meeting is the procedural foundation every other annual ROC filing depends on for companies in ${areaName}, ${district}, Bihar — the AGM must be held within 6 months of the financial year end (by September 30 for standard March-end companies, or within 9 months of incorporation for the first AGM), with 21 clear days' notice to members unless shorter notice is validly consented to.
 
-Proper AGM compliance for an ${areaName} company requires a formally issued notice to all shareholders, directors, and the statutory auditor at least 21 clear days before the meeting date — reducible to shorter notice only with the written consent of shareholders holding at least 95% of voting rights — along with a clearly drafted agenda and explanatory statement for any special business items. Following the meeting, minutes must be drafted within 30 days, circulated, and entered into the statutory Minutes Book, with the Chairman's signature confirming accuracy. Where a company genuinely cannot convene its AGM within the 6-month window due to exceptional circumstances, an extension application can be filed with RoC Patna seeking additional time, though such extensions are granted only in limited circumstances and are not available for the first AGM after incorporation.
+Taxvio manages the full AGM process for ${areaName} companies — drafting the notice with the correct agenda items (adoption of financial statements, auditor appointment/ratification, director reappointment on rotation, and any other business), ensuring quorum and proxy requirements are met, conducting the meeting (physical or video-conference, both permitted), and preparing minutes within the mandatory 30-day window.
 
-Taxvio provides complete, done-for-you AGM compliance support for ${areaName} companies — preparing the AGM notice with correct notice period computation, drafting the agenda and resolutions (ordinary and special, as applicable) covering financial statement adoption, auditor appointment, and any other scheduled business, coordinating minutes drafting and Minutes Book maintenance post-meeting, and where circumstances require it, preparing and filing the extension application with RoC Patna. We ensure every ${areaName} company's AGM is conducted with full procedural compliance — avoiding the governance and penalty risks that arise from informally conducted or undocumented shareholder meetings.`,
+A properly documented AGM in ${district} directly feeds into AOC-4 and MGT-7 — both filings reference the AGM date and its resolutions, so a poorly documented or improperly noticed AGM can create downstream compliance problems for those filings even when the forms themselves are technically correct, which is why we treat AGM compliance as the first step in the annual cycle, not an afterthought.`,
     },
-
-    /* ── 24. Revival / Restoration of Struck-Off Company ── */
     {
       slug: "company-revival-restoration",
-      title: `Revival of Struck-Off Company in ${areaName}`,
-      price: "₹19,999",
-      timeline: "2–4 Months",
-      icon: "⚖️",
-      gradient: "from-slate-600 to-gray-700",
-      accentBg: "bg-slate-50",
-      accentBorder: "border-slate-100",
-      accentText: "text-slate-700",
+      title: `Revival / Restoration of Struck-Off Company in ${areaName}`,
+      price: "₹14,999",
+      timeline: "2–4 Months (NCLT process)",
+      icon: "⚡",
       features: [
-        "Strike-off order & case merit review",
-        "NCLT restoration petition drafting (Section 252)",
-        "Pending AOC-4 / MGT-7 clearance pre-filing",
-        "Representation before NCLT Patna Bench",
+        "Strike-off order review & grounds assessment",
+        "NCLT restoration application (Form NCLT-9)",
+        "Pending AOC-4/MGT-7 clearance",
+        "Legal representation before NCLT",
         "Restoration order follow-up with RoC Patna",
-        "Post-restoration compliance regularisation",
+        "Post-restoration compliance catch-up",
       ],
-      seoContent: `Revival and restoration of a company struck off by RoC Patna is a legal remedy available to ${areaName}, ${district}, Bihar businesses that discover their company — often one they believed was dormant or forgotten — has been forcibly removed from the register of companies, typically due to prolonged non-filing of annual returns, or occasionally removed in error by the ROC itself. A struck-off status is deeply problematic for any business reason requiring the company's continued legal existence — ongoing contracts become unenforceable, bank accounts get frozen, pending litigation in the company's name stalls, and any property or assets held by the company become legally frozen in an entity that technically no longer exists.
+      seoContent: `A company struck off by RoC Patna — whether through a voluntary STK-2 application that's no longer desired, or suo motu by the department for non-filing — can be restored to the register through an application before the National Company Law Tribunal (NCLT) under Section 252, typically within 3 years of the strike-off order for ${areaName}, ${district}, Bihar companies.
 
-Under Section 252 of the Companies Act 2013, an application for restoration can be filed before the National Company Law Tribunal (NCLT) by the company itself, any member, creditor, or workman, within 20 years of the strike-off date — though applications are generally far more successful when filed promptly, with strong evidence that the company was genuinely operational, held valid assets, or had ongoing business obligations that the strike-off has unfairly disrupted. The NCLT Patna Bench, which has jurisdiction over companies registered in Bihar including ${areaName}, examines whether the strike off was just, and where restoration is granted, directs RoC Patna to restore the company's name to the register and treat it as if it had never been struck off.
+Taxvio handles company revival for ${areaName} businesses that need to resume operations with a previously struck-off entity — whether because a bank account, contract, or asset is still tied to the old company name, or because the strike-off happened in error or without the company's knowledge — preparing the NCLT-9 application with supporting grounds, representing the company before the NCLT bench with jurisdiction over Bihar matters, and following up with RoC Patna once the restoration order is issued.
 
-Taxvio manages the complete restoration process for ${areaName} companies — reviewing the strike-off order and underlying circumstances to assess the strength of the restoration case, preparing and filing the NCLT petition with supporting evidence of the company's continued business activity or legitimate interest in restoration, representing the matter before the NCLT Patna Bench, and following through with RoC Patna to ensure the company's status is actually updated in MCA records once the restoration order is passed. Critically, we also clear all pending annual filings that accumulated during the struck-off period and regularise the company's ongoing compliance position immediately after restoration, preventing a repeat strike-off cycle.`,
+Restoration in ${district} is never automatic — the NCLT requires a genuine reason to restore (ongoing assets, pending legitimate business, erroneous strike-off) and typically directs the company to clear all pending annual filings as a condition of restoration, which Taxvio handles as part of the same engagement so the company emerges from the process fully compliant, not just technically re-registered.`,
     },
-
-    /* ── 25. LLP Closure / Strike Off ── */
     {
       slug: "llp-closure",
-      title: `LLP Closure & Strike Off in ${areaName}`,
+      title: `LLP Closure / Strike Off in ${areaName}`,
       price: "₹4,999",
       timeline: "2–4 Months",
-      icon: "📪",
-      gradient: "from-neutral-500 to-stone-600",
-      accentBg: "bg-neutral-50",
-      accentBorder: "border-neutral-100",
-      accentText: "text-neutral-700",
+      icon: "🔐",
       features: [
-        "Form 24 application for LLP strike off",
-        "Partner consent & indemnity documentation",
-        "NIL asset/liability statement of accounts",
-        "Pending Form 8 / Form 11 clearance",
-        "Bank account closure coordination",
-        "Final closure confirmation from RoC Patna",
+        "Form 24 preparation & filing",
+        "1-year inactivity / never-commenced eligibility check",
+        "Partner consent documentation",
+        "Pending Form 11/Form 8 clearance",
+        "Statement of accounts (NIL activity)",
+        "Closure confirmation follow-up with RoC Patna",
       ],
-      seoContent: `LLP closure through the strike off route under Rule 37 of the LLP Rules 2009 allows partners of an inactive or non-operational LLP registered in ${areaName}, ${district}, Bihar to formally dissolve the entity and stop accumulating ongoing compliance obligations — Form 11 annual returns and Form 8 statement of accounts — that continue to apply year after year even for an LLP conducting zero business activity. Much like dormant companies, an inactive ${areaName} LLP that simply stops filing without formally closing continues to attract additional fees of ₹100 per day per form indefinitely, with no upper cap, making voluntary strike off a far more economical path than prolonged inaction.
+      seoContent: `Winding up and striking off an inactive LLP registered in ${areaName}, ${district}, Bihar follows a parallel Fast Track Exit process to company closure, using Form 24 rather than STK-2 — available where the LLP has either never commenced business or has had no business activity for at least one year immediately preceding the application.
 
-To qualify for strike off via Form 24, the LLP must not have commenced business or must have discontinued operations, must have no outstanding liabilities, no pending litigation, and critically, all overdue Form 11 and Form 8 filings up to the date of cessation of business must be brought current — the same compliance-clearing prerequisite that applies to company strike-off applications. The application must be accompanied by a Statement of Accounts showing NIL assets and liabilities (certified by a Chartered Accountant and dated within 30 days of the application), an affidavit from all designated partners confirming the LLP has no pending obligations, consent from all partners, and in certain cases, an indemnity bond protecting against any future liabilities that may surface.
+Taxvio conducts an eligibility review for ${areaName} LLPs seeking closure, clears any pending Form 11 (annual return) and Form 8 (statement of accounts) filings that must be current before Form 24 can be submitted, obtains the required consent from all partners, and prepares the Statement of Accounts confirming NIL or negligible activity.
 
-Taxvio handles the complete LLP closure process for ${areaName} businesses — conducting a full compliance review to identify and clear any pending Form 11 or Form 8 filings, preparing the NIL Statement of Accounts and supporting affidavits and indemnity documentation from designated partners, coordinating bank account closure proof, and filing Form 24 with RoC Patna through to receipt of final confirmation that the LLP has been struck off the register — formally ending all ongoing compliance obligations for the partners.`,
+As with company strike-off, the most common obstacle for ${district} LLPs is unfiled annual compliance arrears — an LLP that conducted zero business for years but never filed Form 11/Form 8 during that time cannot proceed straight to closure, so Taxvio's closure engagements routinely start with bringing the LLP's compliance fully current before Form 24 is even filed.`,
     },
-
-    /* ── 26. CSR-1 Registration ── */
     {
       slug: "csr-1-registration",
       title: `CSR-1 Registration in ${areaName}`,
       price: "₹2,999",
-      timeline: "5–7 Working Days",
+      timeline: "7–15 Working Days",
       icon: "🤲",
-      gradient: "from-pink-500 to-rose-500",
-      accentBg: "bg-pink-50",
-      accentBorder: "border-pink-100",
-      accentText: "text-pink-700",
       features: [
-        "Eligibility check — Section 8 company, trust, or society",
-        "CSR-1 e-form preparation with CA/CS/CWA certification",
-        "DSC coordination for authorised signatory",
-        "Registration number allotment for CSR fund eligibility",
-        "Governing body & activity documentation review",
-        "Guidance on corporate CSR partnership approach",
+        "Eligibility verification (NGO/Trust/Section 8)",
+        "CSR-1 form preparation & filing on MCA portal",
+        "DSC of authorised person",
+        "CA/CS/CWA certification coordination",
+        "Unique CSR registration number issuance",
+        "Corporate CSR fund eligibility advisory",
       ],
-      seoContent: `CSR-1 registration is a mandatory prerequisite under the Companies (CSR Policy) Amendment Rules 2021 for any NGO, Section 8 Company, registered trust, or registered society in ${areaName}, ${district}, Bihar that wishes to receive Corporate Social Responsibility (CSR) funding from companies mandated to spend on CSR activities under Section 135 of the Companies Act 2013. Without a valid CSR-1 registration and the unique CSR Registration Number it generates, an otherwise genuinely well-run and impactful ${areaName} NGO or charitable entity is simply ineligible to be a recipient of corporate CSR funds — regardless of how established or effective its social programs may be, making this registration a gateway requirement for Bihar's non-profit sector to access the substantial CSR funding pools that large corporates across India are statutorily required to deploy.
+      seoContent: `Since 2021, any NGO, trust, society, or Section 8 company in ${areaName}, ${district}, Bihar wanting to receive Corporate Social Responsibility (CSR) funding from companies must first register on the MCA portal via Form CSR-1 and obtain a unique CSR registration number — without it, corporate CSR budgets legally cannot be directed to the organisation, regardless of how credible or impactful its work is.
 
-The CSR-1 registration process requires the applicant entity to have been registered for at least 3 years under its respective governing statute (Societies Registration Act, Indian Trusts Act, or Section 8 of the Companies Act) — though certain exceptions and relaxations apply for entities established by the Central or State Government, or entities set up jointly with another Section 8 company or registered trust that itself already has an established CSR track record. The form requires certification by a practising Chartered Accountant, Company Secretary, or Cost Accountant confirming the entity's legal status, governing structure, and eligibility, along with the Digital Signature Certificate of the entity's authorised signatory and key governing body details.
+Taxvio files CSR-1 for ${areaName} NGOs and trusts seeking access to corporate CSR funding — verifying the entity falls within an eligible category (registered trust, Section 8 company, or society with a 3-year track record, among other routes), preparing the form with the authorised person's Digital Signature Certificate, and arranging the mandatory professional certification from a practising CA, CS, or Cost Accountant that the application requires.
 
-Taxvio assists ${areaName} NGOs, Section 8 Companies, trusts, and societies through the complete CSR-1 registration process — verifying eligibility against the 3-year operational history requirement, preparing the necessary governance and activity documentation, coordinating professional certification, and filing Form CSR-1 on the MCA portal to secure the CSR Registration Number. Once registered, we also advise on positioning your organisation effectively to corporate CSR teams — a step that meaningfully determines whether registration translates into actual funding partnerships for Bihar-focused social programs.`,
+Given the substantial and growing CSR budgets flowing through Bihar's corporate sector — particularly from companies with manufacturing or extraction operations in the state — CSR-1 registration is often the single highest-leverage compliance step a ${district} charitable organisation can take to unlock a funding channel that was previously inaccessible without it.`,
     },
-
-    /* ── 27. Foreign Investment (FC-GPR) Compliance ── */
     {
       slug: "fc-gpr-fdi-compliance",
       title: `Foreign Investment (FC-GPR) Compliance in ${areaName}`,
-      price: "₹8,999",
-      timeline: "15–20 Working Days",
-      icon: "🌐",
-      gradient: "from-indigo-500 to-blue-600",
-      accentBg: "bg-indigo-50",
-      accentBorder: "border-indigo-100",
-      accentText: "text-indigo-700",
+      price: "₹9,999",
+      timeline: "Within 30 Days of Allotment",
+      icon: "🌍",
       features: [
-        "FDI sectoral cap & pricing guideline compliance check",
-        "FIRC & KYC coordination for foreign investor",
-        "Valuation report from a SEBI-registered merchant banker",
-        "FC-GPR filing on RBI FIRMS portal within 30 days",
-        "Share allotment & PAS-3 filing with RoC Patna",
-        "FEMA compliance documentation and record-keeping",
+        "FDI pricing guideline compliance review",
+        "FC-GPR filing on RBI FIRMS portal",
+        "KYC of foreign investor coordination",
+        "Valuation report (CA/merchant banker) arrangement",
+        "Share allotment ROC filing (PAS-3)",
+        "FEMA sectoral cap verification",
       ],
-      seoContent: `Companies in ${areaName}, ${district}, Bihar receiving equity investment from a foreign individual or entity must comply with Foreign Exchange Management Act (FEMA) regulations and Reserve Bank of India reporting norms — a compliance requirement that applies irrespective of the investment amount, becoming increasingly relevant as Bihar's startup ecosystem, particularly in Patna's technology, agri-tech, and education-sector startups, attracts overseas angel investors, diaspora investment from the significant Bihari community abroad, and in some cases, institutional foreign venture capital. The core reporting obligation is Form FC-GPR (Foreign Currency-Gross Provisional Return), filed on the RBI's FIRMS (Foreign Investment Reporting and Management System) portal within 30 days of allotment of shares to the foreign investor.
+      seoContent: `When a company in ${areaName}, ${district}, Bihar receives foreign direct investment — equity funding from an overseas investor — the transaction must be reported to the RBI via Form FC-GPR on the FIRMS portal within 30 days of share allotment, a FEMA compliance requirement entirely separate from and in addition to the standard MCA share allotment filing (Form PAS-3).
 
-Before shares can even be allotted, several foundational compliance steps must be satisfied — confirming the business sector permits foreign investment under the automatic route or identifying whether government approval route requirements apply, verifying pricing guidelines are met (shares must be issued to foreign investors at a price not less than fair value as determined by a SEBI-registered merchant banker or chartered accountant using an internationally accepted valuation methodology), obtaining the Foreign Inward Remittance Certificate (FIRC) confirming the funds were received through proper banking channels, and completing KYC documentation for the foreign investor as prescribed by RBI.
+Taxvio manages FC-GPR compliance for ${areaName} companies receiving foreign investment — verifying the investment complies with FDI pricing guidelines (shares cannot be issued to a foreign investor below fair value, as determined by a CA or merchant banker's valuation report), confirming the sector the company operates in permits foreign investment at the proposed percentage under FEMA sectoral caps, coordinating the foreign investor's KYC documentation required for the filing, and submitting FC-GPR within the statutory window.
 
-Once share allotment is complete, the FC-GPR filing on the FIRMS portal must include the valuation report, FIRC, KYC report from the investor's bank, and board/shareholder resolution approving the allotment — following which the company must also file Form PAS-3 with RoC Patna reporting the share allotment under the Companies Act. Taxvio manages the complete FDI compliance process for ${areaName} companies — from sectoral cap verification and valuation report coordination, through FIRC and KYC collection, to FC-GPR filing on the FIRMS portal and the corresponding PAS-3 filing with RoC Patna — ensuring your company's foreign investment is fully compliant with both FEMA/RBI and Companies Act requirements, protecting against the compounding penalties that apply to unreported or improperly structured foreign investment transactions.`,
+This is an increasingly relevant compliance area for ${district} startups and growing companies attracting investment from NRI or foreign venture investors — a routine funding round can become a serious FEMA compliance problem retroactively if FC-GPR filing is missed or delayed, since RBI compounding (a penalty regularisation process) becomes necessary for late filings, adding cost and complexity to what should have been a straightforward 30-day filing.`,
     },
+  ];
 
+  return [
+    ...original,
+    ...additions.map((svc, i) => ({ ...svc, ...PALETTE[i % PALETTE.length] })),
   ];
 }
 
@@ -776,20 +688,14 @@ Once share allotment is complete, the FC-GPR filing on the FIRMS portal must inc
 export default async function BiharROCAreaPage(
   { params }: { params: Promise<{ city: string }> }
 ) {
-  const { city }  = await params;
-  const areaData  = findArea(city);
-  const areaName  = areaData?.name     ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-  const district  = areaData?.district ?? areaName;
-  const region    = areaData?.region   ?? "Bihar";
-
-  const PHONE = "918937980366";
-  const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
-    `Hello Taxvio, I need ROC / company registration services in ${areaName}, ${district}, Bihar.`
-  )}`;
+  const { city } = await params;
+  const areaData = findArea(city);
+  const areaName = areaData?.name ?? city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const district = areaData?.district ?? areaName;
+  const region = areaData?.region ?? "Bihar";
 
   const services = getServiceContent(areaName, district, region);
 
-  /* ── Nearby areas ── */
   const nearbyAreas = BIHAR_AREAS
     .filter((c) => c.district === district && slugifyArea(c.name) !== city)
     .slice(0, 6);
@@ -797,15 +703,15 @@ export default async function BiharROCAreaPage(
     ? BIHAR_AREAS.filter((c) => c.region === region && slugifyArea(c.name) !== city).slice(0, 6)
     : nearbyAreas;
 
-  /* ── JSON-LD ── */
+  /* ── JSON-LD (telephone/email here are structured business data for search — not a UI call/chat feature) ── */
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: "Taxvio",
     url: "https://www.taxvio.in",
-    telephone: `+${PHONE}`,
-    email: "support@taxvio.in",
-    description: `Taxvio provides Private Limited, LLP, OPC, Section 8 company formation; annual ROC compliance; director changes; name change; capital increase; and company closure in ${areaName}, ${district}, Bihar.`,
+    telephone: "+918937980366",
+    email: "info@taxvio.in",
+    description: `Taxvio provides Private Limited, LLP, OPC, Nidhi, Producer & Section 8 company formation; annual ROC compliance; director changes; name change; capital increase; charge registration; share transfer; CSR-1; FC-GPR; and company closure in ${areaName}, ${district}, Bihar.`,
     areaServed: [
       {
         "@type": "Place",
@@ -817,18 +723,9 @@ export default async function BiharROCAreaPage(
         },
       },
     ],
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "3100",
-    },
-    priceRange: "₹2,499 - ₹10,999",
+    address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
+    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "3100" },
+    priceRange: "₹999 - ₹14,999",
     openingHours: "Mo-Sa 09:00-19:00",
   };
 
@@ -836,9 +733,9 @@ export default async function BiharROCAreaPage(
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home",      item: "https://www.taxvio.in" },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.taxvio.in" },
       { "@type": "ListItem", position: 2, name: "ROC Bihar", item: "https://www.taxvio.in/state/bihar/roc" },
-      { "@type": "ListItem", position: 3, name: district,    item: `https://www.taxvio.in/state/bihar/roc#${district.toLowerCase()}` },
+      { "@type": "ListItem", position: 3, name: district, item: `https://www.taxvio.in/state/bihar/roc#${district.toLowerCase()}` },
       { "@type": "ListItem", position: 4, name: `${areaName} ROC`, item: `https://www.taxvio.in/state/bihar/roc/${city}` },
     ],
   };
@@ -863,40 +760,27 @@ export default async function BiharROCAreaPage(
       {
         "@type": "Question",
         name: `How long does company registration take in ${areaName}, Bihar?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Private Limited Company and OPC registration in ${areaName} typically takes 7–10 working days from complete document submission. LLP registration takes 7–12 working days. Section 8 company requires 20–30 working days due to the Central Government licence process. All companies registered with an office in ${areaName} fall under RoC Patna.`,
-        },
+        acceptedAnswer: { "@type": "Answer", text: `Private Limited Company and OPC registration in ${areaName} typically takes 7–10 working days from complete document submission. LLP registration takes 7–12 working days. Section 8 company requires 20–30 working days due to the Central Government licence process. All companies registered with an office in ${areaName} fall under RoC Patna.` },
       },
       {
         "@type": "Question",
         name: `What is the minimum capital required for company registration in ${areaName}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `There is no minimum paid-up capital requirement for Private Limited Company, OPC, or LLP registration in ${areaName} since the Companies Amendment Act 2015 removed the ₹1 lakh minimum. Incorporation can begin with as little as ₹1 authorised and paid-up capital.`,
-        },
+        acceptedAnswer: { "@type": "Answer", text: `There is no minimum paid-up capital requirement for Private Limited Company, OPC, or LLP registration in ${areaName} since the Companies Amendment Act 2015 removed the ₹1 lakh minimum. Incorporation can begin with as little as ₹1 authorised and paid-up capital.` },
       },
       {
         "@type": "Question",
         name: `What annual compliance is required for a company in ${areaName}, Bihar?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Every Private Limited Company in ${areaName} must file AOC-4 (financial statements) within 30 days of AGM and MGT-7 (annual return) within 60 days of AGM — both typically due by October/November. AGM must be held by September 30. LLPs file Form 11 by May 30 and Form 8 by October 30. Non-compliance attracts ₹100/day additional fees per form, with no cap on AOC-4. All filings go to RoC Patna.`,
-        },
+        acceptedAnswer: { "@type": "Answer", text: `Every Private Limited Company in ${areaName} must file AOC-4 (financial statements) within 30 days of AGM and MGT-7 (annual return) within 60 days of AGM — both typically due by October/November. AGM must be held by September 30. LLPs file Form 11 by May 30 and Form 8 by October 30. Non-compliance attracts ₹100/day additional fees per form, with no cap on AOC-4. All filings go to RoC Patna.` },
       },
     ],
   };
 
   return (
     <>
-      <Script id="lb-schema"  type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
-      <Script id="bc-schema"  type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Script id="sl-schema"  type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceListSchema) }} />
-      <Script id="faq-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <Script id="lb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+      <Script id="bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="sl-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceListSchema) }} />
+      <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <main className="bg-[#f8fbfd] text-gray-800 font-sans">
 
@@ -912,18 +796,16 @@ export default async function BiharROCAreaPage(
 
           <div className="relative max-w-6xl mx-auto px-6 pt-16 pb-10 md:pt-24 md:pb-14">
 
-            {/* Breadcrumb */}
             <nav className="mb-7" aria-label="Breadcrumb">
               <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/45">
                 {[
-                  { href: "/",                    label: "Home" },
-                  { href: "/state/bihar/roc",     label: "ROC — Bihar" },
-                  { href: null,                   label: areaName },
+                  { href: "/", label: "Home" },
+                  { href: "/state/bihar/roc", label: "ROC — Bihar" },
+                  { href: null, label: areaName },
                 ].map(({ href, label }, i, arr) => (
                   <li key={label} className="flex items-center gap-1.5">
-                    {href
-                      ? <Link href={href} className="hover:text-white/80 transition">{label}</Link>
-                      : <span className="text-white/80 font-semibold">{label}</span>}
+                    {href ? <Link href={href} className="hover:text-white/80 transition">{label}</Link>
+                          : <span className="text-white/80 font-semibold">{label}</span>}
                     {i < arr.length - 1 && <span className="text-white/25">›</span>}
                   </li>
                 ))}
@@ -932,7 +814,6 @@ export default async function BiharROCAreaPage(
 
             <div className="grid md:grid-cols-[1fr_300px] gap-10 items-start">
 
-              {/* Left */}
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-5 backdrop-blur-sm"
                   style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)" }}>
@@ -948,18 +829,11 @@ export default async function BiharROCAreaPage(
                 </h1>
 
                 <p className="mt-5 text-white/75 text-base md:text-lg leading-relaxed max-w-2xl">
-                  Expert{" "}
-                  <strong className="text-white">
-                    Private Limited, LLP &amp; OPC formation
-                  </strong>
-                  , annual ROC compliance (AOC-4, MGT-7), director changes,
-                  company name change, authorised capital increase &amp; company
-                  strike-off in{" "}
-                  <strong className="text-white">
-                    {areaName}, {district}, Bihar
-                  </strong>{" "}
-                  — 100% online by CA professionals. Starting{" "}
-                  <strong className="text-sky-300">₹3,999</strong>.
+                  Expert <strong className="text-white">Private Limited, LLP &amp; OPC formation</strong>,
+                  annual ROC compliance (AOC-4, MGT-7), director changes, name change, capital increase,
+                  and {services.length - 6} other services in{" "}
+                  <strong className="text-white">{areaName}, {district}, Bihar</strong> — 100% online by
+                  CA professionals. Starting <strong className="text-sky-300">₹1,499</strong>.
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-2">
@@ -978,72 +852,52 @@ export default async function BiharROCAreaPage(
                   ))}
                 </div>
 
-                <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                  
+                <div className="mt-8">
                   <Link href="/contact"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-[#00416a] text-sm font-bold shadow-xl hover:bg-gray-50 active:scale-[0.97] transition-all">
                     Free Consultation <ArrowRight size={15} className="shrink-0" />
                   </Link>
-
                 </div>
               </div>
 
-              {/* Right — service menu
+              {/* Right — service menu */}
               <div className="rounded-2xl overflow-hidden shadow-2xl border"
                 style={{ background: "rgba(255,255,255,0.07)", borderColor: "rgba(255,255,255,0.14)" }}>
-                <div className="px-5 py-4 border-b flex items-center justify-between"
-                  style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+                <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.10)" }}>
                   <div>
                     <p className="font-bold text-white text-sm">ROC Services — {areaName}</p>
-                    <p className="text-[11px] text-white/50 mt-0.5">
-                      {district} · {services.length} services
-                    </p>
+                    <p className="text-[11px] text-white/50 mt-0.5">{district} · {services.length} services</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <Star size={12} className="fill-yellow-400 text-yellow-400" />
                     <span className="text-white text-xs font-bold">4.9</span>
                   </div>
                 </div>
-                <div className="p-4 space-y-1.5">
+                <div className="p-4 space-y-1.5 max-h-[420px] overflow-y-auto">
                   {services.map((svc) => (
                     <a href={`#${svc.slug}`} key={svc.slug}
                       className="flex items-center justify-between rounded-xl px-3 py-2 transition-colors hover:bg-white/10"
                       style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
                       <span className="flex items-center gap-2 text-[11px] font-semibold text-white/75">
                         <span>{svc.icon}</span>
-                        <span className="truncate">
-                          {svc.title
-                            .replace(` in ${areaName}`, "")
-                            .replace(` & ROC Compliance`, "")
-                            .replace(` Registration`, "")
-                            .replace(` (OPC)`, " (OPC)")
-                            .replace(` & Strike Off`, " / Strike Off")
-                            .replace(` in Authorised Share Capital`, "")
-                            .replace(` Appointment & Resignation`, "")}
-                        </span>
+                        <span className="truncate">{svc.title.replace(` in ${areaName}`, "")}</span>
                       </span>
-                      <span className="text-[10px] font-bold text-sky-300 shrink-0 ml-2">
-                        {svc.price}
-                      </span>
+                      <span className="text-[10px] font-bold text-sky-300 shrink-0 ml-2">{svc.price}</span>
                     </a>
                   ))}
                 </div>
                 <div className="mx-4 mb-4 mt-2 rounded-xl px-4 py-3 flex items-center justify-between"
                   style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
                   <div>
-                    <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wide">
-                      Starting Price
-                    </p>
-                    <p className="text-sky-300 text-2xl font-extrabold leading-tight">₹3,999</p>
+                    <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wide">Starting Price</p>
+                    <p className="text-sky-300 text-2xl font-extrabold leading-tight">₹1,499</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wide">
-                      Incorporation
-                    </p>
+                    <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wide">Incorporation</p>
                     <p className="text-white text-sm font-bold">7–10 Days</p>
                   </div>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
 
@@ -1051,10 +905,10 @@ export default async function BiharROCAreaPage(
           <div className="border-t border-white/10">
             <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
               {[
-                { icon: BadgeCheck,  label: "MCA-Registered CAs"      },
-                { icon: TrendingUp,  label: "1,800+ Companies Formed"  },
-                { icon: Users,       label: "200+ Bihar Areas"         },
-                { icon: IndianRupee, label: "RoC Patna Jurisdiction"   },
+                { icon: BadgeCheck,  label: "MCA-Registered CAs" },
+                { icon: TrendingUp,  label: "1,800+ Companies Formed" },
+                { icon: Users,       label: "200+ Bihar Areas" },
+                { icon: IndianRupee, label: "RoC Patna Jurisdiction" },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-1.5 text-white/45 text-xs">
                   <Icon size={11} className="text-sky-400 shrink-0" /> {label}
@@ -1072,13 +926,12 @@ export default async function BiharROCAreaPage(
         <section className="py-8 bg-white border-b border-gray-100">
           <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { val: "7–10",   label: "Days to Incorporate", icon: Zap           },
-              { val: "4.9★",   label: "Average Rating",      icon: Star          },
-              { val: "₹3,999", label: "Starting Price",      icon: IndianRupee   },
-              { val: "9",      label: "ROC Services",        icon: ClipboardList },
+              { val: "7–10",   label: "Days to Incorporate", icon: Zap },
+              { val: "4.9★",   label: "Average Rating",      icon: Star },
+              { val: "₹1,499", label: "Starting Price",      icon: IndianRupee },
+              { val: String(services.length), label: "ROC Services", icon: ClipboardList },
             ].map(({ val, label, icon: Icon }) => (
-              <div key={label}
-                className="flex flex-col items-center gap-1.5 p-4 rounded-2xl bg-[#f2f8fc] border border-[#deeef7] text-center hover:shadow-sm transition-all">
+              <div key={label} className="flex flex-col items-center gap-1.5 p-4 rounded-2xl bg-[#f2f8fc] border border-[#deeef7] text-center hover:shadow-sm transition-all">
                 <div className="w-8 h-8 rounded-lg bg-[#00416a]/10 flex items-center justify-center">
                   <Icon size={15} className="text-[#00416a]" />
                 </div>
@@ -1096,7 +949,6 @@ export default async function BiharROCAreaPage(
               <article key={svc.slug} id={svc.slug}
                 className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
 
-                {/* Coloured header */}
                 <div className={`bg-gradient-to-r ${svc.gradient} p-6 md:p-8`}>
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex items-center gap-4">
@@ -1107,9 +959,7 @@ export default async function BiharROCAreaPage(
                         <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-1">
                           ROC Service #{String(idx + 1).padStart(2, "0")}
                         </p>
-                        <h2 className="text-lg md:text-2xl font-extrabold text-white leading-tight">
-                          {svc.title}
-                        </h2>
+                        <h2 className="text-lg md:text-2xl font-extrabold text-white leading-tight">{svc.title}</h2>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-3 shrink-0">
@@ -1125,22 +975,16 @@ export default async function BiharROCAreaPage(
                   </div>
                 </div>
 
-                {/* Body */}
                 <div className="p-6 md:p-8">
                   <div className="grid md:grid-cols-[1fr_280px] gap-8 items-start">
-
-                    {/* SEO / AI content */}
                     <div>
                       <h3 className="text-xs font-bold text-[#00416a] uppercase tracking-widest mb-4 flex items-center gap-2">
                         <BookOpen size={13} /> About This Service in {areaName}
                       </h3>
                       <div className="space-y-4 text-gray-600 text-sm leading-relaxed">
-                        {svc.seoContent.split("\n\n").map((para, i) => (
-                          <p key={i}>{para}</p>
-                        ))}
+                        {svc.seoContent.split("\n\n").map((para, i) => <p key={i}>{para}</p>)}
                       </div>
                       <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-100">
-                       
                         <Link href="/contact"
                           className="inline-flex items-center gap-2 bg-[#00416a] hover:bg-[#002b45] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-[0.97]">
                           Get Quote <ArrowRight size={13} />
@@ -1148,7 +992,6 @@ export default async function BiharROCAreaPage(
                       </div>
                     </div>
 
-                    {/* Features sidebar */}
                     <div className={`${svc.accentBg} rounded-2xl p-5 border ${svc.accentBorder}`}>
                       <p className="text-[11px] font-bold text-[#00416a] uppercase tracking-widest mb-4 flex items-center gap-2">
                         <CheckCircle size={13} /> What&apos;s Included
@@ -1166,9 +1009,7 @@ export default async function BiharROCAreaPage(
                       <div className="mt-5 pt-4 border-t border-gray-200/60">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">
-                              Service Fee
-                            </p>
+                            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Service Fee</p>
                             <p className={`text-2xl font-extrabold ${svc.accentText}`}>{svc.price}</p>
                           </div>
                           <Link href="/contact"
@@ -1198,45 +1039,14 @@ export default async function BiharROCAreaPage(
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
-                {
-                  icon: Users,
-                  title: "MCA-Registered CA Team",
-                  desc: `Every company registration and ROC filing for ${areaName} businesses is handled by practising CAs registered with MCA — with direct familiarity of RoC Patna's name approval patterns and processing requirements.`,
-                  color: "bg-blue-100 text-blue-700",
-                },
-                {
-                  icon: Zap,
-                  title: "100% Online — No Office Visit",
-                  desc: `Send PAN, Aadhaar, address proof, and business details on WhatsApp from ${areaName}. We handle all MCA portal submissions, DSC procurement, and RoC Patna filings without any physical visit.`,
-                  color: "bg-emerald-100 text-emerald-700",
-                },
-                {
-                  icon: Landmark,
-                  title: "RoC Patna Jurisdiction Experts",
-                  desc: `Every Bihar-based company falls under RoC Patna's administration. We understand its name approval objection patterns, common documentation requirements, and standard processing timelines — minimising delays for ${areaName} businesses.`,
-                  color: "bg-violet-100 text-violet-700",
-                },
-                {
-                  icon: AlertCircle,
-                  title: "Proactive Compliance Reminders",
-                  desc: `We maintain a shared compliance calendar for every ${areaName} company client — advance reminders for AGM dates, AOC-4, MGT-7, DIR-3 KYC, and LLP Form 11/8 deadlines before penalties accrue.`,
-                  color: "bg-orange-100 text-orange-700",
-                },
-                {
-                  icon: CheckCircle,
-                  title: "Transparent Pricing from ₹3,999",
-                  desc: `No hidden RoC filing fee surprises. Clear, all-inclusive upfront pricing for every ROC service in ${areaName}. Business owners know exactly what they pay before we start.`,
-                  color: "bg-teal-100 text-teal-700",
-                },
-                {
-                  icon: RefreshCw,
-                  title: "End-to-End Post-Incorporation",
-                  desc: `Company formation is just the beginning. We simultaneously handle GST registration, PAN/TAN allotment, and professional tax for new ${areaName} companies — getting you fully operational in one engagement.`,
-                  color: "bg-sky-100 text-sky-700",
-                },
+                { icon: Users, title: "MCA-Registered CA Team", desc: `Every company registration and ROC filing for ${areaName} businesses is handled by practising CAs registered with MCA — with direct familiarity of RoC Patna's name approval patterns and processing requirements.`, color: "bg-blue-100 text-blue-700" },
+                { icon: Zap, title: "100% Online — No Office Visit", desc: `Send PAN, Aadhaar, address proof, and business details with us from ${areaName}. We handle all MCA portal submissions, DSC procurement, and RoC Patna filings without any physical visit.`, color: "bg-emerald-100 text-emerald-700" },
+                { icon: Landmark, title: "RoC Patna Jurisdiction Experts", desc: `Every Bihar-based company falls under RoC Patna's administration. We understand its name approval objection patterns, common documentation requirements, and standard processing timelines — minimising delays for ${areaName} businesses.`, color: "bg-violet-100 text-violet-700" },
+                { icon: AlertCircle, title: "Proactive Compliance Reminders", desc: `We maintain a shared compliance calendar for every ${areaName} company client — advance reminders for AGM dates, AOC-4, MGT-7, DIR-3 KYC, and LLP Form 11/8 deadlines before penalties accrue.`, color: "bg-orange-100 text-orange-700" },
+                { icon: CheckCircle, title: "Transparent Pricing from ₹1,499", desc: `No hidden RoC filing fee surprises. Clear, all-inclusive upfront pricing for every ROC service in ${areaName}. Business owners know exactly what they pay before we start.`, color: "bg-teal-100 text-teal-700" },
+                { icon: RefreshCw, title: "End-to-End Post-Incorporation", desc: `Company formation is just the beginning. We simultaneously handle GST registration, PAN/TAN allotment, and professional tax for new ${areaName} companies — getting you fully operational in one engagement.`, color: "bg-sky-100 text-sky-700" },
               ].map(({ icon: Icon, title, desc, color }) => (
-                <div key={title}
-                  className="group flex items-start gap-4 p-5 bg-[#f8fbfd] border border-[#deeef7] rounded-2xl hover:border-[#00416a]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                <div key={title} className="group flex items-start gap-4 p-5 bg-[#f8fbfd] border border-[#deeef7] rounded-2xl hover:border-[#00416a]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                   <div className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
                     <Icon size={17} />
                   </div>
@@ -1263,13 +1073,12 @@ export default async function BiharROCAreaPage(
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { step: "01", title: "Share Documents",     desc: "Send PAN, Aadhaar, address proof & business details of all directors on WhatsApp" },
+                { step: "01", title: "Share Documents", desc: "Submit PAN, Aadhaar, address proof & business details of all directors through our enquiry form" },
                 { step: "02", title: "DSC & Name Approval", desc: "Our CA team procures DSCs, applies for DIN, and reserves company name via RUN/SPICe+" },
-                { step: "03", title: "MOA, AOA & SPICe+",   desc: "We draft MOA & AOA, file SPICe+ with RoC Patna, and pay applicable government fees" },
-                { step: "04", title: "Certificate & Beyond",desc: "Certificate of Incorporation received. We complete PAN, TAN, GST & compliance setup" },
+                { step: "03", title: "MOA, AOA & SPICe+", desc: "We draft MOA & AOA, file SPICe+ with RoC Patna, and pay applicable government fees" },
+                { step: "04", title: "Certificate & Beyond", desc: "Certificate of Incorporation received. We complete PAN, TAN, GST & compliance setup" },
               ].map(({ step, title, desc }) => (
-                <div key={step}
-                  className="relative p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                <div key={step} className="relative p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
                   <div className="w-10 h-10 rounded-xl bg-[#00416a] text-white text-sm font-extrabold flex items-center justify-center mb-3">
                     {step}
                   </div>
@@ -1295,7 +1104,7 @@ export default async function BiharROCAreaPage(
                 Company Registration FAQs — {areaName}, Bihar
               </h2>
             </div>
-            <div className="space-y-3" itemScope itemType="https://schema.org/FAQPage">
+            <div className="space-y-3">
               {[
                 {
                   q: `How long does company registration take in ${areaName}, Bihar?`,
@@ -1310,18 +1119,14 @@ export default async function BiharROCAreaPage(
                   a: `Taxvio's annual ROC compliance package for ${areaName} companies starts at ₹4,999/year — covering AOC-4, MGT-7/MGT-7A, AGM and board meeting minutes, and secretarial documentation. DIN KYC (DIR-3 KYC) is included. Statutory audit fees are separate and depend on turnover. LLP annual compliance (Form 11 + Form 8 with RoC Patna) starts at ₹3,999/year.`,
                 },
               ].map((f) => (
-                <div key={f.q}
-                  className="border border-gray-100 rounded-2xl bg-white shadow-sm"
-                  itemScope itemType="https://schema.org/Question">
+                <div key={f.q} className="border border-gray-100 rounded-2xl bg-white shadow-sm">
                   <div className="px-5 py-4 flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-[#00416a]/10 flex items-center justify-center shrink-0 mt-0.5">
                       <FileText size={11} className="text-[#00416a]" />
                     </span>
                     <div>
-                      <p className="text-sm font-semibold text-gray-800" itemProp="name">{f.q}</p>
-                      <div itemScope itemType="https://schema.org/Answer">
-                        <p className="text-xs text-gray-600 mt-2 leading-relaxed" itemProp="text">{f.a}</p>
-                      </div>
+                      <p className="text-sm font-semibold text-gray-800">{f.q}</p>
+                      <p className="text-xs text-gray-600 mt-2 leading-relaxed">{f.a}</p>
                     </div>
                   </div>
                 </div>
@@ -1337,12 +1142,8 @@ export default async function BiharROCAreaPage(
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-7 rounded-full bg-gradient-to-b from-[#00416a] to-sky-400" />
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-[#00416a]">
-                    {district} &amp; {region}
-                  </p>
-                  <h2 className="text-lg font-extrabold text-gray-800">
-                    ROC Services in Nearby Bihar Areas
-                  </h2>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-[#00416a]">{district} &amp; {region}</p>
+                  <h2 className="text-lg font-extrabold text-gray-800">ROC Services in Nearby Bihar Areas</h2>
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
@@ -1381,30 +1182,21 @@ export default async function BiharROCAreaPage(
                   Register Your Company in {areaName} — Fast &amp; Compliant
                 </h2>
                 <p className="mt-4 text-white/70 max-w-xl mx-auto text-sm leading-relaxed">
-                  Private Limited, LLP, OPC, Section 8 formation; annual ROC compliance;
-                  director changes; company closure — all delivered online for businesses
-                  in {areaName}, {district}, Bihar. Starting ₹3,999. CA-assisted,
-                  same-day WhatsApp response.
+                  Private Limited, LLP, OPC, Section 8 formation; annual ROC compliance; director changes;
+                  charge registration; CSR-1; FC-GPR; and company closure — all delivered online for
+                  businesses in {areaName}, {district}, Bihar. Starting ₹1,499. CA-assisted, same-day response.
                 </p>
-                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25d366] hover:bg-[#1ebe5d] px-7 py-3.5 text-white text-sm font-bold shadow-lg active:scale-[0.97] transition-all">
-                    <MessageCircle size={16} /> WhatsApp Us
-                  </a>
+                <div className="mt-8 flex items-center justify-center">
                   <Link href="/contact"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all">
                     Free Consultation <ArrowRight size={15} />
                   </Link>
-                  <a href={`tel:${PHONE}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/5 px-7 py-3.5 text-white text-sm font-bold hover:bg-white/10 hover:border-white active:scale-[0.97] transition-all">
-                    <Phone size={15} /> Call Now
-                  </a>
                 </div>
               </div>
             </div>
           </div>
         </section>
-  <InquiryFormButton/>
+        <InquiryFormButton/>
         <Footar />
       </main>
     </>
