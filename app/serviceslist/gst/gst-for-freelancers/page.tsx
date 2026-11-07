@@ -1,242 +1,88 @@
-// app/gst-for-freelancer/page.tsx
+// app/serviceslist/gst/gst-for-freelancer/page.tsx
 
 import type { Metadata } from "next";
-import Script from "next/script";
 import GstForFreelancerClient from "./GstForFreelancerClient";
 
-/* ─── SEO Metadata ─────────────────────────────────────────────────────────── */
+const URL = "https://www.taxvio.in/serviceslist/gst/gst-for-freelancer";
+
 export const metadata: Metadata = {
-  title:
-    "GST for Freelancers in India — Registration, LUT, Returns & Foreign Client Billing | Taxvio",
+  title: "GST for Freelancers India — Registration, LUT, Returns & Foreign Client Billing | Taxvio",
   description:
-    "Complete GST guidance for freelancers and independent professionals in India. GST registration, LUT for foreign client invoicing, GSTR-1, GSTR-3B, zero-rated export of services, SAC code mapping, ITC, QRMP scheme and GST notice support. Starting ₹1,499. CA-assisted, pan-India online service.",
+    "GST registration, LUT for zero-rated foreign billing, SAC code setup, GSTR-1, GSTR-3B, ITC on business tools and RCM compliance for freelancers and independent professionals. CA-led, quote upfront.",
   keywords: [
-    "GST for freelancers India",
-    "GST registration for freelancers",
-    "GST for independent professionals India",
-    "GST for foreign clients India",
-    "LUT GST freelancer",
-    "Letter of Undertaking GST export services",
-    "zero rated supply export of services GST",
-    "GST for IT freelancers",
-    "GST for designers freelancers India",
-    "GST for consultants India",
-    "SAC code for freelancers India",
-    "GSTR-1 GSTR-3B freelancer",
-    "GST threshold for services India",
-    "QRMP scheme freelancer",
-    "reverse charge mechanism freelancer India",
-    "GST on freelance income India",
-    "GST invoice for freelancer India",
-    "GST for content writers India",
-    "GST for software developers freelance India",
-    "Taxvio GST for freelancers",
+    "GST for freelancers","GST registration for freelancers","GST for freelancers India","LUT for freelancers","GST on foreign client payments",
+    "freelancer export of services GST","SAC code for freelancers","GST for software developers","GST for graphic designers","GST for consultants",
+    "RCM on foreign subscriptions","QRMP scheme freelancers","GST for freelancers Khatauli","GST for freelancers Uttar Pradesh","CA assisted freelancer GST",
   ],
-  alternates: {
-    canonical: "https://www.taxvio.in/gst-for-freelancers",
-  },
+  alternates: { canonical: URL },
   openGraph: {
-    title: "GST for Freelancers in India — LUT, Returns & Foreign Client Billing | Taxvio",
-    description:
-      "GST registration, LUT for foreign client invoicing, zero-rated export, SAC codes, GSTR-1, GSTR-3B and GST notices — complete freelancer GST support starting ₹1,499.",
-    url: "https://www.taxvio.in/gst-for-freelancers",
-    siteName: "Taxvio",
-    locale: "en_IN",
-    type: "website",
-    images: [
-      {
-        url: "https://www.taxvio.in/og/gst-for-freelancers.jpg",
-        width: 1200,
-        height: 630,
-        alt: "GST for Freelancers India — Taxvio",
-      },
-    ],
+    title: "GST for Freelancers & Independent Professionals | Taxvio",
+    description: "Registration, LUT for foreign clients, SAC setup, returns, ITC and RCM — handled by a CA-led team.",
+    url: URL, siteName: "Taxvio", locale: "en_IN", type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "GST for Freelancers India | Taxvio",
-    description:
-      "Complete freelancer GST — registration, LUT, zero-rated export, GSTR-1, GSTR-3B. Starting ₹1,499.",
-    images: ["https://www.taxvio.in/og/gst-for-freelancers.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-snippet": -1,
-      "max-image-preview": "large",
-      "max-video-preview": -1,
-    },
-  },
+  twitter: { card: "summary_large_image", title: "GST for Freelancers | Taxvio", description: "GST registration, LUT, returns and foreign client billing for freelancers." },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large", "max-video-preview": -1 } },
 };
 
-/* ─── JSON-LD Schemas ─────────────────────────────────────────────────────── */
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  name: "GST for Freelancers and Independent Professionals",
-  provider: {
-    "@type": "AccountingService",
-    name: "Taxvio",
-    url: "https://www.taxvio.in",
-    telephone: "+918937980366",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
-  },
-  serviceType: "GST Registration and Compliance for Freelancers",
-  areaServed: { "@type": "Country", name: "India" },
-  description:
-    "End-to-end GST support for freelancers — GST registration, Letter of Undertaking (LUT) for foreign client billing, zero-rated export of services, SAC code mapping, GSTR-1, GSTR-3B, QRMP scheme advisory, ITC claims, RCM review and GST notice support.",
-  offers: {
-    "@type": "Offer",
-    price: "1499",
-    priceCurrency: "INR",
-    availability: "https://schema.org/InStock",
-    priceValidUntil: "2026-12-31",
-  },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    reviewCount: "220",
-  },
-};
+const FAQS = [
+  { q: "Do freelancers need GST registration in India?", a: "A freelancer providing services generally must register when aggregate turnover crosses the prescribed threshold, commonly ₹20 lakh (₹10 lakh in some special category states). Some situations require registration irrespective of turnover, so our CA confirms your position." },
+  { q: "Should I register for GST voluntarily as a freelancer?", a: "Many freelancers do. A GSTIN lets you claim input tax credit on tools and win business clients who need GST invoices, and it is often needed to file an LUT and to claim refunds on exports." },
+  { q: "Is GST charged on services to foreign clients?", a: "Services supplied to a client outside India, where the conditions for export of services are met, are generally zero-rated. You can invoice without paying IGST if you have furnished an LUT, or pay IGST and claim a refund." },
+  { q: "What conditions apply to export of services?", a: "Broadly, the supplier is in India, the recipient is outside India, the place of supply is outside India and payment is received in convertible foreign exchange (or permitted Indian rupees), and the supplier and recipient are not merely establishments of a distinct person. Our CA checks each condition for your case." },
+  { q: "What is an LUT and why do freelancers need it?", a: "A Letter of Undertaking lets you export services without paying IGST. It is generally furnished for each financial year and should be in place before you issue your first zero-rated invoice. See our GST LUT filing page for details." },
+  { q: "Which SAC code applies to my work?", a: "The service accounting code depends on the nature of your work, for example software development, design, consulting, writing or marketing. We map your services to the right code and tax rate and set up your invoice format." },
+  { q: "Can I claim ITC on my laptop and software?", a: "Input tax credit is generally available on goods and services used for your business, subject to the eligibility conditions, valid invoices in your GSTIN name and the credit appearing in your GSTR-2B. We review each purchase." },
+  { q: "What is reverse charge on foreign subscriptions?", a: "When you buy certain services from a foreign provider, the law may make you liable to pay the GST under reverse charge. We review your subscriptions and show how to account for them and, where eligible, claim the related credit." },
+  { q: "What is the QRMP scheme and is it right for me?", a: "Eligible taxpayers can file returns quarterly while paying tax monthly. It reduces filing work for smaller freelancers but does not remove monthly payments. We advise on whether it suits your billing pattern." },
+  { q: "Do I need to file returns if I had no income in a month?", a: "Yes. A registered taxpayer must file even when there is no business in the period, using a nil return, to avoid late fees." },
+  { q: "What if I get a GST notice about my export invoices?", a: "We reconcile your invoices, receipts and returns, prepare a reasoned reply and coordinate with the department. See our GST audit assistance page for notice support." },
+];
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: "https://www.taxvio.in",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Services",
-      item: "https://www.taxvio.in/serviceslist",
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      name: "GST",
-      item: "https://www.taxvio.in/serviceslist/gst",
-    },
-    {
-      "@type": "ListItem",
-      position: 4,
-      name: "GST for Freelancers",
-      item: "https://www.taxvio.in/gst-for-freelancers",
-    },
-  ],
-};
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Is GST mandatory for freelancers in India?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "GST registration is mandatory for freelancers if their aggregate turnover from services exceeds ₹20 lakh in a financial year (₹10 lakh for special category states). However, GST registration is compulsory regardless of turnover for freelancers making inter-state taxable supplies of services and for those exporting services to foreign clients who wish to issue zero-rated invoices without paying IGST.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can a freelancer invoice foreign clients without charging GST?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. Export of services is zero-rated under Section 16 of the IGST Act. A registered freelancer can invoice foreign clients without charging GST by obtaining a Letter of Undertaking (LUT) by filing Form RFD-11 on the GST portal before the financial year begins. Without an LUT, the freelancer must charge IGST at the applicable rate and then claim a refund.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is a Letter of Undertaking (LUT) for freelancers?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A Letter of Undertaking (LUT) is a declaration filed in Form RFD-11 on the GST portal by a registered exporter, including freelancers who supply services to foreign clients. After filing the LUT, the freelancer can issue zero-rated invoices to foreign clients without collecting IGST and without needing to claim a refund.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Which GST returns must a freelancer file?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A registered freelancer generally files GSTR-1 for outward supplies and GSTR-3B for monthly tax payment. Freelancers with aggregate turnover up to ₹5 crore can opt for the QRMP scheme — filing GSTR-1 and GSTR-3B quarterly with monthly self-assessed tax payment through PMT-06. Annual return GSTR-9 may also be applicable depending on turnover.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What SAC code should a freelancer use?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The SAC code depends on the nature of services. Common SAC codes for freelancers include: IT and software services — 998314 or 998313; design services (graphic, UI/UX) — 998392; management consulting — 998311; content writing — 998393; digital marketing — 998361; video and film production — 999611; legal services — 998211; accounting and bookkeeping — 998222.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can a freelancer claim Input Tax Credit (ITC)?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. A GST-registered freelancer can claim ITC on goods and services purchased for business purposes — such as laptop, software subscriptions, office supplies, internet charges, professional services, co-working space rent, and advertising costs. ITC reduces the net GST payable. ITC is not available on personal consumption or items specifically blocked under Section 17(5).",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What GST rate applies to freelancer services?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Most professional and business services provided by freelancers attract GST at 18%. This includes IT services, software development, consulting, design, content creation, digital marketing, legal services, accounting, and similar professional services. For export of services to foreign clients under LUT, the rate is 0% (zero-rated).",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the QRMP scheme for freelancers?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The Quarterly Return Monthly Payment (QRMP) scheme allows registered taxpayers with aggregate turnover up to ₹5 crore to file GSTR-1 and GSTR-3B on a quarterly basis instead of monthly. However, tax payment is still required monthly through PMT-06 using either the fixed sum method or self-assessment method. QRMP reduces return filing frequency for eligible freelancers.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Does Reverse Charge Mechanism (RCM) apply to freelancers?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes, in some cases. If a freelancer receives notified services from an unregistered person in India or imports services from abroad (such as foreign software subscriptions, cloud services or consulting), RCM may apply. Under RCM, the freelancer as the recipient is liable to pay GST and self-invoice the transaction, even if the supplier did not charge GST.",
-      },
-    },
-  ],
-};
-
-/* ─── Page (Server Component) ─────────────────────────────────────────────── */
 export default function GstForFreelancerPage() {
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "GST for Freelancers & Independent Professionals",
+      serviceType: "GST for freelancers and independent professionals",
+      description:
+        "End-to-end GST setup for freelancers and independent professionals, including registration, LUT for foreign client billing, SAC code mapping, returns, ITC and RCM compliance.",
+      url: URL,
+      areaServed: { "@type": "Country", name: "India" },
+      provider: {
+        "@type": "ProfessionalService",
+        name: "Taxvio",
+        url: "https://www.taxvio.in",
+        address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://www.taxvio.in" },
+        { "@type": "ListItem", position: 2, name: "Services", item: "https://www.taxvio.in/serviceslist" },
+        { "@type": "ListItem", position: 3, name: "GST Services", item: "https://www.taxvio.in/serviceslist#gst" },
+        { "@type": "ListItem", position: 4, name: "GST for Freelancers & Independent Professionals", item: URL },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ];
+
   return (
     <>
-      <Script
-        id="gst-fl-service-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-      />
-      <Script
-        id="gst-fl-bc-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <Script
-        id="gst-fl-faq-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <GstForFreelancerClient />
+      {jsonLd.map((j, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(j) }} />
+      ))}
+      <GstForFreelancerClient faqs={FAQS} />
     </>
   );
 }

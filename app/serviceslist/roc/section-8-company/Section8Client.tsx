@@ -1,1021 +1,756 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+// app/serviceslist/roc/section-8-company/Section8Client.tsx
+
 import Footar from "@/components/Footar";
-import {
-  ArrowRight, CheckCircle, ChevronRight, ChevronDown,
-  Shield, Users, Zap, Clock, FileText, Building2,
-  Phone, MessageCircle, Star, AlertCircle, TrendingUp, Heart,
-} from "lucide-react";
-import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { serviceCategories } from "@/data/serviceCategories"; // ← adjust path
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path
 
-/* ─── Constants ────────────────────────────────────────────────────────────── */
-const PHONE = "918937980366";
-const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
-  "Hello Taxvio, I want to register a Section 8 Company (NGO / Non-Profit). Please guide me."
-)}`;
+const SERVICE = "Section 8 Company Registration";
 
-/* ─── Who should register Section 8 ───────────────────────────────────────── */
-const WHEN_S8 = [
-  {
-    icon: "🏫",
-    title: "Educational Institutions",
-    section: "Schools & Coaching",
-    desc: "Schools, colleges, skill development centres, coaching institutes, and vocational training organisations operating on a non-profit basis benefit from Section 8 structure for institutional credibility and donation eligibility.",
-  },
-  {
-    icon: "🏥",
-    title: "Healthcare & Medical Relief",
-    section: "Health NGOs",
-    desc: "Organisations providing free or subsidised medical care, rural health camps, mental health awareness, or medical research with charitable intent are ideal candidates for Section 8 registration.",
-  },
-  {
-    icon: "🌱",
-    title: "Environmental Organisations",
-    section: "Environmental Protection",
-    desc: "NGOs working on climate action, tree plantation, water conservation, clean energy, or environmental education can register as Section 8 Companies to access CSR funding and government grants.",
-  },
-  {
-    icon: "👩‍👧",
-    title: "Women & Child Welfare",
-    section: "Social Welfare",
-    desc: "Organisations working on women empowerment, child rights, anti-trafficking, domestic violence support, or child education are well-suited to Section 8 registration for donor credibility and FCRA eligibility.",
-  },
-  {
-    icon: "🎨",
-    title: "Art, Culture & Sports",
-    section: "Promotion of Arts",
-    desc: "Organisations promoting Indian classical arts, folk traditions, heritage conservation, sports development, or cultural exchange — specifically excluded from commercial motive — can be registered as Section 8 Companies.",
-  },
-  {
-    icon: "🤲",
-    title: "CSR-Funded Programmes",
-    section: "Corporate CSR Partner",
-    desc: "If your organisation implements CSR programmes on behalf of corporates or directly receives CSR donations, a Section 8 Company with 80G registration is the most credible and tax-efficient structure for both parties.",
-  },
+/* ══════════════════════ CONTENT ══════════════════════ */
+
+const NAV = [
+  { id: "overview", label: "Overview" },
+  { id: "benefits", label: "Benefits" },
+  { id: "included", label: "What's Included" },
+  { id: "compare", label: "Compare" },
+  { id: "documents", label: "Documents" },
+  { id: "process", label: "Process" },
+  { id: "fees", label: "Timeline & Fees" },
+  { id: "after", label: "After Registration" },
+  { id: "faqs", label: "FAQs" },
 ];
 
-/* ─── What's included ──────────────────────────────────────────────────────── */
-const WHAT_INCLUDED = [
-  { icon: "🔍", title: "Name Approval & Objects Review", desc: "Name checked for availability on MCA and approved through SPICe+. Critically, the objects clause is reviewed to ensure it meets MCA's charitable purpose criteria — a key reason Section 8 applications get rejected." },
-  { icon: "📝", title: "MOA & AOA — Non-Profit Drafting", desc: "MOA and AOA professionally drafted with Section 8-specific non-profit language, prohibition on dividend distribution, and objects restricted to charitable activities per Section 8 requirements." },
-  { icon: "🪪", title: "DIN & DSC Processing", desc: "Director Identification Numbers and Digital Signature Certificates procured for all directors — required for both the incorporation filing and MCA licence application." },
-  { icon: "📋", title: "MCA Licence Application (Section 8)", desc: "The Section 8 licence application (filed with the Central Government via MCA) — the additional step that makes Section 8 registration more complex than standard company incorporation. Our team prepares and files the complete licence package." },
-  { icon: "🏛", title: "Certificate of Incorporation (CoI)", desc: "Official Certificate of Incorporation with CIN issued by MCA after licence grant. Your Section 8 Company's legal existence document — required for all downstream registrations." },
-  { icon: "🌱", title: "PAN/TAN & 12A/80G Guidance", desc: "Company PAN and TAN applied with SPICe+. Detailed guidance on 12A (income tax exemption for the company) and 80G (donor deduction) registration — the two most critical post-incorporation steps for any NGO." },
+const INTRO = [
+  "A Section 8 company is a non-profit company incorporated under Section 8 of the Companies Act, 2013. It is meant for organisations whose purpose is to promote commerce, art, science, sports, education, research, social welfare, religion, charity, protection of the environment or a similar object. Unlike an ordinary company, it applies its profits and income to promoting those objects and does not pay dividends to its members. It is a separate legal entity, so it can own property, receive funds, employ people and sign contracts in its own name.",
+  "For many NGOs and charitable institutions, a Section 8 company is the most credible structure available. It operates under the oversight of the Ministry of Corporate Affairs, keeps proper accounts, files annual returns and is audited, and that discipline is exactly what corporate funders, grant-making bodies and institutional donors look for. Many organisations choose it specifically because they plan to raise money from companies under CSR programmes or from large donors.",
+  "The path to registration is different from an ordinary private limited company, because the MCA first issues a licence confirming that the proposed company meets the conditions of Section 8. The objects statement, the draft MOA and AOA, and the estimated income and expenditure all need to be consistent. Taxvio's CA-assisted team prepares the complete file — name approval, MOA and AOA drafting and the Section 8 licence application — and tells you clearly what to do after incorporation to unlock tax exemptions and donor benefits.",
 ];
 
-/* ─── Section 8 vs Trust vs Society ───────────────────────────────────────── */
-const COMPARISON = [
-  { point: "Governing Law", s8: "Companies Act 2013 (MCA)", trust: "Indian Trusts Act / State Laws", society: "Societies Reg. Act 1860 / State" },
-  { point: "Regulatory Body", s8: "Ministry of Corporate Affairs", trust: "Charity Commissioner (State)", society: "Registrar of Societies (State)" },
-  { point: "Registration Process", s8: "Online (MCA) + Central Licence", trust: "State-level (offline-heavy)", society: "State Registrar (varies by state)" },
-  { point: "Governance Transparency", s8: "Highest — MCA oversight", trust: "Moderate", society: "Moderate" },
-  { point: "FCRA Eligibility", s8: "✅ Strong (MCA credibility)", trust: "✅ Eligible", society: "✅ Eligible" },
-  { point: "CSR Funding Eligibility", s8: "✅ Preferred by corporates", trust: "⚠️ Less preferred", society: "⚠️ Less preferred" },
-  { point: "12A / 80G Registration", s8: "✅ Straightforward", trust: "✅ Available", society: "✅ Available" },
-  { point: "Audit Requirements", s8: "Annual CA audit — mandatory", trust: "State law dependent", society: "State law dependent" },
-  { point: "Annual MCA Filings", s8: "AOC-4 + MGT-7 (mandatory)", trust: "None with MCA", society: "None with MCA" },
-  { point: "Profit Distribution", s8: "❌ Strictly prohibited", trust: "❌ Not applicable", society: "❌ Not applicable" },
-  { point: "Foreign Donations (FCRA)", s8: "✅ Via FCRA registration", trust: "✅ Via FCRA registration", society: "✅ Via FCRA registration" },
-  { point: "Closure Process", s8: "Formal (STK-2 / NCLT)", trust: "Deed-based / Court", society: "State Registrar process" },
+const BENEFITS = [
+  { icon: "🏛️", t: "Separate legal entity", d: "The organisation owns property, signs contracts and receives funds in its own name, independent of its founders." },
+  { icon: "🤝", t: "Strong donor credibility", d: "Regulated, audited and publicly registered — which institutional donors and corporate funders generally prefer." },
+  { icon: "🛡️", t: "Limited liability", d: "Members' liability is limited, so personal assets are separate from the organisation's obligations." },
+  { icon: "🏢", t: "CSR & grant readiness", d: "With the right registrations, a Section 8 company can be eligible to receive CSR funds and institutional grants." },
+  { icon: "🏷️", t: "Name without “Limited”", d: "A Section 8 company may omit “Limited” or “Private Limited” from its name, giving a charitable identity such as “Foundation”." },
+  { icon: "♾️", t: "Perpetual succession", d: "The organisation continues even when directors or members change, so the mission outlives its founders." },
 ];
 
-/* ─── Process steps ────────────────────────────────────────────────────────── */
-const STEPS = [
-  {
-    step: "01",
-    title: "Objectives Assessment & Eligibility Review",
-    desc: "Our CA & CS team reviews your proposed activities to confirm they qualify as Section 8 objects (charitable purpose). We identify any activities that could trigger MCA objections and restructure the objects clause for a clean first-attempt approval.",
-  },
-  {
-    step: "02",
-    title: "DIN, DSC & Name Approval",
-    desc: "Director Identification Numbers and Digital Signature Certificates processed for all directors. Company name applied through SPICe+ with a carefully worded name and objects to prevent MCA-level rejection — critical for Section 8 applications.",
-  },
-  {
-    step: "03",
-    title: "MOA & AOA Drafting — Non-Profit Language",
-    desc: "MOA drafted with non-profit specific objects, explicit prohibition on dividend distribution, and charitable purpose language required by Section 8. AOA drafted with governance provisions appropriate for an NGO/non-profit entity.",
-  },
-  {
-    step: "04",
-    title: "MCA Section 8 Licence Application",
-    desc: "The licence application under Section 8 of the Companies Act is filed with the Central Government via MCA. This requires a declaration by the promoters and specific undertakings about the charitable nature of the organisation. Taxvio prepares and files the complete licence package.",
-  },
-  {
-    step: "05",
-    title: "MCA Review & Licence Grant",
-    desc: "MCA's Regional Director reviews the application, may raise queries, and on satisfaction grants the Section 8 licence. Taxvio handles all MCA queries end-to-end. This step typically takes 7–10 days and is the primary source of timeline variation.",
-  },
-  {
-    step: "06",
-    title: "Certificate of Incorporation + Post-Reg Guidance",
-    desc: "Certificate of Incorporation issued with CIN. PAN and TAN delivered. Our team then provides a detailed roadmap for 12A registration, 80G registration, FCRA eligibility, and annual compliance — so your Section 8 Company is fully operational from day one.",
-  },
+const FEATURES = [
+  { title: "Name approval", note: "We check the proposed name against existing companies, LLPs and trademarks and suggest names that fit the nature of your organisation and MCA naming guidelines." },
+  { title: "MOA & AOA drafting", note: "We draft the Memorandum and Articles with a clear objects clause, a no-dividend clause and the provisions the MCA expects from a Section 8 company." },
+  { title: "License under Section 8", note: "We prepare and file the Section 8 licence application with the supporting statement of objects and estimated income and expenditure, and follow it up with the Registrar." },
 ];
 
-/* ─── Post-incorporation registrations ────────────────────────────────────── */
-const POST_REG = [
-  {
-    icon: "🔵",
-    title: "12A Registration",
-    urgency: "Recommended — File Immediately",
-    badgeColor: "bg-blue-500",
-    desc: "Exempts the Section 8 Company from income tax on income applied for charitable purposes. Without 12A, all surplus income is taxable at 30%. Apply within the first year of incorporation for maximum benefit.",
-    href: "/serviceslist/income-tax/12a-application",
-    linkLabel: "Apply for 12A →",
-  },
-  {
-    icon: "🟢",
-    title: "80G Registration",
-    urgency: "Critical for Fundraising",
-    badgeColor: "bg-emerald-500",
-    desc: "Allows donors to claim 50% tax deduction on donations. Essential for receiving corporate CSR funds, individual donations, and institutional grants. 80G is your most powerful fundraising tool — most donors require it before donating.",
-    href: "/serviceslist/income-tax/12a-application",
-    linkLabel: "Apply for 80G →",
-  },
-  {
-    icon: "🟠",
-    title: "FCRA Registration",
-    urgency: "For Foreign Donations",
-    badgeColor: "bg-orange-500",
-    desc: "Required to receive donations from foreign sources — individuals, NGOs, foundations, or government bodies outside India. FCRA registration is applied with the Ministry of Home Affairs after 3 years of Section 8 Company existence (Prior Permission available earlier).",
-    href: null,
-    linkLabel: null,
-  },
-  {
-    icon: "🟣",
-    title: "NITI Aayog Darpan",
-    urgency: "For Government Grants",
-    badgeColor: "bg-violet-500",
-    desc: "Registration on NITI Aayog's Darpan portal is mandatory to receive grants from central government ministries and departments. Many state governments also require Darpan registration for state-level grants and scheme eligibility.",
-    href: null,
-    linkLabel: null,
-  },
+const IDEAL = [
+  { icon: "🌱", t: "NGOs", d: "Non-governmental organisations working in education, health, livelihood, environment or community development that want a formal and credible structure." },
+  { icon: "🏫", t: "Charitable institutions", d: "Schools, foundations and charitable bodies that want to receive donations and grants and operate transparently." },
+  { icon: "🏆", t: "Associations & chambers", d: "Trade bodies, sports associations, clubs and professional chambers that promote an industry or activity without distributing profit." },
+  { icon: "🔬", t: "Research & cultural bodies", d: "Organisations promoting science, research, art or culture that need a structure suited to grants and institutional partnerships." },
 ];
 
-/* ─── Annual compliance ────────────────────────────────────────────────────── */
-const ANNUAL_COMPLIANCE = [
-  { form: "AGM", detail: "Annual General Meeting within 6 months of financial year end (by 30 September). Mandatory — no relaxation for Section 8 Companies." },
-  { form: "AOC-4", detail: "Financial statements filed with MCA within 30 days of AGM. Penalty: ₹100/day. Includes Balance Sheet, P&L, and Director's Report." },
-  { form: "MGT-7", detail: "Annual return filed within 60 days of AGM. Penalty: ₹100/day. Discloses directors, members, and shareholding structure." },
-  { form: "Statutory Audit", detail: "Mandatory annual audit by a CA — regardless of turnover. Audit report required for 12A/80G renewal and MCA compliance." },
-  { form: "ITR-7", detail: "Income tax return for NGOs and trusts under Section 139(4A). Due: 31 October. 12A-registered entities claim exemption here." },
-  { form: "12A / 80G Renewal", detail: "Both 12A and 80G are now provisional (5-year validity). Renewal application must be filed 6 months before expiry to avoid gap in exemption status." },
-  { form: "Form CSR-1", detail: "Section 8 Companies receiving CSR funds must register on MCA's CSR portal via Form CSR-1 and file annual CSR utilisation reports." },
-  { form: "FCRA Annual Return", detail: "Organisations with FCRA registration must file FC-4 (annual return) on the FCRA portal by 31 December every year, regardless of whether foreign funds were received." },
-];
-
-/* ─── Documents required ───────────────────────────────────────────────────── */
 const DOCS = [
-  {
-    category: "All Directors",
-    icon: "👤",
-    items: [
-      "PAN Card",
-      "Aadhaar Card (mobile-linked)",
-      "Passport-size photograph",
-      "Email ID & mobile number",
-      "DSC — Taxvio assists in procurement",
-    ],
-  },
-  {
-    category: "Registered Office",
-    icon: "🏢",
-    items: [
-      "Latest utility bill — not older than 2 months",
-      "NOC from property owner (if rented)",
-      "Rent agreement (if applicable)",
-    ],
-  },
-  {
-    category: "Section 8 Specific",
-    icon: "📋",
-    items: [
-      "Proposed company name (2–3 options)",
-      "Detailed description of charitable objectives",
-      "Proposed activities and geographic area of operation",
-      "Declaration of non-profit intent (Taxvio drafts)",
-      "Promoter undertaking for non-distribution of profits",
-    ],
-  },
+  "PAN & Aadhaar of all directors",
+  "Passport-size photograph of each director",
+  "Email ID and mobile number of each director",
+  "Address proof of directors (bank statement / utility bill)",
+  "Registered office proof (recent electricity or utility bill)",
+  "Rent agreement + owner's NOC (if premises are rented)",
+  "2–3 proposed names, in order of preference",
+  "Statement of proposed objects and activities",
+  "Estimated income & expenditure for the next three years",
 ];
 
-/* ─── Testimonials ─────────────────────────────────────────────────────────── */
-const TESTIMONIALS = [
-  {
-    stars: 5,
-    text: "We wanted to formalise our rural education initiative. Taxvio helped us choose Section 8 over a Trust and handled the entire registration including the MCA licence. The 12A/80G guidance was extremely helpful.",
-    name: "Shiksha Foundation",
-    location: "Meerut",
-  },
-  {
-    stars: 5,
-    text: "Received our Section 8 Certificate of Incorporation in 18 days. Taxvio's team was proactive on MCA queries and kept us updated throughout. Now filing for 80G with their help as well.",
-    name: "Aastha Welfare Society (Sec 8)",
-    location: "Muzaffarnagar",
-  },
-  {
-    stars: 5,
-    text: "Our corporate CSR partner required us to be a registered Section 8 Company with 80G. Taxvio completed the registration efficiently and we received our first CSR grant within 6 months.",
-    name: "GreenEarth Initiative",
-    location: "Noida",
-  },
+const STEPS = [
+  { t: "Objects & structure check", d: "We understand your mission and confirm that a Section 8 company suits it. We settle the directors and members and the activities the organisation will carry out." },
+  { t: "Digital signatures & name reservation", d: "Directors obtain Digital Signature Certificates (DSC). We then shortlist and reserve a suitable name, checking it against existing entities and trademarks first." },
+  { t: "Draft MOA, AOA & licence documents", d: "We prepare the Memorandum, Articles, the statement of objects, estimated income and expenditure and the required declarations, written to satisfy the Section 8 conditions." },
+  { t: "File the Section 8 licence application", d: "The incorporation filing and the Section 8 licence application are submitted to the MCA with director details and registered-office proof." },
+  { t: "Respond to Registrar queries", d: "Licence applications often draw clarifications. We respond promptly and amend documents where required so the file keeps moving." },
+  { t: "Licence, Certificate & handover", d: "On approval you receive the Section 8 licence and the Certificate of Incorporation. We then share a checklist for tax registrations and first-year compliance." },
 ];
 
-/* ─── Why Taxvio ───────────────────────────────────────────────────────────── */
-const WHY_POINTS = [
-  { icon: Users, title: "CA & CS Assisted", desc: "Every Section 8 incorporation is handled by qualified Chartered Accountants and Company Secretaries with specific NGO registration experience." },
-  { icon: FileText, title: "Non-Profit MOA Expertise", desc: "Generic MOA templates fail MCA scrutiny for Section 8. We draft objects clauses with non-profit language that passes MCA's Regional Director review." },
-  { icon: Shield, title: "MCA Query Handling", desc: "Section 8 applications often receive MCA queries on objects, promoter background, or financial projections. Taxvio handles all queries end-to-end." },
-  { icon: Zap, title: "100% Online Process", desc: "All document sharing via WhatsApp or email. No physical office visit. Real-time status updates on MCA processing and licence grant." },
-  { icon: Heart, title: "12A/80G Roadmap Included", desc: "Post-incorporation, we provide a complete 12A and 80G registration roadmap — the two most critical steps for any Section 8 Company to become fundraising-ready." },
-  { icon: Building2, title: "End-to-End Compliance Support", desc: "Annual ROC filings, 12A/80G renewal, ITR-7, CSR-1 — all handled under one roof after your Section 8 Company is incorporated." },
+const AFTER = [
+  { when: "Within 30 days", t: "Auditor appointment (ADT-1)", d: "The first statutory auditor is generally appointed within 30 days of incorporation and notified to the ROC." },
+  { when: "After incorporation", t: "Section 12A registration", d: "Apply for registration under Section 12A of the Income Tax Act so that the organisation's income can be treated as exempt, subject to conditions." },
+  { when: "After incorporation", t: "Section 80G approval", d: "80G approval lets donors claim a deduction for their donations, which helps fundraising. It is applied for separately from incorporation." },
+  { when: "If applicable", t: "CSR-1 & FCRA", d: "To receive corporate CSR funds, register on the CSR-1 form; to receive foreign contributions, FCRA registration or prior permission is required." },
+  { when: "Every year", t: "Annual filings & AGM", d: "Financial statements (AOC-4), annual return (MGT-7), an AGM, director KYC and a statutory audit are due every year." },
+  { when: "Every year", t: "Income tax return", d: "File the organisation's income tax return and keep proper records to support its claimed exemptions." },
 ];
 
-/* ─── FAQs ─────────────────────────────────────────────────────────────────── */
-const FAQS = [
-  {
-    q: "What is a Section 8 Company in India?",
-    a: "A Section 8 Company is a non-profit organisation incorporated under Section 8 of the Companies Act 2013. It is formed for promoting charitable objects such as education, art, science, sports, social welfare, religion, or environmental protection. Profits must be applied only towards stated objectives — they cannot be distributed to members as dividends.",
-  },
-  {
-    q: "How long does Section 8 Company registration take?",
-    a: "Section 8 Company registration takes 15–20 working days with all documents in order. The process involves name approval, MOA/AOA drafting, MCA licence application under Section 8, and issuance of the Certificate of Incorporation. The MCA licence step adds 5–7 days compared to standard company registration.",
-  },
-  {
-    q: "What is the difference between a Section 8 Company, a Trust, and a Society?",
-    a: "A Section 8 Company is governed by the Companies Act 2013 and regulated by MCA — the most structured and credible non-profit form. Trusts are governed by the Indian Trusts Act or state trust laws. Societies are governed by the Societies Registration Act 1860 or equivalent state laws. Section 8 Companies are preferred for FCRA registration, corporate CSR funding, and 12A/80G exemptions due to higher accountability and auditability.",
-  },
-  {
-    q: "Can a Section 8 Company receive CSR funds from corporates?",
-    a: "Yes. A Section 8 Company with 80G registration is eligible to receive CSR funds from corporates under Section 135 of the Companies Act. Companies spending on CSR can claim tax deduction only when donating to 80G-registered entities. A Section 8 Company is the most trusted and auditable vehicle for receiving corporate CSR donations.",
-  },
-  {
-    q: "What is 12A and 80G registration for a Section 8 Company?",
-    a: "12A registration under the Income Tax Act gives the Section 8 Company itself exemption from income tax on income applied towards charitable purposes. 80G registration allows donors to claim a tax deduction of 50% on their donations — a powerful fundraising tool. Both registrations are applied with the Income Tax Department after incorporation.",
-  },
-  {
-    q: "What is the minimum number of directors for a Section 8 Company?",
-    a: "A Section 8 Company requires a minimum of 2 directors (same as a Private Limited Company). There is no minimum paid-up capital requirement. However, MCA scrutinises the proposed objects and promoter credentials — the objects must genuinely be charitable in nature.",
-  },
-  {
-    q: "Can a Section 8 Company pay salary to its directors?",
-    a: "Yes. A Section 8 Company can pay reasonable salaries to its directors and employees for genuine services. What is prohibited is the distribution of profits as dividends to members. Salary paid for actual work is legitimate — excessive or disguised profit distributions are not permitted and can trigger licence revocation.",
-  },
-  {
-    q: "What annual compliance is required for a Section 8 Company?",
-    a: "A Section 8 Company must hold an AGM within 6 months of FY end, file AOC-4 within 30 days of AGM, file MGT-7 within 60 days of AGM, conduct annual statutory audit, file ITR-7 by 31 October, and renew 12A/80G before the 5-year validity expires. FCRA-registered entities must additionally file FC-4 by 31 December each year.",
-  },
+const MISTAKES = [
+  { t: "Vague or overly broad objects", d: "A loosely worded objects clause invites queries. State charitable objects clearly and specifically." },
+  { t: "Assuming incorporation gives tax exemption", d: "Exemption and donor deductions require separate 12A and 80G registrations after incorporation." },
+  { t: "Distributing surplus to members", d: "Surplus must be applied to the objects. Paying dividends or personal benefits can put the licence at risk." },
+  { t: "Ignoring annual compliance", d: "Filings, AGM and audit are mandatory even when activity is low. Prolonged default can lead to action against the company and its directors." },
+  { t: "Inconsistent projections", d: "The estimated income and expenditure must match the stated activities. Inconsistencies commonly trigger queries on the licence application." },
 ];
 
-/* ─── FAQ Accordion ────────────────────────────────────────────────────────── */
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
+const COMPARE_ROWS = [
+  { k: "Governing law", s8: "Companies Act, 2013", trust: "Indian Trusts Act / state laws", soc: "Societies Registration Act / state laws" },
+  { k: "Regulator", s8: "MCA / Registrar of Companies", trust: "Sub-registrar / charity authorities", soc: "Registrar of Societies" },
+  { k: "Level of oversight", s8: "Higher", trust: "Lower", soc: "Moderate" },
+  { k: "Annual filings", s8: "ROC filings + audit", trust: "Mainly tax filings", soc: "Annual list/returns to Registrar" },
+  { k: "Donor & CSR credibility", s8: "Generally strongest", trust: "Good", soc: "Good" },
+  { k: "Setup effort", s8: "Higher (licence needed)", trust: "Lowest", soc: "Moderate" },
+];
+
+/* ══════════════════════ ROOT ══════════════════════ */
+
+export default function Section8Client({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [active, setActive] = useState("overview");
+
+  useEffect(() => {
+    const els = NAV.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-      itemScope itemType="https://schema.org/Question">
-      <button onClick={() => setOpen(!open)}
-        className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left" aria-expanded={open}>
-        <span className="font-bold text-gray-800 text-sm leading-snug flex items-start gap-3" itemProp="name">
-          <span className="w-5 h-5 rounded-full bg-[#00416a] text-white flex items-center justify-center text-[10px] font-extrabold shrink-0 mt-0.5">Q</span>
-          {q}
-        </span>
-        <ChevronDown size={16}
-          className={`shrink-0 text-[#00416a] mt-0.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <div className="px-6 pb-5 pl-14" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-          <p className="text-gray-600 text-xs leading-relaxed" itemProp="text">{a}</p>
+    <main className="bg-slate-50 text-gray-800 overflow-x-clip">
+      <GlobalStyles />
+      <Hero />
+      <InquiryFormButton />
+      <SectionNav active={active} />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14 grid lg:grid-cols-[1fr_340px] gap-10">
+        <div className="min-w-0 space-y-16 md:space-y-20">
+          <Overview />
+          <Benefits />
+          <Included />
+          <Compare />
+          <Who />
+          <Documents />
+          <Process />
+          <Fees />
+          <After />
+          <FAQs faqs={faqs} />
+          <Related />
         </div>
-      )}
+        <aside className="hidden lg:block">
+          <SideCard />
+        </aside>
+      </div>
+
+      <FinalCTA />
+      <Footar />
+    </main>
+  );
+}
+
+/* ══════════════════════ PRIMITIVES ══════════════════════ */
+
+function GlobalStyles() {
+  return (
+    <style>{`
+      @keyframes s8-aurora { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-30px) scale(1.15); } 100% { transform: translate(0,0) scale(1); } }
+      @keyframes s8-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      .s8-aurora { animation: s8-aurora 14s ease-in-out infinite; }
+      .s8-float { animation: s8-float 7s ease-in-out infinite; }
+      .s8-reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+      .s8-reveal.s8-in { opacity: 1; transform: none; }
+      .s8-hide-scroll::-webkit-scrollbar { display: none; }
+      .s8-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .s8-aurora, .s8-float { animation: none !important; }
+        .s8-reveal { opacity: 1; transform: none; transition: none; }
+      }
+    `}</style>
+  );
+}
+
+function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`s8-reveal ${shown ? "s8-in" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+      {children}
     </div>
   );
 }
 
-/* ─── Main Client Component ────────────────────────────────────────────────── */
-export default function Section8Client() {
+function Heading({ label, title }: { label: string; title: string }) {
   return (
-    <main className="bg-white text-gray-800">
+    <Reveal className="mb-7">
+      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#00416a]/70 border border-[#00416a]/15 bg-[#00416a]/5 px-3 py-1.5 rounded-full mb-3">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00416a]" />
+        {label}
+      </span>
+      <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#00416a] leading-tight">{title}</h2>
+    </Reveal>
+  );
+}
 
-      {/* ══════ DEADLINE BANNER ══════ */}
-      <div className="bg-teal-600 text-white text-xs font-semibold py-2.5 px-4 text-center leading-relaxed">
-        🌱 Section 8 Company? File <strong>12A &amp; 80G within the first year</strong> of incorporation | Without 80G, donors get <strong>no tax benefit</strong> on donations | Renew every <strong>5 years</strong>
-      </div>
+/* ══════════════════════ HERO + NAV ══════════════════════ */
 
-      {/* ══════ HERO ══════ */}
-      <section aria-label="Section 8 Company Registration — NGO / Non-Profit — Taxvio"
-        className="relative overflow-hidden bg-gradient-to-br from-[#00416a] via-[#003257] to-[#001e36] text-white">
-        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle,rgba(56,189,248,0.13) 0%,transparent 65%)" }} />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle,rgba(45,212,191,0.09) 0%,transparent 65%)" }} />
+function Hero() {
+  const facts = [
+    { k: "Type", v: "Non-profit company" },
+    { k: "Needs", v: "Section 8 licence" },
+    { k: "Mode", v: "100% online" },
+  ];
+  return (
+    <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+      <div className="s8-aurora absolute -top-32 -left-24 w-[26rem] h-[26rem] rounded-full bg-sky-400/20 blur-3xl" />
+      <div className="s8-aurora absolute -bottom-40 right-0 w-[28rem] h-[28rem] rounded-full bg-cyan-300/10 blur-3xl [animation-delay:-7s]" />
+      <div
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          maskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+        }}
+      />
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 pt-12 pb-24 md:pt-16 md:pb-28 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+        <div>
+          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/60 flex flex-wrap items-center gap-2">
+            <Link href="/" className="hover:text-white transition">Home</Link><span>/</span>
+            <Link href="/serviceslist" className="hover:text-white transition">Services</Link><span>/</span>
+            <Link href="/serviceslist#roc" className="hover:text-white transition">ROC / Company Law</Link><span>/</span>
+            <span className="text-white">Section 8 Company</span>
+          </nav>
+          <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-5">
+            🌱 NGO &amp; Non-Profit Company
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.1] tracking-tight mb-5">
+            Section 8 Company Registration{" "}
+            <span className="bg-gradient-to-r from-white via-sky-200 to-cyan-200 bg-clip-text text-transparent">
+              — Build Your NGO on a Credible Foundation
+            </span>
+          </h1>
+          <p className="text-base sm:text-lg text-sky-100/90 leading-relaxed max-w-2xl mb-8">
+            Formation of non-profit Section 8 companies for charitable and social objectives — name approval, MOA &amp; AOA
+            drafting and the Section 8 licence, all reviewed by a CA.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <button
+              onClick={() => openInquiryForm(SERVICE)}
+              className="group bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200"
+            >
+              Get a Free Quote <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+            <a href="#process" className="border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+              See How It Works
+            </a>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {facts.map((q) => (
+              <div key={q.k} className="bg-white/10 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5">
+                <p className="text-[10px] uppercase tracking-widest text-sky-200/70">{q.k}</p>
+                <p className="font-bold text-sm">{q.v}</p>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-14 pb-24">
-
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/45">
+        <div className="hidden lg:block">
+          <div className="s8-float bg-white text-gray-800 rounded-3xl shadow-2xl shadow-black/30 p-6 rotate-1">
+            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-1">Your NGO, tracked</p>
+            <p className="font-extrabold text-[#00416a] text-lg mb-4">Sample progress view</p>
+            <ul className="space-y-2.5 mb-5">
               {[
-                { href: "/", label: "Home" },
-                { href: "/serviceslist", label: "Services" },
-                { href: "/serviceslist/roc", label: "ROC Compliance" },
-                { href: null, label: "Section 8 Company" },
-              ].map(({ href, label }, i, arr) => (
-                <li key={label} className="flex items-center gap-1.5">
-                  {href
-                    ? <Link href={href} className="hover:text-white/80 transition">{label}</Link>
-                    : <span className="text-white/75 font-medium">{label}</span>}
-                  {i < arr.length - 1 && <ChevronRight size={12} className="text-white/25" />}
+                { t: "Name approval", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "MOA, AOA & objects statement", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "Section 8 licence application", s: "In progress", c: "bg-amber-100 text-amber-700" },
+                { t: "Certificate of Incorporation", s: "Next", c: "bg-sky-100 text-sky-700" },
+                { t: "12A & 80G registration", s: "Next", c: "bg-sky-100 text-sky-700" },
+              ].map((r) => (
+                <li key={r.t} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3 py-2.5 text-sm">
+                  <span className="flex-1 font-semibold">{r.t}</span>
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${r.c}`}>{r.s}</span>
                 </li>
               ))}
-            </ol>
-          </nav>
-
-          {/* Category pill */}
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-5 text-teal-300"
-            style={{ background: "rgba(20,184,166,0.14)", border: "1px solid rgba(20,184,166,0.30)" }}>
-            🌱 Section 8 Company — NGO / Non-Profit | Companies Act 2013
-          </div>
-
-          <div className="grid md:grid-cols-[1fr_310px] gap-12 items-start">
-
-            {/* ── Left ── */}
-            <div>
-              <h1 className="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-white">
-                Section 8 Company
-                <span className="block mt-2 text-teal-300">Registration in India</span>
-              </h1>
-
-              <p className="mt-5 text-white/75 text-base md:text-lg leading-relaxed max-w-xl">
-                Register your <strong className="text-white">Section 8 Company</strong> (NGO / Non-Profit) online in 15–20
-                working days. Taxvio's CA &amp; CS team handles name approval,{" "}
-                <strong className="text-white">MOA &amp; AOA drafting</strong>, MCA Section 8 licence, Certificate of
-                Incorporation, PAN/TAN, and{" "}
-                <strong className="text-white">12A &amp; 80G guidance</strong> — end to end. Starting{" "}
-                <strong className="text-white">₹9,999</strong>.
-              </p>
-
-              {/* Trust pills */}
-              <div className="mt-6 flex flex-wrap gap-2">
-                {[
-                  "✅ MCA Section 8 Licence",
-                  "🔒 Non-Profit MOA Drafted",
-                  "💚 12A & 80G Guidance",
-                  "📋 CSR Funding Ready",
-                ].map(t => (
-                  <span key={t} className="text-xs font-semibold rounded-full px-3 py-1.5"
-                    style={{ background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.82)" }}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                
-                <Link href="/contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                  Free Consultation <ArrowRight size={15} />
-                </Link>
-              </div>
-
-              {/* Feature row */}
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-white/55">
-                {["MCA Licence Application", "Non-Profit MOA/AOA", "12A & 80G Roadmap", "CSR-1 Guidance"].map(t => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <CheckCircle size={11} className="text-teal-400" /> {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* ── Right — Key Facts card ── */}
-            <div className="rounded-2xl overflow-hidden shadow-2xl"
-              style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.14)" }}>
-              <div className="px-6 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
-                <p className="font-bold text-white text-sm">Section 8 Company — Key Facts</p>
-                <p className="text-xs text-white/50 mt-0.5">All-inclusive · No hidden charges</p>
-              </div>
-              <div className="p-5 space-y-3.5">
-                {[
-                  { label: "Minimum Directors", val: "2 Directors" },
-                  { label: "Governing Act", val: "Companies Act 2013" },
-                  { label: "Special Requirement", val: "MCA Section 8 Licence" },
-                  { label: "Profit Distribution", val: "❌ Strictly prohibited" },
-                  { label: "Tax Exemption", val: "Via 12A registration" },
-                  { label: "Donor Tax Benefit", val: "Via 80G registration" },
-                  { label: "CSR Funding", val: "✅ 80G makes eligible" },
-                  { label: "Processing Time", val: "15–20 working days" },
-                ].map(({ label, val }) => (
-                  <div key={label} className="flex items-center justify-between gap-2">
-                    <span className="text-white/60 text-xs">{label}</span>
-                    <span className="font-bold text-white text-xs text-right">{val}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="px-5 pb-5">
-                <div className="rounded-xl px-4 py-3 flex items-center justify-between mb-3"
-                  style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                  <div>
-                    <p className="text-white text-xs font-bold">All-Inclusive Price</p>
-                    <p className="text-teal-300 text-2xl font-extrabold">₹9,999</p>
-                    <p className="text-white/40 text-[10px] mt-0.5">+ Govt. fees as applicable</p>
-                  </div>
-                  <div className="flex items-center gap-1 text-amber-400">
-                    <Star size={13} className="fill-amber-400" />
-                    <span className="text-white font-bold text-sm">4.9</span>
-                    <span className="text-white/40 text-xs">(186+)</span>
-                  </div>
-                </div>
-                
-              </div>
+            </ul>
+            <div className="rounded-2xl bg-[#00416a] text-white px-4 py-3 text-sm flex items-center gap-3">
+              <span className="text-xl">👨‍💼</span>
+              <span><b>CA-reviewed</b> before every submission</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+      <svg className="absolute bottom-0 left-0 w-full h-10 text-slate-50" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden>
+        <path fill="currentColor" d="M0,60 L0,30 Q360,-10 720,25 T1440,20 L1440,60 Z" />
+      </svg>
+    </section>
+  );
+}
 
-      {/* ══════ STATS STRIP ══════ */}
-      <section className="bg-[#00416a] py-8" aria-label="Taxvio Section 8 registration statistics">
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { val: "190+", label: "Section 8 Companies" },
-            { val: "15–20", label: "Working Days" },
-            { val: "4.9★", label: "Average Rating" },
-            { val: "₹9,999", label: "All-Inclusive Price" },
-          ].map(({ val, label }) => (
-            <div key={label}>
-              <p className="text-xl md:text-2xl font-extrabold text-white">{val}</p>
-              <p className="text-xs text-white/55 mt-0.5">{label}</p>
-            </div>
+function SectionNav({ active }: { active: string }) {
+  return (
+    <div className="sticky top-[72px] z-40 bg-white/85 backdrop-blur-xl border-b border-gray-200/80 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-1.5 overflow-x-auto s8-hide-scroll">
+          {NAV.map((n) => (
+            <a
+              key={n.id}
+              href={`#${n.id}`}
+              className={`flex-shrink-0 text-sm font-semibold px-3.5 py-2 rounded-full transition-all whitespace-nowrap ${
+                active === n.id ? "bg-[#00416a] text-white shadow-md shadow-[#00416a]/25" : "text-[#00416a]/80 hover:bg-[#00416a]/5"
+              }`}
+            >
+              {n.label}
+            </a>
           ))}
         </div>
-      </section>
+        <button
+          onClick={() => openInquiryForm(SERVICE)}
+          className="hidden md:inline-flex flex-shrink-0 text-xs font-bold bg-[#00416a] text-white px-4 py-2.5 rounded-lg hover:bg-[#002b45] active:scale-95 transition"
+        >
+          Enquire now
+        </button>
+      </div>
+    </div>
+  );
+}
 
-      {/* ══════ WHO SHOULD REGISTER ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Who should register a Section 8 Company">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-4">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Section 8 Applicability
-            </span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] text-center mt-4 mb-3">
-            Who Should Register a Section 8 Company?
-          </h2>
-          <p className="text-gray-500 text-sm text-center max-w-xl mx-auto mb-12">
-            A Section 8 Company is the most credible and structured non-profit form in India — ideal for organisations seeking CSR funding, FCRA, or 12A/80G benefits.
-          </p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {WHEN_S8.map(({ icon, title, section, desc }) => (
-              <div key={title}
-                className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-11 h-11 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-2xl shrink-0">
-                    {icon}
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-teal-700 mb-0.5">{section}</p>
-                    <h3 className="font-bold text-gray-800 text-sm leading-snug">{title}</h3>
-                  </div>
-                </div>
-                <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
+/* ══════════════════════ SECTIONS ══════════════════════ */
+
+function Overview() {
+  return (
+    <section id="overview" className="scroll-mt-40">
+      <Heading label="Overview" title="What Is a Section 8 Company?" />
+      <div className="space-y-5">
+        {INTRO.map((p, i) => (
+          <Reveal key={i} delay={i * 70}>
+            <p className={`pl-5 border-l-4 text-gray-700 leading-relaxed ${i === 0 ? "border-[#00416a]" : "border-[#00416a]/25"}`}>{p}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Benefits() {
+  return (
+    <section id="benefits" className="scroll-mt-40">
+      <Heading label="Benefits" title="Why Choose a Section 8 Company for Your NGO?" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {BENEFITS.map((b, i) => (
+          <Reveal key={b.t} delay={i * 60}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center text-xl mb-3 group-hover:scale-110 group-hover:-rotate-6 transition-transform">{b.icon}</div>
+              <h3 className="font-bold text-[#00416a] mb-1">{b.t}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{b.d}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Included() {
+  return (
+    <section id="included" className="scroll-mt-40">
+      <Heading label="What's Included" title="What You Get With Section 8 Registration" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {FEATURES.map((f, i) => (
+          <Reveal key={f.title} delay={i * 70}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center font-bold group-hover:scale-110 group-hover:-rotate-6 transition-transform">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-bold text-[#00416a]">{f.title}</h3>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              <p className="text-sm text-gray-600 leading-relaxed">{f.note}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-      {/* ══════ WHAT'S INCLUDED ══════ */}
-      <section className="py-20 bg-white" aria-label="What is included in Section 8 Company registration">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              What's Included
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Everything Covered in ₹9,999
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              Name approval to Certificate of Incorporation — plus the Section 8-specific MCA licence and post-registration guidance.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {WHAT_INCLUDED.map(({ icon, title, desc }) => (
-              <div key={title}
-                className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:bg-white hover:-translate-y-0.5 transition-all duration-200">
-                <div className="w-11 h-11 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-2xl mb-4">
-                  {icon}
-                </div>
-                <h3 className="font-bold text-gray-800 text-sm mb-2">{title}</h3>
-                <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+/** NGO structure picker + comparison table */
+function Compare() {
+  const [donors, setDonors] = useState<"corp" | "small" | null>(null);
+  const [oversight, setOversight] = useState<"ok" | "light" | null>(null);
+  const [scale, setScale] = useState<"big" | "local" | null>(null);
 
-      {/* ══════ SECTION 8 vs TRUST vs SOCIETY ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Section 8 Company vs Trust vs Society comparison">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Structure Comparison
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Section 8 Company vs Trust vs Society — Which Non-Profit Structure?
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-xl mx-auto">
-              All three are valid non-profit structures — but they differ significantly in governance, credibility, and fundraising access.
-            </p>
-          </div>
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="bg-[#00416a] text-white">
-                  <th className="px-4 py-3.5 text-left font-bold">Parameter</th>
-                  <th className="px-4 py-3.5 text-left font-bold">🌱 Section 8 Company</th>
-                  <th className="px-4 py-3.5 text-left font-bold">📜 Trust</th>
-                  <th className="px-4 py-3.5 text-left font-bold">🏛 Society</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {COMPARISON.map(({ point, s8, trust, society }, i) => (
-                  <tr key={point} className={`hover:bg-teal-50/20 transition-colors ${i % 2 === 0 ? "bg-white" : "bg-gray-50/40"}`}>
-                    <td className="px-4 py-3 font-semibold text-gray-700">{point}</td>
-                    <td className="px-4 py-3 text-gray-700 font-medium">{s8}</td>
-                    <td className="px-4 py-3 text-gray-500">{trust}</td>
-                    <td className="px-4 py-3 text-gray-500">{society}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-5 flex items-start gap-3 bg-teal-50 border border-teal-100 rounded-2xl p-4">
-            <AlertCircle size={16} className="text-teal-700 shrink-0 mt-0.5" />
-            <p className="text-xs text-teal-800 leading-relaxed">
-              <strong>Key recommendation:</strong> If you intend to receive <strong>corporate CSR funds</strong>, seek <strong>FCRA registration</strong>, or need the highest level of <strong>donor credibility</strong> — a Section 8 Company is the right choice. Its MCA oversight, mandatory audit, and annual ROC filings make it the most transparent and credible non-profit form in India.
-            </p>
-          </div>
-        </div>
-      </section>
+  const result = useMemo(() => {
+    if (!donors || !oversight || !scale) return null;
+    if (donors === "corp" && oversight === "ok") return { t: "Section 8 Company", d: "If you want corporate CSR funders and institutional credibility and accept stronger regulation, a Section 8 company is usually the best fit." };
+    if (oversight === "light" && scale === "local") return { t: "Trust", d: "A local organisation that wants the lightest setup and compliance often starts with a trust." };
+    if (scale === "local") return { t: "Society or Trust", d: "A membership-based body, or a local initiative with fewer regulatory demands, can work well as a society or a trust." };
+    return { t: "Section 8 Company or Society", d: "A larger organisation can choose between a society and a Section 8 company, depending on donor expectations and the oversight it can manage." };
+  }, [donors, oversight, scale]);
 
-      {/* ══════ 6-STEP PROCESS ══════ */}
-      <section className="py-20 bg-white" aria-label="Section 8 Company registration process">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-4">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              How We Work
-            </span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] text-center mt-4 mb-12">
-            Taxvio's 6-Step Section 8 Registration Process — Objectives to Certificate
-          </h2>
+  const Opt = <T extends string,>({ value, current, set, label }: { value: T; current: T | null; set: (v: T) => void; label: string }) => (
+    <button
+      onClick={() => set(value)}
+      className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
+        current === value ? "bg-[#00416a] text-white border-[#00416a]" : "bg-white text-[#00416a] border-[#00416a]/20 hover:border-[#00416a]/50"
+      }`}
+    >
+      {label}
+    </button>
+  );
+
+  return (
+    <section id="compare" className="scroll-mt-40">
+      <Heading label="Compare" title="Section 8 Company vs Trust vs Society" />
+
+      <Reveal>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm mb-8">
+          <p className="font-bold text-[#00416a] mb-4">🧭 Which NGO structure fits you? Three quick questions</p>
           <div className="space-y-4">
-            {STEPS.map(({ step, title, desc }) => (
-              <div key={step}
-                className="flex gap-5 items-start bg-gray-50 border border-gray-100 rounded-2xl p-5 hover:shadow-md hover:border-[#00416a]/15 transition-all duration-200">
-                <div className="w-10 h-10 rounded-xl bg-[#00416a] flex items-center justify-center text-white font-extrabold text-sm shrink-0 shadow-md">
-                  {step}
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-800 text-sm mb-1">{title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ POST-INCORPORATION REGISTRATIONS ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Post-incorporation registrations for Section 8 Company">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              After Incorporation
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Critical Post-Incorporation Registrations for Section 8 Companies
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-xl mx-auto">
-              Incorporation is just the beginning. These registrations transform your Section 8 Company from a legal entity into a fully fundraising-ready NGO.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-5">
-            {POST_REG.map(({ icon, title, urgency, badgeColor, desc, href, linkLabel }) => (
-              <div key={title}
-                className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-xl shrink-0">
-                      {icon}
-                    </div>
-                    <h3 className="font-bold text-gray-800 text-sm leading-snug">{title}</h3>
-                  </div>
-                  <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0 ${badgeColor}`}>{urgency.split(" — ")[0]}</span>
-                </div>
-                <p className="text-gray-500 text-xs leading-relaxed mb-3">{desc}</p>
-                {href && linkLabel && (
-                  <Link href={href}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-[#00416a] hover:text-sky-700 transition">
-                    {linkLabel} <ArrowRight size={10} />
-                  </Link>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="mt-5 flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-4">
-            <AlertCircle size={16} className="text-[#00416a] shrink-0 mt-0.5" />
-            <p className="text-xs text-[#00416a] leading-relaxed">
-              <strong>Important:</strong> 12A and 80G registrations are now <strong>provisional with 5-year validity</strong> (amended by Finance Act 2020). Renewal applications must be filed at least 6 months before expiry. Failure to renew means losing tax-exempt status and donor deduction eligibility — which can devastate your fundraising ability overnight. Taxvio tracks your renewal deadlines as part of our{" "}
-              <Link href="/serviceslist/roc/annual-roc-compliance" className="font-bold underline hover:text-sky-700 transition">annual compliance package</Link>.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ ANNUAL COMPLIANCE ══════ */}
-      <section className="py-20 bg-white" aria-label="Section 8 Company annual compliance requirements">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Compliance Reference
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Annual Compliance for Section 8 Companies — Full Reference
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              Section 8 Companies have the same ROC compliance burden as Private Limited Companies — plus additional non-profit-specific filings.
-            </p>
-          </div>
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="bg-[#00416a] text-white">
-                  <th className="px-5 py-3.5 text-left font-bold">Compliance</th>
-                  <th className="px-5 py-3.5 text-left font-bold">Due Date / Condition</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {ANNUAL_COMPLIANCE.map(({ form, detail }, i) => (
-                  <tr key={form} className={`hover:bg-teal-50/20 transition-colors ${i % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
-                    <td className="px-5 py-3.5 font-bold text-[#00416a]">{form}</td>
-                    <td className="px-5 py-3.5 text-gray-600">{detail}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-5 flex items-start gap-3 bg-red-50 border border-red-100 rounded-2xl p-4">
-            <AlertCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
-            <p className="text-xs text-red-700 leading-relaxed">
-              <strong>Penalty alert:</strong> Section 8 Companies that fail to maintain proper books of accounts, fail to conduct annual audits, or distribute profits to members face <strong>licence revocation by the Central Government</strong> — which converts the company into a regular company subject to full corporate taxation. Taxvio's{" "}
-              <Link href="/serviceslist/roc/annual-roc-compliance" className="font-bold underline hover:text-red-900 transition">annual compliance service</Link> ensures all deadlines are tracked and filed on time.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ DOCUMENTS CHECKLIST ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Documents required for Section 8 Company registration">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Documents Checklist
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Documents Required for Section 8 Company Registration
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              All documents shared via WhatsApp or email. The Section 8-specific documents are prepared by Taxvio — you provide the information.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-5">
-            {DOCS.map(({ category, icon, items }) => (
-              <div key={category} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-xl bg-[#00416a] flex items-center justify-center text-base">
-                    {icon}
-                  </div>
-                  <h3 className="font-bold text-gray-800 text-sm">{category}</h3>
-                </div>
-                <ul className="space-y-2">
-                  {items.map(item => (
-                    <li key={item} className="flex items-start gap-2 text-xs text-gray-600">
-                      <CheckCircle size={10} className="text-green-500 shrink-0 mt-0.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 flex items-start gap-3 bg-amber-50 border border-amber-100 rounded-2xl p-4">
-            <AlertCircle size={16} className="text-amber-500 shrink-0 mt-0.5" />
-            <p className="text-xs text-amber-800 leading-relaxed">
-              <strong>Objects clause is critical:</strong> The detailed description of your charitable objectives is the most scrutinised document in a Section 8 application. Vague, commercial-sounding, or inconsistent objectives are the primary reason for MCA rejection or query. Taxvio's team reviews and frames your objectives specifically for Section 8 MCA approval.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ SEO PILLAR CONTENT ══════ */}
-      <section className="py-20 bg-white" aria-label="Complete guide to Section 8 Company registration in India">
-        <div className="max-w-4xl mx-auto px-6 space-y-14">
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              What is a Section 8 Company in India?
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                A <strong>Section 8 Company</strong> is a non-profit entity incorporated under Section 8 of the <strong>Companies Act 2013</strong> — formerly known as a Section 25 Company under the Companies Act 1956. It is formed for promoting objects of general public utility including commerce, art, science, sports, education, research, social welfare, religion, charity, or protection of the environment, or any other object approved by the Central Government.
-              </p>
-              <p>
-                The defining legal requirement of a Section 8 Company is the <strong>non-distribution clause</strong> — all income and profits of the company must be applied towards its stated charitable objectives. No dividend can be declared or paid to its members. This prohibition on profit distribution is what distinguishes a Section 8 Company from a regular <Link href="/serviceslist/roc/private-limited-formation" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">Private Limited Company</Link> — and what earns it its non-profit legal status.
-              </p>
-              <p>
-                Unlike a Trust or Society, a Section 8 Company is incorporated under a central law (the Companies Act) and regulated by the <strong>Ministry of Corporate Affairs (MCA)</strong>. This central regulation — with its mandatory annual filings, statutory audit requirements, and MCA oversight — makes Section 8 Companies the <em>most transparent and credible</em> non-profit structure in India, preferred by donors, corporates, and government agencies alike.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              The MCA Section 8 Licence — What Makes This Registration Different
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                Unlike the registration of a <Link href="/serviceslist/roc/private-limited-formation" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">Private Limited Company</Link> or <Link href="/serviceslist/roc/llp-formation" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">LLP</Link> — which proceed directly from name approval to incorporation — a Section 8 Company requires an additional and separate step: a <strong>licence from the Central Government</strong> through MCA's Regional Director.
-              </p>
-              <p>
-                The licence application requires promoters to declare that the company will be formed for charitable purposes only, will not distribute profits, and will apply all income towards its stated objectives. The MCA's Regional Director reviews the proposed objects, the promoters' background, and the genuineness of the non-profit intent before granting the licence. This review process typically takes 7–10 additional working days and is the primary reason Section 8 registration takes 15–20 days versus 7–10 days for a standard company.
-              </p>
-              <p>
-                <strong>Objects clause scrutiny</strong> is the most common source of MCA queries and rejections. Objects that appear commercial, vague, or outside the categories prescribed under Section 8 are flagged. Common errors include: using objects that could imply business activities (e.g., "trading in educational materials" instead of "promoting education"), objects that are too broad to be genuinely charitable, or objects that overlap with the personal business interests of the promoters. Taxvio's team reviews and restructures your objects clause specifically to pass the Regional Director's scrutiny.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              12A and 80G Registration — The Two Most Important Steps After Incorporation
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                Incorporating a Section 8 Company gives you a legal entity — but it does not automatically make your organisation <em>tax-exempt</em> or <em>donation-deduction-eligible</em>. These critical benefits come from two separate registrations with the Income Tax Department: <strong>12A</strong> and <strong>80G</strong>.
-              </p>
-              <p>
-                <strong>12A registration</strong> under Section 12A/12AA of the Income Tax Act gives the Section 8 Company itself exemption from paying income tax on income applied towards charitable purposes. Without 12A, the company is taxed like any other entity — at 30% on surplus income. A 12A-registered Section 8 Company can accumulate up to 15% of its income for future charitable use without it being treated as taxable surplus.
-              </p>
-              <p>
-                <strong>80G registration</strong> is even more critical for fundraising. It allows donors — individuals and corporates — to claim a 50% deduction on donations made to the 80G-registered organisation. In practice, most major donors (individuals, HNIs, and especially corporates making CSR donations) will not donate to an organisation without 80G registration, because they have no tax incentive to do so. 80G registration is therefore not optional — it is a fundraising prerequisite.
-              </p>
-              <p>
-                Since the Finance Act 2020, both 12A and 80G registrations are <strong>provisional for 3 years initially</strong>, then renewable for 5 years at a time. Organisations must proactively file renewal applications 6 months before expiry. A lapse in either registration — even for a single month — can disrupt donor confidence and CSR funding pipelines. Taxvio's <Link href="/serviceslist/income-tax/12a-application" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">12A and 80G registration service</Link> covers the initial application and all subsequent renewals.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              CSR Funding for Section 8 Companies — How to Access Corporate Donations
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                Under Section 135 of the Companies Act 2013, every company with net worth above ₹500 crore, turnover above ₹1,000 crore, or net profit above ₹5 crore must spend 2% of its average net profit of the preceding three years on CSR activities. This creates a massive pool of corporate funding that NGOs can access — provided they meet the eligibility criteria.
-              </p>
-              <p>
-                For a Section 8 Company to receive CSR funds, it must be <strong>registered on MCA's CSR portal via Form CSR-1</strong> (effective from 1 April 2021, all NGOs receiving CSR must have a unique CSR Registration Number). The Section 8 Company must also hold valid <strong>80G registration</strong> — without which the donating company cannot claim its CSR spend as a deductible contribution.
-              </p>
-              <p>
-                Section 8 Companies are <em>strongly preferred</em> over Trusts and Societies for CSR funding because of their MCA oversight, mandatory statutory audit, and annual ROC filings — which give corporate CSR departments the audit trail and governance assurance they need to comply with their own board-level CSR reporting requirements. Many large corporates have explicit internal policies requiring CSR partners to be Section 8 Companies.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              Annual Compliance — What Changes and What Stays the Same Compared to a Pvt Ltd
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                A Section 8 Company has the <strong>same ROC compliance obligations as a Private Limited Company</strong> — AGM, AOC-4, MGT-7, statutory audit — plus additional non-profit-specific compliance requirements. There is no compliance relaxation for Section 8 Companies in the ROC sphere.
-              </p>
-              <p>
-                <strong>What is different for Section 8 Companies:</strong> The income tax return form is <strong>ITR-7</strong> (for entities under Section 139(4A)) — not ITR-6 used by regular companies. The 12A and 80G exemptions must be renewed every 5 years. FCRA-registered organisations must file FC-4 annually regardless of whether foreign funds were received. CSR-1 registration and annual CSR utilisation reporting are required for organisations receiving corporate CSR funds.
-              </p>
-              <p>
-                <strong>Penalty for non-compliance:</strong> A Section 8 Company that fails to comply with its obligations — including maintaining non-profit status — faces the most serious consequence available: the <strong>Central Government can revoke the Section 8 licence</strong>, converting the company into a standard taxable entity, imposing full income tax on accumulated surpluses, and potentially winding up the company. This is far more severe than the penalties that apply to standard companies for compliance failures.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ══════ WHY TAXVIO ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Why choose Taxvio for Section 8 Company registration">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Why Taxvio
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Why NGOs &amp; Non-Profits Trust Taxvio for Section 8 Registration
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              Section 8 registration is more complex than standard company formation — experience and non-profit-specific expertise matter.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {WHY_POINTS.map(({ icon: Icon, title, desc }) => (
-              <div key={title}
-                className="flex items-start gap-4 p-5 bg-white border border-gray-100 rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                <div className="w-10 h-10 rounded-xl bg-[#00416a]/8 flex items-center justify-center shrink-0">
-                  <Icon size={18} className="text-[#00416a]" />
-                </div>
-                <div>
-                  <p className="font-bold text-gray-800 text-sm">{title}</p>
-                  <p className="text-gray-500 text-xs mt-1 leading-relaxed">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ TESTIMONIALS ══════ */}
-      <section className="py-20 bg-white" aria-label="Client reviews for Section 8 Company registration">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Client Stories
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Trusted by NGOs &amp; Non-Profits Across India
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-5">
-            {TESTIMONIALS.map(({ stars, text, name, location }) => (
-              <div key={name}
-                className="bg-gray-50 border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                <div className="flex gap-0.5 mb-4">
-                  {Array.from({ length: stars }).map((_, i) => (
-                    <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-gray-700 text-xs leading-relaxed mb-5 italic">"{text}"</p>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white font-extrabold text-xs shrink-0">
-                    {name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-800 text-xs">{name}</p>
-                    <p className="text-gray-400 text-[10px]">📍 {location}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ FAQ ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Section 8 Company registration FAQs">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              FAQs
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Frequently Asked Questions — Section 8 Company in India
-            </h2>
-          </div>
-          <div className="space-y-3">
-            {FAQS.map(({ q, a }) => <FAQItem key={q} q={q} a={a} />)}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ OUR REACH ══════ */}
-      <section className="py-14 bg-white border-t border-gray-100" aria-label="Section 8 Company registration services across India">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1 h-7 rounded-full bg-[#00416a]" />
-            <h2 className="text-lg font-extrabold text-gray-800">Section 8 Company Registration Across India</h2>
-          </div>
-          <p className="text-gray-600 text-sm mb-6 max-w-3xl">
-            Taxvio is based in <strong>Khatauli, Muzaffarnagar, UP</strong> and provides Section 8 Company registration for NGOs, trusts, and non-profit initiatives across <strong>Noida, Delhi NCR, Meerut, Lucknow, Jaipur, Mumbai, Bangalore</strong>, and pan-India — 100% online.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {["Khatauli", "Muzaffarnagar", "Meerut", "Noida", "Delhi NCR", "Ghaziabad", "Lucknow", "Jaipur", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata"].map(city => (
-              <Link key={city} href={`/city/${city.toLowerCase().replace(/\s+/g, "-")}`}
-                className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-50 border border-gray-100 text-gray-600 hover:border-teal-200 hover:text-teal-700 hover:bg-teal-50 transition-all duration-150">
-                📍 {city}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ RELATED SERVICES ══════ */}
-      <section className="py-14 bg-gray-50 border-t border-gray-100" aria-label="Related services for Section 8 Companies">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-1 h-8 rounded-full bg-[#00416a]" />
-            <h2 className="text-lg font-extrabold text-gray-800">Explore More — Related Services</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { title: "12A / 80G Registration", desc: "Income tax exemption for NGOs — ₹4,999", href: "/serviceslist/income-tax/12a-application", icon: "🌱" },
-              { title: "Annual ROC Compliance", desc: "AOC-4, MGT-7 for Section 8 — ₹3,999", href: "/serviceslist/roc/annual-roc-compliance", icon: "📋" },
-              { title: "Pvt Ltd Registration", desc: "For-profit company incorporation", href: "/serviceslist/roc/private-limited-formation", icon: "🏛" },
-              { title: "GST Registration", desc: "GSTIN in 3–7 days — ₹1,499", href: "/serviceslist/gst/gst-registration", icon: "🧾" },
-            ].map(({ title, desc, href, icon }) => (
-              <Link key={title} href={href}
-                className="group flex items-start gap-3 p-4 bg-white border border-gray-100 rounded-2xl hover:shadow-md hover:border-[#00416a]/20 hover:-translate-y-0.5 transition-all duration-200">
-                <span className="text-xl shrink-0">{icon}</span>
-                <div>
-                  <p className="font-bold text-gray-800 text-xs group-hover:text-[#00416a] transition">{title}</p>
-                  <p className="text-gray-500 text-[11px] mt-0.5 leading-snug">{desc}</p>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#00416a] mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                    Learn More <ArrowRight size={9} />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ FINAL CTA ══════ */}
-      <section className="py-20 bg-gradient-to-br from-[#00416a] via-[#003257] to-[#001e36] relative overflow-hidden"
-        aria-label="Register Section 8 Company with Taxvio">
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle,rgba(56,189,248,0.10) 0%,transparent 65%)" }} />
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "26px 26px" }} />
-
-        <div className="relative max-w-4xl mx-auto px-6">
-          {/* 12A/80G reminder */}
-          <div className="bg-white/10 border border-white/20 rounded-2xl px-6 py-4 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="text-white font-bold text-sm">💚 Post-Incorporation Priority</p>
-              <p className="text-white/65 text-xs mt-0.5">
-                Apply for <strong className="text-white">12A &amp; 80G</strong> within your first year.
-                Without 80G, donors have <strong className="text-white">no tax incentive</strong> to donate.
-              </p>
+              <p className="text-sm font-semibold text-gray-700 mb-2">Who will fund your work?</p>
+              <div className="flex flex-wrap gap-2"><Opt value="corp" current={donors} set={setDonors} label="Corporates / large donors" /><Opt value="small" current={donors} set={setDonors} label="Individuals / local donors" /></div>
             </div>
-            <Link href="/serviceslist/income-tax/12a-application"
-              className="shrink-0 inline-flex items-center gap-2 bg-white text-[#00416a] text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-gray-100 transition-all active:scale-[0.97]">
-              Apply for 12A / 80G <ArrowRight size={12} />
-            </Link>
+            <div>
+              <p className="text-sm font-semibold text-gray-700 mb-2">How much regulation are you comfortable with?</p>
+              <div className="flex flex-wrap gap-2"><Opt value="ok" current={oversight} set={setOversight} label="Strong oversight is fine" /><Opt value="light" current={oversight} set={setOversight} label="Prefer lighter compliance" /></div>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-700 mb-2">What is the planned scale?</p>
+              <div className="flex flex-wrap gap-2"><Opt value="big" current={scale} set={setScale} label="State / national" /><Opt value="local" current={scale} set={setScale} label="Local / community" /></div>
+            </div>
           </div>
-
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 text-white"
-              style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)" }}>
-              <TrendingUp size={12} className="text-teal-400" />
-              190+ Section 8 Companies · 4.9★ Rating · Starting ₹9,999
+          {result && (
+            <div className="mt-5 rounded-2xl bg-sky-50 border border-sky-100 p-4">
+              <p className="text-xs uppercase tracking-widest text-[#00416a]/60 font-bold mb-1">Likely fit</p>
+              <p className="font-extrabold text-[#00416a] text-lg">{result.t}</p>
+              <p className="text-sm text-gray-600 mt-1">{result.d}</p>
+              <button onClick={() => openInquiryForm(SERVICE)} className="mt-3 text-sm font-bold bg-[#00416a] text-white px-4 py-2 rounded-lg hover:bg-[#002b45] transition">
+                Confirm with a CA →
+              </button>
             </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">A starting guide only — your mission, funding sources and state laws decide the final choice.</p>
+        </div>
+      </Reveal>
 
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
-              Register Your Section 8 Company —
-              <span className="block mt-1 text-teal-300">India's Most Credible Non-Profit Structure</span>
-            </h2>
+      <Reveal>
+        <div className="overflow-x-auto rounded-3xl border border-gray-200 shadow-lg bg-white">
+          <table className="min-w-[700px] w-full text-sm border-separate border-spacing-0">
+            <thead>
+              <tr>
+                <th className="px-4 py-4 bg-gray-50 rounded-tl-3xl" />
+                <th className="px-4 py-4 text-left font-extrabold text-white bg-gradient-to-br from-[#00416a] to-[#0a6aa8]">Section 8 Company</th>
+                <th className="px-4 py-4 text-left font-semibold text-gray-600 bg-gray-50">Trust</th>
+                <th className="px-4 py-4 text-left font-semibold text-gray-600 bg-gray-50 rounded-tr-3xl">Society</th>
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARE_ROWS.map((r) => (
+                <tr key={r.k} className="group">
+                  <td className="px-4 py-3.5 font-bold text-gray-800 border-t border-gray-100 group-hover:bg-gray-50">{r.k}</td>
+                  <td className="px-4 py-3.5 font-semibold text-[#00416a] bg-sky-50/70 border-t border-[#00416a]/10">{r.s8}</td>
+                  <td className="px-4 py-3.5 text-gray-600 border-t border-gray-100 group-hover:bg-gray-50">{r.trust}</td>
+                  <td className="px-4 py-3.5 text-gray-600 border-t border-gray-100 group-hover:bg-gray-50">{r.soc}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-sm text-gray-500">
+          Rules for trusts and societies vary by state, so treat this table as a general guide and confirm with your CA.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
 
-            <p className="mt-5 text-white/70 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-              Name approval, non-profit MOA &amp; AOA, MCA Section 8 licence, Certificate of Incorporation, PAN/TAN, and 12A &amp; 80G guidance
-              — all handled end-to-end by our CA &amp; CS team. 100% online, 15–20 working days, starting ₹9,999.
+function Who() {
+  return (
+    <section id="who" className="scroll-mt-40">
+      <Heading label="Who It's For" title="Is a Section 8 Company Right for You?" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {IDEAL.map((w, i) => (
+          <Reveal key={w.t} delay={i * 70}>
+            <div className="relative h-full overflow-hidden bg-gradient-to-br from-[#00416a] to-[#00527f] text-white rounded-2xl p-6 shadow-lg">
+              <span className="absolute -right-4 -bottom-6 text-8xl opacity-10 select-none">{w.icon}</span>
+              <div className="relative">
+                <p className="text-2xl mb-2">{w.icon}</p>
+                <h3 className="font-bold text-lg mb-1.5">{w.t}</h3>
+                <p className="text-sm text-sky-100/90 leading-relaxed">{w.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Documents() {
+  const [checked, setChecked] = useState<boolean[]>(() => DOCS.map(() => false));
+  const done = checked.filter(Boolean).length;
+  const pct = Math.round((done / DOCS.length) * 100);
+  return (
+    <section id="documents" className="scroll-mt-40">
+      <Heading label="Documents" title="Documents Required for Section 8 Company Registration" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          Directors&apos; identity and address proofs, proof of the registered office, and a clear statement of your objects
+          and projected income and expenditure form the core of the file. Keep clear colour scans ready; a utility bill used
+          as address proof should be recent, and rented premises need the owner&apos;s NOC.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <p className="font-bold text-[#00416a]">Your document checklist</p>
+            <p className="text-sm font-semibold text-gray-500 tabular-nums">{done}/{DOCS.length} ready</p>
+          </div>
+          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden mb-5">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#00416a] to-emerald-500 transition-all duration-500" style={{ width: `${pct}%` }} />
+          </div>
+          <ul className="space-y-2.5">
+            {DOCS.map((d, i) => (
+              <li key={d}>
+                <label className={`flex items-center gap-3 cursor-pointer rounded-xl border px-4 py-3 transition-all ${checked[i] ? "bg-emerald-50 border-emerald-200" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/30"}`}>
+                  <input type="checkbox" checked={checked[i]} onChange={() => setChecked((c) => c.map((v, j) => (j === i ? !v : v)))} className="w-5 h-5 accent-[#00416a]" />
+                  <span className={`text-sm font-medium ${checked[i] ? "text-emerald-800 line-through decoration-emerald-400" : "text-gray-800"}`}>{d}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          <div className={`mt-5 rounded-2xl px-5 py-4 text-sm flex flex-col sm:flex-row sm:items-center gap-3 ${pct === 100 ? "bg-emerald-50 text-emerald-900" : "bg-sky-50 text-[#00416a]"}`}>
+            <span className="flex-1 font-medium">
+              {pct === 100 ? "🎉 You have everything on the list — you're ready to start." : "Tick off what you already have. Missing something? We'll tell you the easiest way to get it."}
+            </span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">
+              {pct === 100 ? "Start now →" : "Ask us →"}
+            </button>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section id="process" className="scroll-mt-40">
+      <Heading label="Process" title="How Section 8 Company Registration Works, Step by Step" />
+      <ol className="relative space-y-5 before:absolute before:left-[27px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-[#00416a]/40 before:to-[#00416a]/5">
+        {STEPS.map((s, i) => (
+          <Reveal key={s.t} delay={i * 70}>
+            <li className="relative flex gap-5">
+              <span className="relative z-10 flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center text-lg font-extrabold shadow-lg shadow-[#00416a]/25">{i + 1}</span>
+              <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg hover:border-[#00416a]/30 transition-all">
+                <h3 className="font-bold text-[#00416a] mb-1.5">{s.t}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{s.d}</p>
+              </div>
+            </li>
+          </Reveal>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function Fees() {
+  return (
+    <section id="fees" className="scroll-mt-40">
+      <Heading label="Timeline & Fees" title="Timeline, Cost & Mistakes to Avoid" />
+      <div className="grid md:grid-cols-2 gap-4 mb-8">
+        <Reveal>
+          <div className="h-full bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">⏱️</p>
+            <h3 className="font-bold text-[#00416a] mb-2">How long does it take?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Section 8 registration usually takes longer than an ordinary company, because a licence application is reviewed
+              before incorporation. Timelines depend on the completeness of documents, the consistency of the objects and
+              projections, and the Registrar&apos;s review. Clarifications can add time, which is why we prepare a careful,
+              consistent file before filing.
             </p>
+          </div>
+        </Reveal>
+        <Reveal delay={90}>
+          <div className="h-full bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">💰</p>
+            <h3 className="font-bold text-[#00416a] mb-2">What does it cost?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              The total has two parts: Taxvio&apos;s professional fee and government charges. Government costs — MCA filing fees and
+              stamp duty — vary with your authorised capital and state, so they cannot be quoted accurately without those
+              details. You receive a written, itemised quote before we start, with no add-ons introduced once the work is
+              underway.
+            </p>
+          </div>
+        </Reveal>
+      </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-             
-              <Link href="/contact"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                Free Consultation <ArrowRight size={15} />
-              </Link>
-             
+      <Reveal><h3 className="font-extrabold text-[#00416a] text-xl mb-4">Common mistakes we help you avoid</h3></Reveal>
+      <div className="space-y-3">
+        {MISTAKES.map((m, i) => (
+          <Reveal key={m.t} delay={i * 50}>
+            <div className="flex gap-4 bg-amber-50/70 border border-amber-200/70 rounded-2xl p-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center">!</span>
+              <div>
+                <p className="font-bold text-gray-800">{m.t}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{m.d}</p>
+              </div>
             </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-            <div className="mt-8 flex flex-wrap justify-center gap-5 text-xs text-white/40">
-              <span className="flex items-center gap-1.5"><Shield size={12} /> 100% Confidential</span>
-              <span className="flex items-center gap-1.5"><CheckCircle size={12} /> CA &amp; CS Assisted</span>
-              <span className="flex items-center gap-1.5"><Zap size={12} /> Fast Processing</span>
-              <span className="flex items-center gap-1.5"><Clock size={12} /> Mon–Sat · 9 AM–7 PM</span>
+function After() {
+  return (
+    <section id="after" className="scroll-mt-40">
+      <Heading label="After Registration" title="Tax Registrations & Compliance for Your NGO" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          Incorporation is the beginning, not the end. To claim tax exemptions, accept donations with deductions and qualify for
+          CSR funds, a Section 8 company needs further registrations — and then recurring filings every year. Rules and dates
+          follow current law and may change; our team confirms what applies to your organisation.
+        </p>
+      </Reveal>
+      <div className="grid sm:grid-cols-2 gap-4">
+        {AFTER.map((c, i) => (
+          <Reveal key={c.t} delay={i * 60}>
+            <div className="h-full bg-white border border-gray-200 border-l-4 border-l-[#00416a] rounded-2xl p-5 hover:shadow-lg transition-all">
+              <span className="inline-block text-[11px] font-bold text-[#00416a] uppercase tracking-wide bg-sky-50 border border-sky-100 px-2.5 py-1 rounded-full mb-2">{c.when}</span>
+              <h3 className="font-bold text-[#00416a] mb-1.5">{c.t}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{c.d}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FAQs({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faqs" className="scroll-mt-40">
+      <Heading label="FAQs" title="Section 8 Company — Frequently Asked Questions" />
+      <div className="space-y-3">
+        {faqs.map((f, i) => {
+          const isOpen = open === i;
+          return (
+            <Reveal key={f.q} delay={Math.min(i, 5) * 40}>
+              <div className={`rounded-2xl border bg-white transition-all duration-300 ${isOpen ? "border-[#00416a]/40 shadow-lg shadow-[#00416a]/10" : "border-gray-200 hover:border-[#00416a]/25"}`}>
+                <button onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left">
+                  <span className={`font-bold ${isOpen ? "text-[#00416a]" : "text-gray-800"}`}>{f.q}</span>
+                  <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${isOpen ? "bg-[#00416a] text-white rotate-45" : "bg-[#00416a]/10 text-[#00416a]"}`}>+</span>
+                </button>
+                <div className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                  <div className="overflow-hidden"><p className="px-5 pb-5 text-sm text-gray-600 leading-relaxed">{f.a}</p></div>
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Related() {
+  const roc = serviceCategories.find((c) => c.slug === "roc");
+  const items = (roc?.services ?? []).filter((s) => s.slug !== "section-8-company").slice(0, 6);
+  if (!items.length) return null;
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Related Services" title="More ROC & Company Law Services" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {items.map((r, i) => (
+          <Reveal key={r.slug} delay={i * 60}>
+            <Link
+              href={`/serviceslist/roc/${r.slug}`}
+              className="group block h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300"
+            >
+              <h3 className="font-bold text-[#00416a] mb-1.5 leading-snug">{r.title}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 mb-3">{r.shortDescription}</p>
+              <span className="text-sm font-semibold text-[#00416a] inline-flex items-center gap-1">
+                Learn more <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ SIDEBAR + CTA ══════════════════════ */
+
+function SideCard() {
+  return (
+    <div className="sticky top-40 space-y-4">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white p-6 shadow-xl">
+        <div className="s8-aurora absolute -top-16 -right-16 w-48 h-48 rounded-full bg-sky-400/25 blur-2xl" />
+        <div className="relative">
+          <p className="text-xs uppercase tracking-widest text-sky-200 font-semibold mb-2">Free consultation</p>
+          <h3 className="font-extrabold text-xl leading-snug mb-2">Register your NGO with a CA</h3>
+          <p className="text-sm text-sky-100/85 leading-relaxed mb-5">Tell us your mission — a CA from our team will call you back with a clear process and a fixed quote.</p>
+          <button onClick={() => openInquiryForm(SERVICE)} className="w-full bg-white text-[#00416a] font-bold py-3.5 rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition">
+            Get a Free Quote →
+          </button>
+          <ul className="mt-4 space-y-1.5 text-sm text-white/80">
+            <li>✓ No obligation</li>
+            <li>✓ Fixed quote upfront</li>
+            <li>✓ 100% online</li>
+          </ul>
+        </div>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-2xl p-5">
+        <p className="font-bold text-[#00416a] mb-3 text-sm">On this page</p>
+        <ul className="space-y-1.5">
+          {NAV.map((n) => (
+            <li key={n.id}>
+              <a href={`#${n.id}`} className="text-sm text-gray-600 hover:text-[#00416a] hover:translate-x-1 inline-block transition">{n.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-10 pb-24">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] shadow-2xl px-6 py-12 sm:px-12 sm:py-16 text-white">
+          <div className="s8-aurora absolute -top-20 -right-20 w-72 h-72 rounded-full bg-sky-400/25 blur-3xl" />
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="max-w-2xl text-center lg:text-left">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-3 leading-tight">Ready to register your Section 8 company?</h3>
+              <p className="text-lg text-sky-100/90 leading-relaxed">Share your requirement in 30 seconds. A CA from our team will call you back with a clear plan and honest pricing.</p>
+            </div>
+            <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
+              <button onClick={() => openInquiryForm(SERVICE)} className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition-all">
+                Get a Free Quote →
+              </button>
+              <Link href="/serviceslist" className="border-2 border-white/40 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition text-center">
+                All Services
+              </Link>
             </div>
           </div>
         </div>
-      </section>  
-      <InquiryFormButton />
-
-      <Footar />
-    </main>
+      </Reveal>
+    </section>
   );
 }

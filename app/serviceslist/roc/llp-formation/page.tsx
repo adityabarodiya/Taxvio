@@ -1,186 +1,111 @@
-import type { Metadata } from "next";
-import Script from "next/script";
-import LLPFormationClient from "./Llpformationclient";
+// app/serviceslist/roc/llp-formation/page.tsx
 
-/* ─── SEO Metadata ─────────────────────────────────────────────────────────── */
+import type { Metadata } from "next";
+import LlpFormationClient from "./Llpformationclient";
+
+const URL = "https://www.taxvio.in/serviceslist/roc/llp-formation";
+
 export const metadata: Metadata = {
-  title: "LLP Registration in India — Online, Starting ₹5,999 | Taxvio",
+  title: "LLP Registration Online in India — CA-Assisted Services | Taxvio",
   description:
-    "Register your Limited Liability Partnership (LLP) online in 7–10 working days. Taxvio's CA & CS-assisted service covers name reservation, LLP agreement drafting, DPIN processing, MCA incorporation certificate & PAN/TAN. Starting ₹5,999. Pan-India.",
+    "Register your LLP online with Taxvio: name reservation, LLP agreement drafting, incorporation certificate and ROC compliance support. CA-reviewed, fixed quote upfront, pan-India service.",
   keywords: [
-    "LLP registration India",
-    "limited liability partnership registration online",
-    "how to register LLP in India",
-    "LLP formation MCA",
-    "LLP agreement drafting India",
-    "DPIN registration",
+    "LLP registration",
+    "LLP registration online India",
+    "limited liability partnership registration",
+    "how to register an LLP",
+    "LLP registration documents",
+    "LLP registration fees",
+    "LLP registration process",
+    "LLP agreement drafting",
     "LLP vs private limited company",
-    "LLP annual compliance India",
-    "Form 11 Form 8 LLP filing",
-    "LLP incorporation certificate India",
-    "LLP registration fee India",
-    "CA assisted LLP registration",
-    "Taxvio LLP registration",
+    "LLP annual compliance Form 11 Form 8",
+    "FiLLiP incorporation",
+    "LLP registration Khatauli",
     "LLP registration Muzaffarnagar",
-    "LLP registration Meerut",
-    "LLP registration Delhi NCR",
+    "LLP registration Uttar Pradesh",
+    "CA assisted LLP registration",
   ],
-  alternates: { canonical: "https://www.taxvio.in/serviceslist/roc/llp-formation" },
+  alternates: { canonical: URL },
   openGraph: {
-    title: "LLP Registration in India | Starting ₹5,999 | Taxvio",
+    title: "LLP Registration Online — CA-Assisted | Taxvio",
     description:
-      "CA-assisted LLP registration online — name reservation, LLP agreement, DPIN, MCA filing & incorporation certificate. Starting ₹5,999.",
-    url: "https://www.taxvio.in/serviceslist/roc/llp-formation",
+      "Name reservation, LLP agreement drafting and incorporation certificate — handled end to end by a CA-led team. Fixed quote upfront.",
+    url: URL,
     siteName: "Taxvio",
+    locale: "en_IN",
     type: "website",
-    images: [{ url: "https://www.taxvio.in/og/llp-formation.jpg", width: 1200, height: 630, alt: "LLP Registration Services India — Taxvio" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "LLP Registration in India | Taxvio",
-    description: "Online LLP registration — CA & CS-assisted, starting ₹5,999. 7–10 working days.",
-    images: ["https://www.taxvio.in/og/llp-formation.jpg"],
+    title: "LLP Registration Online | Taxvio",
+    description: "CA-assisted LLP registration in India: name reservation, LLP agreement, incorporation certificate and ROC compliance.",
   },
-  robots: { index: true, follow: true },
-};
-
-/* ─── JSON-LD Schemas ─────────────────────────────────────────────────────── */
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  name: "LLP Registration",
-  provider: {
-    "@type": "ProfessionalService",
-    name: "Taxvio",
-    url: "https://www.taxvio.in",
-    telephone: "+918937980366",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
-  },
-  serviceType: "LLP Registration",
-  areaServed: { "@type": "Country", name: "India" },
-  description:
-    "Complete LLP registration — name reservation, DPIN processing, LLP agreement drafting, MCA FiLLiP filing, incorporation certificate, and PAN/TAN application. CA & CS-assisted, 100% online.",
-  offers: {
-    "@type": "Offer",
-    price: "5999",
-    priceCurrency: "INR",
-    availability: "https://schema.org/InStock",
-    priceValidUntil: "2025-12-31",
-  },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    reviewCount: "312",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large", "max-video-preview": -1 },
   },
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.taxvio.in" },
-    { "@type": "ListItem", position: 2, name: "Services", item: "https://www.taxvio.in/serviceslist" },
-    { "@type": "ListItem", position: 3, name: "ROC Compliance", item: "https://www.taxvio.in/serviceslist/roc" },
-    { "@type": "ListItem", position: 4, name: "LLP Registration", item: "https://www.taxvio.in/serviceslist/roc/llp-formation" },
-  ],
-};
+const FAQS = [
+  { q: "What is an LLP and how is it different from a partnership firm?", a: "A Limited Liability Partnership (LLP) is a separate legal entity registered under the LLP Act, 2008. Unlike a traditional partnership, a partner is not personally liable for the other partners' wrongful acts or the LLP's debts beyond their agreed contribution, though each partner remains liable for their own acts." },
+  { q: "How many partners are needed to register an LLP?", a: "An LLP needs at least two partners, and at least two of them must be designated partners who are individuals. At least one designated partner must be resident in India, meaning present in India for 182 days or more during the previous year. There is no upper limit on the number of partners." },
+  { q: "Is there a minimum capital requirement?", a: "No minimum contribution is prescribed. Partners decide their contributions, which can be in cash or in kind. MCA fees and stamp duty on the LLP agreement depend on the contribution and on your state, so we show them separately in the quote." },
+  { q: "Which documents are required for LLP registration?", a: "The core documents are PAN and Aadhaar of the partners and proof of the registered office. You will also need a photograph, email ID and mobile number of each partner, address proof, and two proposed names. Foreign partners need passport-based documents." },
+  { q: "How long does LLP registration take?", a: "When documents are complete and the name is accepted on the first attempt, registration is usually completed in roughly one to two weeks. Name objections or Registrar queries can add time, which is why we pre-check the name and the paperwork." },
+  { q: "What is the LLP agreement and is it mandatory?", a: "The LLP agreement sets out each partner's rights, duties, contribution and profit share. It must be filed with the Registrar within 30 days of incorporation. If you do not have one, the default rules of the LLP Act apply, which rarely suit a real business." },
+  { q: "What annual filings does an LLP have to make?", a: "Every LLP files Form 11 (annual return) and Form 8 (statement of account and solvency) each year, plus an income tax return. An audit is required when turnover or contribution crosses the prescribed limits. These are due even if the LLP had no business." },
+  { q: "Is an LLP taxed differently from a company?", a: "An LLP is taxed as a firm on its profits, and the partners' share of profit is not taxed again in their hands. Rates and surcharge change with the Finance Act, so our CA team confirms the current position for your case." },
+  { q: "Can an LLP raise equity funding from investors?", a: "An LLP has no shares, so it cannot issue equity the way a company can. If you expect to raise venture or angel equity, a private limited company is usually the better fit. Our CA team can compare both for you." },
+  { q: "Can I convert my partnership firm or private company into an LLP?", a: "Yes. A partnership firm, and in some cases a private company, can be converted into an LLP through the prescribed process. Taxvio can handle the conversion; ask us for the specific requirements for your entity." },
+];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
+export default function LlpFormationPage() {
+  const jsonLd = [
     {
-      "@type": "Question",
-      name: "How long does LLP registration take in India?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "LLP registration through Taxvio typically takes 7–10 working days with all documents in order. This covers name reservation via RUN-LLP, DPIN processing, LLP agreement drafting, FiLLiP form filing on MCA, and delivery of the Certificate of Incorporation.",
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "LLP Registration",
+      serviceType: "LLP incorporation",
+      description:
+        "Professional LLP registration services with MCA compliance and documentation support, including name reservation, LLP agreement drafting and incorporation certificate.",
+      url: URL,
+      areaServed: { "@type": "Country", name: "India" },
+      provider: {
+        "@type": "ProfessionalService",
+        name: "Taxvio",
+        url: "https://www.taxvio.in",
+        address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
       },
     },
     {
-      "@type": "Question",
-      name: "What is the minimum number of partners required to form an LLP?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "An LLP requires a minimum of 2 designated partners. There is no upper limit on the total number of partners. At least 2 designated partners must be individuals, and at least one of them must be a resident of India (present in India for at least 182 days in the previous calendar year).",
-      },
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://www.taxvio.in" },
+        { "@type": "ListItem", position: 2, name: "Services", item: "https://www.taxvio.in/serviceslist" },
+        { "@type": "ListItem", position: 3, name: "ROC / Company Law", item: "https://www.taxvio.in/serviceslist#roc" },
+        { "@type": "ListItem", position: 4, name: "LLP Registration", item: URL },
+      ],
     },
     {
-      "@type": "Question",
-      name: "What is the difference between an LLP and a Private Limited Company?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "An LLP (Limited Liability Partnership) is governed by the LLP Act 2008, offers lower compliance burden (no mandatory AGM, no mandatory audit below ₹40 lakh turnover), and cannot raise equity investment. A Private Limited Company is governed by the Companies Act 2013, has higher compliance requirements, but can raise equity funding through shares, issue ESOPs, and has higher credibility with large corporate clients and investors.",
-      },
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
     },
-    {
-      "@type": "Question",
-      name: "What is a Designated Partner Identification Number (DPIN)?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A DPIN (Designated Partner Identification Number) is a unique identification number allotted to designated partners of an LLP by MCA. It is similar to a Director Identification Number (DIN) for company directors. If a person already holds a DIN, the same number serves as the DPIN — no separate application is needed.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What annual compliance is required for an LLP?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "An LLP must file: Form 11 (annual return) by 30 May each year, and Form 8 (statement of accounts and solvency) by 30 October each year. An LLP with turnover above ₹40 lakh or contribution above ₹25 lakh must get its accounts audited by a CA. The LLP must also file ITR-5 for income tax compliance.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can a body corporate (company) be a partner in an LLP?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. A body corporate — including a Private Limited Company, Public Limited Company, or foreign company — can be a partner in an LLP. However, a body corporate cannot be a designated partner in an LLP. Designated partners must be individuals.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the LLP agreement and why is it important?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The LLP agreement is the foundational document governing the LLP — defining partner rights, obligations, profit-sharing ratios, capital contributions, decision-making processes, and dispute resolution mechanisms. It must be filed with MCA within 30 days of incorporation. A poorly drafted LLP agreement creates operational conflicts and compliance issues. Taxvio drafts customised LLP agreements covering all essential and dispute-prevention clauses.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the penalty for late filing of LLP annual returns?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The penalty for late filing of Form 11 or Form 8 is ₹100 per day per form, with no upper limit. Unlike companies, LLP partners are not personally disqualified for non-filing, but persistent non-compliance can lead to the LLP being declared defunct and struck off by MCA, with partners facing legal consequences.",
-      },
-    },
-  ],
-};
+  ];
 
-/* ─── Page (Server Component) ─────────────────────────────────────────────── */
-export default function LLPFormationPage() {
   return (
     <>
-      <Script
-        id="llp-service-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-      />
-      <Script
-        id="llp-bc-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <Script
-        id="llp-faq-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <LLPFormationClient />
+      {jsonLd.map((j, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(j) }} />
+      ))}
+      <LlpFormationClient faqs={FAQS} />
     </>
   );
 }

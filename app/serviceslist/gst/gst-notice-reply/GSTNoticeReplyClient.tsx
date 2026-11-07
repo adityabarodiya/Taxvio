@@ -1,806 +1,843 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Script from "next/script";
-import { motion, AnimatePresence } from "framer-motion";
-import type { Variants } from "framer-motion";
-import {
-  CheckCircle, ChevronDown, ArrowRight, Phone,
-  MessageCircle, Clock, Shield, Zap, FileText, AlertCircle, XCircle,
-} from "lucide-react";
+// app/serviceslist/gst/gst-notice-reply/GSTNoticeReplyClient.tsx
+
 import Footar from "@/components/Footar";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { serviceCategories } from "@/data/serviceCategories"; // ← adjust path
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path
 
-const PHONE = "918937980366";
-const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I received a GST notice and need urgent help.")}`;
-const DARK = { background: "linear-gradient(135deg,#00416a 0%,#003257 55%,#001e36 100%)" };
+const SERVICE = "GST Notice Reply & Compliance";
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-};
-const stagger: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.09 } } };
-const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.93 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
-};
+/* ══════════════════════ CONTENT ══════════════════════ */
 
-const NOTICE_TYPES = [
-  {
-    form: "ASMT-10",
-    title: "Scrutiny of Returns",
-    section: "Section 61 CGST Act",
-    badge: "Most Common",
-    badgeColor: "#2563eb",
-    urgency: "30 days to respond",
-    urgencyColor: "#ea580c",
-    trigger: "Automated system detects discrepancy — GSTR-1 vs GSTR-3B mismatch, excess ITC vs GSTR-2B, or unusual return patterns.",
-    reply: "ASMT-11",
-    consequence: "If unsatisfactory: assessment order passed ex-parte under Section 62. If no reply: best judgment assessment.",
-    docs: ["ITC reconciliation working", "GSTR-1 vs GSTR-3B comparison", "Supplier invoices / GSTR-2B", "Explanation for each discrepancy"],
-  },
-  {
-    form: "DRC-01",
-    title: "Demand Notice",
-    section: "Section 73 / 74 CGST Act",
-    badge: "High Stakes",
-    badgeColor: "#dc2626",
-    urgency: "30 days to pay or reply",
-    urgencyColor: "#dc2626",
-    trigger: "Tax officer determines tax is short paid, ITC wrongly availed, or tax evaded. Issued after audit, scrutiny, or investigation.",
-    reply: "DRC-03 (payment) or written reply",
-    consequence: "Non-response leads to confirmed demand order (DRC-07) — GSTIN may be attached, bank accounts frozen, or recovery initiated.",
-    docs: ["All GST returns for demand period", "ITC register and reconciliation", "Purchase invoices matching ITC claims", "Business explanation for alleged discrepancy"],
-  },
-  {
-    form: "REG-17",
-    title: "Cancellation Show Cause Notice",
-    section: "Section 29(2) CGST Act",
-    badge: "Act Immediately",
-    badgeColor: "#7c3aed",
-    urgency: "7 working days to respond",
-    urgencyColor: "#dc2626",
-    trigger: "Non-filing of returns for 6 consecutive months (monthly) or 3 consecutive quarters (QRMP). Registration obtained by fraud.",
-    reply: "REG-18 (reply to SCN)",
-    consequence: "If no reply or unsatisfactory reply: REG-19 cancellation order issued. GSTIN becomes cancelled — buyer ITC on your invoices blocked.",
-    docs: ["All pending returns filed before reply", "Reason for non-filing with supporting docs", "Proof of business continuity", "Undertaking to file future returns timely"],
-  },
-  {
-    form: "DRC-01A",
-    title: "Pre-SCN Intimation",
-    section: "Section 73/74 CGST Act",
-    badge: "Opportunity to Settle",
-    badgeColor: "#059669",
-    urgency: "Respond before SCN is issued",
-    urgencyColor: "#059669",
-    trigger: "Issued before formal Show Cause Notice — gives taxpayer an opportunity to voluntarily pay dues to avoid penalty escalation.",
-    reply: "DRC-01A Part B (voluntary payment or reply)",
-    consequence: "If dues paid voluntarily via DRC-03 within 30 days: penalty reduced to nil (Section 73) or 25% (Section 74). No penalty if paid before SCN.",
-    docs: ["Liability calculation review", "DRC-03 payment challan if paying", "Written explanation if disputing liability", "Supporting invoices and return data"],
-  },
-  {
-    form: "SCN (ADT-04 / General)",
-    title: "Show Cause Notice — Post Audit",
-    section: "Section 73 / 74 / 130 CGST Act",
-    badge: "Formal Legal Notice",
-    badgeColor: "#b45309",
-    urgency: "As per notice (typically 30 days)",
-    urgencyColor: "#dc2626",
-    trigger: "Issued after departmental audit (Section 65), special audit (Section 66), or investigation. Demands explanation for specific tax shortfall.",
-    reply: "Formal written reply + personal hearing request",
-    consequence: "If unsatisfactory: adjudication order with full demand + 10% penalty (Section 73) or 100% penalty (Section 74 for fraud). Appealable to First Appellate Authority.",
-    docs: ["Audit report (ADT-04) if available", "Books of accounts for demand period", "ITC reconciliation and reversal workings", "Legal argument and supporting case law"],
-  },
-  {
-    form: "CMP-05",
-    title: "Composition Scheme Show Cause",
-    section: "Section 10 CGST Act",
-    badge: "Scheme Cancellation Risk",
-    badgeColor: "#0891b2",
-    urgency: "15 days to respond",
-    urgencyColor: "#ea580c",
-    trigger: "Turnover exceeded composition scheme limit, or taxpayer found making inter-state or non-eligible supplies while registered under composition.",
-    reply: "CMP-06 (reply to show cause)",
-    consequence: "If scheme cancelled: taxpayer moved to regular scheme, IGST on inter-state supplies becomes payable from date of cancellation.",
-    docs: ["Turnover calculation for all periods", "Proof of eligible composition supplies", "State-wise supply breakup", "Rectification undertaking if applicable"],
-  },
+const NAV = [
+  { id: "overview", label: "Overview" },
+  { id: "planner", label: "Notice Types" },
+  { id: "included", label: "What's Included" },
+  { id: "deadline", label: "Reply Tracker" },
+  { id: "gap", label: "Exposure Estimate" },
+  { id: "documents", label: "Documents" },
+  { id: "process", label: "Process" },
+  { id: "mistakes", label: "Pitfalls" },
+  { id: "faqs", label: "FAQs" },
 ];
 
-const CONSEQUENCES = [
-  { risk: "Ex-Parte Assessment Order",   desc: "If no reply to ASMT-10 within 30 days, officer passes best judgment assessment under Section 62 — demand confirmed without your input." },
-  { risk: "DRC-07 Confirmed Demand",     desc: "Ignoring DRC-01 leads to a confirmed demand order. GST department can then initiate recovery — attaching your bank accounts or property." },
-  { risk: "GSTIN Cancellation",          desc: "REG-17 notice without reply results in REG-19 cancellation. Your buyers lose ITC on your invoices — severe business relationship damage." },
-  { risk: "100% Penalty for Fraud",      desc: "Section 74 notices (fraud/wilful misstatement) carry 100% penalty on the tax demand. Non-response worsens the outcome significantly." },
-  { risk: "ITC Reversal + Interest",     desc: "Demand notices often include ITC reversal with 18% per annum interest — making delayed response financially very costly." },
-  { risk: "Section 132 Prosecution",     desc: "In serious fraud cases, ignoring notices can escalate to criminal prosecution under Section 132 of the CGST Act." },
+const INTRO = [
+  "Receiving a GST notice is stressful, and the first instinct is often to ignore it, hope it goes away or reply in a hurry. Both are mistakes. A GST notice is a formal communication from the department that starts a legal process with fixed time limits. A well-prepared reply, filed on time with supporting documents, resolves most notices at the first stage. A late, thin or missing reply can lead to an order against you on the department's own figures, with tax, interest and penalty.",
+  "Notices come in many forms. Some ask for clarification on a return, such as a mismatch between your GSTR-1 and GSTR-3B or between your credit claimed and the auto-drafted statement. Some relate to registration, refunds, composition, late filing or a proposed demand of tax. Each has its own form, reply route and time limit. Understanding which notice you have received, what the department is actually alleging and what evidence answers it is the first and most important step.",
+  "Taxvio's CA-assisted team handles the whole process. We analyse your notice, identify the section and issue, reconcile your data, draft a reasoned reply, upload it with the supporting documents and follow the case until it is closed, including personal hearings where needed. You receive a written quote before we begin, and we tell you honestly if a reply is not needed or if the better course is to pay and close the matter.",
+];
+
+const FEATURES = [
+  { title: "Notice analysis", note: "We study the notice, identify the form, the section invoked, the period and the exact allegation, and tell you the time you have to respond and what is at stake." },
+  { title: "Reply drafting", note: "We reconcile your records and draft a reasoned reply that answers each point with facts, working papers and the relevant provisions, in the format the portal expects." },
+  { title: "Document submission", note: "We organise and upload the supporting documents, such as invoices, ledgers, bank statements and reconciliations, and confirm that the reply is filed correctly." },
+  { title: "Case follow-up", note: "We track the matter on the portal, attend to further queries, help with personal hearings and advise on next steps, including payment or appeal if required." },
+];
+
+const BENEFITS = [
+  { icon: "⏰", t: "Reply on time", d: "We track the window from the day you share the notice so no deadline is missed." },
+  { icon: "🔍", t: "Understand the real issue", d: "Notices are often written in general terms; we pin down what is actually being alleged." },
+  { icon: "📑", t: "Evidence-backed replies", d: "A reply with working papers and documents is far more persuasive than a general denial." },
+  { icon: "🧮", t: "Know your exposure", d: "We tell you the likely tax, interest and penalty position so you can decide with facts." },
+  { icon: "🤝", t: "One point of contact", d: "We handle the portal, the officer and the paperwork so you can run your business." },
+  { icon: "🛡️", t: "Fix the root cause", d: "We point out process gaps so the same notice does not come back next year." },
+];
+
+const IDEAL = [
+  { icon: "📨", t: "Businesses with a notice", d: "Any registered taxpayer who has received a notice, intimation or query on the GST portal." },
+  { icon: "🧾", t: "Mismatch cases", d: "Taxpayers with differences between returns, credit statements and books." },
+  { icon: "⚠️", t: "Late or missing filings", d: "Businesses with pending returns or registration-related notices." },
+];
+
+type Case = { id: string; label: string; icon: string; form: string; t: string; d: string };
+
+const CASES: Case[] = [
+  { id: "scrutiny", label: "Notice on discrepancies in my returns", icon: "📊", form: "ASMT-10", t: "Scrutiny of returns", d: "The officer has found differences in your returns and asks for an explanation. The reply is generally filed in a prescribed form within a stated period, commonly about 30 days, and can be extended on request." },
+  { id: "scn", label: "Show cause notice proposing tax, interest and penalty", icon: "⚖️", form: "DRC-01 / SCN", t: "Show cause notice", d: "This is a proposal to demand tax, with interest and penalty. A reply, and in some cases payment within the permitted period, can reduce or avoid penalty. Time limits are strict." },
+  { id: "itc", label: "Intimation about ITC mismatch or tax difference", icon: "💳", form: "DRC-01B / 01C", t: "Return mismatch intimation", d: "The system has flagged a difference between returns or in credit claimed. You generally have to explain, correct or pay within the period stated in the intimation." },
+  { id: "reg", label: "Notice about my registration", icon: "🪪", form: "REG-03 / REG-17", t: "Registration notice", d: "The officer seeks clarification or proposes cancellation. The reply window is short, so quick action matters. Cancelled registrations can sometimes be revoked." },
+  { id: "return", label: "Notice for not filing returns", icon: "📅", form: "GSTR-3A", t: "Default in return filing", d: "A reminder to file pending returns. Filing within the period stated, with late fee, can close it; ignoring it can lead to an assessment on the department's estimate." },
+  { id: "refund", label: "Notice on my refund application", icon: "💸", form: "RFD-08", t: "Refund-related notice", d: "The officer proposes to reject or reduce a refund. A reasoned reply with documents is needed within the period stated." },
+];
+
+const DOC_SETS: Record<string, { label: string; docs: string[] }> = {
+  notice: {
+    label: "The notice",
+    docs: [
+      "Copy of the GST notice with its reference number",
+      "Date of the notice and the reply deadline stated",
+      "Any earlier notices or replies on the same matter",
+      "Portal login access or authorisation letter",
+      "Any personal hearing intimation",
+    ],
+  },
+  returns: {
+    label: "Returns & ledgers",
+    docs: [
+      "GSTR-1 and GSTR-3B for the period in the notice",
+      "Annual return and reconciliation, if filed",
+      "Auto-drafted credit statements (GSTR-2A / 2B)",
+      "Electronic cash and credit ledger statements",
+      "Challans of tax paid",
+    ],
+  },
+  support: {
+    label: "Supporting documents",
+    docs: [
+      "Sales and purchase invoices relevant to the issue",
+      "Books of accounts, ledgers and bank statements",
+      "Contracts, e-way bills or transport records, if relevant",
+      "Reconciliation statements, if already prepared",
+      "Explanations or correspondence with suppliers or customers",
+    ],
+  },
+};
+
+const CYCLE = [
+  { t: "Read & classify", d: "We identify the form, section, period and the allegation, and note the reply date." },
+  { t: "Gather & reconcile", d: "We collect returns, ledgers and records and reconcile them against the points raised." },
+  { t: "Decide the position", d: "We advise whether to explain, correct and pay, or contest, with the likely exposure." },
+  { t: "Draft & file the reply", d: "We prepare a reasoned reply with annexures and file it on the portal on time." },
+  { t: "Follow up & close", d: "We track the case, handle hearings and further queries until the matter is closed." },
 ];
 
 const STEPS = [
-  { n:"01", title:"Notice Analysis",
-    desc:"Taxvio reviews the notice — identifying the notice type (ASMT-10, DRC-01, REG-17, SCN), the section under which it is issued, the specific allegations or discrepancies mentioned, the reply deadline, and the available remedy." },
-  { n:"02", title:"Data & Document Gathering",
-    desc:"All relevant GST returns (GSTR-1, GSTR-3B, GSTR-2B), purchase/sale invoices, ITC reconciliation, books of accounts, and any prior correspondence with the department are collected for the notice period." },
-  { n:"03", title:"Reconciliation & Root Cause Analysis",
-    desc:"Taxvio reconciles GST returns against books to identify the actual source of the discrepancy — GSTR-1 vs GSTR-3B difference, ITC mismatch, rounding difference, or genuine liability. Each item in the notice is addressed point by point." },
-  { n:"04", title:"Reply Drafting",
-    desc:"A professional legal reply is drafted — citing relevant sections of the CGST Act, applicable CBIC circulars, and GST Council decisions — with clear explanations and supporting evidence for each allegation in the notice." },
-  { n:"05", title:"Review & Approval",
-    desc:"The draft reply is shared with you for review on WhatsApp. Corrections and additions are incorporated. Final reply is prepared with all annexures (reconciliation statements, invoice copies, computation sheets)." },
-  { n:"06", title:"Filing on GST Portal + Personal Hearing",
-    desc:"Reply is filed on the GST portal before the deadline. If a personal hearing is required, Taxvio's CA represents you before the GST officer — presenting the reply, responding to queries, and working toward a favourable order." },
+  { t: "Share your notice", d: "You send us the notice and portal access or authorisation. We note the reply deadline straight away." },
+  { t: "Analyse the notice", d: "We identify the form, section and issue and give you a plain-language summary and a plan." },
+  { t: "Collect records & reconcile", d: "We gather your returns, ledgers and documents and reconcile them against the points in the notice." },
+  { t: "Agree the position", d: "We discuss whether to correct and pay, explain, or contest, and what the exposure looks like." },
+  { t: "Draft & submit the reply", d: "After your approval, we file the reply with supporting documents in the required form." },
+  { t: "Follow-up & hearings", d: "We track the case, attend to queries and support you at any personal hearing until it is closed." },
 ];
 
-const DOCS = [
-  { label:"Copy of GST Notice",             sub:"Original notice document — notice number, date, and all attachments" },
-  { label:"GST Returns for Notice Period",   sub:"GSTR-1, GSTR-3B, GSTR-2B for all months/quarters mentioned in notice" },
-  { label:"Purchase & Sales Ledger",         sub:"Books of account entries matching the GST return period under scrutiny" },
-  { label:"All Tax Invoices",                sub:"B2B purchase invoices for ITC claimed; sales invoices for outward supplies" },
-  { label:"ITC Reconciliation Workings",     sub:"GSTR-2B vs books ITC comparison — showing matching and unmatched credits" },
-  { label:"Previous Correspondence",         sub:"Any earlier notices, responses, or orders from the department on related issues" },
-  { label:"E-Way Bills (if applicable)",     sub:"E-way bill register for the period — to reconcile against invoice data if demanded" },
-  { label:"Bank Statements",                 sub:"For cross-verification of sale proceeds and payment of tax if required by notice" },
+const MISTAKES = [
+  { t: "Ignoring the notice", d: "Silence can lead to an order based on the department's figures, with tax, interest and penalty." },
+  { t: "Missing the reply deadline", d: "Reply windows are short; ask for more time early rather than after the date has passed." },
+  { t: "Replying without evidence", d: "A general denial rarely works. Every point needs invoices, ledgers or reconciliations." },
+  { t: "Replying to the wrong issue", d: "Answering what you assume instead of what the notice alleges can weaken your case." },
+  { t: "Paying without understanding", d: "Paying the demand without checking it may close the matter but also admit liability that was not due." },
 ];
 
-const FAQS = [
-  {
-    q: "What is an ASMT-10 notice and how do I respond to it?",
-    a: "ASMT-10 is a scrutiny notice issued by the GST officer under Section 61 of the CGST Act when the automated system or manual review detects discrepancies in your filed returns. Common triggers include: GSTR-1 vs GSTR-3B mismatch (different outward supply values), ITC claimed in GSTR-3B exceeding GSTR-2B auto-populated credit, turnover in GST returns differing from Form 26AS or income tax returns, or unusual patterns like zero-liability returns combined with large ITC claims. The taxpayer must respond in Form ASMT-11 within 30 days of receipt of ASMT-10, explaining the discrepancy with supporting documents. If the officer is satisfied, no further action is taken. If unsatisfied, an assessment order under Section 62 is passed. Taxvio prepares the ASMT-11 response with point-by-point reconciliation of each discrepancy mentioned in the ASMT-10.",
-  },
-  {
-    q: "What is DRC-01 and what happens if I don't respond?",
-    a: "DRC-01 is a demand notice (Show Cause Notice) issued under Section 73 or Section 74 of the CGST Act when the GST officer determines that tax has been short paid, not paid, or Input Tax Credit has been wrongly availed or utilised. Section 73 applies to cases of genuine error or negligence (10% penalty); Section 74 applies to cases of fraud, wilful misstatement, or suppression of facts (100% penalty). Upon receiving DRC-01, the taxpayer has 30 days to either pay the demand via DRC-03 (with interest, and penalty reduced if paid voluntarily) or file a written reply disputing the demand. If no response is filed within 30 days, the officer issues a confirmed demand order in DRC-07 — which carries the full penalty and interest. The department can then initiate recovery proceedings — attaching bank accounts, property, or initiating prosecution under Section 132 for serious cases.",
-  },
-  {
-    q: "What is REG-17 notice and can my GST registration be cancelled if I ignore it?",
-    a: "REG-17 is a Show Cause Notice issued by the GST officer before cancelling a taxpayer's GST registration suo motu under Section 29(2) of the CGST Act. It is most commonly issued when a taxpayer has not filed GST returns for 6 consecutive months (monthly filers) or 3 consecutive quarters (QRMP scheme filers). The notice asks the taxpayer to show cause — explain why their GST registration should not be cancelled. The taxpayer must respond in Form REG-18 within 7 working days. If the reply is satisfactory, the officer drops the notice. If no reply is filed or the reply is unsatisfactory, the officer issues a cancellation order in Form REG-19 — permanently cancelling the GSTIN. Once cancelled, buyers cannot claim ITC on your invoices, and your business is effectively paralysed for GST purposes. Taxvio treats REG-17 as the highest-urgency notice type — we typically file all pending returns and submit the REG-18 reply within 2–3 days.",
-  },
-  {
-    q: "What is a GST Show Cause Notice (SCN) and how does it differ from DRC-01?",
-    a: "A GST Show Cause Notice (SCN) is a formal notice requiring the taxpayer to explain why a specific tax demand, penalty, or action (such as registration cancellation or ITC reversal) should not be imposed. DRC-01 is a specific type of SCN issued for tax demand under Section 73 or 74 — it is the most common type. Other SCNs can be issued under Section 130 (confiscation), Section 122 (general penalty), or after a departmental audit (ADT-04 followed by SCN). The key difference is that DRC-01 specifically triggers the demand proceedings timeline and penalty provisions of Sections 73/74, while general SCNs may relate to different violations. All GST SCNs must be responded to professionally — failing to respond or providing an inadequate reply results in an adverse ex-parte order that is much harder to challenge in appellate proceedings.",
-  },
-  {
-    q: "What is DRC-01A and why is it important to respond before the SCN is issued?",
-    a: "DRC-01A is a pre-SCN intimation — a communication issued under Section 73(5) or 74(5) of the CGST Act informing the taxpayer of the proposed demand before the formal Show Cause Notice (DRC-01) is issued. Its purpose is to give the taxpayer an opportunity to review the proposed liability and pay voluntarily — if the taxpayer pays the full demand + interest via DRC-03 within 30 days of DRC-01A, the penalty under Section 73 is reduced to nil (zero penalty). For Section 74 cases, paying at this stage reduces the penalty from 100% to 25% of the tax demanded. This is the most financially advantageous stage to resolve a GST demand — and why DRC-01A should never be ignored. Taxvio analyses every DRC-01A to determine whether the proposed liability is correct, and advises on whether to pay (for savings on penalty) or dispute (if the proposed liability is wrong).",
-  },
-  {
-    q: "Can I represent myself in a GST personal hearing or do I need a CA?",
-    a: "GST proceedings are quasi-judicial in nature — personal hearings before a GST officer or adjudicating authority are formal legal proceedings where you have a right to be heard before any adverse order is passed. While you can technically represent yourself, it is strongly advisable to have a qualified CA or GST advocate represent you for the following reasons: GST officers expect structured legal arguments citing specific sections, CBIC circulars, and judicial precedents; an unrepresented taxpayer often fails to place the complete record before the officer, leading to adverse orders; professional representatives know which arguments are accepted at the officer level vs. which require appellate forums; and a poor personal hearing outcome creates adverse findings that make first appellate proceedings more difficult. Taxvio's CA team attends personal hearings, prepares hearing notes in advance, and ensures the complete reconciliation and legal submission is before the officer before the hearing date.",
-  },
-];
+/* ══════════════════════ ROOT ══════════════════════ */
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQS.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+export default function GSTNoticeReplyClient({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [active, setActive] = useState("overview");
 
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  name: "GST Notice Reply India",
-  serviceType: "GST Notice Reply",
-  description:
-    "CA-assisted GST notice reply services — ASMT-10 (ASMT-11), DRC-01, REG-17 (REG-18), DRC-01A, Show Cause Notice, personal hearing representation. Starting ₹1,999. Pan India.",
-  provider: {
-    "@type": "ProfessionalService",
-    name: "Taxvio",
-    url: "https://www.taxvio.in",
-    telephone: "+918937980366",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
-  },
-  areaServed: "India",
-  offers: {
-    "@type": "Offer",
-    price: "1999",
-    priceCurrency: "INR",
-    description: "GST notice reply — ASMT-10, DRC-01, REG-17, SCN — starting ₹1,999.",
-  },
-};
-
-export default function GSTNoticeReplyClient() {
-  const [faqOpen, setFaqOpen]   = useState<number | null>(null);
-  const [openNotice, setOpenNotice] = useState<number | null>(null);
+  useEffect(() => {
+    const els = NAV.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <>
-      <Script id="gst-notice-service-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
-      <Script id="gst-notice-faq-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+    <main className="bg-slate-50 text-gray-800 overflow-x-clip">
+      <GlobalStyles />
+      <Hero />
+      <InquiryFormButton />
+      <SectionNav active={active} />
 
-      <main className="bg-white text-gray-800">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14 grid lg:grid-cols-[1fr_340px] gap-10">
+        <div className="min-w-0 space-y-16 md:space-y-20">
+          <Overview />
+          <Benefits />
+          <Planner />
+          <Included />
+          <Who />
+          <Deadline />
+          <Gap />
+          <Documents />
+          <Process />
+          <Pitfalls />
+          <FAQs faqs={faqs} />
+          <Related />
+        </div>
+        <aside className="hidden lg:block">
+          <SideCard />
+        </aside>
+      </div>
 
-        {/* ══ HERO ══════════════════════════════════════════════════════════ */}
-        <section className="relative overflow-hidden text-white" style={DARK}
-          aria-label="GST Notice Reply Services India" itemScope itemType="https://schema.org/Service">
-          <div className="absolute inset-0 pointer-events-none" style={{
-            backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px)",
-            backgroundSize: "26px 26px",
-          }} />
-          <div className="absolute top-0 right-0 w-[520px] h-[520px] rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle,rgba(239,68,68,0.12) 0%,transparent 65%)" }} />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle,rgba(56,189,248,0.08) 0%,transparent 65%)" }} />
+      <FinalCTA />
+      <Footar />
+    </main>
+  );
+}
 
-          <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
-            <nav className="text-sm mb-8" aria-label="Breadcrumb">
-              <ol className="flex items-center gap-2" style={{ color: "rgba(255,255,255,0.5)" }}>
-                <li><Link href="/" className="hover:text-white transition">Home</Link></li>
-                <li style={{ color: "rgba(255,255,255,0.3)" }}>›</li>
-                <li><Link href="/serviceslist/gst" className="hover:text-white transition">GST Services</Link></li>
-                <li style={{ color: "rgba(255,255,255,0.3)" }}>›</li>
-                <li className="text-white font-medium">GST Notice Reply</li>
-              </ol>
-            </nav>
+/* ══════════════════════ PRIMITIVES ══════════════════════ */
 
-            <motion.div initial="hidden" animate="visible" variants={stagger}>
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                  <motion.div variants={fadeUp}
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-5"
-                    style={{ background: "rgba(239,68,68,0.2)", border: "1px solid rgba(239,68,68,0.4)" }}>
-                    <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
-                    Received a GST Notice? Reply Within the Deadline — Act Now
-                  </motion.div>
+function GlobalStyles() {
+  return (
+    <style>{`
+      @keyframes nr-aurora { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-30px) scale(1.15); } 100% { transform: translate(0,0) scale(1); } }
+      @keyframes nr-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      .nr-aurora { animation: nr-aurora 14s ease-in-out infinite; }
+      .nr-float { animation: nr-float 7s ease-in-out infinite; }
+      .nr-reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+      .nr-reveal.nr-in { opacity: 1; transform: none; }
+      .nr-hide-scroll::-webkit-scrollbar { display: none; }
+      .nr-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .nr-aurora, .nr-float { animation: none !important; }
+        .nr-reveal { opacity: 1; transform: none; transition: none; }
+      }
+    `}</style>
+  );
+}
 
-                  <motion.h1 variants={fadeUp}
-                    className="text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-white"
-                    itemProp="name">
-                    GST Notice Reply —
-                    <span className="block mt-2" style={{ color: "#7dd3fc" }}>
-                      ASMT-10, DRC-01, REG-17 &amp; SCN
-                    </span>
-                  </motion.h1>
+function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`nr-reveal ${shown ? "nr-in" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+      {children}
+    </div>
+  );
+}
 
-                  <motion.p variants={fadeUp} className="mt-5 text-lg leading-relaxed"
-                    style={{ color: "rgba(255,255,255,0.78)" }} itemProp="description">
-                    CA-assisted GST notice reply — professional legal drafting, ITC reconciliation,
-                    and personal hearing representation. Starting at{" "}
-                    <strong className="text-white">₹1,999</strong>. Reply filed before your deadline.
-                  </motion.p>
+function Heading({ label, title }: { label: string; title: string }) {
+  return (
+    <Reveal className="mb-7">
+      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#00416a]/70 border border-[#00416a]/15 bg-[#00416a]/5 px-3 py-1.5 rounded-full mb-3">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00416a]" />
+        {label}
+      </span>
+      <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#00416a] leading-tight">{title}</h2>
+    </Reveal>
+  );
+}
 
-                  <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
-                    <a href={WA} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3.5 rounded-xl font-bold shadow-xl hover:scale-105 transition-all duration-200">
-                      <MessageCircle size={18} /> WhatsApp — Get Urgent Help
-                    </a>
-                    <Link href="/contact"
-                      className="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-xl font-bold hover:bg-white/10 transition-all"
-                      style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
-                      <Phone size={18} /> Free Consultation
-                    </Link>
-                  </motion.div>
+/* ══════════════════════ HERO + NAV ══════════════════════ */
 
-                  <motion.div variants={fadeUp} className="mt-6 flex flex-wrap gap-3">
-                    {["✅ ASMT-10 Reply", "✅ DRC-01 Response", "✅ REG-17 / REG-18", "✅ Personal Hearing"].map(tx => (
-                      <span key={tx} className="text-sm rounded-full px-3 py-1"
-                        style={{ background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.82)" }}>
-                        {tx}
-                      </span>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* Quick facts card */}
-                <motion.div variants={scaleIn}>
-                  <div className="rounded-2xl overflow-hidden shadow-2xl"
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
-                    <div className="px-6 py-4"
-                      style={{ background: "rgba(239,68,68,0.15)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                      <p className="font-bold text-white text-lg flex items-center gap-2">
-                        <AlertCircle size={18} className="text-red-400" /> Notice Deadlines — Act Fast
-                      </p>
-                    </div>
-                    <div className="p-6 space-y-3">
-                      {[
-                        { form:"ASMT-10", deadline:"30 days",          urgency:"high" },
-                        { form:"DRC-01",  deadline:"30 days to pay/reply", urgency:"high" },
-                        { form:"DRC-01A", deadline:"30 days (pre-SCN)", urgency:"medium" },
-                        { form:"REG-17",  deadline:"7 working days",    urgency:"critical" },
-                        { form:"SCN",     deadline:"As stated in notice", urgency:"high" },
-                        { form:"CMP-05",  deadline:"15 days",           urgency:"medium" },
-                      ].map(({ form, deadline, urgency }) => (
-                        <div key={form} className="flex justify-between items-center text-sm">
-                          <span className="font-mono font-bold text-white">{form}</span>
-                          <span className={`text-xs font-bold rounded-full px-2.5 py-1 ${
-                            urgency === "critical" ? "bg-red-500/30 text-red-300" :
-                            urgency === "high" ? "bg-orange-500/30 text-orange-300" :
-                            "bg-yellow-500/20 text-yellow-300"
-                          }`}>{deadline}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="px-6 pb-6">
-                      <a href={WA} target="_blank" rel="noopener noreferrer"
-                        className="block w-full text-center bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-bold transition hover:scale-105">
-                        Get Urgent Notice Help →
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ INTERNAL LINKS ═══════════════════════════════════════════════ */}
-        <div className="bg-blue-50 border-y border-blue-100 py-4">
-          <p className="text-center text-sm text-gray-700 max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-x-3 gap-y-1">
-            <span>Got a GST audit notice?{" "}
-              <Link href="/serviceslist/gst/gst-audit" className="text-[#00416a] font-bold underline underline-offset-2">GST Audit Assistance</Link>
+function Hero() {
+  const facts = [
+    { k: "Covers", v: "All GST notices" },
+    { k: "Support", v: "Till closure" },
+    { k: "Support", v: "Till closure" },
+  ];
+  return (
+    <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+      <div className="nr-aurora absolute -top-32 -left-24 w-[26rem] h-[26rem] rounded-full bg-sky-400/20 blur-3xl" />
+      <div className="nr-aurora absolute -bottom-40 right-0 w-[28rem] h-[28rem] rounded-full bg-cyan-300/10 blur-3xl [animation-delay:-7s]" />
+      <div
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          maskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+        }}
+      />
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 pt-12 pb-24 md:pt-16 md:pb-28 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+        <div>
+          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/60 flex flex-wrap items-center gap-2">
+            <Link href="/" className="hover:text-white transition">Home</Link><span>/</span>
+            <Link href="/serviceslist" className="hover:text-white transition">Services</Link><span>/</span>
+            <Link href="/serviceslist#gst" className="hover:text-white transition">GST Services</Link><span>/</span>
+            <span className="text-white">GST Notice Reply & Compliance</span>
+          </nav>
+          <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-5">
+            📨 GST Services
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.1] tracking-tight mb-5">
+            GST Notice Reply & Compliance{" "}
+            <span className="bg-gradient-to-r from-white via-sky-200 to-cyan-200 bg-clip-text text-transparent">
+              — Accurate, On Time, CA-Reviewed
             </span>
-            <span className="text-gray-400">|</span>
-            <span>File pending returns?{" "}
-              <Link href="/serviceslist/gst/gst-return" className="text-[#00416a] font-bold underline underline-offset-2">File GST Returns</Link>
-            </span>
-            <span className="text-gray-400">|</span>
-            <span>GSTIN cancelled?{" "}
-              <Link href="/serviceslist/gst/gst-cancellation" className="text-[#00416a] font-bold underline underline-offset-2">Apply for Revocation</Link>
-            </span>
+          </h1>
+          <p className="text-base sm:text-lg text-sky-100/90 leading-relaxed max-w-2xl mb-8">
+            Expert assistance in drafting and filing replies to GST notices and departmental queries — analysed, drafted and followed up by a CA-led team.
           </p>
-        </div>
-
-        {/* ══ SEO BLOCK 1 ══════════════════════════════════════════════════ */}
-        <section className="py-20 bg-white" aria-label="What is a GST Notice">
-          <div className="max-w-4xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl font-extrabold text-[#00416a] mb-5">
-                What is a GST Notice and Why Do Taxpayers Receive Them?
-              </motion.h2>
-              <motion.div variants={fadeUp} className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  A <strong>GST notice</strong> is a formal written communication issued by the GST
-                  department to a registered taxpayer requiring a response — either an explanation,
-                  additional information, payment of tax, or appearance before an officer. GST notices
-                  are issued under specific sections of the <strong>Central Goods and Services Tax
-                  (CGST) Act, 2017</strong> and the corresponding State GST Acts. Each notice type has
-                  a prescribed response form, a specific deadline, and specific consequences for
-                  non-compliance.
-                </p>
-                <p>
-                  The GST department&apos;s risk-based selection system — operated by the <strong>DGARM
-                  (Directorate General of Analytics and Risk Management)</strong> — uses advanced data
-                  analytics to cross-verify taxpayer data across multiple databases: GSTR-1 vs GSTR-3B
-                  (supply declared vs tax paid), GSTR-2B vs ITC claimed (credit available vs credit taken),
-                  GST turnover vs income tax Form 26AS and ITR turnover, e-way bill data vs invoice data,
-                  and ICEGATE import/export data. Any significant mismatch triggers an automated alert
-                  that results in the issuance of a scrutiny notice (ASMT-10) or a pre-demand
-                  communication (DRC-01A).
-                </p>
-                <p>
-                  Notices can also arise from <strong>departmental audits under Section 65</strong>
-                  (conducted by GST officers at the taxpayer&apos;s premises), <strong>special audits
-                  under Section 66</strong> (conducted by a nominated CA/CMA), field inspections under
-                  Section 67, intelligence inputs from informers, or information shared by other tax
-                  authorities (Income Tax, Customs, SFIO). Understanding which trigger resulted in the
-                  notice is essential for preparing an effective reply — and Taxvio&apos;s first step in
-                  every case is a root-cause analysis before drafting begins.
-                </p>
-                <p>
-                  The most critical rule in GST notice management: <strong>never ignore a notice and
-                  never miss the deadline</strong>. GST notices are legal communications — failure to
-                  respond or providing an inadequate reply leads to ex-parte orders (passed without your
-                  input) that impose the maximum penalty and full tax demand. These orders are much harder
-                  and more expensive to challenge in appeal than a properly defended first-stage response.
-                  The cheapest and fastest resolution is always at the notice stage — not at the
-                  adjudication or appellate stage.
-                </p>
-              </motion.div>
-            </motion.div>
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <button
+              onClick={() => openInquiryForm(SERVICE)}
+              className="group bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200"
+            >
+              Get a Free Quote <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+            <a href="#planner" className="border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+              Notice Types
+            </a>
           </div>
-        </section>
-
-        {/* ══ NOTICE TYPE ACCORDIONS ═══════════════════════════════════════ */}
-        <section className="py-16 bg-gray-50" aria-label="Types of GST Notices">
-          <div className="max-w-4xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-10">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-blue-100">
-                  Notice Types
-                </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-                  6 Types of GST Notices — Triggers, Deadlines &amp; Consequences
-                </h2>
-                <p className="text-gray-600 mt-2 text-sm">Click any notice to see triggers, reply form, and consequence of non-response.</p>
-              </motion.div>
-
-              <motion.div variants={stagger} className="space-y-3">
-                {NOTICE_TYPES.map((n, i) => (
-                  <motion.div key={n.form} variants={fadeUp}
-                    className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-                    <button
-                      onClick={() => setOpenNotice(openNotice === i ? null : i)}
-                      className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-gray-50 transition">
-                      <div className="flex items-center gap-4 flex-1 min-w-0">
-                        <span className="font-mono font-extrabold text-[#00416a] text-base shrink-0">{n.form}</span>
-                        <div className="min-w-0">
-                          <span className="font-bold text-gray-800 text-sm">{n.title}</span>
-                          <span className="text-xs text-gray-500 ml-2 hidden sm:inline">{n.section}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className="text-xs font-bold rounded-full px-2.5 py-1 text-white hidden sm:inline"
-                          style={{ background: n.badgeColor }}>{n.badge}</span>
-                        <span className="text-xs font-bold rounded-full px-2.5 py-1"
-                          style={{ background: "#fef2f2", color: n.urgencyColor }}>{n.urgency}</span>
-                        <ChevronDown size={16} className={`text-[#00416a] transition-transform duration-300 ${openNotice === i ? "rotate-180" : ""}`} />
-                      </div>
-                    </button>
-
-                    <AnimatePresence>
-                      {openNotice === i && (
-                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}
-                          className="overflow-hidden border-t border-gray-100">
-                          <div className="px-6 py-5 grid sm:grid-cols-2 gap-5">
-                            <div>
-                              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">What Triggers It</p>
-                              <p className="text-sm text-gray-700">{n.trigger}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Reply Form</p>
-                              <p className="text-sm font-mono font-bold text-[#00416a]">{n.reply}</p>
-                              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-3 mb-1">Consequence of No Reply</p>
-                              <p className="text-sm text-red-700">{n.consequence}</p>
-                            </div>
-                            <div className="sm:col-span-2">
-                              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Key Documents Needed</p>
-                              <div className="flex flex-wrap gap-2">
-                                {n.docs.map(d => (
-                                  <span key={d} className="text-xs bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1">{d}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="px-6 pb-5">
-                            <a href={WA} target="_blank" rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition hover:scale-105">
-                              <MessageCircle size={13} /> Get Help with {n.form} Reply
-                            </a>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ CONSEQUENCES ══════════════════════════════════════════════════ */}
-        <section className="py-16 bg-red-50 border-y border-red-100" aria-label="Consequences of Ignoring GST Notice">
-          <div className="max-w-5xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-red-800">
-                  What Happens If You Ignore a GST Notice?
-                </h2>
-                <p className="text-red-700 text-sm mt-2">6 serious consequences of missing the reply deadline.</p>
-              </motion.div>
-              <motion.div variants={stagger} className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {CONSEQUENCES.map(({ risk, desc }) => (
-                  <motion.div key={risk} variants={scaleIn}
-                    className="bg-white border border-red-200 rounded-2xl p-5 flex items-start gap-3">
-                    <XCircle size={18} className="text-red-500 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-bold text-red-800 text-sm">{risk}</p>
-                      <p className="text-red-700 text-xs mt-1 leading-relaxed">{desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-              <motion.div variants={fadeUp} className="text-center mt-8">
-                <a href={WA} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-bold text-base shadow-lg hover:scale-105 transition-all">
-                  <Zap size={18} /> Get Urgent Notice Help — Don&apos;t Miss the Deadline
-                </a>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ SEO BLOCK 2 — Drafting & Hearing ════════════════════════════ */}
-        <section className="py-20 bg-white" aria-label="GST Notice Reply Drafting and Hearing">
-          <div className="max-w-4xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl font-extrabold text-[#00416a] mb-5">
-                What Makes a Good GST Notice Reply — and Why Legal Drafting Matters
-              </motion.h2>
-              <motion.div variants={fadeUp} className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  A GST notice reply is not a simple email — it is a formal legal submission that becomes
-                  part of the official record in a quasi-judicial proceeding. The quality of the reply
-                  determines not just the immediate outcome (whether the officer accepts or rejects it)
-                  but also the strength of your position in any subsequent appeal to the <strong>First
-                  Appellate Authority, GST Appellate Tribunal (GSTAT)</strong>, or High Court. An
-                  inadequate reply that misses key legal arguments cannot easily be supplemented at
-                  the appellate stage — appellate authorities are reluctant to admit new defences that
-                  were available at the adjudicating stage but not raised.
-                </p>
-                <p>
-                  A proper GST notice reply must: (1) address every specific point raised in the notice —
-                  not just the ones that are easy to answer; (2) cite the relevant sections of the CGST
-                  Act, IGST Act, and CGST Rules that support the taxpayer&apos;s position; (3) reference
-                  applicable <strong>CBIC Circulars and Notifications</strong> that clarify the law on
-                  the disputed point; (4) cite relevant <strong>GST Council decisions and judicial
-                  precedents</strong> from the GST Appellate Authority or High Courts; (5) include a
-                  complete reconciliation statement addressing the specific discrepancy mentioned — not
-                  just a general statement that returns are correct; and (6) attach all supporting
-                  evidence as numbered annexures that are clearly referenced in the reply text.
-                </p>
-                <p>
-                  For notices where a <strong>personal hearing</strong> is requested (which is the right
-                  of every taxpayer under Section 75(4) of the CGST Act), the oral submissions before
-                  the officer are as important as the written reply. The hearing is an opportunity to
-                  clarify, supplement the reply, and address the officer&apos;s specific concerns before
-                  an adverse order is passed. Taxvio&apos;s CA team prepares a <strong>hearing note</strong>
-                  — a point-by-point argument document — before every personal hearing, ensuring no
-                  critical issue is missed in the oral submission.
-                </p>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ DOCUMENTS ════════════════════════════════════════════════════ */}
-        <section className="py-16 bg-gray-50" aria-label="Documents for GST Notice Reply">
-          <div className="max-w-5xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-10">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-blue-100">
-                  Document Checklist
-                </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-                  Documents Needed to Reply to a GST Notice
-                </h2>
-              </motion.div>
-              <motion.div variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {DOCS.map(({ label, sub }) => (
-                  <motion.div key={label} variants={scaleIn}
-                    className="bg-white border border-gray-100 rounded-2xl p-5 flex items-start gap-3 hover:shadow-md transition-all">
-                    <FileText size={16} className="text-[#00416a] shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-gray-800 text-sm">{label}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ PROCESS ══════════════════════════════════════════════════════ */}
-        <section className="py-20 bg-white" aria-label="GST Notice Reply Process">
-          <div className="max-w-4xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-12">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 px-3 py-1 rounded-full">
-                  How It Works
-                </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-                  GST Notice Reply Process — 6 Steps to a Filed Response
-                </h2>
-                <p className="text-gray-600 mt-2 text-sm">
-                  WhatsApp us your notice — reply drafted and filed well before your deadline.
-                </p>
-              </motion.div>
-              <div className="space-y-5">
-                {STEPS.map(({ n, title, desc }) => (
-                  <motion.div key={n} variants={fadeUp} className="flex gap-5 items-start">
-                    <div className="w-11 h-11 rounded-full flex items-center justify-center font-extrabold text-sm text-white shrink-0 shadow-md"
-                      style={{ background: "#00416a" }}>
-                      {n}
-                    </div>
-                    <div className="flex-1 bg-gray-50 border border-gray-100 rounded-2xl p-5">
-                      <p className="font-bold text-gray-800">{title}</p>
-                      <p className="text-gray-600 text-sm mt-1 leading-relaxed">{desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
+          <div className="flex flex-wrap gap-3">
+            {facts.map((q) => (
+              <div key={q.k} className="bg-white/10 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5">
+                <p className="text-[10px] uppercase tracking-widest text-sky-200/70">{q.k}</p>
+                <p className="font-bold text-sm">{q.v}</p>
               </div>
-            </motion.div>
+            ))}
           </div>
-        </section>
-
-        {/* ══ PRICING ══════════════════════════════════════════════════════ */}
-        <section className="py-16" style={{ background: "#00416a" }} aria-label="GST Notice Reply Pricing">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="text-center mb-10">
-              <span className="text-xs font-semibold uppercase tracking-widest rounded-full px-3 py-1"
-                style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)" }}>
-                Transparent Pricing
-              </span>
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white mt-4">
-                GST Notice Reply Fee
-              </h2>
-              <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.65)" }}>
-                Fixed fee per notice. Personal hearing charged separately per hearing date.
-              </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-5">
-              {[
-                {
-                  plan: "Scrutiny Reply", price: "₹1,999", highlight: false,
-                  items: ["ASMT-10 notice analysis", "ASMT-11 reply drafting", "GSTR-1 vs GSTR-3B reconciliation", "ITC mismatch explanation", "Filed before deadline"],
-                },
-                {
-                  plan: "Demand / SCN Reply", price: "₹3,499", highlight: true,
-                  items: ["DRC-01 / DRC-01A / REG-17 / SCN", "Full ITC reconciliation workings", "Legal drafting with case law", "Pre-SCN payment advisory (DRC-03)", "Personal hearing preparation"],
-                },
-                {
-                  plan: "Full Adjudication Support", price: "₹6,999", highlight: false,
-                  items: ["Everything in Demand Reply plan", "Personal hearing representation", "Post-hearing submissions", "First appellate preparation (if needed)", "Unlimited query support"],
-                },
-              ].map(({ plan, price, highlight, items }) => (
-                <div key={plan} className="rounded-2xl p-6 flex flex-col"
-                  style={{
-                    background: highlight ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.08)",
-                    border: highlight ? "2px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.15)",
-                  }}>
-                  {highlight && (
-                    <span className="text-[10px] font-bold text-[#00416a] bg-white rounded-full px-3 py-0.5 self-start mb-3 uppercase tracking-wide">
-                      Most Common
-                    </span>
-                  )}
-                  <p className="text-white font-bold text-base mb-1">{plan}</p>
-                  <p className="text-3xl font-extrabold text-white mb-4">{price}</p>
-                  <ul className="space-y-2 flex-1">
-                    {items.map(item => (
-                      <li key={item} className="flex items-center gap-2 text-sm"
-                        style={{ color: "rgba(255,255,255,0.82)" }}>
-                        <CheckCircle size={14} className="text-green-400 shrink-0" /> {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="mt-6 block text-center py-3 rounded-xl font-bold text-sm transition hover:scale-105"
-                    style={{
-                      background: highlight ? "#fff" : "rgba(255,255,255,0.15)",
-                      color: highlight ? "#00416a" : "#fff",
-                    }}>
-                    Get Started →
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ FAQ ══════════════════════════════════════════════════════════ */}
-        <section className="py-20 bg-white" aria-label="GST Notice Reply FAQ"
-          itemScope itemType="https://schema.org/FAQPage">
-          <div className="max-w-3xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-12">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-gray-50 px-3 py-1 rounded-full border border-blue-100">FAQ</span>
-                <h2 className="text-3xl font-extrabold text-[#00416a] mt-4">
-                  Frequently Asked Questions — GST Notice Reply
-                </h2>
-                <p className="text-gray-500 mt-2 text-sm">WhatsApp us your notice — we reply within 15 minutes.</p>
-              </motion.div>
-              <motion.div variants={stagger} className="space-y-3">
-                {FAQS.map((f, i) => (
-                  <motion.div key={i} variants={fadeUp}
-                    className="border border-gray-200 rounded-2xl overflow-hidden"
-                    itemScope itemType="https://schema.org/Question">
-                    <button
-                      className="w-full text-left px-6 py-5 flex justify-between items-center font-semibold text-gray-800 hover:bg-gray-50 transition"
-                      onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                      aria-expanded={faqOpen === i}>
-                      <span itemProp="name">{f.q}</span>
-                      <ChevronDown size={18}
-                        className={`text-[#00416a] shrink-0 ml-4 transition-transform duration-300 ${faqOpen === i ? "rotate-180" : ""}`} />
-                    </button>
-                    <AnimatePresence>
-                      {faqOpen === i && (
-                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}
-                          className="overflow-hidden" itemScope itemType="https://schema.org/Answer">
-                          <p className="px-6 pb-5 text-gray-600 text-sm leading-relaxed" itemProp="text">{f.a}</p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ RELATED SERVICES ═════════════════════════════════════════════ */}
-        <section className="py-16 bg-gray-50" aria-label="Related GST Services">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-extrabold text-[#00416a]">Related GST Services by Taxvio</h2>
-              <p className="text-gray-500 text-sm mt-2">Complete GST compliance and dispute resolution support</p>
-            </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                { title:"GST Audit Assistance",   href:"/serviceslist/gst/gst-audit",        desc:"Section 65/66 audit support — ₹3,999" },
-                { title:"GST Return Filing",       href:"/serviceslist/gst/gst-return",       desc:"Monthly GSTR-1 & GSTR-3B — ₹499/month" },
-                { title:"GSTR-9 Annual Return",    href:"/serviceslist/gst/gstr-9",           desc:"Annual reconciliation & filing — ₹2,999" },
-                { title:"GST Cancellation",        href:"/serviceslist/gst/gst-cancellation", desc:"REG-16 cancellation + GSTR-10 — ₹1,499" },
-                { title:"GST Registration",        href:"/serviceslist/gst/gst-registration", desc:"New GSTIN in 3–7 days — ₹1,499" },
-                { title:"GST Refund",              href:"/serviceslist/gst/gst-refund",       desc:"ITC refund, export refund — ₹2,499" },
-              ].map(({ title, href, desc }) => (
-                <Link key={title} href={href}
-                  className="group flex items-start gap-3 p-5 bg-white border border-gray-100 rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                  <ArrowRight size={16} className="text-[#00416a] shrink-0 mt-0.5 group-hover:translate-x-1 transition-transform" />
-                  <div>
-                    <p className="font-bold text-gray-800 text-sm group-hover:text-[#00416a] transition">{title}</p>
-                    <p className="text-gray-500 text-xs mt-0.5">{desc}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ FINAL CTA ════════════════════════════════════════════════════ */}
-        <section className="py-20 relative overflow-hidden" style={DARK}>
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle,rgba(239,68,68,0.1) 0%,transparent 70%)" }} />
-          <motion.div className="relative max-w-3xl mx-auto px-6 text-center"
-            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.div variants={fadeUp}
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm mb-6 text-white"
-              style={{ background: "rgba(239,68,68,0.2)", border: "1px solid rgba(239,68,68,0.35)" }}>
-              <AlertCircle size={14} className="text-red-400" /> Don&apos;t miss the deadline — ex-parte orders are irreversible
-            </motion.div>
-            <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
-              Got a GST Notice? Reply Before the Deadline
-            </motion.h2>
-            <motion.p variants={fadeUp} className="mt-4 text-lg" style={{ color: "rgba(255,255,255,0.72)" }}>
-              ASMT-10, DRC-01, REG-17, SCN, DRC-01A — Taxvio drafts and files your reply with full
-              legal arguments, ITC reconciliation, and personal hearing support. Starting ₹1,999.
-            </motion.p>
-            <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-              <a href={WA} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:scale-105 transition-all">
-                <MessageCircle size={20} /> WhatsApp — Urgent Notice Help
-              </a>
-              <Link href="/contact"
-                className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
-                style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
-                <Phone size={20} /> Free Consultation
-              </Link>
-            </motion.div>
-            <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-5 text-sm"
-              style={{ color: "rgba(255,255,255,0.5)" }}>
-              <span className="flex items-center gap-1.5"><Shield size={13} />100% Confidential</span>
-              <span className="flex items-center gap-1.5"><CheckCircle size={13} />CA-Assisted</span>
-              <span className="flex items-center gap-1.5"><Clock size={13} />Reply Before Deadline</span>
-              <span className="flex items-center gap-1.5"><FileText size={13} />Legal Drafting Included</span>
-            </motion.div>
-          </motion.div>
-        </section>
-
-        {/* Sticky CTA */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 py-3 px-4 flex justify-center gap-4"
-          style={{ background: "#001e36", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-          <a href={WA} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
-            🚨 WhatsApp — Reply to GST Notice Now
-          </a>
-          <Link href="/contact"
-            className="inline-flex items-center gap-2 bg-white text-[#00416a] px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
-            Free Consultation
-          </Link>
         </div>
 
-        <Footar />
-      </main>
-    </>
+        <div className="hidden lg:block">
+          <div className="nr-float bg-white text-gray-800 rounded-3xl shadow-2xl shadow-black/30 p-6 rotate-1">
+            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-1">Your notice, tracked</p>
+            <p className="font-extrabold text-[#00416a] text-lg mb-4">Sample status view</p>
+            <ul className="space-y-2.5 mb-5">
+              {[
+                { t: "Notice analysed", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "Records reconciled", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "Reply drafted", s: "In progress", c: "bg-amber-100 text-amber-700" },
+                { t: "Acknowledgement", s: "Next", c: "bg-sky-100 text-sky-700" },
+                { t: "Case followed up", s: "Next", c: "bg-sky-100 text-sky-700" },
+              ].map((r) => (
+                <li key={r.t} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3 py-2.5 text-sm">
+                  <span className="flex-1 font-semibold">{r.t}</span>
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${r.c}`}>{r.s}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="rounded-2xl bg-[#00416a] text-white px-4 py-3 text-sm flex items-center gap-3">
+              <span className="text-xl">👨‍💼</span>
+              <span><b>CA-reviewed</b> before every filing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <svg className="absolute bottom-0 left-0 w-full h-10 text-slate-50" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden>
+        <path fill="currentColor" d="M0,60 L0,30 Q360,-10 720,25 T1440,20 L1440,60 Z" />
+      </svg>
+    </section>
+  );
+}
+
+function SectionNav({ active }: { active: string }) {
+  return (
+    <div className="sticky top-[72px] z-40 bg-white/85 backdrop-blur-xl border-b border-gray-200/80 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-1.5 overflow-x-auto nr-hide-scroll">
+          {NAV.map((n) => (
+            <a
+              key={n.id}
+              href={`#${n.id}`}
+              className={`flex-shrink-0 text-sm font-semibold px-3.5 py-2 rounded-full transition-all whitespace-nowrap ${
+                active === n.id ? "bg-[#00416a] text-white shadow-md shadow-[#00416a]/25" : "text-[#00416a]/80 hover:bg-[#00416a]/5"
+              }`}
+            >
+              {n.label}
+            </a>
+          ))}
+        </div>
+        <button
+          onClick={() => openInquiryForm(SERVICE)}
+          className="hidden md:inline-flex flex-shrink-0 text-xs font-bold bg-[#00416a] text-white px-4 py-2.5 rounded-lg hover:bg-[#002b45] active:scale-95 transition"
+        >
+          Enquire now
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════ SECTIONS ══════════════════════ */
+
+function Overview() {
+  return (
+    <section id="overview" className="scroll-mt-40">
+      <Heading label="Overview" title="What Is GST Notice Reply & Compliance?" />
+      <div className="space-y-5">
+        {INTRO.map((p, i) => (
+          <Reveal key={i} delay={i * 70}>
+            <p className={`pl-5 border-l-4 text-gray-700 leading-relaxed ${i === 0 ? "border-[#00416a]" : "border-[#00416a]/25"}`}>{p}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Benefits() {
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Benefits" title="Why Professional GST Notice Reply & Compliance Pays Off" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {BENEFITS.map((b, i) => (
+          <Reveal key={b.t} delay={i * 60}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center text-xl mb-3 group-hover:scale-110 group-hover:-rotate-6 transition-transform">{b.icon}</div>
+              <h3 className="font-bold text-[#00416a] mb-1">{b.t}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{b.d}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Included() {
+  return (
+    <section id="included" className="scroll-mt-40">
+      <Heading label="What's Included" title="What You Get With GST Notice Reply & Compliance" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {FEATURES.map((f, i) => (
+          <Reveal key={f.title} delay={i * 70}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center font-bold group-hover:scale-110 group-hover:-rotate-6 transition-transform">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-bold text-[#00416a]">{f.title}</h3>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{f.note}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Who() {
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Who It's For" title="Who We Support" />
+      <div className="grid sm:grid-cols-3 gap-4">
+        {IDEAL.map((w, i) => (
+          <Reveal key={w.t} delay={i * 70}>
+            <div className="relative h-full overflow-hidden bg-gradient-to-br from-[#00416a] to-[#00527f] text-white rounded-2xl p-6 shadow-lg">
+              <span className="absolute -right-4 -bottom-6 text-8xl opacity-10 select-none">{w.icon}</span>
+              <div className="relative">
+                <p className="text-2xl mb-2">{w.icon}</p>
+                <h3 className="font-bold text-lg mb-1.5">{w.t}</h3>
+                <p className="text-sm text-sky-100/90 leading-relaxed">{w.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** Which notice */
+function Planner() {
+  const [sel, setSel] = useState<string | null>(null);
+  const cur = CASES.find((c) => c.id === sel);
+  return (
+    <section id="planner" className="scroll-mt-40">
+      <Heading label="Notice Types" title="Which GST Notice Have You Received?" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          The reply route, the time limit and the risk differ for each type of notice. Choose the one closest to yours for an
+          indication. Always check the form number and the dates on your actual notice.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="grid sm:grid-cols-2 gap-2.5">
+            {CASES.map((c) => {
+              const on = sel === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setSel(c.id)}
+                  aria-pressed={on}
+                  className={`text-left flex items-center gap-3 rounded-xl border px-4 py-3 transition-all ${on ? "bg-[#00416a] text-white border-[#00416a] shadow-lg shadow-[#00416a]/20" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/40"}`}
+                >
+                  <span className="text-xl">{c.icon}</span>
+                  <span className="flex-1 text-sm font-semibold">{c.label}</span>
+                  <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${on ? "bg-white/20" : "bg-sky-100 text-[#00416a]"}`}>{c.form}</span>
+                </button>
+              );
+            })}
+          </div>
+          {cur && (
+            <div className="mt-6 rounded-2xl border border-sky-100 bg-sky-50 p-5">
+              <p className="text-xs uppercase tracking-widest text-[#00416a]/60 font-bold mb-1">What it usually means</p>
+              <p className="font-extrabold text-[#00416a] text-lg">{cur.t} <span className="text-sm font-semibold text-gray-500">({cur.form})</span></p>
+              <p className="text-sm text-gray-700 mt-1">{cur.d}</p>
+              <button onClick={() => openInquiryForm(SERVICE)} className="mt-3 text-sm font-bold bg-[#00416a] text-white px-4 py-2 rounded-lg hover:bg-[#002b45] transition">Share my notice →</button>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">Indicative only. Forms, time limits and consequences depend on the section invoked and current law; our CA confirms your case.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/** Reply deadline tracker */
+function Deadline() {
+  const [noticeDate, setNoticeDate] = useState("");
+  const [days, setDays] = useState(30);
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    setToday(d);
+  }, []);
+
+  const info = useMemo(() => {
+    if (!noticeDate || !today) return null;
+    const start = new Date(noticeDate + "T00:00:00");
+    if (isNaN(start.getTime())) return null;
+    const due = new Date(start);
+    due.setDate(due.getDate() + Math.max(0, days));
+    const diff = Math.round((due.getTime() - today.getTime()) / 86400000);
+    return { due, diff };
+  }, [noticeDate, days, today]);
+
+  const fmt = (d: Date) => d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+
+  return (
+    <section id="deadline" className="scroll-mt-40">
+      <Heading label="Reply Tracker" title="How Much Time Do You Have to Reply?" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          Every notice states a time to respond, and that date matters more than anything else. Enter the date on your notice
+          and the number of days it gives you to see your reply date. If more time is needed, an extension can often be
+          requested, but it should be asked for before the date passes.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="text-sm font-semibold text-gray-700">Date of notice</span>
+              <input type="date" value={noticeDate} onChange={(e) => setNoticeDate(e.target.value)} className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#00416a]" />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-gray-700">Days given to reply (as in the notice)</span>
+              <input type="number" min={0} value={days} onChange={(e) => setDays(+e.target.value)} className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#00416a]" />
+            </label>
+          </div>
+          {info && (
+            <div className={`mt-5 rounded-2xl border p-5 ${info.diff < 0 ? "bg-red-50 border-red-200" : info.diff <= 5 ? "bg-amber-50 border-amber-200" : "bg-emerald-50 border-emerald-200"}`}>
+              <p className="text-xs uppercase tracking-widest text-[#00416a]/60 font-bold mb-1">Reply due</p>
+              <p className="text-xl font-extrabold text-[#00416a]">{fmt(info.due)}</p>
+              <p className="text-sm text-gray-700 mt-1">
+                {info.diff < 0 ? `The date passed ${Math.abs(info.diff)} day${Math.abs(info.diff) === 1 ? "" : "s"} ago. Contact us immediately; depending on the stage, a late reply or a request for time may still be possible.` : info.diff === 0 ? "Due today. Reach out now." : `${info.diff} day${info.diff === 1 ? "" : "s"} left.`}
+              </p>
+              <button onClick={() => openInquiryForm(SERVICE)} className="mt-3 text-sm font-bold bg-[#00416a] text-white px-4 py-2 rounded-lg hover:bg-[#002b45] transition">Get help replying →</button>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">Always follow the date and instructions in your actual notice. This is only a helper.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/** Exposure estimator */
+function Gap() {
+  const [tax, setTax] = useState(200000);
+  const [months, setMonths] = useState(6);
+  const [pen, setPen] = useState(10);
+
+  const r = useMemo(() => {
+    const t = Math.max(0, tax);
+    const interest = Math.round(t * 0.18 * (Math.max(0, months) / 12));
+    const penalty = Math.round(t * (Math.max(0, pen) / 100));
+    return { interest, penalty, withPen: t + interest + penalty, noPen: t + interest };
+  }, [tax, months, pen]);
+
+  const inr = (n: number) => "₹" + n.toLocaleString("en-IN");
+  const Field = ({ label, v, set }: { label: string; v: number; set: (n: number) => void }) => (
+    <label className="block">
+      <span className="text-sm font-semibold text-gray-700">{label}</span>
+      <input type="number" min={0} value={v} onChange={(e) => set(+e.target.value)} className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#00416a]" />
+    </label>
+  );
+
+  return (
+    <section id="gap" className="scroll-mt-40">
+      <Heading label="Exposure Estimate" title="What Could a GST Demand Cost You?" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          If a notice proposes a demand, three things stack up: the tax itself, interest from the date it should have been paid,
+          and a penalty. In some cases, paying the tax and interest within the permitted period can avoid or reduce the penalty.
+          Use this to see how the pieces add up. Real figures depend on the section invoked and the facts.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="grid sm:grid-cols-3 gap-4 mb-5">
+            <Field label="Tax proposed in the notice (₹)" v={tax} set={setTax} />
+            <Field label="Months since the tax was due" v={months} set={setMonths} />
+            <Field label="Penalty assumed (% of tax)" v={pen} set={setPen} />
+          </div>
+          <div className="grid sm:grid-cols-3 gap-3">
+            <div className="rounded-2xl bg-sky-50 border border-sky-100 p-4">
+              <p className="text-xs uppercase tracking-widest font-bold text-[#00416a]/70">Interest (18% a year)</p>
+              <p className="text-2xl font-extrabold text-[#00416a]">{inr(r.interest)}</p>
+            </div>
+            <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4">
+              <p className="text-xs uppercase tracking-widest font-bold text-amber-700">Penalty (if imposed)</p>
+              <p className="text-2xl font-extrabold text-amber-900">{inr(r.penalty)}</p>
+            </div>
+            <div className="rounded-2xl bg-[#00416a] text-white p-4">
+              <p className="text-xs uppercase tracking-widest text-sky-200 font-bold">Indicative total</p>
+              <p className="text-2xl font-extrabold">{inr(r.withPen)}</p>
+              <p className="text-sm text-sky-100 mt-1">Without penalty: {inr(r.noPen)}</p>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-col sm:flex-row sm:items-center gap-3 rounded-2xl bg-sky-50 px-5 py-4 text-sm text-[#00416a]">
+            <span className="flex-1 font-medium">We tell you the likely position before you decide to reply, pay or contest.</span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">Review my notice →</button>
+          </div>
+          <p className="mt-4 text-xs text-gray-400">A rough illustration only. Interest, penalty rates and any relief depend on the section, facts and current law.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Documents() {
+  const keys = Object.keys(DOC_SETS);
+  const [tab, setTab] = useState(keys[0]);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const set = DOC_SETS[tab];
+  const done = set.docs.filter((d) => checked[tab + d]).length;
+  const pct = Math.round((done / set.docs.length) * 100);
+
+  return (
+    <section id="documents" className="scroll-mt-40">
+      <Heading label="Documents" title="Documents Required for GST Notice Reply" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          We need the notice itself, your returns and ledgers for the period, and the documents that support your position. Tick off what you have in each group.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="flex flex-wrap gap-2 mb-5" role="tablist">
+            {keys.map((k) => (
+              <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${tab === k ? "bg-[#00416a] text-white border-[#00416a]" : "bg-white text-[#00416a] border-[#00416a]/20 hover:border-[#00416a]/50"}`}>
+                {DOC_SETS[k].label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="font-bold text-[#00416a]">Your document checklist</p>
+            <p className="text-sm font-semibold text-gray-500 tabular-nums">{done}/{set.docs.length} ready</p>
+          </div>
+          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden mb-5">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#00416a] to-emerald-500 transition-all duration-500" style={{ width: `${pct}%` }} />
+          </div>
+          <ul className="space-y-2.5">
+            {set.docs.map((d) => {
+              const on = !!checked[tab + d];
+              return (
+                <li key={d}>
+                  <label className={`flex items-center gap-3 cursor-pointer rounded-xl border px-4 py-3 transition-all ${on ? "bg-emerald-50 border-emerald-200" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/30"}`}>
+                    <input type="checkbox" checked={on} onChange={() => setChecked((c) => ({ ...c, [tab + d]: !on }))} className="w-5 h-5 accent-[#00416a]" />
+                    <span className={`text-sm font-medium ${on ? "text-emerald-800 line-through decoration-emerald-400" : "text-gray-800"}`}>{d}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          <div className={`mt-5 rounded-2xl px-5 py-4 text-sm flex flex-col sm:flex-row sm:items-center gap-3 ${pct === 100 ? "bg-emerald-50 text-emerald-900" : "bg-sky-50 text-[#00416a]"}`}>
+            <span className="flex-1 font-medium">{pct === 100 ? "🎉 This group is complete." : "Missing something? We can download GSTR-2B and related data from the portal."}</span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">Ask us →</button>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Pitfalls() {
+  return (
+    <section id="mistakes" className="scroll-mt-40">
+      <Heading label="Pitfalls" title="GST Notice Mistakes That Cost Businesses Money" />
+      <Reveal>
+        <h3 className="font-extrabold text-[#00416a] text-xl mb-4">How we handle your notice</h3>
+        <ol className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
+          {CYCLE.map((s, i) => (
+            <li key={s.t} className="bg-white border border-gray-200 rounded-2xl p-4">
+              <span className="inline-block text-[11px] font-bold text-[#00416a] uppercase tracking-wide bg-sky-50 border border-sky-100 px-2.5 py-1 rounded-full mb-2">Step {i + 1}</span>
+              <p className="font-bold text-[#00416a] mb-1">{s.t}</p>
+              <p className="text-sm text-gray-600 leading-relaxed">{s.d}</p>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
+      <div className="space-y-3">
+        {MISTAKES.map((m, i) => (
+          <Reveal key={m.t} delay={i * 50}>
+            <div className="flex gap-4 bg-amber-50/70 border border-amber-200/70 rounded-2xl p-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center">!</span>
+              <div>
+                <p className="font-bold text-gray-800">{m.t}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{m.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+      <Reveal>
+        <p className="mt-6 text-sm text-gray-500">
+          Related: <Link href="/serviceslist/gst/gst-audit" className="font-semibold text-[#00416a] hover:underline">GST audit assistance</Link>, <Link href="/serviceslist/gst/gst-itc-reconciliation" className="font-semibold text-[#00416a] hover:underline">ITC reconciliation</Link>, <Link href="/serviceslist/gst/gst-return" className="font-semibold text-[#00416a] hover:underline">GST return filing</Link> and all <Link href="/serviceslist#gst" className="font-semibold text-[#00416a] hover:underline">GST services</Link>.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section id="process" className="scroll-mt-40">
+      <Heading label="Process" title="How Our GST Notice Reply & Compliance Works" />
+      <ol className="relative space-y-5 before:absolute before:left-[27px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-[#00416a]/40 before:to-[#00416a]/5">
+        {STEPS.map((s, i) => (
+          <Reveal key={s.t} delay={i * 70}>
+            <li className="relative flex gap-5">
+              <span className="relative z-10 flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center text-lg font-extrabold shadow-lg shadow-[#00416a]/25">{i + 1}</span>
+              <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg hover:border-[#00416a]/30 transition-all">
+                <h3 className="font-bold text-[#00416a] mb-1.5">{s.t}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{s.d}</p>
+              </div>
+            </li>
+          </Reveal>
+        ))}
+      </ol>
+      <Reveal>
+        <div className="mt-8 grid md:grid-cols-2 gap-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">💰</p>
+            <h3 className="font-bold text-[#00416a] mb-2">What does it cost?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Our fee depends on the size of your stock and asset list, whether earlier returns are pending and how many registrations are involved. You receive a written quote before we start. Any tax, late fee or interest payable to the government is separate.
+            </p>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">⏱️</p>
+            <h3 className="font-bold text-[#00416a] mb-2">How long does it take?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Reply deadlines are fixed by the notice, so we start analysis the day you share it. The time to prepare depends on the data volume and the issue, and we confirm a plan once we have read the notice.</p>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function FAQs({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faqs" className="scroll-mt-40">
+      <Heading label="FAQs" title="GST Notice Reply & Compliance — Frequently Asked Questions" />
+      <div className="space-y-3">
+        {faqs.map((f, i) => {
+          const isOpen = open === i;
+          return (
+            <Reveal key={f.q} delay={Math.min(i, 5) * 40}>
+              <div className={`rounded-2xl border bg-white transition-all duration-300 ${isOpen ? "border-[#00416a]/40 shadow-lg shadow-[#00416a]/10" : "border-gray-200 hover:border-[#00416a]/25"}`}>
+                <button onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left">
+                  <span className={`font-bold ${isOpen ? "text-[#00416a]" : "text-gray-800"}`}>{f.q}</span>
+                  <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${isOpen ? "bg-[#00416a] text-white rotate-45" : "bg-[#00416a]/10 text-[#00416a]"}`}>+</span>
+                </button>
+                <div className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                  <div className="overflow-hidden"><p className="px-5 pb-5 text-sm text-gray-600 leading-relaxed">{f.a}</p></div>
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Related() {
+  const gst = serviceCategories.find((c) => c.slug === "gst");
+  const items = (gst?.services ?? []).filter((s) => s.slug !== "gst-notice-reply").slice(0, 6);
+  if (!items.length) return null;
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Related Services" title="More GST Services" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {items.map((r, i) => (
+          <Reveal key={r.slug} delay={i * 60}>
+            <Link
+              href={`/serviceslist/gst/${r.slug}`}
+              className="group block h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300"
+            >
+              <h3 className="font-bold text-[#00416a] mb-1.5 leading-snug">{r.title}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 mb-3">{r.shortDescription}</p>
+              <span className="text-sm font-semibold text-[#00416a] inline-flex items-center gap-1">
+                Learn more <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ SIDEBAR + CTA ══════════════════════ */
+
+function SideCard() {
+  return (
+    <div className="sticky top-40 space-y-4">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white p-6 shadow-xl">
+        <div className="nr-aurora absolute -top-16 -right-16 w-48 h-48 rounded-full bg-sky-400/25 blur-2xl" />
+        <div className="relative">
+          <p className="text-xs uppercase tracking-widest text-sky-200 font-semibold mb-2">Free consultation</p>
+          <h3 className="font-extrabold text-xl leading-snug mb-2">Face your GST notice with confidence</h3>
+          <p className="text-sm text-sky-100/85 leading-relaxed mb-5">Tell us about your business — a CA from our team will call you back with a clear plan and a fixed quote.</p>
+          <button onClick={() => openInquiryForm(SERVICE)} className="w-full bg-white text-[#00416a] font-bold py-3.5 rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition">
+            Get a Free Quote →
+          </button>
+          <ul className="mt-4 space-y-1.5 text-sm text-white/80">
+            <li>✓ No obligation</li>
+            <li>✓ Fixed quote upfront</li>
+            <li>✓ 100% online</li>
+          </ul>
+        </div>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-2xl p-5">
+        <p className="font-bold text-[#00416a] mb-3 text-sm">On this page</p>
+        <ul className="space-y-1.5">
+          {NAV.map((n) => (
+            <li key={n.id}>
+              <a href={`#${n.id}`} className="text-sm text-gray-600 hover:text-[#00416a] hover:translate-x-1 inline-block transition">{n.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-10 pb-24">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] shadow-2xl px-6 py-12 sm:px-12 sm:py-16 text-white">
+          <div className="nr-aurora absolute -top-20 -right-20 w-72 h-72 rounded-full bg-sky-400/25 blur-3xl" />
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="max-w-2xl text-center lg:text-left">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-3 leading-tight">Received a GST notice?</h3>
+              <p className="text-lg text-sky-100/90 leading-relaxed">Share your requirement in 30 seconds. A CA from our team will call you back with a clear plan and honest pricing.</p>
+            </div>
+            <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
+              <button onClick={() => openInquiryForm(SERVICE)} className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition-all">
+                Get a Free Quote →
+              </button>
+              <Link href="/serviceslist" className="border-2 border-white/40 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition text-center">
+                All Services
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
   );
 }

@@ -1,237 +1,88 @@
-// app/gst-for-e-commerce/page.tsx
+// app/serviceslist/gst/gst-for-e-commerce/page.tsx
 
 import type { Metadata } from "next";
-import Script from "next/script";
 import GstForEcommerceClient from "./GstForEcommerceClient";
 
-/* ─── SEO Metadata ─────────────────────────────────────────────────────────── */
+const URL = "https://www.taxvio.in/serviceslist/gst/gst-for-e-commerce";
+
 export const metadata: Metadata = {
-  title:
-    "GST for E-Commerce Sellers & Operators — Amazon, Flipkart, Meesho GST | Taxvio",
+  title: "GST for E-Commerce Sellers & Operators — Amazon, Flipkart, Meesho | Taxvio",
   description:
-    "Complete GST compliance for e-commerce sellers and operators in India. GST registration, Amazon/Flipkart/Meesho seller GST setup, GSTR-1, GSTR-3B, GSTR-8, GST TCS reconciliation, Section 52, Section 9(5), marketplace settlement matching and notice support. Starting ₹1,499. Pan-India online service.",
+    "GST registration, GSTR-1, GSTR-3B, GSTR-8, marketplace settlement reconciliation, TCS credit matching and GST notice support for Amazon, Flipkart, Meesho, Shopify and D2C sellers. CA-led, fixed quote upfront.",
   keywords: [
-    "GST for e-commerce sellers",
-    "GST registration for Amazon sellers",
-    "GST for Flipkart sellers",
-    "GST for Meesho sellers",
-    "GST for e-commerce business India",
-    "GSTR-8 filing for e-commerce operators",
-    "GST TCS e-commerce Section 52",
-    "GST TCS reconciliation Amazon Flipkart",
-    "GST return filing for online sellers",
-    "GST for Shopify sellers India",
-    "GST for D2C brands",
-    "GST for online marketplace sellers",
-    "GST for Zomato Swiggy restaurants",
-    "Section 9(5) GST e-commerce operator",
-    "GST registration exemption e-commerce small seller",
-    "Notification 34/2023 GST e-commerce",
-    "Amazon seller GST compliance",
-    "Flipkart GST return filing",
-    "e-commerce GST notice support",
-    "Taxvio GST for e-commerce",
+    "GST for e-commerce sellers","GST for Amazon sellers","GST for Flipkart sellers","GST for Meesho sellers","GST registration for e-commerce",
+    "GST TCS credit e-commerce","Section 52 GST TCS","GSTR-8 filing","Section 9(5) GST Zomato Swiggy","marketplace settlement reconciliation",
+    "GST for Shopify sellers","GST for D2C brands","GST e-commerce Khatauli","GST e-commerce Uttar Pradesh","CA assisted e-commerce GST",
   ],
-  alternates: {
-    canonical: "https://www.taxvio.in/gst-for-e-commerce",
-  },
+  alternates: { canonical: URL },
   openGraph: {
     title: "GST for E-Commerce Sellers & Operators | Taxvio",
-    description:
-      "GST registration, monthly returns, TCS reconciliation, GSTR-8, Amazon/Flipkart/Meesho compliance and marketplace settlement matching — starting ₹1,499.",
-    url: "https://www.taxvio.in/gst-for-e-commerce",
-    siteName: "Taxvio",
-    locale: "en_IN",
-    type: "website",
-    images: [
-      {
-        url: "https://www.taxvio.in/og/gst-for-e-commerce.jpg",
-        width: 1200,
-        height: 630,
-        alt: "GST for E-Commerce Sellers and Operators — Taxvio",
-      },
-    ],
+    description: "Registration, GSTR-1, GSTR-3B, GSTR-8, TCS credit matching and notice support for marketplace and D2C sellers.",
+    url: URL, siteName: "Taxvio", locale: "en_IN", type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "GST for E-Commerce Sellers | Taxvio",
-    description:
-      "GST setup for Amazon, Flipkart, Meesho, Shopify and D2C sellers — registration, returns, TCS reconciliation and notices.",
-    images: ["https://www.taxvio.in/og/gst-for-e-commerce.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-snippet": -1,
-      "max-image-preview": "large",
-      "max-video-preview": -1,
-    },
-  },
+  twitter: { card: "summary_large_image", title: "GST for E-Commerce Sellers | Taxvio", description: "Complete GST compliance for Amazon, Flipkart, Meesho, Shopify and D2C sellers." },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large", "max-video-preview": -1 } },
 };
 
-/* ─── JSON-LD Schemas ─────────────────────────────────────────────────────── */
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  name: "GST for E-Commerce Sellers and Operators",
-  provider: {
-    "@type": "AccountingService",
-    name: "Taxvio",
-    url: "https://www.taxvio.in",
-    telephone: "+918937980366",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
-  },
-  serviceType: "GST Registration and Compliance for E-Commerce",
-  areaServed: {
-    "@type": "Country",
-    name: "India",
-  },
-  description:
-    "End-to-end GST compliance for e-commerce sellers and operators — GST registration, marketplace seller GST setup, GSTR-1, GSTR-3B, GSTR-8, GST TCS reconciliation, marketplace settlement matching, Section 52 compliance, Section 9(5) advisory and GST notice support.",
-  offers: {
-    "@type": "Offer",
-    price: "1499",
-    priceCurrency: "INR",
-    availability: "https://schema.org/InStock",
-    priceValidUntil: "2026-12-31",
-  },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    reviewCount: "240",
-  },
-};
+const FAQS = [
+  { q: "Do I need GST registration to sell on Amazon, Flipkart or Meesho?", a: "Generally yes. Suppliers who sell through an e-commerce operator are required to register under GST, with limited exceptions for certain small intra-state suppliers of specified goods. Our CA confirms whether an exception applies to you." },
+  { q: "What is TCS under GST?", a: "Tax collected at source (TCS) is an amount that the e-commerce operator collects from sellers on the net value of taxable supplies made through the platform and deposits with the government. The seller then claims it as credit in their electronic cash ledger." },
+  { q: "How do I claim TCS credit?", a: "The credit appears in your electronic cash ledger once the operator files its GSTR-8 and the details are reflected against your GSTIN. We match your platform TCS statements with the portal each month so that you claim exactly what was deducted." },
+  { q: "What is GSTR-8?", a: "GSTR-8 is the monthly statement filed by e-commerce operators that report the TCS collected from each seller. Sellers see the details as a credit and can reconcile them against settlement reports." },
+  { q: "How should I report marketplace sales in GSTR-1?", a: "You report the taxable value of sales, with the correct place of supply, tax rate and HSN codes, and adjust for returns and cancellations. You do not report the payout credited to your bank, which is net of fees and TCS." },
+  { q: "What is Section 9(5) and does it apply to me?", a: "Section 9(5) makes the e-commerce operator liable to pay GST on certain services supplied through it, such as restaurant services and passenger transport. If you are a restaurant on a food-delivery app, our team explains how it affects your invoicing and returns." },
+  { q: "Do I need a GSTIN in every state where the marketplace stores my stock?", a: "Generally, stock held in a marketplace warehouse in another state needs to be reflected as an additional place of business in that state. We help you add and maintain these in your registration." },
+  { q: "Are commission and shipping fees subject to GST?", a: "Yes. The marketplace charges GST on its commission, shipping and other fees, and you can generally claim input tax credit on them if they are properly invoiced to your GSTIN." },
+  { q: "How do you handle returns and cancellations?", a: "We adjust returns and cancellations through credit notes or in the correct period so that your reported sales and tax reflect the final position." },
+  { q: "Can you handle multiple platforms together?", a: "Yes. We combine Amazon, Flipkart, Meesho, Shopify, ONDC and other channels into one monthly reconciliation and one set of returns." },
+  { q: "What if I get a GST notice on mismatches?", a: "We reconcile your sales, TCS and credit data, prepare a reasoned reply with working papers and coordinate with the department. See our GST audit assistance for notice support." },
+];
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: "https://www.taxvio.in",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Services",
-      item: "https://www.taxvio.in/serviceslist",
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      name: "GST",
-      item: "https://www.taxvio.in/serviceslist/gst",
-    },
-    {
-      "@type": "ListItem",
-      position: 4,
-      name: "GST for E-Commerce",
-      item: "https://www.taxvio.in/gst-for-e-commerce",
-    },
-  ],
-};
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Is GST registration mandatory for e-commerce sellers in India?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "GST registration is generally required for sellers supplying through e-commerce operators such as Amazon, Flipkart, Meesho and similar marketplaces, especially where the marketplace is required to collect TCS under Section 52. However, small suppliers of goods may be exempt from registration under Notification 34/2023 subject to conditions such as turnover below the threshold, no inter-state supply, PAN-based enrolment and supply through an ECO in only one State or Union Territory.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is GST TCS for e-commerce sellers?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "GST TCS is Tax Collected at Source by an e-commerce operator under Section 52 of the CGST Act on the net value of taxable supplies made through its platform. The ECO collects TCS from seller payouts and files GSTR-8. Sellers can claim the TCS credit in their electronic cash ledger after the operator files GSTR-8.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the current GST TCS rate for e-commerce operators?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "With effect from 10 July 2024, the GST TCS rate for e-commerce operators is 0.5% overall — 0.25% CGST plus 0.25% SGST/UTGST for intra-state supplies, or 0.5% IGST for inter-state supplies.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Which GST returns must e-commerce sellers file?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A registered e-commerce seller generally files GSTR-1 for outward supplies and GSTR-3B for summary tax payment. Depending on turnover and registration type, annual return GSTR-9 may also apply. Sellers must also reconcile marketplace settlement reports, GSTR-2B, TCS credit and GSTR-1/GSTR-3B turnover to avoid GST notices.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is GSTR-8 and who files it?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "GSTR-8 is the monthly statement filed by e-commerce operators who are required to collect GST TCS under Section 52. It reports supplier-wise supplies made through the platform and TCS collected. GSTR-8 is generally due by the 10th day of the succeeding month.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can small sellers sell online without GST registration?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Small suppliers of goods may sell through e-commerce operators without GST registration only if they satisfy the conditions of Notification 34/2023 — turnover below the registration threshold, no inter-state supply, no supply through ECOs in more than one State or Union Territory, PAN declaration and enrolment number on the GST portal. The relaxation is not a blanket exemption for all online sellers.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is Section 9(5) under GST for e-commerce?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Section 9(5) shifts GST payment liability to the e-commerce operator for notified services supplied through the platform, such as passenger transport, accommodation, housekeeping and restaurant services. In these cases, the ECO pays GST as if it is the supplier for those notified services, while sellers must report such supplies correctly to avoid double taxation.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Why do e-commerce sellers receive GST mismatch notices?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "E-commerce sellers commonly receive GST notices due to mismatch between marketplace sales, GSTR-1, GSTR-3B, GSTR-2B, TCS credit, cancellations, returns, discounts and settlement reports. Regular marketplace reconciliation helps identify differences before the department issues ASMT-10 or DRC notices.",
-      },
-    },
-  ],
-};
-
-/* ─── Page (Server Component) ─────────────────────────────────────────────── */
 export default function GstForEcommercePage() {
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "GST for E-Commerce Sellers & Operators",
+      serviceType: "GST for e-commerce sellers and operators",
+      description:
+        "Complete GST compliance for Amazon, Flipkart, Meesho, Shopify and D2C sellers, including registration, marketplace reconciliation, TCS credit matching, GSTR-8 and notice support.",
+      url: URL,
+      areaServed: { "@type": "Country", name: "India" },
+      provider: {
+        "@type": "ProfessionalService",
+        name: "Taxvio",
+        url: "https://www.taxvio.in",
+        address: { "@type": "PostalAddress", addressLocality: "Khatauli", addressRegion: "Uttar Pradesh", addressCountry: "IN" },
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://www.taxvio.in" },
+        { "@type": "ListItem", position: 2, name: "Services", item: "https://www.taxvio.in/serviceslist" },
+        { "@type": "ListItem", position: 3, name: "GST Services", item: "https://www.taxvio.in/serviceslist#gst" },
+        { "@type": "ListItem", position: 4, name: "GST for E-Commerce Sellers & Operators", item: URL },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ];
+
   return (
     <>
-      <Script
-        id="gst-ecom-service-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-      />
-      <Script
-        id="gst-ecom-bc-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <Script
-        id="gst-ecom-faq-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <GstForEcommerceClient />
+      {jsonLd.map((j, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(j) }} />
+      ))}
+      <GstForEcommerceClient faqs={FAQS} />
     </>
   );
 }

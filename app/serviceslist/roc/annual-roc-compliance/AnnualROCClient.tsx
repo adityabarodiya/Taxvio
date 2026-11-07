@@ -1,975 +1,918 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+// app/serviceslist/roc/annual-roc-compliance/AnnualROCClient.tsx
+
 import Footar from "@/components/Footar";
-import {
-  ArrowRight, CheckCircle, ChevronRight, ChevronDown,
-  Shield, Users, Zap, Clock, FileText, AlertTriangle,
-  Phone, MessageCircle, Star, AlertCircle, TrendingUp, Calendar,
-} from "lucide-react";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { serviceCategories } from "@/data/serviceCategories"; // ← adjust path
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path
 
-import InquiryForm, {openInquiryForm} from "@/components/InquiryFormButton";
-/* ─── Constants ────────────────────────────────────────────────────────────── */
-const PHONE = "918937980366";
-const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent(
-  "Hello Taxvio, I need help with Annual ROC Compliance filing for my company/LLP."
-)}`;
+const SERVICE = "Annual ROC Compliance";
 
-/* ─── Pricing Plans ────────────────────────────────────────────────────────── */
-const PLANS = [
-  {
-    entity: "LLP",
-    icon: "🤝",
-    price: "₹2,499",
-    badge: null,
-    badgeColor: "",
-    accentColor: "border-sky-200",
-    headingColor: "text-sky-700",
-    forms: ["Form 11 — Annual Return", "Form 8 — Statement of Accounts", "Deadline reminder service", "MCA filing acknowledgements"],
-    due: "Form 11: 30 May | Form 8: 30 Oct",
-    href: "/serviceslist/roc/llp-formation",
-  },
-  {
-    entity: "OPC / Small Company",
-    icon: "👤",
-    price: "₹3,999",
-    badge: "Simplified Filing",
-    badgeColor: "bg-violet-500",
-    accentColor: "border-violet-200",
-    headingColor: "text-violet-700",
-    forms: ["AOC-4 — Financial Statements", "MGT-7A — Simplified Annual Return", "ADT-1 — Auditor Appointment", "Board Meeting Minutes", "Director's Report drafting"],
-    due: "AOC-4: Within 180 days of FY end | MGT-7A: Within 60 days of FY end",
-    href: "/serviceslist/roc/opc-formation",
-  },
-  {
-    entity: "Private Limited Company",
-    icon: "🏛",
-    price: "₹6,999",
-    badge: "Most Popular",
-    badgeColor: "bg-emerald-500",
-    accentColor: "border-emerald-200",
-    headingColor: "text-[#00416a]",
-    forms: ["AOC-4 — Financial Statements", "MGT-7 — Annual Return", "ADT-1 — Auditor Appointment", "Board Meeting Minutes (4/year)", "Director's Report drafting", "MCA filing & acknowledgements"],
-    due: "AOC-4: 30 days of AGM | MGT-7: 60 days of AGM | AGM by 30 Sep",
-    href: "/serviceslist/roc/private-limited-formation",
-  },
-  {
-    entity: "Section 8 Company",
-    icon: "🌱",
-    price: "₹8,499",
-    badge: "NGO / Non-Profit",
-    badgeColor: "bg-teal-500",
-    accentColor: "border-teal-200",
-    headingColor: "text-teal-700",
-    forms: ["AOC-4 — Financial Statements", "MGT-7 — Annual Return", "ADT-1 — Auditor Appointment", "Board Meeting Minutes", "Director's Report (non-profit format)", "12A/80G renewal tracking"],
-    due: "AOC-4: 30 days of AGM | MGT-7: 60 days of AGM | AGM by 30 Sep",
-    href: "/serviceslist/roc/section-8-company",
-  },
+/* ══════════════════════ CONTENT ══════════════════════ */
+
+const NAV = [
+  { id: "overview", label: "Overview" },
+  { id: "update", label: "Oct 2026 Update" },
+  { id: "covered", label: "What's Covered" },
+  { id: "dates", label: "Due Dates" },
+  { id: "calculator", label: "Calculator" },
+  { id: "documents", label: "Documents" },
+  { id: "process", label: "Process" },
+  { id: "penalties", label: "Penalties & Fees" },
+  { id: "faqs", label: "FAQs" },
 ];
 
-/* ─── All required forms reference ────────────────────────────────────────── */
-const ALL_FORMS = [
-  {
-    form: "AOC-4",
-    fullName: "Financial Statements Filing",
-    entity: "Pvt Ltd, OPC, Section 8",
-    dueDate: "Within 30 days of AGM (OPC: 180 days of FY end)",
-    penalty: "₹100/day",
-    consequence: "Directors marked as defaulters on MCA",
-  },
-  {
-    form: "MGT-7",
-    fullName: "Annual Return",
-    entity: "Private Limited Company, Section 8",
-    dueDate: "Within 60 days of AGM",
-    penalty: "₹100/day",
-    consequence: "Director disqualification after 3 years default",
-  },
-  {
-    form: "MGT-7A",
-    fullName: "Simplified Annual Return",
-    entity: "OPC & Small Companies",
-    dueDate: "Within 60 days of FY end",
-    penalty: "₹100/day",
-    consequence: "Director disqualification after 3 years default",
-  },
-  {
-    form: "ADT-1",
-    fullName: "Auditor Appointment",
-    entity: "All Companies",
-    dueDate: "Within 15 days of AGM",
-    penalty: "₹300/day (max ₹12 lakh)",
-    consequence: "Non-compliant audit status",
-  },
-  {
-    form: "Form 11",
-    fullName: "LLP Annual Return",
-    entity: "All LLPs",
-    dueDate: "30 May every year",
-    penalty: "₹100/day",
-    consequence: "LLP marked defaulting; potential strike-off",
-  },
-  {
-    form: "Form 8",
-    fullName: "Statement of Accounts & Solvency",
-    entity: "All LLPs",
-    dueDate: "30 October every year",
-    penalty: "₹100/day",
-    consequence: "LLP marked defaulting; potential strike-off",
-  },
-  {
-    form: "INC-20A",
-    fullName: "Commencement of Business",
-    entity: "New Companies (post Nov 2018)",
-    dueDate: "Within 180 days of incorporation",
-    penalty: "₹50,000 company + ₹1,000/day per officer",
-    consequence: "Company cannot legally commence business",
-  },
-  {
-    form: "DIR-3 KYC",
-    fullName: "Director KYC",
-    entity: "All Directors with DIN",
-    dueDate: "30 September every year",
-    penalty: "₹5,000 (DIN deactivated until filed)",
-    consequence: "DIN deactivation — cannot sign MCA forms",
-  },
+const INTRO = [
+  "Every company and LLP registered in India has to file its accounts and annual return with the Registrar of Companies (ROC) every year, whether or not it did any business. For private limited companies the core filings are Form AOC-4 (financial statements) and Form MGT-7 (annual return). For LLPs they are Form 8 (statement of account and solvency) and Form 11 (annual return). Directors also have to complete DIR-3 KYC, companies have to report auditor appointments, and many have to file a return of deposits.",
+  "These filings look routine, but the consequences of missing them are not. Late fees accrue for each day or slab of delay, officers in default can be penalised, directors can be disqualified, DINs can be deactivated, and prolonged non-filing can lead the Registrar to strike the entity off the register. Reviving a struck-off company is a slow, expensive exercise compared with filing a few months late.",
+  "Taxvio's CA-assisted team takes annual ROC compliance off your plate. We check your filing history, prepare the financials and forms, get them reviewed by a Chartered Accountant, file them on time and keep a due-date calendar for your entity. If you have fallen behind, we also clear the backlog and tell you the cost before we start.",
+  "Latest update (26 October 2026): MCA General Circular 05/2026 lets companies file AOC-4 and its variants up to 31 December 2026, and MGT-7 and MGT-7A up to 31 January 2027, for FY 2025-26 without additional fees. It does not extend the AGM deadline and it does not cover LLP forms. See the update section below for how it affects your dates.",
 ];
 
-/* ─── What's included ──────────────────────────────────────────────────────── */
-const WHAT_INCLUDED = [
-  { icon: "📋", title: "AOC-4 Financial Statement Filing", desc: "Financial statements (balance sheet, P&L, cash flow) prepared in XBRL/non-XBRL format and filed with MCA within the due date — coordinated with your statutory auditor." },
-  { icon: "📊", title: "MGT-7 / MGT-7A Annual Return", desc: "Complete annual return filed with MCA — disclosing director details, shareholding pattern, charges, and any changes during the year. Signed using director DSC." },
-  { icon: "🏦", title: "ADT-1 Auditor Appointment", desc: "Auditor appointment form filed within 15 days of AGM. We track auditor tenure limits and flag any rotation requirements under Section 139." },
-  { icon: "📝", title: "Board Meeting Minutes (4/year)", desc: "All 4 mandatory board meeting minutes drafted with correct agenda items, quorum, resolutions, and notice period compliance — ready for director sign-off." },
-  { icon: "📑", title: "Director's Report Drafting", desc: "Annual Director's Report drafted in Companies Act 2013-compliant format — covering financial highlights, dividend declaration, audit observations, and statutory disclosures." },
-  { icon: "🔔", title: "Deadline Reminder System", desc: "Proactive WhatsApp reminders 30 days, 15 days, and 7 days before each filing deadline — so you never face a last-minute scramble or penalty day." },
+const COVERED = [
+  { icon: "📄", t: "AOC-4 filing", d: "Filing of the company's financial statements — balance sheet, profit & loss account and the auditor's and board's reports — with the ROC." },
+  { icon: "📋", t: "MGT-7 filing", d: "Filing of the annual return, which records shareholding, directors, meetings and other prescribed details as on the year-end." },
+  { icon: "🤝", t: "LLP Form 11 & 8", d: "Annual return of the LLP (Form 11) and its statement of account and solvency (Form 8), including partner and contribution details." },
+  { icon: "🪪", t: "DIR-3 KYC", d: "Annual KYC of every director holding a DIN, so that the DIN remains active." },
+  { icon: "🧾", t: "ADT-1 & auditor filings", d: "Reporting the appointment of a statutory auditor to the ROC within the prescribed time." },
+  { icon: "📅", t: "Due-date calendar", d: "A compliance calendar for your entity, so each next deadline is known well before it becomes urgent." },
 ];
 
-/* ─── Penalty scenarios ────────────────────────────────────────────────────── */
-const PENALTY_SCENARIOS = [
-  {
-    scenario: "30 Days Late",
-    forms: "AOC-4 + MGT-7",
-    penalty: "₹6,000",
-    calc: "₹100 × 30 days × 2 forms",
-    color: "bg-yellow-50 border-yellow-200 text-yellow-800",
-    icon: "⚠️",
-  },
-  {
-    scenario: "3 Months Late",
-    forms: "AOC-4 + MGT-7",
-    penalty: "₹18,000",
-    calc: "₹100 × 90 days × 2 forms",
-    color: "bg-orange-50 border-orange-200 text-orange-800",
-    icon: "🔴",
-  },
-  {
-    scenario: "6 Months Late",
-    forms: "AOC-4 + MGT-7",
-    penalty: "₹36,000",
-    calc: "₹100 × 180 days × 2 forms",
-    color: "bg-red-50 border-red-200 text-red-800",
-    icon: "🚨",
-  },
-  {
-    scenario: "3 Years Non-Filing",
-    forms: "AOC-4 + MGT-7",
-    penalty: "Director Disqualified",
-    calc: "Section 164(2) — 5 years ban",
-    color: "bg-red-100 border-red-300 text-red-900",
-    icon: "⛔",
-  },
+const IDEAL = [
+  { icon: "🏢", t: "Private limited companies", d: "Companies of every size must file AOC-4 and MGT-7 each year, and hold an AGM, regardless of turnover." },
+  { icon: "🤝", t: "LLPs", d: "LLPs must file Form 11 and Form 8 every year. Form 8 for FY 2025-26 is due 30 October 2026, and the additional fee for delay is a slab multiple that rises with the delay." },
+  { icon: "👤", t: "One Person Companies", d: "OPCs have relaxations such as no AGM, but still file financial statements and a simplified annual return." },
+  { icon: "🌱", t: "Dormant & backlog entities", d: "Entities that have missed several years and want to regularise their position before facing strike-off or disqualification." },
 ];
 
-/* ─── Process steps ────────────────────────────────────────────────────────── */
+const DOCS = [
+  "Balance sheet",
+  "Profit & loss account",
+  "Auditor's report and signed financial statements",
+  "Notes to accounts and cash-flow statement (where applicable)",
+  "Directors' report details (companies)",
+  "List of directors and shareholders / partners",
+  "AGM date and notice details (companies)",
+  "Statement of account & solvency details (LLPs)",
+  "Digital Signature Certificates of signatories",
+  "Previous filings / SRNs, if available",
+];
+
 const STEPS = [
-  {
-    step: "01",
-    title: "Documents & Financial Statements",
-    desc: "Share your audited financial statements, director details, and any changes during the year via WhatsApp or email. If audit is pending, we coordinate with your auditor to receive the signed accounts.",
-  },
-  {
-    step: "02",
-    title: "Director's Report & Minutes Drafting",
-    desc: "We draft the annual Director's Report and board meeting minutes for the year in Companies Act 2013-compliant format. Shared with you for director review and DSC signature.",
-  },
-  {
-    step: "03",
-    title: "AOC-4 Preparation (Financial Statements)",
-    desc: "Financial statements converted to MCA filing format (XBRL where applicable). AOC-4 form prepared with all financial schedule attachments and cross-verified against audit report.",
-  },
-  {
-    step: "04",
-    title: "MGT-7 / MGT-7A Annual Return",
-    desc: "Annual return form prepared with director details, member register, share transfer records, and charge details. Cross-checked with MCA master data to ensure zero discrepancies.",
-  },
-  {
-    step: "05",
-    title: "Filing on MCA Portal",
-    desc: "All forms filed on MCA portal using director DSC. ADT-1 filed for auditor appointment. Filing receipts downloaded and delivered to you as evidence of compliance.",
-  },
-  {
-    step: "06",
-    title: "Acknowledgement & Compliance Certificate",
-    desc: "MCA filing acknowledgements, Service Request Numbers (SRNs), and a compliance summary delivered via WhatsApp. Annual compliance calendar for the next year provided.",
-  },
+  { t: "Compliance health check", d: "We review your MCA master data and past filings to see exactly what has been filed, what is pending and what is coming up." },
+  { t: "Collect financials & details", d: "You share the financial statements and basic details listed here. We check them for completeness and consistency with your books." },
+  { t: "Prepare resolutions & forms", d: "We prepare the board and AGM documentation for companies, and the statements for LLPs, and fill the forms with the required attachments." },
+  { t: "CA review & signatures", d: "A Chartered Accountant reviews the filing line by line. Directors or partners sign digitally, and the forms are certified where required." },
+  { t: "File with the MCA", d: "We file the forms on the MCA portal, track payment and processing, and fix any rejection or resubmission promptly." },
+  { t: "Acknowledgement & next-year calendar", d: "You receive the acknowledgements and filed copies, plus a calendar of your next due dates." },
 ];
 
-/* ─── Testimonials ─────────────────────────────────────────────────────────── */
-const TESTIMONIALS = [
-  {
-    stars: 5,
-    text: "We missed ROC filings for 2 years and our directors were disqualified. Taxvio helped us clear all backlogs through CFSS and file current year returns. Highly recommend for ongoing compliance.",
-    name: "Pankaj Enterprises Pvt Ltd",
-    location: "Meerut",
-  },
-  {
-    stars: 5,
-    text: "Annual compliance for our LLP is taken care of by Taxvio completely. We just share our accounts in September and they handle Form 11, Form 8, and ITR-5 — on time every year.",
-    name: "Sharma & Associates LLP",
-    location: "Muzaffarnagar",
-  },
-  {
-    stars: 5,
-    text: "The Director's Report and board meeting minutes drafted by Taxvio are thorough and professionally formatted. Our auditor also confirmed the AOC-4 was filed correctly without any MCA queries.",
-    name: "TechSolve Solutions Pvt Ltd",
-    location: "Noida",
-  },
+const DATE_TABLE = [
+  { k: "Financial statements", co: "AOC-4: within 30 days of the AGM. FY 2025-26: no additional fee up to 31 Dec 2026", llp: "Form 8: within 30 days of six months from year-end (30 Oct 2026 for FY 2025-26)", opc: "AOC-4: within 180 days of year-end. FY 2025-26: no additional fee up to 31 Dec 2026" },
+  { k: "Annual return", co: "MGT-7: within 60 days of the AGM. FY 2025-26: no additional fee up to 31 Jan 2027", llp: "Form 11: within 60 days of year-end (≈ 30 May)", opc: "MGT-7A: within 60 days of year-end. FY 2025-26: no additional fee up to 31 Jan 2027" },
+  { k: "AGM", co: "Within 6 months of year-end (30 Sep 2026 for FY 2025-26). Not extended by the circular", llp: "Not required", opc: "Not required" },
+  { k: "Director / DIN KYC", co: "DIR-3 KYC by 30 Sep each year", llp: "DIN KYC by 30 Sep each year", opc: "DIR-3 KYC by 30 Sep each year" },
+  { k: "Auditor appointment", co: "ADT-1: within 15 days of the AGM", llp: "Audit only above prescribed limits", opc: "ADT-1 as applicable" },
+  { k: "Statutory audit", co: "Required", llp: "Only above prescribed limits", opc: "Required" },
 ];
 
-/* ─── Why Taxvio ───────────────────────────────────────────────────────────── */
-const WHY_POINTS = [
-  { icon: Users, title: "CA & CS Assisted", desc: "Every filing prepared and reviewed by practising Chartered Accountants and Company Secretaries — not automated software without oversight." },
-  { icon: Calendar, title: "Proactive Deadline Tracking", desc: "We track your AGM dates, financial year end, and all ROC deadlines — and alert you 30, 15, and 7 days in advance via WhatsApp." },
-  { icon: Shield, title: "Zero Penalty Guarantee", desc: "If you give us documents on time, we guarantee on-time filing. If we miss a deadline due to our error, we bear the penalty." },
-  { icon: FileText, title: "Director's Report & Minutes Included", desc: "We don't just file forms — we draft the complete annual documentation set: Director's Report, board minutes, and AGM minutes." },
-  { icon: Zap, title: "100% Online", desc: "Share accounts via WhatsApp or email. We handle all MCA filings, DSC usage, and acknowledgement delivery without you visiting any office." },
-  { icon: AlertTriangle, title: "Backlog Clearance Specialists", desc: "Have pending filings from previous years? We clear ROC backlogs, calculate accumulated penalties, and advise on MCA amnesty schemes." },
+const RISKS = [
+  { icon: "💸", t: "Additional fees for delay", d: "Late filing attracts additional fees. For companies public references report ₹100 per day per form with no cap. For LLPs it is a slab multiple of the normal fee that rises with the delay. Either way, you pay per form." },
+  { icon: "⚖️", t: "Penalties on officers", d: "The company and its officers in default can be penalised for failing to file financial statements or the annual return." },
+  { icon: "🪪", t: "DIN deactivation", d: "A director who misses DIR-3 KYC can see their DIN deactivated, and a fee is charged to reactivate it." },
+  { icon: "🚫", t: "Director disqualification", d: "Directors of a company that has not filed financial statements or returns for a prescribed continuous period can be disqualified." },
+  { icon: "🗑️", t: "Strike-off risk", d: "Prolonged non-filing can lead the Registrar to strike the entity off the register, and restoration is slow and costly." },
+  { icon: "🏦", t: "Banking & funding hurdles", d: "Banks, investors and large customers check MCA compliance status; a poor record can block loans, tenders or funding." },
 ];
 
-/* ─── FAQs ─────────────────────────────────────────────────────────────────── */
-const FAQS = [
-  {
-    q: "What is the due date for AOC-4 filing?",
-    a: "AOC-4 must be filed within 30 days of the AGM. Since the AGM must be held by 30 September (within 6 months of financial year end i.e. 31 March), the effective deadline is typically 29 October. For OPCs, AOC-4 must be filed within 180 days of the financial year end — by 27 September.",
-  },
-  {
-    q: "What is the due date for MGT-7 annual return filing?",
-    a: "MGT-7 (for Private Limited Companies) must be filed within 60 days of the AGM — typically by 28 November. OPCs and small companies file the simplified MGT-7A within 60 days of the financial year end.",
-  },
-  {
-    q: "What is the penalty for late ROC filing?",
-    a: "The penalty for late filing of AOC-4 and MGT-7 is ₹100 per day per form, with no upper cap. A company delaying both forms by 6 months faces ₹36,000 in penalties. Directors of companies failing to file for 3 consecutive years are disqualified under Section 164(2) for 5 years.",
-  },
-  {
-    q: "What is Form 11 and Form 8 for LLPs?",
-    a: "Form 11 is the annual return of an LLP — filed by 30 May. It discloses designated partners, total partners, and contributions. Form 8 is the Statement of Accounts and Solvency — filed by 30 October. Both are mandatory for all LLPs regardless of turnover. Penalty: ₹100/day per form.",
-  },
-  {
-    q: "What happens if a company misses ROC filings for 3 years?",
-    a: "Under Section 164(2) of the Companies Act 2013, all directors of a company that fails to file annual returns for 3 consecutive financial years are automatically disqualified. Disqualified directors cannot be on the board of any company for 5 years. The ROC may also initiate strike-off proceedings.",
-  },
-  {
-    q: "Is annual ROC compliance mandatory even if the company had no business?",
-    a: "Yes. Annual ROC compliance is mandatory for all registered companies and LLPs regardless of business activity. Even dormant companies must file AOC-4 and MGT-7 with nil financial statements. Companies can apply for 'Dormant Company' status under Section 455 for reduced compliance.",
-  },
-  {
-    q: "What documents are needed for annual ROC compliance?",
-    a: "You need: audited financial statements (balance sheet, P&L, cash flow), board meeting minutes for the year, AGM notice and minutes, directors' DSCs, list of directors and shareholders, and records of any changes in capital or directorship. Taxvio coordinates with your statutory auditor and prepares all ROC documents from the audit package.",
-  },
-  {
-    q: "Can I file overdue ROC returns after the due date?",
-    a: "Yes. Pending returns can be filed at any time with accumulated late fees of ₹100/day/form. MCA periodically announces CFSS (Companies Fresh Start Scheme) or LLP Settlement Schemes that waive or reduce penalties for past defaults. Taxvio assists in clearing all ROC backlogs and advises on available amnesty windows.",
-  },
+const MISTAKES = [
+  { t: "Assuming a dormant entity needs no filing", d: "Annual filings are mandatory even with zero turnover, and late fees keep running." },
+  { t: "Filing financials that don't match the books", d: "Mismatches between ROC filings, GST returns and the income tax return invite queries across departments." },
+  { t: "Forgetting DIR-3 KYC", d: "Directors often overlook the annual KYC, and find out only when the DIN is deactivated." },
+  { t: "Holding the AGM late", d: "A delayed AGM pushes every later due date and can add its own penalty." },
+  { t: "Treating the extension as a waiver", d: "Circular 05/2026 relieves additional fees only inside its window. File after it and fees are counted from the original due date, not the extended one." },
+  { t: "Assuming the AGM was extended too", d: "The circular says it does not extend the time for holding AGMs. A company that missed the AGM date remains liable under the Act." },
+  { t: "Waiting for the last day", d: "Portal slowdowns near deadlines cause missed filings. Aim to file well before the due date." },
 ];
 
-/* ─── FAQ Accordion ────────────────────────────────────────────────────────── */
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
+/* ══════════════════════ HELPERS ══════════════════════ */
+
+type Entity = "company" | "llp" | "opc";
+
+const addDays = (d: Date, n: number) => {
+  const r = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  r.setDate(r.getDate() + n);
+  return r;
+};
+const addMonths = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth() + n, d.getDate());
+const fmt = (d: Date) => d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+const toInput = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const fromInput = (s: string) => {
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, (m || 1) - 1, d || 1);
+};
+
+/* ══════════════════════ ROOT ══════════════════════ */
+
+export default function AnnualROCClient({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [active, setActive] = useState("overview");
+
+  useEffect(() => {
+    const els = NAV.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-      itemScope itemType="https://schema.org/Question">
-      <button onClick={() => setOpen(!open)}
-        className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left" aria-expanded={open}>
-        <span className="font-bold text-gray-800 text-sm leading-snug flex items-start gap-3" itemProp="name">
-          <span className="w-5 h-5 rounded-full bg-[#00416a] text-white flex items-center justify-center text-[10px] font-extrabold shrink-0 mt-0.5">Q</span>
-          {q}
-        </span>
-        <ChevronDown size={16}
-          className={`shrink-0 text-[#00416a] mt-0.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <div className="px-6 pb-5 pl-14" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-          <p className="text-gray-600 text-xs leading-relaxed" itemProp="text">{a}</p>
+    <main className="bg-slate-50 text-gray-800 overflow-x-clip">
+      <GlobalStyles />
+      <Hero />
+      <InquiryFormButton />
+      <FloatingCTA />
+      <SectionNav active={active} />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14 grid lg:grid-cols-[1fr_340px] gap-10">
+        <div className="min-w-0 space-y-16 md:space-y-20">
+          <Overview />
+          <LatestUpdate />
+          <Covered />
+          <Who />
+          <Dates />
+          <Calculator />
+          <Documents />
+          <Process />
+          <Penalties />
+          <FAQs faqs={faqs} />
+          <Related />
         </div>
-      )}
+        <aside className="hidden lg:block">
+          <SideCard />
+        </aside>
+      </div>
+
+      <FinalCTA />
+      <Footar />
+    </main>
+  );
+}
+
+/* ══════════════════════ PRIMITIVES ══════════════════════ */
+
+function GlobalStyles() {
+  return (
+    <style>{`
+      @keyframes ar-aurora { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-30px) scale(1.15); } 100% { transform: translate(0,0) scale(1); } }
+      @keyframes ar-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      @keyframes ar-pulse { 0% { box-shadow: 0 0 0 0 rgba(251,191,36,.55); } 70% { box-shadow: 0 0 0 12px rgba(251,191,36,0); } 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0); } }
+      @keyframes ar-ring { 0%,60%,100% { transform: rotate(0); } 10%,30% { transform: rotate(-14deg); } 20%,40% { transform: rotate(14deg); } 50% { transform: rotate(-8deg); } }
+      @keyframes ar-shine { 0% { transform: translateX(-120%) skewX(-20deg); } 60%,100% { transform: translateX(260%) skewX(-20deg); } }
+      .ar-pulse { animation: ar-pulse 2s infinite; }
+      .ar-ring { animation: ar-ring 3.2s ease-in-out infinite; transform-origin: 50% 50%; }
+      .ar-shine { animation: ar-shine 3.8s ease-in-out infinite; }
+      .ar-aurora { animation: ar-aurora 14s ease-in-out infinite; }
+      .ar-float { animation: ar-float 7s ease-in-out infinite; }
+      .ar-reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+      .ar-reveal.ar-in { opacity: 1; transform: none; }
+      .ar-hide-scroll::-webkit-scrollbar { display: none; }
+      .ar-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .ar-aurora, .ar-float, .ar-pulse, .ar-ring, .ar-shine { animation: none !important; }
+        .ar-reveal { opacity: 1; transform: none; transition: none; }
+      }
+    `}</style>
+  );
+}
+
+function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`ar-reveal ${shown ? "ar-in" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+      {children}
     </div>
   );
 }
 
-/* ─── Main Client Component ────────────────────────────────────────────────── */
-export default function AnnualROCClient() {
+function Heading({ label, title }: { label: string; title: string }) {
   return (
-    <main className="bg-white text-gray-800">
+    <Reveal className="mb-7">
+      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#00416a]/70 border border-[#00416a]/15 bg-[#00416a]/5 px-3 py-1.5 rounded-full mb-3">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00416a]" />
+        {label}
+      </span>
+      <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#00416a] leading-tight">{title}</h2>
+    </Reveal>
+  );
+}
 
-      {/* ══════ DEADLINE URGENCY BANNER ══════ */}
-      <div className="bg-red-600 text-white text-xs font-semibold py-2.5 px-4 text-center leading-relaxed">
-        🚨 <strong>AGM must be held by 30 September</strong> | AOC-4 due: <strong>29 October</strong> | MGT-7 due: <strong>28 November</strong> | LLP Form 11: <strong>30 May</strong> | Form 8: <strong>30 Oct</strong> | Penalty: <strong>₹100/day/form — No upper cap</strong>
+
+/* ══════════════════════ LATEST UPDATE (26 Oct 2026) ══════════════════════ */
+
+function LatestUpdate() {
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    setToday(d);
+  }, []);
+  const left = (y: number, m: number, d: number) => (today ? Math.round((new Date(y, m, d).getTime() - today.getTime()) / 86400000) : null);
+  const cards = [
+    { f: "LLP Form 8", d: "30 Oct 2026", n: left(2026, 9, 30), note: "Not covered by the circular", tone: "from-red-500 to-rose-600" },
+    { f: "AOC-4 family", d: "31 Dec 2026", n: left(2026, 11, 31), note: "No additional fee up to this date", tone: "from-[#00416a] to-[#0a6aa8]" },
+    { f: "MGT-7 / MGT-7A", d: "31 Jan 2027", n: left(2027, 0, 31), note: "No additional fee up to this date", tone: "from-indigo-600 to-violet-600" },
+  ];
+  return (
+    <section id="update" className="scroll-mt-40">
+      <Heading label="Oct 2026 Update" title="MCA General Circular 05/2026: What Changed for FY 2025-26" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-5">
+          On 24 October 2026 the Ministry of Corporate Affairs allowed companies to file their FY 2025-26 financial statements
+          (AOC-4, AOC-4 CFS, AOC-4 XBRL and the two NBFC Ind AS variants) up to 31 December 2026, and annual returns (MGT-7 and
+          MGT-7A) up to 31 January 2027, without additional fees. We read the circular as follows.
+        </p>
+      </Reveal>
+      <div className="grid sm:grid-cols-3 gap-4 mb-5">
+        {cards.map((k, i) => (
+          <Reveal key={k.f} delay={i * 70}>
+            <div className={`h-full rounded-2xl bg-gradient-to-br ${k.tone} text-white p-5 shadow-lg`}>
+              <p className="text-xs uppercase tracking-widest text-white/70 font-semibold">{k.f}</p>
+              <p className="text-2xl font-extrabold mt-1">{k.d}</p>
+              <p className="text-sm mt-2 text-white/90">{k.n === null ? "…" : k.n > 0 ? `${k.n} days left` : k.n === 0 ? "Last day today" : `${Math.abs(k.n)} days past`}</p>
+              <p className="text-xs mt-1 text-white/70">{k.note}</p>
+            </div>
+          </Reveal>
+        ))}
       </div>
+      <Reveal>
+        <ul className="space-y-3">
+          {[
+            ["It relaxes additional fees only.", "Normal filing fees still apply."],
+            ["The AGM date was not extended.", "The circular says it does not give extra time to hold AGMs, and companies that missed timelines remain liable under the Act."],
+            ["After the window, fees run from the original due date.", "Paragraph 4 says later filings attract all fees, including additional fees, from the date the filing was actually due. One day late can cost weeks of fees."],
+            ["LLPs are not named.", "Form 8 stays due on 30 October 2026 as far as we know. Confirm on the MCA site if an LLP notice is issued."],
+            ["Other company forms were not mentioned.", "ADT-1, DIR-3 KYC, MSME-1 and DPT-3 follow their own dates."],
+          ].map(([t, d]) => (
+            <li key={t} className="flex gap-3 bg-white border border-gray-200 rounded-2xl p-4">
+              <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#00416a] text-white text-sm font-bold flex items-center justify-center">✓</span>
+              <p className="text-sm text-gray-600 leading-relaxed"><b className="text-[#00416a]">{t}</b> {d}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-sm text-gray-500">
+          Read more:{" "}
+          <Link href="/guide/roc/mca-circular-05-2026-aoc-4-mgt-7-extension" className="font-semibold text-[#00416a] hover:underline">circular explained</Link>,{" "}
+          <Link href="/guide/roc/roc-additional-fee-from-original-due-date-aoc-4-mgt-7" className="font-semibold text-[#00416a] hover:underline">the fee cliff</Link>,{" "}
+          <Link href="/guide/roc/aoc-4-xbrl-cfs-mgt-7-mgt-7a-which-form-to-file" className="font-semibold text-[#00416a] hover:underline">which form to file</Link> and{" "}
+          <Link href="/guide/roc/llp-form-8" className="font-semibold text-[#00416a] hover:underline">LLP Form 8</Link>.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
 
-      {/* ══════ HERO ══════ */}
-      <section aria-label="Annual ROC Compliance Filing — Taxvio"
-        className="relative overflow-hidden bg-gradient-to-br from-[#00416a] via-[#003257] to-[#001e36] text-white">
-        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle,rgba(56,189,248,0.13) 0%,transparent 65%)" }} />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 65%)" }} />
+/* ══════════════════════ FLOATING CONTACT BUTTON ══════════════════════ */
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-14 pb-24">
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/45">
+function FloatingCTA() {
+  return (
+    <button
+      type="button"
+      onClick={() => openInquiryForm(SERVICE)}
+      aria-label="Contact Taxvio: talk to a CA, free callback"
+      className="ar-pulse group fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 sm:bottom-6 sm:right-6 z-[70] flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-300 py-2 pl-2 pr-4 sm:pr-5 text-[#00416a] shadow-xl ring-2 ring-white/70 transition hover:scale-105 active:scale-95"
+    >
+      <span aria-hidden className="ar-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/40 blur-sm" />
+      <span className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-[#00416a] text-white shadow-inner">
+        <svg viewBox="0 0 24 24" className="ar-ring h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+        <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
+      </span>
+      <span className="relative text-left leading-tight">
+        <span className="block text-[10px] font-bold uppercase tracking-widest opacity-70">Free CA callback</span>
+        <span className="block text-sm font-extrabold">Contact Us</span>
+      </span>
+    </button>
+  );
+}
+
+/* ══════════════════════ HERO + NAV ══════════════════════ */
+
+function Hero() {
+  const facts = [
+    { k: "Applies to", v: "Companies & LLPs" },
+    { k: "Due", v: "Every year, even if dormant" },
+    { k: "Mode", v: "100% online" },
+  ];
+  return (
+    <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+      <div className="ar-aurora absolute -top-32 -left-24 w-[26rem] h-[26rem] rounded-full bg-sky-400/20 blur-3xl" />
+      <div className="ar-aurora absolute -bottom-40 right-0 w-[28rem] h-[28rem] rounded-full bg-cyan-300/10 blur-3xl [animation-delay:-7s]" />
+      <div
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          maskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+        }}
+      />
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 pt-12 pb-24 md:pt-16 md:pb-28 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+        <div>
+          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/60 flex flex-wrap items-center gap-2">
+            <Link href="/" className="hover:text-white transition">Home</Link><span>/</span>
+            <Link href="/serviceslist" className="hover:text-white transition">Services</Link><span>/</span>
+            <Link href="/serviceslist#roc" className="hover:text-white transition">ROC / Company Law</Link><span>/</span>
+            <span className="text-white">Annual ROC Compliance</span>
+          </nav>
+          <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-5">
+            📅 Updated 26 Oct 2026 · MCA Circular 05/2026
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.1] tracking-tight mb-5">
+            Annual ROC Compliance{" "}
+            <span className="bg-gradient-to-r from-white via-sky-200 to-cyan-200 bg-clip-text text-transparent">
+              — AOC-4, MGT-7, LLP Form 11 &amp; 8, On Time
+            </span>
+          </h1>
+          <p className="text-base sm:text-lg text-sky-100/90 leading-relaxed max-w-2xl mb-8">
+            Filing of annual ROC returns and compliance documents for companies and LLPs — prepared, CA-reviewed and filed
+            before the deadline, with a due-date calendar for every year.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <button
+              onClick={() => openInquiryForm(SERVICE)}
+              className="group bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200"
+            >
+              Get a Free Quote <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+            <a href="#calculator" className="border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+              Check My Due Dates
+            </a>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {facts.map((q) => (
+              <div key={q.k} className="bg-white/10 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5">
+                <p className="text-[10px] uppercase tracking-widest text-sky-200/70">{q.k}</p>
+                <p className="font-bold text-sm">{q.v}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden lg:block">
+          <div className="ar-float bg-white text-gray-800 rounded-3xl shadow-2xl shadow-black/30 p-6 rotate-1">
+            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-1">Your compliance, tracked</p>
+            <p className="font-extrabold text-[#00416a] text-lg mb-4">Sample annual calendar</p>
+            <ul className="space-y-2.5 mb-5">
               {[
-                { href: "/", label: "Home" },
-                { href: "/serviceslist", label: "Services" },
-                { href: "/serviceslist/roc", label: "ROC Compliance" },
-                { href: null, label: "Annual ROC Compliance" },
-              ].map(({ href, label }, i, arr) => (
-                <li key={label} className="flex items-center gap-1.5">
-                  {href
-                    ? <Link href={href} className="hover:text-white/80 transition">{label}</Link>
-                    : <span className="text-white/75 font-medium">{label}</span>}
-                  {i < arr.length - 1 && <ChevronRight size={12} className="text-white/25" />}
+                { t: "ADT-1 (auditor)", s: "Filed", c: "bg-emerald-100 text-emerald-700" },
+                { t: "AOC-4 (financials)", s: "In review", c: "bg-amber-100 text-amber-700" },
+                { t: "MGT-7 (annual return)", s: "Upcoming", c: "bg-sky-100 text-sky-700" },
+                { t: "DIR-3 KYC", s: "Upcoming", c: "bg-sky-100 text-sky-700" },
+                { t: "LLP Form 11 & 8", s: "Upcoming", c: "bg-sky-100 text-sky-700" },
+              ].map((r) => (
+                <li key={r.t} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3 py-2.5 text-sm">
+                  <span className="flex-1 font-semibold">{r.t}</span>
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${r.c}`}>{r.s}</span>
                 </li>
               ))}
-            </ol>
-          </nav>
-          <InquiryForm />
-          {/* Category pill */}
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-5 text-sky-300"
-            style={{ background: "rgba(56,189,248,0.12)", border: "1px solid rgba(56,189,248,0.25)" }}>
-            📋 Annual ROC Compliance — Companies Act 2013 & LLP Act 2008
-          </div>
-
-          <div className="grid md:grid-cols-[1fr_310px] gap-12 items-start">
-            {/* ── Left ── */}
-            <div>
-              <h1 className="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-white">
-                Annual ROC Compliance
-                <span className="block mt-2 text-sky-300">For Companies &amp; LLPs in India</span>
-              </h1>
-
-              <p className="mt-5 text-white/75 text-base md:text-lg leading-relaxed max-w-xl">
-                File your <strong className="text-white">AOC-4, MGT-7</strong> for Private Limited Companies &amp; OPCs and{" "}
-                <strong className="text-white">Form 11, Form 8</strong> for LLPs — on time, every year. Taxvio's CA &amp; CS
-                team handles all annual MCA filings, Director's Report, board meeting minutes, and auditor appointment —
-                100% online. Starting <strong className="text-white">₹2,499</strong>.
-              </p>
-
-              {/* Trust pills */}
-              <div className="mt-6 flex flex-wrap gap-2">
-                {["✅ Zero Penalty Guarantee", "🔒 CA & CS Assisted", "⚡ Proactive Reminders", "📋 Director's Report Included"].map(t => (
-                  <span key={t} className="text-xs font-semibold rounded-full px-3 py-1.5"
-                    style={{ background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.82)" }}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
-               
-                <Link href="/contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                  Free Consultation <ArrowRight size={15} />
-                </Link>
-              </div>
-
-              {/* Feature row */}
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-white/55">
-                {["AOC-4 Filing", "MGT-7 / MGT-7A", "Form 11 & Form 8", "Director's Report", "Board Minutes"].map(t => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <CheckCircle size={11} className="text-sky-400" /> {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* ── Right — Quick deadline card ── */}
-            <div className="rounded-2xl overflow-hidden shadow-2xl"
-              style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.14)" }}>
-              <div className="px-6 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
-                <p className="font-bold text-white text-sm">📅 Key Filing Deadlines</p>
-                <p className="text-xs text-white/50 mt-0.5">All companies & LLPs — FY ending 31 March</p>
-              </div>
-              <div className="p-5 space-y-3">
-                {[
-                  { form: "AGM", due: "By 30 September", entity: "Pvt Ltd / OPC / Sec 8", urgent: true },
-                  { form: "AOC-4", due: "By 29 October", entity: "Pvt Ltd / OPC / Sec 8", urgent: true },
-                  { form: "MGT-7 / 7A", due: "By 28 November", entity: "Pvt Ltd / OPC / Sec 8", urgent: false },
-                  { form: "ADT-1", due: "Within 15 days of AGM", entity: "All Companies", urgent: false },
-                  { form: "Form 11", due: "30 May every year", entity: "All LLPs", urgent: false },
-                  { form: "Form 8", due: "30 October every year", entity: "All LLPs", urgent: false },
-                  { form: "DIR-3 KYC", due: "30 September every year", entity: "All Directors", urgent: false },
-                ].map(({ form, due, entity, urgent }) => (
-                  <div key={form} className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      {urgent && <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />}
-                      {!urgent && <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0" />}
-                      <div>
-                        <p className="font-bold text-white text-xs">{form}</p>
-                        <p className="text-white/45 text-[10px]">{entity}</p>
-                      </div>
-                    </div>
-                    <span className={`text-[10px] font-bold rounded-full px-2 py-0.5 ${urgent ? "bg-red-500/20 text-red-300" : "bg-white/10 text-white/70"}`}>
-                      {due}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div className="px-5 pb-5">
-                <div className="rounded-xl px-4 py-3 flex items-center justify-between"
-                  style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                  <div>
-                    <p className="text-white text-xs font-bold">Starting Price</p>
-                    <p className="text-sky-300 text-2xl font-extrabold">₹2,499</p>
-                    <p className="text-white/40 text-[10px] mt-0.5">LLP annual compliance</p>
-                  </div>
-                  <div className="flex items-center gap-1 text-amber-400">
-                    <Star size={13} className="fill-amber-400" />
-                    <span className="text-white font-bold text-sm">4.9</span>
-                    <span className="text-white/40 text-xs">(1,240+)</span>
-                  </div>
-                </div>
-              </div>
+            </ul>
+            <div className="rounded-2xl bg-[#00416a] text-white px-4 py-3 text-sm flex items-center gap-3">
+              <span className="text-xl">👨‍💼</span>
+              <span><b>CA-reviewed</b> before every filing</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+      <svg className="absolute bottom-0 left-0 w-full h-10 text-slate-50" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden>
+        <path fill="currentColor" d="M0,60 L0,30 Q360,-10 720,25 T1440,20 L1440,60 Z" />
+      </svg>
+    </section>
+  );
+}
 
-      {/* ══════ STATS STRIP ══════ */}
-      <section className="bg-[#00416a] py-8" aria-label="Taxvio ROC compliance statistics">
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { val: "3,500+", label: "Returns Filed / Year" },
-            { val: "0", label: "Penalties Incurred" },
-            { val: "4.9★", label: "Average Rating" },
-            { val: "₹2,499", label: "Starting Price" },
-          ].map(({ val, label }) => (
-            <div key={label}>
-              <p className="text-xl md:text-2xl font-extrabold text-white">{val}</p>
-              <p className="text-xs text-white/55 mt-0.5">{label}</p>
-            </div>
+function SectionNav({ active }: { active: string }) {
+  return (
+    <div className="sticky top-[72px] z-40 bg-white/85 backdrop-blur-xl border-b border-gray-200/80 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-1.5 overflow-x-auto ar-hide-scroll">
+          {NAV.map((n) => (
+            <a
+              key={n.id}
+              href={`#${n.id}`}
+              className={`flex-shrink-0 text-sm font-semibold px-3.5 py-2 rounded-full transition-all whitespace-nowrap ${
+                active === n.id ? "bg-[#00416a] text-white shadow-md shadow-[#00416a]/25" : "text-[#00416a]/80 hover:bg-[#00416a]/5"
+              }`}
+            >
+              {n.label}
+            </a>
           ))}
         </div>
-      </section>
+        <button
+          onClick={() => openInquiryForm(SERVICE)}
+          className="hidden md:inline-flex flex-shrink-0 text-xs font-bold bg-[#00416a] text-white px-4 py-2.5 rounded-lg hover:bg-[#002b45] active:scale-95 transition"
+        >
+          Enquire now
+        </button>
+      </div>
+    </div>
+  );
+}
 
-      {/* ══════ PRICING PLANS BY ENTITY ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Annual ROC compliance pricing for different entity types">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Choose Your Plan
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Annual ROC Compliance — Plans by Entity Type
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              Select your entity type. All plans include deadline reminders, MCA filing, and acknowledgements.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {PLANS.map(({ entity, icon, price, badge, badgeColor, accentColor, headingColor, forms, due, href }) => (
-              <div key={entity}
-                className={`relative bg-white border-2 ${accentColor} rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-250 flex flex-col`}>
-                {badge && (
-                  <span className={`absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-bold text-white px-3 py-1 rounded-full ${badgeColor} whitespace-nowrap`}>
-                    {badge}
-                  </span>
-                )}
-                <div className="w-12 h-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-2xl mb-4">
-                  {icon}
-                </div>
-                <h3 className={`font-extrabold text-sm mb-1 ${headingColor}`}>{entity}</h3>
-                <p className="text-2xl font-extrabold text-gray-800 mb-4">{price}</p>
+/* ══════════════════════ SECTIONS ══════════════════════ */
 
-                <ul className="space-y-2 mb-5 flex-1">
-                  {forms.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-xs text-gray-600">
-                      <CheckCircle size={10} className="text-green-500 shrink-0 mt-0.5" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+function Overview() {
+  return (
+    <section id="overview" className="scroll-mt-40">
+      <Heading label="Overview" title="What Is Annual ROC Compliance?" />
+      <div className="space-y-5">
+        {INTRO.map((p, i) => (
+          <Reveal key={i} delay={i * 70}>
+            <p className={`pl-5 border-l-4 text-gray-700 leading-relaxed ${i === 0 ? "border-[#00416a]" : "border-[#00416a]/25"}`}>{p}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-                <div className="bg-gray-50 rounded-xl px-3 py-2 mb-4">
-                  <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mb-0.5">Due Dates</p>
-                  <p className="text-[11px] text-gray-600 leading-snug">{due}</p>
-                </div>
-
-                <button onClick={() => openInquiryForm(entity)}
-                  className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#00416a] hover:bg-[#003257] py-2.5 text-white text-xs font-bold transition-all active:scale-[0.97]">
-                  <MessageCircle size={12} /> Get Started
-                </button>
-                <Link href={href}
-                  className="flex items-center justify-center gap-1 mt-2 text-[10px] font-semibold text-[#00416a] hover:underline transition">
-                  About {entity} <ArrowRight size={9} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ PENALTY CALCULATOR VISUAL ══════ */}
-      <section className="py-20 bg-white" aria-label="ROC filing late penalty calculator and scenarios">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Cost of Delay
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              What Does Late ROC Filing Really Cost?
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-xl mx-auto">
-              ₹100/day sounds small. It accumulates fast — and the non-financial consequences are far worse.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {PENALTY_SCENARIOS.map(({ scenario, forms, penalty, calc, color, icon }) => (
-              <div key={scenario} className={`border rounded-2xl p-5 ${color}`}>
-                <div className="text-2xl mb-2">{icon}</div>
-                <p className="font-extrabold text-sm mb-1">{scenario}</p>
-                <p className="text-xs opacity-70 mb-3">{forms}</p>
-                <p className="text-xl font-extrabold">{penalty}</p>
-                <p className="text-[10px] opacity-60 mt-0.5">{calc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="flex items-start gap-3 bg-red-50 border border-red-100 rounded-2xl p-5">
-            <AlertTriangle size={18} className="text-red-500 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-bold text-red-800 text-sm mb-1">Section 164(2) Director Disqualification</p>
-              <p className="text-red-700 text-xs leading-relaxed">
-                If your company fails to file AOC-4 or MGT-7 for <strong>3 consecutive financial years</strong>, every
-                director is automatically disqualified under Section 164(2) of the Companies Act 2013. Disqualified
-                directors are <strong>banned from serving on any company's board for 5 years</strong> — and cannot sign
-                MCA forms, open bank accounts on behalf of companies, or hold directorship in any entity during this
-                period. The ROC also initiates strike-off proceedings against such companies.
-              </p>
+function Covered() {
+  return (
+    <section id="covered" className="scroll-mt-40">
+      <Heading label="What's Covered" title="What Our Annual ROC Compliance Service Includes" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {COVERED.map((c, i) => (
+          <Reveal key={c.t} delay={i * 60}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center text-xl mb-3 group-hover:scale-110 group-hover:-rotate-6 transition-transform">{c.icon}</div>
+              <h3 className="font-bold text-[#00416a] mb-1">{c.t}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{c.d}</p>
             </div>
-          </div>
-        </div>
-      </section>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-      {/* ══════ ALL FORMS REFERENCE TABLE ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Complete ROC forms reference table with due dates and penalties">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Forms Reference
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Complete ROC Forms — Due Dates, Penalties &amp; Consequences
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              Every MCA form your company or LLP must file — with exact deadlines and penalty details.
-            </p>
-          </div>
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="bg-[#00416a] text-white">
-                  <th className="px-4 py-3.5 text-left font-bold">Form</th>
-                  <th className="px-4 py-3.5 text-left font-bold">Purpose</th>
-                  <th className="px-4 py-3.5 text-left font-bold">Entity</th>
-                  <th className="px-4 py-3.5 text-left font-bold">Due Date</th>
-                  <th className="px-4 py-3.5 text-left font-bold">Penalty</th>
+function Who() {
+  return (
+    <section id="who" className="scroll-mt-40">
+      <Heading label="Who It's For" title="Who Needs Annual ROC Compliance?" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {IDEAL.map((w, i) => (
+          <Reveal key={w.t} delay={i * 70}>
+            <div className="relative h-full overflow-hidden bg-gradient-to-br from-[#00416a] to-[#00527f] text-white rounded-2xl p-6 shadow-lg">
+              <span className="absolute -right-4 -bottom-6 text-8xl opacity-10 select-none">{w.icon}</span>
+              <div className="relative">
+                <p className="text-2xl mb-2">{w.icon}</p>
+                <h3 className="font-bold text-lg mb-1.5">{w.t}</h3>
+                <p className="text-sm text-sky-100/90 leading-relaxed">{w.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Dates() {
+  return (
+    <section id="dates" className="scroll-mt-40">
+      <Heading label="Due Dates" title="Annual ROC Due Dates at a Glance" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-5">
+          The table below summarises the usual due dates for a financial year ending 31 March. MCA sometimes extends
+          deadlines through circulars, and rules can change, so our team always confirms the current dates for your entity.
+        </p>
+        <div className="overflow-x-auto rounded-3xl border border-gray-200 shadow-lg bg-white">
+          <table className="min-w-[760px] w-full text-sm border-separate border-spacing-0">
+            <thead>
+              <tr>
+                <th className="px-4 py-4 bg-gray-50 rounded-tl-3xl" />
+                <th className="px-4 py-4 text-left font-extrabold text-white bg-gradient-to-br from-[#00416a] to-[#0a6aa8]">Private Limited Company</th>
+                <th className="px-4 py-4 text-left font-semibold text-gray-600 bg-gray-50">LLP</th>
+                <th className="px-4 py-4 text-left font-semibold text-gray-600 bg-gray-50 rounded-tr-3xl">One Person Company</th>
+              </tr>
+            </thead>
+            <tbody>
+              {DATE_TABLE.map((r) => (
+                <tr key={r.k} className="group">
+                  <td className="px-4 py-3.5 font-bold text-gray-800 border-t border-gray-100 group-hover:bg-gray-50">{r.k}</td>
+                  <td className="px-4 py-3.5 font-semibold text-[#00416a] bg-sky-50/70 border-t border-[#00416a]/10">{r.co}</td>
+                  <td className="px-4 py-3.5 text-gray-600 border-t border-gray-100 group-hover:bg-gray-50">{r.llp}</td>
+                  <td className="px-4 py-3.5 text-gray-600 border-t border-gray-100 group-hover:bg-gray-50">{r.opc}</td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {ALL_FORMS.map(({ form, fullName, entity, dueDate, penalty }, i) => (
-                  <tr key={form} className={`hover:bg-blue-50/20 transition-colors ${i % 2 === 0 ? "bg-white" : "bg-gray-50/40"}`}>
-                    <td className="px-4 py-3 font-extrabold text-[#00416a]">{form}</td>
-                    <td className="px-4 py-3 text-gray-700">{fullName}</td>
-                    <td className="px-4 py-3 text-gray-500">{entity}</td>
-                    <td className="px-4 py-3 text-gray-700 font-medium">{dueDate}</td>
-                    <td className="px-4 py-3 font-bold text-red-600">{penalty}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </section>
+        <p className="mt-3 text-sm text-gray-500">
+          Looking to incorporate first? See{" "}
+          <Link href="/serviceslist/roc/private-limited-formation" className="font-semibold text-[#00416a] hover:underline">Private Limited Formation</Link>,{" "}
+          <Link href="/serviceslist/roc/llp-formation" className="font-semibold text-[#00416a] hover:underline">LLP Registration</Link> or{" "}
+          <Link href="/serviceslist/roc/opc-formation" className="font-semibold text-[#00416a] hover:underline">OPC Registration</Link>.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
 
-      {/* ══════ WHAT'S INCLUDED ══════ */}
-      <section className="py-20 bg-white" aria-label="What is included in annual ROC compliance service">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              What's Included
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Everything Covered in Taxvio's Annual ROC Compliance Service
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              Not just form filing — complete annual compliance documentation handled end-to-end.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {WHAT_INCLUDED.map(({ icon, title, desc }) => (
-              <div key={title}
-                className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:bg-white hover:-translate-y-0.5 transition-all duration-200">
-                <div className="w-11 h-11 rounded-2xl bg-[#00416a]/8 border border-[#00416a]/12 flex items-center justify-center text-2xl mb-4">
-                  {icon}
-                </div>
-                <h3 className="font-bold text-gray-800 text-sm mb-2">{title}</h3>
-                <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+/** Interactive due-date calculator */
+function Calculator() {
+  const [entity, setEntity] = useState<Entity>("company");
+  const [fyStart, setFyStart] = useState(2025); // FY 2025-26 by default
+  const fyEnd = useMemo(() => new Date(fyStart + 1, 2, 31), [fyStart]);
+  const [agm, setAgm] = useState<string>(() => toInput(new Date(2026, 8, 30)));
+  const [today, setToday] = useState<Date | null>(null);
 
-      {/* ══════ 6-STEP PROCESS ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Annual ROC compliance process with Taxvio">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-4">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              How We Work
-            </span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] text-center mt-4 mb-12">
-            Taxvio's 6-Step Annual ROC Compliance Process
-          </h2>
-          <div className="space-y-4">
-            {STEPS.map(({ step, title, desc }) => (
-              <div key={step}
-                className="flex gap-5 items-start bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-md hover:border-[#00416a]/15 transition-all duration-200">
-                <div className="w-10 h-10 rounded-xl bg-[#00416a] flex items-center justify-center text-white font-extrabold text-sm shrink-0 shadow-md">
-                  {step}
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-800 text-sm mb-1">{title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+  useEffect(() => setToday(new Date()), []);
+  // keep the AGM default tied to the chosen year until the user edits it
+  useEffect(() => setAgm(toInput(addMonths(new Date(fyStart + 1, 2, 31), 6))), [fyStart]);
 
-      {/* ══════ SEO PILLAR CONTENT ══════ */}
-      <section className="py-20 bg-white" aria-label="Complete guide to annual ROC compliance in India">
-        <div className="max-w-4xl mx-auto px-6 space-y-14">
+  const items = useMemo(() => {
+    const out: { form: string; label: string; due: Date; free?: Date }[] = [];
+    const later = (a: Date, b: Date) => (a.getTime() >= b.getTime() ? a : b);
+    const relief = fyStart === 2025; // MCA General Circular 05/2026, FY 2025-26 only
+    const agmDate = fromInput(agm);
+    const kyc = new Date(fyStart + 1, 8, 30);
+    if (entity === "company") {
+      out.push({ form: "AGM", label: "Annual General Meeting", due: addMonths(fyEnd, 6) });
+      out.push({ form: "ADT-1", label: "Auditor appointment (15 days from AGM)", due: addDays(agmDate, 15) });
+      out.push({ form: "AOC-4", label: "Financial statements (30 days from AGM)", due: addDays(agmDate, 30), free: relief ? later(addDays(agmDate, 30), new Date(2026, 11, 31)) : undefined });
+      out.push({ form: "MGT-7", label: "Annual return (60 days from AGM)", due: addDays(agmDate, 60), free: relief ? later(addDays(agmDate, 60), new Date(2027, 0, 31)) : undefined });
+      out.push({ form: "DIR-3 KYC", label: "Director KYC", due: kyc });
+    } else if (entity === "opc") {
+      out.push({ form: "MGT-7A", label: "Annual return (60 days from year-end)", due: addDays(fyEnd, 60), free: relief ? later(addDays(fyEnd, 60), new Date(2027, 0, 31)) : undefined });
+      out.push({ form: "AOC-4", label: "Financial statements (180 days from year-end)", due: addDays(fyEnd, 180), free: relief ? later(addDays(fyEnd, 180), new Date(2026, 11, 31)) : undefined });
+      out.push({ form: "DIR-3 KYC", label: "Director KYC", due: kyc });
+    } else {
+      out.push({ form: "Form 11", label: "LLP annual return (60 days from year-end)", due: addDays(fyEnd, 60) });
+      out.push({ form: "Form 8", label: "Statement of account & solvency", due: addDays(addMonths(fyEnd, 6), 30) });
+      out.push({ form: "DIN KYC", label: "Designated partner KYC", due: kyc });
+    }
+    return out.sort((a, b) => a.due.getTime() - b.due.getTime());
+  }, [entity, fyStart, fyEnd, agm]);
 
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              What is Annual ROC Compliance in India?
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                Every company incorporated under the <strong>Companies Act 2013</strong> and every LLP registered under the <strong>LLP Act 2008</strong> is legally required to file annual statutory returns with the <strong>Registrar of Companies (ROC)</strong> — an office under the Ministry of Corporate Affairs (MCA). This recurring obligation is called <em>annual ROC compliance</em>.
-              </p>
-              <p>
-                Annual ROC compliance is not optional and cannot be skipped — even if the company or LLP had zero transactions during the year. The law treats incorporated entities as perpetual legal persons with ongoing disclosure obligations. Failure to meet these obligations triggers automatic financial penalties, potential director disqualification, and ultimately strike-off of the entity from the MCA register.
-              </p>
-              <p>
-                For a <Link href="/serviceslist/roc/private-limited-formation" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">Private Limited Company</Link>, annual compliance consists of three core MCA filings: AOC-4 (financial statements), MGT-7 (annual return), and ADT-1 (auditor appointment) — plus the internal governance requirements of holding at least 4 board meetings and one AGM per year. For an <Link href="/serviceslist/roc/llp-formation" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">LLP</Link>, the requirements are lighter: Form 11 (annual return) and Form 8 (statement of accounts and solvency), with no mandatory AGM or board meetings.
-              </p>
-            </div>
-          </div>
+  const status = (due: Date, free?: Date) => {
+    const eff = free ?? due;
+    if (!today) return { text: "", cls: "bg-gray-100 text-gray-500" };
+    const days = Math.ceil((eff.getTime() - new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) / 86400000);
+    if (days < 0) return { text: `Overdue by ${-days} day${-days === 1 ? "" : "s"}`, cls: "bg-red-100 text-red-700" };
+    if (days === 0) return { text: "Due today", cls: "bg-red-100 text-red-700" };
+    if (days <= 30) return { text: `Due in ${days} days`, cls: "bg-amber-100 text-amber-800" };
+    return { text: `In ${days} days`, cls: "bg-sky-100 text-sky-700" };
+  };
 
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              AOC-4 — Filing Financial Statements with MCA
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                <strong>AOC-4</strong> is the form used to file a company's financial statements — balance sheet, profit &amp; loss account, cash flow statement (where applicable), and auditor's report — with the MCA. AOC-4 must be filed within <strong>30 days of the AGM</strong>. Since the AGM must be held within 6 months of the financial year end (i.e., by 30 September for companies with a 31 March year-end), the effective AOC-4 deadline is typically <strong>29 October</strong>.
-              </p>
-              <p>
-                For companies required to file XBRL (eXtensible Business Reporting Language) financial statements — typically listed companies and companies with paid-up capital above ₹5 crore or turnover above ₹100 crore — AOC-4 must be filed in XBRL format. For other companies, the standard non-XBRL AOC-4 format applies. Taxvio handles both formats — XBRL tagging and mapping is done by our team from the audit-ready financial statements.
-              </p>
-              <p>
-                For <Link href="/serviceslist/roc/opc-formation" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">One Person Companies (OPCs)</Link>, the AOC-4 due date is different: it must be filed within <strong>180 days of the financial year end</strong> — by 27 September. This is one of the specific compliance relaxations for OPCs. OPCs are also not required to include a cash flow statement in their AOC-4 filing if their turnover is below ₹2 crore.
-              </p>
-            </div>
-          </div>
+  const overdue = today ? items.filter((i) => (i.free ?? i.due).getTime() < new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()).length : 0;
 
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              MGT-7 Annual Return — What It Discloses and Why It Matters
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                <strong>MGT-7</strong> is the annual return form filed by Private Limited Companies, and <strong>MGT-7A</strong> is the simplified version for OPCs and small companies. Both forms must be filed within <strong>60 days of the AGM</strong> — typically by <strong>28 November</strong> for companies with a 31 March financial year end.
-              </p>
-              <p>
-                The annual return discloses comprehensive information about the company: registered office address, principal business activities, details of associates and subsidiaries, share capital structure, pattern of shareholding, list of all directors (with their DIN, date of appointment, and designation), debenture trustees, details of meetings held and attended, remuneration of directors, certifications about compliance with all applicable laws, and details of penalties imposed. It is the primary disclosure document through which MCA tracks corporate governance.
-              </p>
-              <p>
-                For companies with a paid-up capital above ₹10 crore or turnover above ₹50 crore, MGT-7 must be certified by a <strong>Company Secretary in Practice</strong> (not just filed by the company). This certification requirement is often overlooked by companies in this size bracket and leads to non-compliance penalties. Taxvio arranges CS certification as part of our annual compliance package for qualifying companies.
-              </p>
-            </div>
-          </div>
+  const Pill = ({ value, label }: { value: Entity; label: string }) => (
+    <button
+      onClick={() => setEntity(value)}
+      className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
+        entity === value ? "bg-[#00416a] text-white border-[#00416a]" : "bg-white text-[#00416a] border-[#00416a]/20 hover:border-[#00416a]/50"
+      }`}
+    >
+      {label}
+    </button>
+  );
 
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              LLP Annual Compliance — Form 11 and Form 8 in Detail
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                <Link href="/serviceslist/roc/llp-formation" className="text-[#00416a] font-semibold underline hover:text-sky-700 transition">Limited Liability Partnerships (LLPs)</Link> have a simpler annual compliance structure compared to companies — no mandatory AGM, no mandatory board meetings, and no AOC-4/MGT-7. Instead, LLPs file two annual forms: <strong>Form 11</strong> and <strong>Form 8</strong>.
-              </p>
-              <p>
-                <strong>Form 11</strong> (Annual Return of LLP) is due by <strong>30 May every year</strong>. It discloses the LLP's total partner count, designated partners, capital contributions by each partner, and any changes in partnership during the year. All LLPs — regardless of whether they conducted business or earned any income — must file Form 11. Late filing penalty: ₹100 per day with no upper cap.
-              </p>
-              <p>
-                <strong>Form 8</strong> (Statement of Accounts and Solvency) is due by <strong>30 October every year</strong>. It contains the LLP's financial statements: balance sheet, income &amp; expenditure statement, and a solvency declaration by the designated partners. For LLPs with turnover above ₹40 lakh or contribution above ₹25 lakh, Form 8 must be signed by a <strong>Chartered Accountant</strong> after conducting a statutory audit. Below these thresholds, the designated partners can self-certify.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              Director KYC (DIR-3 KYC) — The Often-Missed Annual Requirement
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                Every individual who holds a <strong>Director Identification Number (DIN)</strong> — whether or not they are currently a director in any company — must complete annual KYC by filing <strong>DIR-3 KYC</strong> with MCA. The due date is <strong>30 September every year</strong>.
-              </p>
-              <p>
-                If a director fails to file DIR-3 KYC, their DIN is <strong>deactivated</strong> by MCA. A deactivated DIN means the director cannot sign any MCA forms, cannot be listed as a director in any company filing, and their company's ROC filings will be rejected if they attempt to use the deactivated DIN. Reactivation requires filing DIR-3 KYC with a late fee of <strong>₹5,000</strong>.
-              </p>
-              <p>
-                Taxvio tracks DIR-3 KYC deadlines for all directors in our client portfolio and proactively completes the filing before the 30 September deadline — ensuring DINs remain active and no MCA filing is blocked at a critical moment. This small filing is frequently overlooked because it appears unrelated to annual ROC compliance — but its consequences (DIN deactivation) are immediate and disruptive.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-[#00416a] mb-4 leading-snug">
-              Clearing ROC Backlogs — Pending Filings &amp; MCA Amnesty Schemes
-            </h2>
-            <div className="text-gray-700 text-sm leading-relaxed space-y-3">
-              <p>
-                Many companies and LLPs accumulate ROC filing backlogs — sometimes for years — due to business disruptions, founder transitions, or simply not knowing the deadlines. If your company has missed filings, the situation is recoverable but requires careful handling.
-              </p>
-              <p>
-                Pending ROC returns can be filed at any time after the due date — with accumulated late fees of ₹100/day/form calculated from the original due date. For a company with 3 years of missing AOC-4 and MGT-7 filings, the accumulated penalty can reach ₹2–3 lakh. These must be paid at the time of filing and cannot be waived in normal circumstances.
-              </p>
-              <p>
-                MCA periodically announces <strong>amnesty schemes</strong> — most recently the Companies Fresh Start Scheme (CFSS 2020) and LLP Settlement Scheme 2020 — that allow companies and LLPs to file pending returns with significantly reduced or waived late fees for a limited window. Taxvio monitors these windows and advises clients on the optimal time and strategy for clearing backlogs. We also handle the complete filing process — from calculating accumulated penalties to filing all pending forms in the correct sequence.
-              </p>
-              <p>
-                If your company's directors have already been disqualified under Section 164(2), the path to remediation involves filing all pending returns (clearing the default), applying for restoration of DIN through appropriate legal channels, and restructuring the company's compliance going forward. Taxvio provides end-to-end support for this process — including coordination with lawyers where DIN restoration requires court intervention.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ══════ WHY TAXVIO ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Why choose Taxvio for annual ROC compliance">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Why Taxvio
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Why 1,200+ Companies Trust Taxvio for Annual ROC Compliance
-            </h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-lg mx-auto">
-              Annual compliance is recurring — the right partner saves you from penalties, disqualifications, and last-minute chaos every year.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {WHY_POINTS.map(({ icon: Icon, title, desc }) => (
-              <div key={title}
-                className="flex items-start gap-4 p-5 bg-white border border-gray-100 rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                <div className="w-10 h-10 rounded-xl bg-[#00416a]/8 flex items-center justify-center shrink-0">
-                  <Icon size={18} className="text-[#00416a]" />
-                </div>
-                <div>
-                  <p className="font-bold text-gray-800 text-sm">{title}</p>
-                  <p className="text-gray-500 text-xs mt-1 leading-relaxed">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ TESTIMONIALS ══════ */}
-      <section className="py-20 bg-white" aria-label="Client reviews for annual ROC compliance service">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              Client Stories
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Trusted for Annual ROC Compliance Across India
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-5">
-            {TESTIMONIALS.map(({ stars, text, name, location }) => (
-              <div key={name}
-                className="bg-gray-50 border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                <div className="flex gap-0.5 mb-4">
-                  {Array.from({ length: stars }).map((_, i) => (
-                    <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-gray-700 text-xs leading-relaxed mb-5 italic">"{text}"</p>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-[#00416a] flex items-center justify-center text-white font-extrabold text-xs shrink-0">
-                    {name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-800 text-xs">{name}</p>
-                    <p className="text-gray-400 text-[10px]">📍 {location}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ FAQ ACCORDION ══════ */}
-      <section className="py-20 bg-gray-50" aria-label="Annual ROC compliance FAQs">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-              FAQs
-            </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-              Frequently Asked Questions — Annual ROC Compliance
-            </h2>
-          </div>
-          <div className="space-y-3">
-            {FAQS.map(({ q, a }) => <FAQItem key={q} q={q} a={a} />)}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ OUR REACH ══════ */}
-      <section className="py-14 bg-white border-t border-gray-100" aria-label="Annual ROC compliance services across India">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1 h-7 rounded-full bg-[#00416a]" />
-            <h2 className="text-lg font-extrabold text-gray-800">Annual ROC Compliance Across India</h2>
-          </div>
-          <p className="text-gray-600 text-sm mb-6 max-w-3xl">
-            Taxvio is based in <strong>Khatauli, Muzaffarnagar, UP</strong> and handles annual ROC compliance for companies and LLPs across <strong>Noida, Delhi NCR, Meerut, Ghaziabad, Lucknow, Jaipur, Mumbai, Bangalore</strong>, and pan-India — 100% online.
+  return (
+    <section id="calculator" className="scroll-mt-40">
+      <Heading label="Calculator" title="Check Your Annual ROC Due Dates" />
+      <Reveal>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <p className="text-sm text-gray-500 mb-5">
+            Choose your entity and financial year to see the usual due dates. For FY 2025-26 the calculator also shows the fee-free dates from MCA General Circular 05/2026. After that date, fees are counted from the original due date. This is an indicative guide, so confirm with a CA before relying on a date.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {["Khatauli", "Muzaffarnagar", "Meerut", "Noida", "Delhi NCR", "Ghaziabad", "Lucknow", "Jaipur", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata"].map(city => (
-              <Link key={city} href={`/city/${city.toLowerCase().replace(/\s+/g, "-")}`}
-                className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-50 border border-gray-100 text-gray-600 hover:border-[#00416a]/30 hover:text-[#00416a] hover:bg-blue-50 transition-all duration-150">
-                📍 {city}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ RELATED SERVICES ══════ */}
-      <section className="py-14 bg-gray-50 border-t border-gray-100" aria-label="Related ROC and compliance services">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-1 h-8 rounded-full bg-[#00416a]" />
-            <h2 className="text-lg font-extrabold text-gray-800">Explore More — Related Services</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { title: "Pvt Ltd Registration", desc: "Incorporate your company — ₹6,999", href: "/serviceslist/roc/private-limited-formation", icon: "🏛" },
-              { title: "LLP Registration", desc: "Register your LLP — ₹5,999", href: "/serviceslist/roc/llp-formation", icon: "🤝" },
-              { title: "Director Appointment / Resignation", desc: "DIR-12 ROC filing — ₹2,999", href: "/serviceslist/roc/director-appointment-resignation", icon: "👔" },
-              { title: "Income Tax Filing (ITR-6)", desc: "Company ITR — ₹2,999", href: "/serviceslist/income-tax/itr-proprietor", icon: "💼" },
-            ].map(({ title, desc, href, icon }) => (
-              <Link key={title} href={href}
-                className="group flex items-start gap-3 p-4 bg-white border border-gray-100 rounded-2xl hover:shadow-md hover:border-[#00416a]/20 hover:-translate-y-0.5 transition-all duration-200">
-                <span className="text-xl shrink-0">{icon}</span>
-                <div>
-                  <p className="font-bold text-gray-800 text-xs group-hover:text-[#00416a] transition">{title}</p>
-                  <p className="text-gray-500 text-[11px] mt-0.5 leading-snug">{desc}</p>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#00416a] mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                    Learn More <ArrowRight size={9} />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════ FINAL CTA ══════ */}
-      <section className="py-20 bg-gradient-to-br from-[#00416a] via-[#003257] to-[#001e36] relative overflow-hidden"
-        aria-label="File your annual ROC compliance with Taxvio">
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle,rgba(56,189,248,0.10) 0%,transparent 65%)" }} />
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "26px 26px" }} />
-
-        <div className="relative max-w-4xl mx-auto px-6">
-          {/* Deadline reminder box */}
-          <div className="bg-white/10 border border-white/20 rounded-2xl px-6 py-4 mb-10 grid sm:grid-cols-3 gap-4">
-            {[
-              { label: "AOC-4 Deadline", due: "29 October", color: "text-red-300" },
-              { label: "MGT-7 Deadline", due: "28 November", color: "text-amber-300" },
-              { label: "LLP Form 11", due: "30 May", color: "text-sky-300" },
-            ].map(({ label, due, color }) => (
-              <div key={label} className="text-center">
-                <p className="text-white/60 text-xs">{label}</p>
-                <p className={`font-extrabold text-lg ${color}`}>{due}</p>
+          <div className="grid sm:grid-cols-2 gap-5 mb-6">
+            <div>
+              <p className="text-sm font-semibold text-gray-700 mb-2">Entity type</p>
+              <div className="flex flex-wrap gap-2">
+                <Pill value="company" label="Private Limited" />
+                <Pill value="llp" label="LLP" />
+                <Pill value="opc" label="OPC" />
               </div>
-            ))}
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Financial year</label>
+                <select
+                  value={fyStart}
+                  onChange={(e) => setFyStart(Number(e.target.value))}
+                  className="rounded-xl border border-gray-300 px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-4 focus:ring-[#00416a]/15 focus:border-[#00416a]"
+                >
+                  {[2022, 2023, 2024, 2025, 2026].map((y) => (
+                    <option key={y} value={y}>
+                      FY {y}-{String(y + 1).slice(2)} (ends 31 Mar {y + 1})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {entity === "company" && (
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">AGM date</label>
+                  <input
+                    type="date"
+                    value={agm}
+                    onChange={(e) => e.target.value && setAgm(e.target.value)}
+                    className="rounded-xl border border-gray-300 px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-4 focus:ring-[#00416a]/15 focus:border-[#00416a]"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 text-white"
-              style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)" }}>
-              <TrendingUp size={12} className="text-sky-400" />
-              3,500+ Returns Filed · Zero Penalties · Starting ₹2,499
+          <ul className="space-y-2.5">
+            {items.map((it) => {
+              const s = status(it.due, it.free);
+              return (
+                <li key={it.form + it.label} className="flex flex-wrap items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3">
+                  <span className="w-24 text-center text-xs font-extrabold text-[#00416a] bg-[#00416a]/10 rounded-lg py-2">{it.form}</span>
+                  <span className="flex-1 min-w-[180px] text-sm font-semibold text-gray-800">{it.label}</span>
+                  <span className="text-sm font-bold text-[#00416a] tabular-nums">{fmt(it.due)}</span>
+                  {it.free && it.free.getTime() > it.due.getTime() && (
+                    <span className="w-full sm:w-auto text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-1">No additional fee up to {fmt(it.free)}</span>
+                  )}
+                  {s.text && <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${s.cls}`}>{s.text}</span>}
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className={`mt-5 rounded-2xl px-5 py-4 text-sm flex flex-col sm:flex-row sm:items-center gap-3 ${overdue ? "bg-red-50 text-red-900" : "bg-sky-50 text-[#00416a]"}`}>
+            <span className="flex-1 font-medium">
+              {overdue
+                ? `⚠️ ${overdue} filing${overdue === 1 ? " looks" : "s look"} overdue for this year. Late fees grow with the delay — the sooner it's filed, the lower the cost.`
+                : "Want these tracked for you every year? We keep a due-date calendar and file on time."}
+            </span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">
+              {overdue ? "Fix it now →" : "Get a quote →"}
+            </button>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Documents() {
+  const [checked, setChecked] = useState<boolean[]>(() => DOCS.map(() => false));
+  const done = checked.filter(Boolean).length;
+  const pct = Math.round((done / DOCS.length) * 100);
+  return (
+    <section id="documents" className="scroll-mt-40">
+      <Heading label="Documents" title="Documents Required for Annual ROC Filing" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          The balance sheet and profit &amp; loss account are the heart of the filing. Share signed or final financials where
+          available — if your accounts aren&apos;t ready, we can also help prepare them with your bookkeeper. Some items apply only
+          to companies or only to LLPs.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <p className="font-bold text-[#00416a]">Your document checklist</p>
+            <p className="text-sm font-semibold text-gray-500 tabular-nums">{done}/{DOCS.length} ready</p>
+          </div>
+          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden mb-5">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#00416a] to-emerald-500 transition-all duration-500" style={{ width: `${pct}%` }} />
+          </div>
+          <ul className="space-y-2.5">
+            {DOCS.map((d, i) => (
+              <li key={d}>
+                <label className={`flex items-center gap-3 cursor-pointer rounded-xl border px-4 py-3 transition-all ${checked[i] ? "bg-emerald-50 border-emerald-200" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/30"}`}>
+                  <input type="checkbox" checked={checked[i]} onChange={() => setChecked((c) => c.map((v, j) => (j === i ? !v : v)))} className="w-5 h-5 accent-[#00416a]" />
+                  <span className={`text-sm font-medium ${checked[i] ? "text-emerald-800 line-through decoration-emerald-400" : "text-gray-800"}`}>{d}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          <div className={`mt-5 rounded-2xl px-5 py-4 text-sm flex flex-col sm:flex-row sm:items-center gap-3 ${pct === 100 ? "bg-emerald-50 text-emerald-900" : "bg-sky-50 text-[#00416a]"}`}>
+            <span className="flex-1 font-medium">
+              {pct === 100 ? "🎉 You have everything on the list — you're ready to start." : "Tick off what you already have. Missing something? We'll tell you the easiest way to get it."}
+            </span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">
+              {pct === 100 ? "Start now →" : "Ask us →"}
+            </button>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section id="process" className="scroll-mt-40">
+      <Heading label="Process" title="How Our Annual ROC Compliance Works, Step by Step" />
+      <ol className="relative space-y-5 before:absolute before:left-[27px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-[#00416a]/40 before:to-[#00416a]/5">
+        {STEPS.map((s, i) => (
+          <Reveal key={s.t} delay={i * 70}>
+            <li className="relative flex gap-5">
+              <span className="relative z-10 flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center text-lg font-extrabold shadow-lg shadow-[#00416a]/25">{i + 1}</span>
+              <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg hover:border-[#00416a]/30 transition-all">
+                <h3 className="font-bold text-[#00416a] mb-1.5">{s.t}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{s.d}</p>
+              </div>
+            </li>
+          </Reveal>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function Penalties() {
+  return (
+    <section id="penalties" className="scroll-mt-40">
+      <Heading label="Penalties & Fees" title="What Happens If You Miss Annual ROC Filing?" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+        {RISKS.map((r, i) => (
+          <Reveal key={r.t} delay={i * 60}>
+            <div className="h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition-all">
+              <div className="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center text-xl mb-3">{r.icon}</div>
+              <h3 className="font-bold text-[#00416a] mb-1">{r.t}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{r.d}</p>
             </div>
+          </Reveal>
+        ))}
+      </div>
 
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
-              File Your Annual ROC Returns —
-              <span className="block mt-1 text-sky-300">On Time, Every Year</span>
-            </h2>
-
-            <p className="mt-5 text-white/70 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-              AOC-4, MGT-7, Form 11, Form 8, ADT-1, Director's Report, board minutes — all handled end-to-end
-              by our CA &amp; CS team. 100% online, proactive reminders, zero penalties. Starting ₹2,499.
+      <div className="grid md:grid-cols-2 gap-4 mb-8">
+        <Reveal>
+          <div className="h-full bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">⏱️</p>
+            <h3 className="font-bold text-[#00416a] mb-2">How long does filing take?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Once we have final financials and the required details, a standard annual filing is typically completed within a
+              few working days. The main variable is how quickly the accounts and signatures are ready. Backlog cases take
+              longer because several years are prepared together.
             </p>
+          </div>
+        </Reveal>
+        <Reveal delay={90}>
+          <div className="h-full bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">💰</p>
+            <h3 className="font-bold text-[#00416a] mb-2">What does it cost?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              The total has two parts: Taxvio&apos;s professional fee and government charges (filing fees and any late fees), which
+              depend on your authorised capital and how late the filing is. You receive a written, itemised quote before we
+              start, with no add-ons introduced once the work is underway.
+            </p>
+          </div>
+        </Reveal>
+      </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-          
-              <Link href="/contact"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-white px-7 py-3.5 text-[#00416a] text-sm font-bold shadow-lg hover:bg-gray-50 active:scale-[0.97] transition-all duration-200 min-h-[52px]">
-                Free Consultation <ArrowRight size={15} />
-              </Link>
-              
+      <Reveal><h3 className="font-extrabold text-[#00416a] text-xl mb-4">Common mistakes we help you avoid</h3></Reveal>
+      <div className="space-y-3">
+        {MISTAKES.map((m, i) => (
+          <Reveal key={m.t} delay={i * 50}>
+            <div className="flex gap-4 bg-amber-50/70 border border-amber-200/70 rounded-2xl p-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center">!</span>
+              <div>
+                <p className="font-bold text-gray-800">{m.t}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{m.d}</p>
+              </div>
             </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-            <div className="mt-8 flex flex-wrap justify-center gap-5 text-xs text-white/40">
-              <span className="flex items-center gap-1.5"><Shield size={12} /> 100% Confidential</span>
-              <span className="flex items-center gap-1.5"><CheckCircle size={12} /> CA &amp; CS Assisted</span>
-              <span className="flex items-center gap-1.5"><Zap size={12} /> Fast Processing</span>
-              <span className="flex items-center gap-1.5"><Clock size={12} /> Mon–Sat · 9 AM–7 PM</span>
+function FAQs({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faqs" className="scroll-mt-40">
+      <Heading label="FAQs" title="Annual ROC Compliance — Frequently Asked Questions" />
+      <div className="space-y-3">
+        {faqs.map((f, i) => {
+          const isOpen = open === i;
+          return (
+            <Reveal key={f.q} delay={Math.min(i, 5) * 40}>
+              <div className={`rounded-2xl border bg-white transition-all duration-300 ${isOpen ? "border-[#00416a]/40 shadow-lg shadow-[#00416a]/10" : "border-gray-200 hover:border-[#00416a]/25"}`}>
+                <button onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left">
+                  <span className={`font-bold ${isOpen ? "text-[#00416a]" : "text-gray-800"}`}>{f.q}</span>
+                  <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${isOpen ? "bg-[#00416a] text-white rotate-45" : "bg-[#00416a]/10 text-[#00416a]"}`}>+</span>
+                </button>
+                <div className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                  <div className="overflow-hidden"><p className="px-5 pb-5 text-sm text-gray-600 leading-relaxed">{f.a}</p></div>
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Related() {
+  const roc = serviceCategories.find((c) => c.slug === "roc");
+  const items = (roc?.services ?? []).filter((s) => s.slug !== "annual-roc-compliance").slice(0, 6);
+  if (!items.length) return null;
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Related Services" title="More ROC & Company Law Services" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {items.map((r, i) => (
+          <Reveal key={r.slug} delay={i * 60}>
+            <Link
+              href={`/serviceslist/roc/${r.slug}`}
+              className="group block h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300"
+            >
+              <h3 className="font-bold text-[#00416a] mb-1.5 leading-snug">{r.title}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 mb-3">{r.shortDescription}</p>
+              <span className="text-sm font-semibold text-[#00416a] inline-flex items-center gap-1">
+                Learn more <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ SIDEBAR + CTA ══════════════════════ */
+
+function SideCard() {
+  return (
+    <div className="sticky top-40 space-y-4">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white p-6 shadow-xl">
+        <div className="ar-aurora absolute -top-16 -right-16 w-48 h-48 rounded-full bg-sky-400/25 blur-2xl" />
+        <div className="relative">
+          <p className="text-xs uppercase tracking-widest text-sky-200 font-semibold mb-2">Free consultation</p>
+          <h3 className="font-extrabold text-xl leading-snug mb-2">Never miss a ROC deadline</h3>
+          <p className="text-sm text-sky-100/85 leading-relaxed mb-5">Tell us your entity — a CA from our team will call you back with a clear plan and a fixed quote.</p>
+          <button onClick={() => openInquiryForm(SERVICE)} className="w-full bg-white text-[#00416a] font-bold py-3.5 rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition">
+            Get a Free Quote →
+          </button>
+          <ul className="mt-4 space-y-1.5 text-sm text-white/80">
+            <li>✓ No obligation</li>
+            <li>✓ Fixed quote upfront</li>
+            <li>✓ 100% online</li>
+          </ul>
+        </div>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-2xl p-5">
+        <p className="font-bold text-[#00416a] mb-3 text-sm">On this page</p>
+        <ul className="space-y-1.5">
+          {NAV.map((n) => (
+            <li key={n.id}>
+              <a href={`#${n.id}`} className="text-sm text-gray-600 hover:text-[#00416a] hover:translate-x-1 inline-block transition">{n.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-10 pb-24">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] shadow-2xl px-6 py-12 sm:px-12 sm:py-16 text-white">
+          <div className="ar-aurora absolute -top-20 -right-20 w-72 h-72 rounded-full bg-sky-400/25 blur-3xl" />
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="max-w-2xl text-center lg:text-left">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-3 leading-tight">Get your annual ROC filing done on time</h3>
+              <p className="text-lg text-sky-100/90 leading-relaxed">Share your requirement in 30 seconds. A CA from our team will call you back with a clear plan and honest pricing.</p>
+            </div>
+            <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
+              <button onClick={() => openInquiryForm(SERVICE)} className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition-all">
+                Get a Free Quote →
+              </button>
+              <Link href="/serviceslist" className="border-2 border-white/40 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition text-center">
+                All Services
+              </Link>
             </div>
           </div>
         </div>
-      </section>
-
-      <Footar />
-    </main>
+      </Reveal>
+    </section>
   );
 }

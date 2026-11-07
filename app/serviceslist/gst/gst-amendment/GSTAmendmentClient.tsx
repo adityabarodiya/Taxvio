@@ -1,769 +1,749 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Script from "next/script";
-import { motion, AnimatePresence } from "framer-motion";
-import type { Variants } from "framer-motion";
-import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path to match where you save InquiryFormButton.tsx
-import {
-  CheckCircle, ChevronDown, ArrowRight, Phone,
-  MessageCircle, Clock, Shield, Zap, FileText, AlertCircle, RefreshCw,
-} from "lucide-react";
+// app/serviceslist/gst/gst-amendment/GSTAmendmentClient.tsx
+
 import Footar from "@/components/Footar";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { serviceCategories } from "@/data/serviceCategories"; // ← adjust path
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path
 
-const PHONE = "8937980366";
-const WA = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Taxvio, I need help with GST Amendment.")}`;
-const DARK = { background: "linear-gradient(135deg,#00416a 0%,#003257 55%,#001e36 100%)" };
+const SERVICE = "GST Amendment / Update";
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-};
-const stagger: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.09 } } };
-const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.93 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
-};
+/* ══════════════════════ CONTENT ══════════════════════ */
 
-const CORE_FIELDS = [
-  { field: "Legal / Trade Name Change",       note: "Requires PAN-linked name update + officer approval" },
-  { field: "Principal Place of Business",     note: "New address proof + NOC from owner if rented" },
-  { field: "Additional Place of Business",    note: "Adding or removing any branch premises" },
-  { field: "Addition of Partner / Director",  note: "New partner's PAN, Aadhaar, photo, consent letter" },
-  { field: "Removal of Partner / Director",   note: "Board resolution / consent of remaining partners" },
-  { field: "Change in Business Constitution", note: "E.g. proprietorship to partnership, LLP conversion" },
+const NAV = [
+  { id: "overview", label: "Overview" },
+  { id: "planner", label: "Change Planner" },
+  { id: "included", label: "What's Included" },
+  { id: "deadline", label: "Reporting Deadline" },
+  { id: "documents", label: "Documents" },
+  { id: "process", label: "Process" },
+  { id: "mistakes", label: "Pitfalls" },
+  { id: "faqs", label: "FAQs" },
 ];
 
-const NON_CORE_FIELDS = [
-  { field: "Bank Account Details",      note: "New cancelled cheque or bank statement" },
-  { field: "Email Address",             note: "OTP verification on new email required" },
-  { field: "Mobile Number",             note: "OTP verification on new mobile required" },
-  { field: "Authorised Signatory",      note: "New signatory's Aadhaar, PAN, photograph" },
-  { field: "Nature of Business (HSN)",  note: "Updated product/service description" },
-  { field: "Flat / Building / Street",  note: "Minor address corrections within same premises" },
+const INTRO = [
+  "A GST registration describes your business at one point in time. Businesses change: they move premises, open a second shop, rename themselves, add partners or directors, switch phone numbers and email addresses, or take up a new line of activity. Each of these changes must be reflected in your GST registration, or your records, invoices and filings will stop matching what the department has on file.",
+  "GST amendment is the process of updating those details on the GST portal. The law divides the fields into two groups. Core fields, such as the legal name, principal place of business and additional places of business, generally need the tax officer's approval. Non-core fields, such as contact details, are generally updated without approval. Knowing which group your change falls in decides the documents you need and how long it takes.",
+  "Taxvio's CA-assisted team handles the entire amendment. We identify whether each change is core or non-core, prepare the right supporting documents, file the application, track the approval, and reply to any officer query. You also get guidance on what to update after approval: invoices, displayed details and return filings. You receive a fixed quote before we start.",
 ];
 
-const COMPARISON = [
-  { basis: "Officer Approval Required",  core: "Yes — GST officer reviews",             noncore: "No — auto-approved" },
-  { basis: "Processing Time",            core: "7–15 working days",                     noncore: "Instant on submission" },
-  { basis: "Notice Possible (REG-03)",   core: "Yes — officer may seek clarification",  noncore: "Not applicable" },
-  { basis: "DSC / EVC Required",         core: "Yes — mandatory",                       noncore: "Yes — mandatory" },
-  { basis: "Form Used",                  core: "REG-14 (Amendment Application)",        noncore: "REG-14 (Amendment Application)" },
-  { basis: "Effect Date",                core: "From date of change (not filing date)", noncore: "From date of filing" },
+const FEATURES = [
+  { title: "Core field amendment", note: "Changes to legal name, principal and additional places of business, partners or directors and similar fields. We prepare the supporting documents and handle officer approval." },
+  { title: "Non-core field update", note: "Updates to contact details, bank details and other non-core information, filed correctly so they take effect without delay." },
+  { title: "Document upload", note: "We check that documents are recent, consistent and in the correct format, and upload them against the right field to avoid avoidable rejections." },
+  { title: "Approval tracking", note: "We follow the application reference number, respond to queries on your behalf and confirm when the amended certificate is issued." },
 ];
 
-const DOCUMENTS = [
-  { label: "GST Login Credentials",         sub: "Portal username and password for filing REG-14" },
-  { label: "Proof of New Address",           sub: "Electricity bill / rent agreement + NOC (for address change)" },
-  { label: "Updated Partnership Deed / Board Resolution", sub: "For change in partners, directors, or constitution" },
-  { label: "New Partner / Director KYC",    sub: "PAN, Aadhaar, photograph of incoming partner/director" },
-  { label: "Cancelled Cheque / Bank Statement", sub: "For bank account detail update" },
-  { label: "DSC or Aadhaar OTP",            sub: "For e-signing the REG-14 amendment application" },
-  { label: "NOC from Property Owner",       sub: "If new principal place of business is rented" },
-  { label: "Authorised Signatory Details",  sub: "New signatory's PAN, Aadhaar, photo, consent letter" },
+const BENEFITS = [
+  { icon: "🧾", t: "Records that match", d: "Your registration, invoices and returns all show the same, correct business details." },
+  { icon: "⚖️", t: "Stay compliant", d: "Report changes within the prescribed period and avoid penalties for outdated registration details." },
+  { icon: "📬", t: "Notices reach you", d: "Updated address and contact details ensure department notices and OTPs reach the right person." },
+  { icon: "🤝", t: "Smooth dealings", d: "Suppliers and buyers see the right name and address, which keeps input credit and invoices clean." },
+  { icon: "🧮", t: "Correct classification", d: "We tell you which fields are core and which are not, so you do not wait for approvals you do not need." },
+  { icon: "🚫", t: "Fewer rejections", d: "Careful documents and consistent details reduce queries and re-submissions." },
+];
+
+const IDEAL = [
+  { icon: "🏠", t: "Businesses that moved", d: "A new office, shop, warehouse or home-based address needs an updated registration." },
+  { icon: "🏷️", t: "Renamed or restructured", d: "Name changes, partner or director changes and added places of business." },
+  { icon: "📱", t: "Changed contact details", d: "New mobile numbers or email addresses so portal OTPs and notices keep arriving." },
+];
+
+type Change = { id: string; label: string; icon: string; kind: "core" | "non-core"; docs: string[]; note: string };
+
+const CHANGES: Change[] = [
+  { id: "addr", label: "Change principal place of business", icon: "📍", kind: "core", docs: ["Proof of new address (electricity bill / rent agreement)", "Owner's consent letter or NOC, if rented or shared", "Photograph or proof of premises, as required"], note: "Officer approval generally required. Moving to another state is not an amendment; it needs a fresh registration." },
+  { id: "addl", label: "Add / change additional place of business", icon: "🏬", kind: "core", docs: ["Proof of the additional place", "Rent agreement and owner's consent, if applicable"], note: "Core field, so approval is generally required." },
+  { id: "legal", label: "Change legal name of business", icon: "🏛️", kind: "core", docs: ["PAN card showing the new name", "Revised certificate / deed / name-change proof", "Authorisation of the signatory"], note: "Core field. Usually follows a PAN or constitution change." },
+  { id: "partner", label: "Add / remove partner, director or proprietor details", icon: "👥", kind: "core", docs: ["PAN and Aadhaar of the person", "Photograph", "Revised partnership deed or board resolution", "Consent or resignation proof"], note: "Treated as a core change in most cases." },
+  { id: "trade", label: "Change trade name", icon: "🏷️", kind: "non-core", docs: ["Updated trade name details", "Signage or other supporting proof, if asked"], note: "Generally non-core. Confirm with our CA for your case." },
+  { id: "contact", label: "Change mobile number or email", icon: "📱", kind: "non-core", docs: ["Details of the new mobile number and email", "Authorised signatory identity"], note: "Non-core. Usually updated without officer approval." },
+  { id: "bank", label: "Update bank account details", icon: "🏦", kind: "non-core", docs: ["Cancelled cheque or bank statement"], note: "Non-core. Keep records aligned with refunds and payments." },
+  { id: "activity", label: "Add / change business activity or HSN codes", icon: "🛠️", kind: "non-core", docs: ["Description of the new activity", "HSN / SAC code details"], note: "Generally non-core, but it affects your tax rates, so we review it." },
 ];
 
 const STEPS = [
-  { n: "01", title: "Identify Amendment Type",          desc: "Share what needs to be changed. Taxvio's CA team determines whether it is a core or non-core amendment and confirms the documents required." },
-  { n: "02", title: "Document Collection",              desc: "Send supporting documents — address proof, board resolution, KYC, or bank statement — via WhatsApp or email based on amendment type." },
-  { n: "03", title: "REG-14 Application Preparation",   desc: "Our CA team prepares the amendment application (Form REG-14) with all required details and supporting attachments." },
-  { n: "04", title: "DSC / EVC Signing",                desc: "Application is e-signed using your DSC or Aadhaar-based EVC authentication before submission on the GST portal." },
-  { n: "05", title: "Submission & Tracking",            desc: "REG-14 filed on the portal. For non-core: instantly approved. For core: tracked through officer review; Taxvio handles any REG-03 query notice." },
-  { n: "06", title: "Updated Certificate Delivered",    desc: "Amended GST registration certificate (REG-15) issued and delivered to you on WhatsApp. Your GSTIN records now reflect the updated information." },
+  { t: "Understand what changed", d: "You tell us what has changed and when. We classify each item as core or non-core and confirm whether amendment is the right route." },
+  { t: "Collect supporting documents", d: "We give you a precise list for your change and check each document for recency and consistency." },
+  { t: "Prepare the application", d: "We prepare the amendment on the GST portal with the correct fields and uploads, and share it with you for approval." },
+  { t: "File & authenticate", d: "We file the application and, where needed, you complete verification through the registered mobile." },
+  { t: "Track & respond to queries", d: "For core changes, we follow the reference number and reply to officer queries on your behalf." },
+  { t: "Amended certificate & follow-up", d: "You receive the updated registration details and a short note on invoices, displayed details and returns to update." },
 ];
 
-const FAQS = [
-  {
-    q: "What is GST amendment and when is it required?",
-    a: "GST amendment is the process of updating or modifying details in an existing GST registration using Form REG-14 on the GST portal. It is required whenever there is a change in any registered information — such as business name, principal place of business, bank account, authorised signatory, addition or removal of partners/directors, or change in contact details. Under Rule 19 of the CGST Rules, 2017, a registered taxpayer must apply for an amendment within 15 days of the occurrence of any change in the registered particulars. Failure to update details promptly can lead to compliance discrepancies, mismatch in GSTIN records, and potential penalties under Section 122 of the CGST Act.",
-  },
-  {
-    q: "What is the difference between core and non-core GST amendment?",
-    a: "Under the CGST Rules, amendments are classified into core and non-core categories. Core amendments involve changes to fundamental registration details — such as legal or trade name, principal place of business address, additional places of business, addition or removal of partners or directors, or a change in business constitution (e.g. proprietorship converting to a partnership). Core amendments require approval by the GST officer and may take 7–15 working days; the officer may issue a REG-03 notice for additional documents. Non-core amendments cover peripheral details like bank account numbers, email address, mobile number, authorised signatory details, and minor address corrections. Non-core amendments are auto-approved immediately upon submission — no officer review is required.",
-  },
-  {
-    q: "How long does GST amendment take to process?",
-    a: "The processing time depends on the amendment type. Non-core amendments (bank account, email, mobile, authorised signatory) are auto-approved instantly upon successful submission of Form REG-14 — no officer intervention is required. Core amendments (name change, address change, addition/removal of partners) are reviewed by a GST officer. If the application is complete and all documents are in order, approval is typically granted within 7 working days. If the officer issues a REG-03 notice for additional information, the applicant must respond within 15 working days; if the response is satisfactory, approval is granted within 7 days of the response. Total timeline for core amendments with an officer query can be up to 15 working days.",
-  },
-  {
-    q: "Can I change my business name in GST registration?",
-    a: "Yes, you can change your trade name in GST registration. However, the legal name in GST registration is linked to your PAN — so if your legal name (as on PAN) has changed, the PAN itself must first be updated with the Income Tax Department before the GST registration can reflect the new legal name. Once PAN records are updated, Form REG-14 can be filed to update the legal name in GST. If you only want to change your trade name (the name under which you conduct business, which is different from the legal entity name), this can be done directly through a core amendment via REG-14.",
-  },
-  {
-    q: "What is Form REG-14 and REG-15?",
-    a: "Form REG-14 is the application form used to apply for any amendment (core or non-core) in GST registration details. It is filed on the GST Common Portal under Services > Registration > Amendment of Registration. Upon submission, an ARN (Application Reference Number) is generated as acknowledgement. Form REG-15 is the amended GST registration certificate issued by the GST officer after approving a core amendment application. For non-core amendments that are auto-approved, the updated registration certificate is available immediately for download from the GST portal. REG-15 serves as the official updated proof of GST registration incorporating the amended details.",
-  },
-  {
-    q: "What happens if I miss the 15-day deadline to apply for GST amendment?",
-    a: "Under Rule 19(1) of the CGST Rules, 2017, a registered taxpayer is required to apply for an amendment within 15 days of the occurrence of any change in registered particulars. While the GST portal technically allows late filing of REG-14 (there is no hard system block after 15 days), filing beyond the 15-day window creates a compliance gap. If the GST department conducts an audit or scrutiny and finds that registered particulars were not updated in time, it can treat this as a contravention under Section 122(1) of the CGST Act, which attracts a penalty of ₹10,000 or the equivalent of tax evaded (whichever is higher). Taxvio recommends filing the amendment as soon as the change occurs.",
-  },
+const MISTAKES = [
+  { t: "Waiting too long to report", d: "Changes are generally reportable within a short period; delay can mean penalties and mismatches." },
+  { t: "Treating a state change as an amendment", d: "GST is state-wise, so moving to another state generally needs a new registration, not an update." },
+  { t: "Inconsistent documents", d: "An address or name that differs across PAN, bills and agreements is a common cause of queries." },
+  { t: "Ignoring officer queries", d: "Core amendments have a short reply window; an unanswered query can lead to rejection." },
+  { t: "Not updating invoices after approval", d: "New details must appear on invoices and be displayed at the place of business from the effective date." },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQS.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+/* ══════════════════════ ROOT ══════════════════════ */
 
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  name: "GST Amendment India",
-  serviceType: "GST Amendment",
-  description:
-    "Professional GST amendment services — core and non-core amendments via Form REG-14. Business name, address, bank account, partner/director updates. Starting ₹799. CA-assisted, pan India.",
-  provider: {
-    "@type": "ProfessionalService",
-    name: "Taxvio",
-    url: "https://www.taxvio.in",
-    telephone: "+918937980366",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
-  },
-  areaServed: "India",
-  offers: {
-    "@type": "Offer",
-    price: "799",
-    priceCurrency: "INR",
-    description: "GST Amendment — core and non-core, starting ₹799.",
-  },
-};
+export default function GSTAmendmentClient({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [active, setActive] = useState("overview");
 
-export default function GSTAmendmentClient() {
-  const [faqOpen, setFaqOpen] = useState<number | null>(null);
-  const [tab, setTab] = useState<"core" | "noncore">("core");
+  useEffect(() => {
+    const els = NAV.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <>
-      <Script id="gst-amendment-service-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
-      <Script id="gst-amendment-faq-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-
+    <main className="bg-slate-50 text-gray-800 overflow-x-clip">
+      <GlobalStyles />
+      <Hero />
       <InquiryFormButton />
-      <main className="bg-white text-gray-800">
+      <SectionNav active={active} />
 
-        {/* ══ HERO ══════════════════════════════════════════════════════════ */}
-        <section className="relative overflow-hidden text-white" style={DARK}
-          aria-label="GST Amendment Services India" itemScope itemType="https://schema.org/Service">
-          <div className="absolute inset-0 pointer-events-none" style={{
-            backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px)",
-            backgroundSize: "26px 26px",
-          }} />
-          <div className="absolute top-0 right-0 w-[520px] h-[520px] rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle,rgba(56,189,248,0.12) 0%,transparent 65%)" }} />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle,rgba(45,212,191,0.1) 0%,transparent 65%)" }} />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14 grid lg:grid-cols-[1fr_340px] gap-10">
+        <div className="min-w-0 space-y-16 md:space-y-20">
+          <Overview />
+          <Benefits />
+          <Planner />
+          <Included />
+          <Who />
+          <Deadline />
+          <Documents />
+          <Process />
+          <Pitfalls />
+          <FAQs faqs={faqs} />
+          <Related />
+        </div>
+        <aside className="hidden lg:block">
+          <SideCard />
+        </aside>
+      </div>
 
-          <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
-            {/* Breadcrumb */}
-            <nav className="text-sm mb-8" aria-label="Breadcrumb">
-              <ol className="flex items-center gap-2" style={{ color: "rgba(255,255,255,0.5)" }}>
-                <li><Link href="/" className="hover:text-white transition">Home</Link></li>
-                <li style={{ color: "rgba(255,255,255,0.3)" }}>›</li>
-                <li><Link href="/serviceslist/gst" className="hover:text-white transition">GST Services</Link></li>
-                <li style={{ color: "rgba(255,255,255,0.3)" }}>›</li>
-                <li className="text-white font-medium">GST Amendment</li>
-              </ol>
-            </nav>
+      <FinalCTA />
+      <Footar />
+    </main>
+  );
+}
 
-            <motion.div initial="hidden" animate="visible" variants={stagger}>
-              <div className="grid md:grid-cols-2 gap-12 items-center">
+/* ══════════════════════ PRIMITIVES ══════════════════════ */
 
-                {/* Left */}
-                <div>
-                  <motion.div variants={fadeUp}
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-5"
-                    style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)" }}>
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    Non-Core Amendments Approved Instantly
-                  </motion.div>
+function GlobalStyles() {
+  return (
+    <style>{`
+      @keyframes am-aurora { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-30px) scale(1.15); } 100% { transform: translate(0,0) scale(1); } }
+      @keyframes am-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      .am-aurora { animation: am-aurora 14s ease-in-out infinite; }
+      .am-float { animation: am-float 7s ease-in-out infinite; }
+      .am-reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+      .am-reveal.am-in { opacity: 1; transform: none; }
+      .am-hide-scroll::-webkit-scrollbar { display: none; }
+      .am-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .am-aurora, .am-float { animation: none !important; }
+        .am-reveal { opacity: 1; transform: none; transition: none; }
+      }
+    `}</style>
+  );
+}
 
-                  <motion.h1 variants={fadeUp}
-                    className="text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-white"
-                    itemProp="name">
-                    GST Amendment —
-                    <span className="block mt-2" style={{ color: "#7dd3fc" }}>
-                      Update GST Registration Details
-                    </span>
-                  </motion.h1>
+function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`am-reveal ${shown ? "am-in" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+      {children}
+    </div>
+  );
+}
 
-                  <motion.p variants={fadeUp} className="mt-5 text-lg leading-relaxed"
-                    style={{ color: "rgba(255,255,255,0.78)" }} itemProp="description">
-                    CA-assisted GST amendment for business name, address, bank account, authorised
-                    signatory, partners/directors, and all core &amp; non-core fields. 100% online,
-                    starting at <strong className="text-white">₹799</strong>.
-                  </motion.p>
+function Heading({ label, title }: { label: string; title: string }) {
+  return (
+    <Reveal className="mb-7">
+      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#00416a]/70 border border-[#00416a]/15 bg-[#00416a]/5 px-3 py-1.5 rounded-full mb-3">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00416a]" />
+        {label}
+      </span>
+      <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#00416a] leading-tight">{title}</h2>
+    </Reveal>
+  );
+}
 
-                  <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-4">
-                    
-                    <Link href="/contact"
-                      className="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-xl font-bold hover:bg-white/10 transition-all"
-                      style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
-                      <Phone size={18} /> Free Consultation
-                    </Link>
-                  </motion.div>
+/* ══════════════════════ HERO + NAV ══════════════════════ */
 
-                  <motion.div variants={fadeUp} className="mt-6 flex flex-wrap gap-3">
-                    {["✅ Core & Non-Core", "✅ Form REG-14", "✅ REG-03 Reply Included", "✅ All States"].map(tx => (
-                      <span key={tx} className="text-sm rounded-full px-3 py-1"
-                        style={{ background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.82)" }}>
-                        {tx}
-                      </span>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* Right card */}
-                <motion.div variants={scaleIn}>
-                  <div className="rounded-2xl overflow-hidden shadow-2xl"
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
-                    <div className="px-6 py-4"
-                      style={{ background: "rgba(255,255,255,0.08)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                      <p className="font-bold text-white text-lg">GST Amendment — At a Glance</p>
-                    </div>
-                    <div className="p-6 space-y-4">
-                      {[
-                        { icon: "₹",  label: "Professional Fee",        val: "Starting ₹799" },
-                        { icon: "⚡", label: "Non-Core Processing",     val: "Instant (auto-approved)" },
-                        { icon: "⏱", label: "Core Processing",         val: "7–15 Working Days" },
-                        { icon: "📋", label: "Form Used",               val: "REG-14 (GST Portal)" },
-                        { icon: "📄", label: "Amended Certificate",     val: "Form REG-15" },
-                        { icon: "⏰", label: "Filing Deadline",         val: "Within 15 days of change" },
-                      ].map(({ icon, label, val }) => (
-                        <div key={label} className="flex justify-between items-center text-sm">
-                          <span style={{ color: "rgba(255,255,255,0.6)" }}>{icon} {label}</span>
-                          <span className="font-bold text-white">{val}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="px-6 pb-6">
-                      <a href={WA} target="_blank" rel="noopener noreferrer"
-                        className="block w-full text-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold transition hover:scale-105">
-                        Start Amendment — ₹799 →
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ INTERNAL LINKS BANNER ════════════════════════════════════════ */}
-        <div className="bg-blue-50 border-y border-blue-100 py-4">
-          <p className="text-center text-sm text-gray-700 max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-x-3 gap-y-1">
-            <span>Need GST Registration?{" "}
-              <Link href="/serviceslist/gst/gst-registration" className="text-[#00416a] font-bold underline underline-offset-2">Register here</Link>
+function Hero() {
+  const facts = [
+    { k: "Fields", v: "Core & non-core" },
+    { k: "GSTIN", v: "Stays the same" },
+    { k: "Mode", v: "100% online" },
+  ];
+  return (
+    <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+      <div className="am-aurora absolute -top-32 -left-24 w-[26rem] h-[26rem] rounded-full bg-sky-400/20 blur-3xl" />
+      <div className="am-aurora absolute -bottom-40 right-0 w-[28rem] h-[28rem] rounded-full bg-cyan-300/10 blur-3xl [animation-delay:-7s]" />
+      <div
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          maskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+        }}
+      />
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 pt-12 pb-24 md:pt-16 md:pb-28 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+        <div>
+          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/60 flex flex-wrap items-center gap-2">
+            <Link href="/" className="hover:text-white transition">Home</Link><span>/</span>
+            <Link href="/serviceslist" className="hover:text-white transition">Services</Link><span>/</span>
+            <Link href="/serviceslist#gst" className="hover:text-white transition">GST Services</Link><span>/</span>
+            <span className="text-white">GST Amendment / Update</span>
+          </nav>
+          <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-5">
+            ✏️ GST Services
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.1] tracking-tight mb-5">
+            GST Amendment / Update{" "}
+            <span className="bg-gradient-to-r from-white via-sky-200 to-cyan-200 bg-clip-text text-transparent">
+              — Accurate, On Time, CA-Reviewed
             </span>
-            <span className="text-gray-400">|</span>
-            <span>Need to file returns?{" "}
-              <Link href="/serviceslist/gst/gst-return" className="text-[#00416a] font-bold underline underline-offset-2">File GST Returns</Link>
-            </span>
-            <span className="text-gray-400">|</span>
-            <span>Want to cancel GSTIN?{" "}
-              <Link href="/serviceslist/gst/gst-cancellation" className="text-[#00416a] font-bold underline underline-offset-2">Cancel GST Registration</Link>
-            </span>
+          </h1>
+          <p className="text-base sm:text-lg text-sky-100/90 leading-relaxed max-w-2xl mb-8">
+            Update your GST registration details such as address, business name and contact details, with proper filing and approval tracking.
           </p>
-        </div>
-
-        {/* ══ SEO BLOCK 1 — What is GST Amendment ═════════════════════════ */}
-        <section className="py-20 bg-white" aria-label="What is GST Amendment">
-          <div className="max-w-4xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl font-extrabold text-[#00416a] mb-5">
-                What is GST Amendment and When is it Required?
-              </motion.h2>
-              <motion.div variants={fadeUp} className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  <strong>GST amendment</strong> is the process by which a registered taxpayer updates or
-                  modifies details in their existing GST registration on the GST Common Portal (gst.gov.in)
-                  by filing <strong>Form REG-14</strong>. Under <strong>Rule 19 of the CGST Rules, 2017</strong>,
-                  every registered person is legally required to apply for an amendment within
-                  <strong> 15 days</strong> of any change occurring in the information furnished at the time
-                  of registration or in any subsequent amendment. Failure to update GST registration details
-                  within the prescribed timeline is a contravention under Section 122 of the CGST Act and
-                  can attract a penalty of ₹10,000 or the tax equivalent, whichever is higher.
-                </p>
-                <p>
-                  GST amendment becomes necessary in a wide range of business scenarios: when a business
-                  relocates its office or warehouse (principal place of business change), when a new
-                  partner or director joins the firm, when a partner retires or a director is removed from
-                  the board, when the business trades under a different trade name, when the company&apos;s bank
-                  account changes, or simply when the authorised signatory&apos;s mobile number or email address
-                  changes. Each of these requires a specific amendment in the GST registration records to
-                  ensure that official GST correspondence, notices, refunds, and ITC credits reach the
-                  correct address and the right person.
-                </p>
-                <p>
-                  It is important to note that GST registration details and PAN details are interlinked — the
-                  <strong> legal name</strong> in GST registration is derived directly from the PAN database.
-                  If your legal business name has changed (for example, due to a court order, company name
-                  change with the Registrar of Companies, or a change in the proprietor&apos;s name on their PAN),
-                  the <strong>PAN records must first be updated with the Income Tax Department</strong> before
-                  the corresponding change can be effected in GST registration. Trade name changes (which
-                  are separate from the legal entity name) can be made directly through the GST portal.
-                </p>
-                <p>
-                  The GST amendment framework divides all possible changes into two categories —
-                  <strong> core amendments</strong> (which require GST officer approval) and
-                  <strong> non-core amendments</strong> (which are auto-approved immediately). Understanding
-                  which category your change falls into is critical, as it determines the documents required,
-                  the processing timeline, and whether an officer query notice (REG-03) is a possibility.
-                  Taxvio&apos;s CA team assesses your amendment requirement, confirms the category, and handles
-                  the entire process — from document preparation to REG-14 filing and REG-15 certificate delivery.
-                </p>
-              </motion.div>
-            </motion.div>
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <button
+              onClick={() => openInquiryForm(SERVICE)}
+              className="group bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200"
+            >
+              Get a Free Quote <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+            <a href="#planner" className="border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+              Plan My Change
+            </a>
           </div>
-        </section>
-
-        {/* ══ CORE vs NON-CORE TABS ════════════════════════════════════════ */}
-        <section className="py-16 bg-gray-50" aria-label="Core and Non-Core GST Amendment Fields">
-          <div className="max-w-5xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-10">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-blue-100">
-                  Amendment Types
-                </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-                  Core vs Non-Core GST Amendment — What Can Be Changed
-                </h2>
-                <p className="text-gray-600 mt-2 text-sm max-w-2xl mx-auto">
-                  All GST amendments use the same Form REG-14 but have very different approval timelines
-                  and requirements depending on whether the field is core or non-core.
-                </p>
-              </motion.div>
-
-              {/* Tab switcher */}
-              <motion.div variants={fadeUp} className="flex gap-3 justify-center mb-8">
-                {(["core", "noncore"] as const).map(t => (
-                  <button key={t} onClick={() => setTab(t)}
-                    className="px-6 py-2.5 rounded-xl font-bold text-sm transition-all"
-                    style={{
-                      background: tab === t ? "#00416a" : "white",
-                      color: tab === t ? "white" : "#00416a",
-                      border: "2px solid #00416a",
-                    }}>
-                    {t === "core" ? "⚠️ Core Amendment" : "✅ Non-Core Amendment"}
-                  </button>
-                ))}
-              </motion.div>
-
-              <AnimatePresence mode="wait">
-                {tab === "core" && (
-                  <motion.div key="core"
-                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.25 }}>
-                    <div className="bg-orange-50 border border-orange-200 rounded-2xl p-5 mb-5 flex items-start gap-3">
-                      <AlertCircle size={18} className="text-orange-500 shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-bold text-orange-800 text-sm">Core Amendment — Officer Approval Required</p>
-                        <p className="text-orange-700 text-xs mt-1">
-                          Processing time: 7–15 working days. Officer may issue REG-03 notice for additional documents.
-                          Taxvio handles all notices as part of the service.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      {CORE_FIELDS.map(({ field, note }) => (
-                        <div key={field} className="bg-white border border-gray-100 rounded-2xl p-5 flex items-start gap-3 hover:shadow-md transition-all">
-                          <RefreshCw size={16} className="text-orange-500 shrink-0 mt-0.5" />
-                          <div>
-                            <p className="font-bold text-gray-800 text-sm">{field}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">{note}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-                {tab === "noncore" && (
-                  <motion.div key="noncore"
-                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.25 }}>
-                    <div className="bg-green-50 border border-green-200 rounded-2xl p-5 mb-5 flex items-start gap-3">
-                      <CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-bold text-green-800 text-sm">Non-Core Amendment — Auto-Approved Instantly</p>
-                        <p className="text-green-700 text-xs mt-1">
-                          No officer review required. Amendment takes effect immediately upon submission of REG-14.
-                          Updated GST certificate downloadable right away.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      {NON_CORE_FIELDS.map(({ field, note }) => (
-                        <div key={field} className="bg-white border border-gray-100 rounded-2xl p-5 flex items-start gap-3 hover:shadow-md transition-all">
-                          <CheckCircle size={16} className="text-green-500 shrink-0 mt-0.5" />
-                          <div>
-                            <p className="font-bold text-gray-800 text-sm">{field}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">{note}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ COMPARISON TABLE ════════════════════════════════════════════ */}
-        <section className="py-16 bg-white" aria-label="Core vs Non-Core Amendment Comparison">
-          <div className="max-w-5xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a]">
-                  Core vs Non-Core Amendment — Detailed Comparison
-                </h2>
-              </motion.div>
-              <motion.div variants={fadeUp} className="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
-                <table className="w-full text-sm" aria-label="GST amendment comparison table">
-                  <thead>
-                    <tr style={{ background: "#00416a" }}>
-                      <th className="text-left px-5 py-4 text-white font-semibold">Parameter</th>
-                      <th className="text-left px-5 py-4 text-white font-semibold">Core Amendment</th>
-                      <th className="text-left px-5 py-4 text-white font-semibold">Non-Core Amendment</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {COMPARISON.map(({ basis, core, noncore }, i) => (
-                      <tr key={basis} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                        <td className="px-5 py-3.5 font-semibold text-gray-800">{basis}</td>
-                        <td className="px-5 py-3.5 text-orange-700 font-medium">{core}</td>
-                        <td className="px-5 py-3.5 text-green-700 font-medium">{noncore}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ SEO BLOCK 2 — Rule 19, timeline, penalty ═════════════════════ */}
-        <section className="py-20 bg-gray-50" aria-label="GST Amendment Rules and Penalties">
-          <div className="max-w-4xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl font-extrabold text-[#00416a] mb-5">
-                GST Amendment Rules — Timeline, Officer Process &amp; Consequences of Non-Update
-              </motion.h2>
-              <motion.div variants={fadeUp} className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  The legal framework for GST amendments is governed by <strong>Rule 19 of the CGST Rules,
-                  2017</strong>, read with <strong>Section 28 of the CGST Act, 2017</strong>. Section 28
-                  empowers the proper GST officer to approve amendments to registration information based
-                  on the taxpayer&apos;s application or suo motu (on their own initiative) if incorrect information
-                  is discovered during audit or scrutiny. Rule 19 operationalises this by specifying the
-                  timeline, form (REG-14), and procedure.
-                </p>
-                <p>
-                  For <strong>core amendments</strong>, once Form REG-14 is submitted, the GST officer has
-                  15 working days to process the application. If the officer needs additional information,
-                  they issue a <strong>Form REG-03</strong> notice (similar to the one issued during initial
-                  registration). The taxpayer (or Taxvio on their behalf) must respond with
-                  <strong> Form REG-04</strong> within 15 working days of receiving REG-03. If the officer
-                  is satisfied, an <strong>order in Form REG-15</strong> is passed approving the amendment
-                  and a new registration certificate is issued. If the officer rejects the application,
-                  a rejection order in Form REG-05 is issued with reasons — which can be challenged before
-                  the appellate authority.
-                </p>
-                <p>
-                  One commonly overlooked scenario is when a change in registered particulars occurs and
-                  the taxpayer does not file REG-14 at all — either due to lack of awareness or because
-                  they consider the change minor. This creates a <strong>mismatch between actual business
-                  operations and GST registration records</strong>. If the GST department identifies this
-                  discrepancy during an inspection under Section 67, audit under Section 65, or scrutiny
-                  of returns under Section 61, it is treated as furnishing incorrect information in the
-                  registration application — a contravention under Section 122(1)(xi), attracting a penalty
-                  of ₹10,000 (or the equivalent of tax, whichever is higher) for each contravention.
-                </p>
-                <p>
-                  A particularly important compliance requirement is the <strong>timely update of bank
-                  account details</strong> in GST registration. All GST refunds — whether export refunds,
-                  inverted duty structure refunds, or excess cash ledger refunds — are processed by the
-                  CBIC directly to the bank account registered in the GST portal. If the bank account
-                  details are outdated or incorrect, refunds will fail, and the re-credit process
-                  (requiring manual intervention and correspondence with the GST department) can take
-                  several months. Updating bank account details is a non-core amendment — it is auto-approved
-                  instantly via REG-14.
-                </p>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ DOCUMENTS ════════════════════════════════════════════════════ */}
-        <section className="py-16 bg-white" aria-label="Documents for GST Amendment">
-          <div className="max-w-5xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-10">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-blue-50 px-3 py-1 rounded-full">
-                  Document Checklist
-                </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-                  Documents Required for GST Amendment
-                </h2>
-                <p className="text-gray-600 mt-2 text-sm max-w-xl mx-auto">
-                  Documents vary by amendment type. Taxvio confirms the exact list after reviewing
-                  your specific change. These are the common documents across amendment types.
-                </p>
-              </motion.div>
-              <motion.div variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {DOCUMENTS.map(({ label, sub }) => (
-                  <motion.div key={label} variants={scaleIn}
-                    className="bg-gray-50 border border-gray-100 rounded-2xl p-5 flex items-start gap-3 hover:shadow-md transition-all duration-200">
-                    <CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-gray-800 text-sm">{label}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ PROCESS ══════════════════════════════════════════════════════ */}
-        <section className="py-20 bg-gray-50" aria-label="GST Amendment Process Steps">
-          <div className="max-w-4xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-12">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-white px-3 py-1 rounded-full border border-blue-100">
-                  How It Works
-                </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-[#00416a] mt-4">
-                  GST Amendment Process — 6 Steps to Updated Registration
-                </h2>
-                <p className="text-gray-600 mt-2 text-sm">
-                  100% online. No office visit. Send your documents on WhatsApp — we file REG-14 and deliver REG-15.
-                </p>
-              </motion.div>
-              <div className="space-y-5">
-                {STEPS.map(({ n, title, desc }) => (
-                  <motion.div key={n} variants={fadeUp} className="flex gap-5 items-start">
-                    <div className="w-11 h-11 rounded-full flex items-center justify-center font-extrabold text-sm text-white shrink-0 shadow-md"
-                      style={{ background: "#00416a" }}>
-                      {n}
-                    </div>
-                    <div className="flex-1 bg-white border border-gray-100 rounded-2xl p-5">
-                      <p className="font-bold text-gray-800">{title}</p>
-                      <p className="text-gray-600 text-sm mt-1 leading-relaxed">{desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
+          <div className="flex flex-wrap gap-3">
+            {facts.map((q) => (
+              <div key={q.k} className="bg-white/10 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5">
+                <p className="text-[10px] uppercase tracking-widest text-sky-200/70">{q.k}</p>
+                <p className="font-bold text-sm">{q.v}</p>
               </div>
-            </motion.div>
+            ))}
           </div>
-        </section>
-
-        {/* ══ PRICING ══════════════════════════════════════════════════════ */}
-        <section className="py-16" style={{ background: "#00416a" }}
-          aria-label="GST Amendment Pricing">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="text-center mb-10">
-              <span className="text-xs font-semibold uppercase tracking-widest rounded-full px-3 py-1"
-                style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)" }}>
-                Transparent Pricing
-              </span>
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white mt-4">
-                GST Amendment Fee — No Hidden Charges
-              </h2>
-              <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.65)" }}>
-                Flat fee per amendment. REG-03 officer query response included at no extra charge.
-              </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-5">
-              {[
-                {
-                  plan: "Non-Core Amendment", price: "₹799", highlight: false,
-                  items: ["Bank account update", "Email / mobile change", "Authorised signatory update", "HSN / nature of business change", "Instant approval — no wait"],
-                },
-                {
-                  plan: "Core Amendment", price: "₹1,999", highlight: true,
-                  items: ["Business name / address change", "Partner / director addition or removal", "Principal place of business", "REG-03 officer notice reply", "REG-15 certificate delivery"],
-                },
-                {
-                  plan: "Combined Amendment Bundle", price: "₹1,999", highlight: false,
-                  items: ["Core + non-core amendments", "Unlimited fields in one filing", "Full document preparation", "Priority processing", "WhatsApp support throughout"],
-                },
-              ].map(({ plan, price, highlight, items }) => (
-                <div key={plan} className="rounded-2xl p-6 flex flex-col"
-                  style={{
-                    background: highlight ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.08)",
-                    border: highlight ? "2px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.15)",
-                  }}>
-                  {highlight && (
-                    <span className="text-[10px] font-bold text-[#00416a] bg-white rounded-full px-3 py-0.5 self-start mb-3 uppercase tracking-wide">
-                      Most Common
-                    </span>
-                  )}
-                  <p className="text-white font-bold text-base mb-1">{plan}</p>
-                  <p className="text-3xl font-extrabold text-white mb-4">{price}</p>
-                  <ul className="space-y-2 flex-1">
-                    {items.map(item => (
-                      <li key={item} className="flex items-center gap-2 text-sm"
-                        style={{ color: "rgba(255,255,255,0.82)" }}>
-                        <CheckCircle size={14} className="text-green-400 shrink-0" /> {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <a href={WA} target="_blank" rel="noopener noreferrer"
-                    className="mt-6 block text-center py-3 rounded-xl font-bold text-sm transition hover:scale-105"
-                    style={{
-                      background: highlight ? "#fff" : "rgba(255,255,255,0.15)",
-                      color: highlight ? "#00416a" : "#fff",
-                    }}>
-                    Get Started →
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ FAQ ══════════════════════════════════════════════════════════ */}
-        <section className="py-20 bg-white" aria-label="GST Amendment FAQ"
-          itemScope itemType="https://schema.org/FAQPage">
-          <div className="max-w-3xl mx-auto px-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-12">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#00416a] bg-gray-50 px-3 py-1 rounded-full border border-blue-100">
-                  FAQ
-                </span>
-                <h2 className="text-3xl font-extrabold text-[#00416a] mt-4">
-                  Frequently Asked Questions — GST Amendment
-                </h2>
-                <p className="text-gray-500 mt-2 text-sm">
-                  Have more questions? WhatsApp us — we reply within 15 minutes.
-                </p>
-              </motion.div>
-              <motion.div variants={stagger} className="space-y-3">
-                {FAQS.map((f, i) => (
-                  <motion.div key={i} variants={fadeUp}
-                    className="border border-gray-200 rounded-2xl overflow-hidden bg-white"
-                    itemScope itemType="https://schema.org/Question">
-                    <button
-                      className="w-full text-left px-6 py-5 flex justify-between items-center font-semibold text-gray-800 hover:bg-gray-50 transition"
-                      onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                      aria-expanded={faqOpen === i}>
-                      <span itemProp="name">{f.q}</span>
-                      <ChevronDown size={18}
-                        className={`text-[#00416a] shrink-0 ml-4 transition-transform duration-300 ${faqOpen === i ? "rotate-180" : ""}`} />
-                    </button>
-                    <AnimatePresence>
-                      {faqOpen === i && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                          itemScope itemType="https://schema.org/Answer">
-                          <p className="px-6 pb-5 text-gray-600 text-sm leading-relaxed" itemProp="text">
-                            {f.a}
-                          </p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ══ RELATED SERVICES ═════════════════════════════════════════════ */}
-        <section className="py-16 bg-gray-50" aria-label="Related GST Services">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-extrabold text-[#00416a]">Other GST Services by Taxvio</h2>
-              <p className="text-gray-500 text-sm mt-2">Full GST lifecycle support — from registration to compliance</p>
-            </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                { title: "GST Registration",       href: "/serviceslist/gst/gst-registration",  desc: "New GSTIN in 3–7 days — ₹1,999" },
-                { title: "GST Return Filing",       href: "/serviceslist/gst/gst-return",        desc: "Monthly GSTR-1 & GSTR-3B — ₹999/month" },
-                { title: "GST Cancellation",        href: "/serviceslist/gst/gst-cancellation",  desc: "Voluntary GSTIN cancellation — ₹1,999" },
-                { title: "GST Notice Reply",        href: "/serviceslist/gst/gst-notice-reply",  desc: "ASMT-10, DRC-01, SCN reply — ₹1,999" },
-                { title: "GSTR-9 Annual Return",    href: "/serviceslist/gst/gstr-9",            desc: "Annual reconciliation & filing — ₹2,999" },
-                { title: "GST Refund",              href: "/serviceslist/gst/gst-refund",        desc: "Export & inverted duty refund — ₹2,999" },
-              ].map(({ title, href, desc }) => (
-                <Link key={title} href={href}
-                  className="group flex items-start gap-3 p-5 bg-white border border-gray-100 rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                  <ArrowRight size={16} className="text-[#00416a] shrink-0 mt-0.5 group-hover:translate-x-1 transition-transform" />
-                  <div>
-                    <p className="font-bold text-gray-800 text-sm group-hover:text-[#00416a] transition">{title}</p>
-                    <p className="text-gray-500 text-xs mt-0.5">{desc}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ FINAL CTA ════════════════════════════════════════════════════ */}
-        <section className="py-20 relative overflow-hidden" style={DARK}>
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle,rgba(56,189,248,0.1) 0%,transparent 70%)" }} />
-          <motion.div className="relative max-w-3xl mx-auto px-6 text-center"
-            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.div variants={fadeUp}
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm mb-6 text-white"
-              style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)" }}>
-              <Zap size={14} className="text-yellow-400" /> Non-core amendments approved instantly
-            </motion.div>
-            <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
-              Update Your GST Details — File within 15 Days
-            </motion.h2>
-            <motion.p variants={fadeUp} className="mt-4 text-lg"
-              style={{ color: "rgba(255,255,255,0.72)" }}>
-              CA-assisted GST amendment for all field types — core and non-core. Starting ₹799.
-              100% online. REG-03 officer query handling included.
-            </motion.p>
-            <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-              
-              <Link href="/contact"
-                className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
-                style={{ border: "1px solid rgba(255,255,255,0.3)" }}>
-                <Phone size={20} /> Free Consultation
-              </Link>
-            </motion.div>
-            <motion.div variants={fadeUp}
-              className="mt-8 flex flex-wrap justify-center gap-5 text-sm"
-              style={{ color: "rgba(255,255,255,0.5)" }}>
-              <span className="flex items-center gap-1.5"><Shield size={13} /> 100% Confidential</span>
-              <span className="flex items-center gap-1.5"><CheckCircle size={13} /> CA-Assisted</span>
-              <span className="flex items-center gap-1.5"><Clock size={13} /> Fast Processing</span>
-              <span className="flex items-center gap-1.5"><FileText size={13} /> REG-15 Certificate</span>
-            </motion.div>
-          </motion.div>
-        </section>
-
-        {/* Sticky CTA bar */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 py-3 px-4 flex justify-center gap-4"
-          style={{ background: "#001e36", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-
-          <Link href="/contact"
-            className="inline-flex items-center gap-2 bg-white text-[#00416a] px-5 py-2.5 rounded-xl text-sm font-bold shadow hover:scale-105 transition">
-            Free Consultation
-          </Link>
         </div>
 
-        <Footar />
-      </main>
-    </>
+        <div className="hidden lg:block">
+          <div className="am-float bg-white text-gray-800 rounded-3xl shadow-2xl shadow-black/30 p-6 rotate-1">
+            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-1">Your amendment, tracked</p>
+            <p className="font-extrabold text-[#00416a] text-lg mb-4">Sample status view</p>
+            <ul className="space-y-2.5 mb-5">
+              {[
+                { t: "Change classified", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "Documents verified", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "Application filed (ARN)", s: "In progress", c: "bg-amber-100 text-amber-700" },
+                { t: "Officer approval", s: "Next", c: "bg-sky-100 text-sky-700" },
+                { t: "Amended certificate", s: "Next", c: "bg-sky-100 text-sky-700" },
+              ].map((r) => (
+                <li key={r.t} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3 py-2.5 text-sm">
+                  <span className="flex-1 font-semibold">{r.t}</span>
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${r.c}`}>{r.s}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="rounded-2xl bg-[#00416a] text-white px-4 py-3 text-sm flex items-center gap-3">
+              <span className="text-xl">👨‍💼</span>
+              <span><b>CA-reviewed</b> before every filing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <svg className="absolute bottom-0 left-0 w-full h-10 text-slate-50" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden>
+        <path fill="currentColor" d="M0,60 L0,30 Q360,-10 720,25 T1440,20 L1440,60 Z" />
+      </svg>
+    </section>
+  );
+}
+
+function SectionNav({ active }: { active: string }) {
+  return (
+    <div className="sticky top-[72px] z-40 bg-white/85 backdrop-blur-xl border-b border-gray-200/80 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-1.5 overflow-x-auto am-hide-scroll">
+          {NAV.map((n) => (
+            <a
+              key={n.id}
+              href={`#${n.id}`}
+              className={`flex-shrink-0 text-sm font-semibold px-3.5 py-2 rounded-full transition-all whitespace-nowrap ${
+                active === n.id ? "bg-[#00416a] text-white shadow-md shadow-[#00416a]/25" : "text-[#00416a]/80 hover:bg-[#00416a]/5"
+              }`}
+            >
+              {n.label}
+            </a>
+          ))}
+        </div>
+        <button
+          onClick={() => openInquiryForm(SERVICE)}
+          className="hidden md:inline-flex flex-shrink-0 text-xs font-bold bg-[#00416a] text-white px-4 py-2.5 rounded-lg hover:bg-[#002b45] active:scale-95 transition"
+        >
+          Enquire now
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════ SECTIONS ══════════════════════ */
+
+function Overview() {
+  return (
+    <section id="overview" className="scroll-mt-40">
+      <Heading label="Overview" title="What Is GST Amendment / Update?" />
+      <div className="space-y-5">
+        {INTRO.map((p, i) => (
+          <Reveal key={i} delay={i * 70}>
+            <p className={`pl-5 border-l-4 text-gray-700 leading-relaxed ${i === 0 ? "border-[#00416a]" : "border-[#00416a]/25"}`}>{p}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Benefits() {
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Benefits" title="Why Professional GST Amendment / Update Pays Off" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {BENEFITS.map((b, i) => (
+          <Reveal key={b.t} delay={i * 60}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center text-xl mb-3 group-hover:scale-110 group-hover:-rotate-6 transition-transform">{b.icon}</div>
+              <h3 className="font-bold text-[#00416a] mb-1">{b.t}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{b.d}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Included() {
+  return (
+    <section id="included" className="scroll-mt-40">
+      <Heading label="What's Included" title="What You Get With GST Amendment / Update" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {FEATURES.map((f, i) => (
+          <Reveal key={f.title} delay={i * 70}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center font-bold group-hover:scale-110 group-hover:-rotate-6 transition-transform">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-bold text-[#00416a]">{f.title}</h3>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{f.note}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Who() {
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Who It's For" title="Who Needs a GST Amendment" />
+      <div className="grid sm:grid-cols-3 gap-4">
+        {IDEAL.map((w, i) => (
+          <Reveal key={w.t} delay={i * 70}>
+            <div className="relative h-full overflow-hidden bg-gradient-to-br from-[#00416a] to-[#00527f] text-white rounded-2xl p-6 shadow-lg">
+              <span className="absolute -right-4 -bottom-6 text-8xl opacity-10 select-none">{w.icon}</span>
+              <div className="relative">
+                <p className="text-2xl mb-2">{w.icon}</p>
+                <h3 className="font-bold text-lg mb-1.5">{w.t}</h3>
+                <p className="text-sm text-sky-100/90 leading-relaxed">{w.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** Change planner */
+function Planner() {
+  const [sel, setSel] = useState<string[]>([]);
+  const chosen = CHANGES.filter((c) => sel.includes(c.id));
+  const core = chosen.filter((c) => c.kind === "core");
+  const non = chosen.filter((c) => c.kind === "non-core");
+  const toggle = (id: string) => setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+
+  return (
+    <section id="planner" className="scroll-mt-40">
+      <Heading label="Change Planner" title="What Are You Changing? Core or Non-Core?" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          Select everything that has changed in your business. We show whether each item is a core field, which generally
+          needs the officer&apos;s approval, or a non-core field, which is generally updated without approval.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="grid sm:grid-cols-2 gap-2.5">
+            {CHANGES.map((c) => {
+              const on = sel.includes(c.id);
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => toggle(c.id)}
+                  aria-pressed={on}
+                  className={`text-left flex items-center gap-3 rounded-xl border px-4 py-3 transition-all ${on ? "bg-[#00416a] text-white border-[#00416a] shadow-lg shadow-[#00416a]/20" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/40"}`}
+                >
+                  <span className="text-xl">{c.icon}</span>
+                  <span className="flex-1 text-sm font-semibold">{c.label}</span>
+                  <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${on ? "bg-white/20" : c.kind === "core" ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-700"}`}>{c.kind}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {chosen.length > 0 && (
+            <div className="mt-6 space-y-3">
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                  <p className="text-xs uppercase tracking-widest font-bold text-amber-700">Core changes</p>
+                  <p className="text-2xl font-extrabold text-amber-900">{core.length}</p>
+                  <p className="text-sm text-gray-600">{core.length ? "Officer approval generally required." : "None selected."}</p>
+                </div>
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+                  <p className="text-xs uppercase tracking-widest font-bold text-emerald-700">Non-core changes</p>
+                  <p className="text-2xl font-extrabold text-emerald-900">{non.length}</p>
+                  <p className="text-sm text-gray-600">{non.length ? "Generally updated without approval." : "None selected."}</p>
+                </div>
+              </div>
+              <ul className="space-y-2">
+                {chosen.map((c) => (
+                  <li key={c.id} className="rounded-xl bg-sky-50 border border-sky-100 px-4 py-3 text-sm text-[#00416a]">
+                    <b>{c.label}:</b> <span className="text-gray-700">{c.note}</span>
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => openInquiryForm(SERVICE)} className="text-sm font-bold bg-[#00416a] text-white px-5 py-3 rounded-lg hover:bg-[#002b45] transition">
+                Get these changes filed →
+              </button>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">Indicative classification. Treatment of fields can change by notification; our CA confirms your case.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/** Reporting deadline tracker */
+function Deadline() {
+  const [changeDate, setChangeDate] = useState("");
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    setToday(d);
+  }, []);
+
+  const info = useMemo(() => {
+    if (!changeDate || !today) return null;
+    const start = new Date(changeDate + "T00:00:00");
+    if (isNaN(start.getTime())) return null;
+    const due = new Date(start);
+    due.setDate(due.getDate() + 15);
+    const diff = Math.round((due.getTime() - today.getTime()) / 86400000);
+    return { due, diff };
+  }, [changeDate, today]);
+
+  const fmt = (d: Date) => d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+
+  return (
+    <section id="deadline" className="scroll-mt-40">
+      <Heading label="Reporting Deadline" title="How Soon Must You Report a Change?" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          GST law generally requires changes in registration details to be reported within a short prescribed period, commonly
+          fifteen days from the date of the change. Enter the date your details changed to see an indicative reporting date.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <label className="block max-w-xs">
+            <span className="text-sm font-semibold text-gray-700">Date the change happened</span>
+            <input type="date" value={changeDate} onChange={(e) => setChangeDate(e.target.value)} className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#00416a]" />
+          </label>
+          {info && (
+            <div className={`mt-5 rounded-2xl border p-5 ${info.diff < 0 ? "bg-red-50 border-red-200" : info.diff <= 5 ? "bg-amber-50 border-amber-200" : "bg-emerald-50 border-emerald-200"}`}>
+              <p className="text-xs uppercase tracking-widest font-bold text-[#00416a]/60 mb-1">Indicative reporting date</p>
+              <p className="text-xl font-extrabold text-[#00416a]">{fmt(info.due)}</p>
+              <p className="text-sm text-gray-700 mt-1">
+                {info.diff < 0 ? `This date has passed by ${Math.abs(info.diff)} day${Math.abs(info.diff) === 1 ? "" : "s"}. File as soon as possible.` : info.diff === 0 ? "Due today." : `${info.diff} day${info.diff === 1 ? "" : "s"} left.`}
+              </p>
+              <button onClick={() => openInquiryForm(SERVICE)} className="mt-3 text-sm font-bold bg-[#00416a] text-white px-4 py-2 rounded-lg hover:bg-[#002b45] transition">File my amendment →</button>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">Indicative only. The reporting period and its start depend on the field and current rules; our CA confirms the exact date.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Documents() {
+  const [tab, setTab] = useState(CHANGES[0].id);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const cur = CHANGES.find((c) => c.id === tab) ?? CHANGES[0];
+  const done = cur.docs.filter((d) => checked[tab + d]).length;
+  const pct = Math.round((done / cur.docs.length) * 100);
+
+  return (
+    <section id="documents" className="scroll-mt-40">
+      <Heading label="Documents" title="Documents Required for GST Amendment" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          Every amendment needs your GSTIN and the identity of the authorised signatory, plus proof for the specific change.
+          Choose your change to see the checklist. Names and addresses must be consistent across documents.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="flex flex-wrap gap-2 mb-5" role="tablist">
+            {CHANGES.map((c) => (
+              <button
+                key={c.id}
+                role="tab"
+                aria-selected={tab === c.id}
+                onClick={() => setTab(c.id)}
+                className={`px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold border transition ${tab === c.id ? "bg-[#00416a] text-white border-[#00416a]" : "bg-white text-[#00416a] border-[#00416a]/20 hover:border-[#00416a]/50"}`}
+              >
+                {c.icon} {c.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="font-bold text-[#00416a]">Your document checklist</p>
+            <p className="text-sm font-semibold text-gray-500 tabular-nums">{done}/{cur.docs.length} ready</p>
+          </div>
+          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden mb-5">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#00416a] to-emerald-500 transition-all duration-500" style={{ width: `${pct}%` }} />
+          </div>
+          <ul className="space-y-2.5">
+            {cur.docs.map((d) => {
+              const on = !!checked[tab + d];
+              return (
+                <li key={d}>
+                  <label className={`flex items-center gap-3 cursor-pointer rounded-xl border px-4 py-3 transition-all ${on ? "bg-emerald-50 border-emerald-200" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/30"}`}>
+                    <input type="checkbox" checked={on} onChange={() => setChecked((c) => ({ ...c, [tab + d]: !on }))} className="w-5 h-5 accent-[#00416a]" />
+                    <span className={`text-sm font-medium ${on ? "text-emerald-800 line-through decoration-emerald-400" : "text-gray-800"}`}>{d}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          <div className={`mt-5 rounded-2xl px-5 py-4 text-sm flex flex-col sm:flex-row sm:items-center gap-3 ${pct === 100 ? "bg-emerald-50 text-emerald-900" : "bg-sky-50 text-[#00416a]"}`}>
+            <span className="flex-1 font-medium">{pct === 100 ? "🎉 Everything for this change is ready." : "Also keep your GSTIN and PAN / Aadhaar handy. Missing something? We'll help."}</span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">Ask us →</button>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Pitfalls() {
+  return (
+    <section id="mistakes" className="scroll-mt-40">
+      <Heading label="Pitfalls" title="Common GST Amendment Mistakes" />
+      <div className="space-y-3">
+        {MISTAKES.map((m, i) => (
+          <Reveal key={m.t} delay={i * 50}>
+            <div className="flex gap-4 bg-amber-50/70 border border-amber-200/70 rounded-2xl p-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center">!</span>
+              <div>
+                <p className="font-bold text-gray-800">{m.t}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{m.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+      <Reveal>
+        <p className="mt-6 text-sm text-gray-500">
+          Starting fresh? See <Link href="/serviceslist/gst/gst-registration" className="font-semibold text-[#00416a] hover:underline">GST registration</Link> or all <Link href="/serviceslist#gst" className="font-semibold text-[#00416a] hover:underline">GST services</Link>.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section id="process" className="scroll-mt-40">
+      <Heading label="Process" title="How Our GST Amendment / Update Works" />
+      <ol className="relative space-y-5 before:absolute before:left-[27px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-[#00416a]/40 before:to-[#00416a]/5">
+        {STEPS.map((s, i) => (
+          <Reveal key={s.t} delay={i * 70}>
+            <li className="relative flex gap-5">
+              <span className="relative z-10 flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center text-lg font-extrabold shadow-lg shadow-[#00416a]/25">{i + 1}</span>
+              <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg hover:border-[#00416a]/30 transition-all">
+                <h3 className="font-bold text-[#00416a] mb-1.5">{s.t}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{s.d}</p>
+              </div>
+            </li>
+          </Reveal>
+        ))}
+      </ol>
+      <Reveal>
+        <div className="mt-8 grid md:grid-cols-2 gap-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">💰</p>
+            <h3 className="font-bold text-[#00416a] mb-2">What does it cost?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              There is generally no government fee for a registration amendment on the portal. Our professional fee depends on how many fields change and whether officer approval is needed, and you receive a written quote before we start.
+            </p>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">⏱️</p>
+            <h3 className="font-bold text-[#00416a] mb-2">How long does it take?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Non-core updates are generally quick. Core changes depend on the officer&apos;s review and any queries, so timelines vary by case and tax office. We track the application and respond on your behalf.
+            </p>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function FAQs({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faqs" className="scroll-mt-40">
+      <Heading label="FAQs" title="GST Amendment — Frequently Asked Questions" />
+      <div className="space-y-3">
+        {faqs.map((f, i) => {
+          const isOpen = open === i;
+          return (
+            <Reveal key={f.q} delay={Math.min(i, 5) * 40}>
+              <div className={`rounded-2xl border bg-white transition-all duration-300 ${isOpen ? "border-[#00416a]/40 shadow-lg shadow-[#00416a]/10" : "border-gray-200 hover:border-[#00416a]/25"}`}>
+                <button onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left">
+                  <span className={`font-bold ${isOpen ? "text-[#00416a]" : "text-gray-800"}`}>{f.q}</span>
+                  <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${isOpen ? "bg-[#00416a] text-white rotate-45" : "bg-[#00416a]/10 text-[#00416a]"}`}>+</span>
+                </button>
+                <div className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                  <div className="overflow-hidden"><p className="px-5 pb-5 text-sm text-gray-600 leading-relaxed">{f.a}</p></div>
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Related() {
+  const gst = serviceCategories.find((c) => c.slug === "gst");
+  const items = (gst?.services ?? []).filter((s) => s.slug !== "gst-amendment").slice(0, 6);
+  if (!items.length) return null;
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Related Services" title="More GST Services" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {items.map((r, i) => (
+          <Reveal key={r.slug} delay={i * 60}>
+            <Link
+              href={`/serviceslist/gst/${r.slug}`}
+              className="group block h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300"
+            >
+              <h3 className="font-bold text-[#00416a] mb-1.5 leading-snug">{r.title}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 mb-3">{r.shortDescription}</p>
+              <span className="text-sm font-semibold text-[#00416a] inline-flex items-center gap-1">
+                Learn more <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ SIDEBAR + CTA ══════════════════════ */
+
+function SideCard() {
+  return (
+    <div className="sticky top-40 space-y-4">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white p-6 shadow-xl">
+        <div className="am-aurora absolute -top-16 -right-16 w-48 h-48 rounded-full bg-sky-400/25 blur-2xl" />
+        <div className="relative">
+          <p className="text-xs uppercase tracking-widest text-sky-200 font-semibold mb-2">Free consultation</p>
+          <h3 className="font-extrabold text-xl leading-snug mb-2">Update your GST details correctly</h3>
+          <p className="text-sm text-sky-100/85 leading-relaxed mb-5">Tell us about your business — a CA from our team will call you back with a clear plan and a fixed quote.</p>
+          <button onClick={() => openInquiryForm(SERVICE)} className="w-full bg-white text-[#00416a] font-bold py-3.5 rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition">
+            Get a Free Quote →
+          </button>
+          <ul className="mt-4 space-y-1.5 text-sm text-white/80">
+            <li>✓ No obligation</li>
+            <li>✓ Fixed quote upfront</li>
+            <li>✓ 100% online</li>
+          </ul>
+        </div>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-2xl p-5">
+        <p className="font-bold text-[#00416a] mb-3 text-sm">On this page</p>
+        <ul className="space-y-1.5">
+          {NAV.map((n) => (
+            <li key={n.id}>
+              <a href={`#${n.id}`} className="text-sm text-gray-600 hover:text-[#00416a] hover:translate-x-1 inline-block transition">{n.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-10 pb-24">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] shadow-2xl px-6 py-12 sm:px-12 sm:py-16 text-white">
+          <div className="am-aurora absolute -top-20 -right-20 w-72 h-72 rounded-full bg-sky-400/25 blur-3xl" />
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="max-w-2xl text-center lg:text-left">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-3 leading-tight">Need to update your GST registration?</h3>
+              <p className="text-lg text-sky-100/90 leading-relaxed">Share your requirement in 30 seconds. A CA from our team will call you back with a clear plan and honest pricing.</p>
+            </div>
+            <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
+              <button onClick={() => openInquiryForm(SERVICE)} className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition-all">
+                Get a Free Quote →
+              </button>
+              <Link href="/serviceslist" className="border-2 border-white/40 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition text-center">
+                All Services
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
   );
 }

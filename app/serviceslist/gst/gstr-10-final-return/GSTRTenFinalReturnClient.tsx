@@ -1,1194 +1,851 @@
-// app/serviceslist/gst/gstr-10-final-return/GSTRTenFinalReturnClient.tsx
 "use client";
+
+// app/serviceslist/gst/gstr-10-final-return/GSTRTenFinalReturnClient.tsx
 
 import Footar from "@/components/Footar";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { serviceCategories } from "@/data/serviceCategories"; // ← adjust path
+import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButton"; // ← adjust path
 
-import InquiryForm from "@/components/InquiryFormButton";
-/* ── JSON-LD SCHEMA ── */
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  name: "GSTR-10 Final Return Filing - GST Cancellation Closing Return",
-  provider: {
-    "@type": "AccountingService",
-    name: "Taxvio",
-    areaServed: "India",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Khatauli",
-      addressRegion: "Uttar Pradesh",
-      addressCountry: "IN",
-    },
+const SERVICE = "GSTR-10 Final Return Filing";
+
+/* ══════════════════════ CONTENT ══════════════════════ */
+
+const NAV = [
+  { id: "overview", label: "Overview" },
+  { id: "planner", label: "Who Must File" },
+  { id: "included", label: "What's Included" },
+  { id: "deadline", label: "Due Date" },
+  { id: "gap", label: "ITC Reversal" },
+  { id: "documents", label: "Documents" },
+  { id: "process", label: "Process" },
+  { id: "mistakes", label: "Pitfalls" },
+  { id: "faqs", label: "FAQs" },
+];
+
+const INTRO = [
+  "Cancelling a GST registration is not the end of your GST obligations. When a business shuts down, merges, changes its constitution or simply stops needing registration, the registration can be cancelled on the taxpayer's request or by the department. But the law still expects a last statement from you. This is the GSTR-10, the final return, and it closes the books on your GST account.",
+  "GSTR-10 reports the stock and capital goods you held on the date of cancellation, the input tax credit that must be reversed on them, and any tax still payable. The idea is simple: credit was allowed on the assumption that you would use the goods in a taxable business. Once registration ends, credit on closing stock and capital goods generally has to be paid back. The calculation is where most mistakes happen, because the rules for stock and for capital goods are different and need valuation and dates.",
+  "Taxvio's CA-assisted team prepares and files your GSTR-10 from start to finish. We value your closing stock, compute the ITC reversal on inputs, finished goods and capital goods, reconcile outstanding liabilities, prepare and file the return, and give you the acknowledgement. We also check that all earlier returns are filed so that nothing is left hanging after cancellation. You receive a written quote before we begin.",
+];
+
+const FEATURES = [
+  { title: "Closing stock valuation", note: "We list the inputs, semi-finished and finished goods and capital goods held on the cancellation date, and value them in line with your invoices and records." },
+  { title: "ITC reversal computation", note: "We compute the credit to be reversed on stock and capital goods, using the prescribed method, and tell you the amount payable before we file." },
+  { title: "GSTR-10 preparation & filing", note: "We prepare the return with the cancellation details, stock and liability statements and file it on the GST portal with the required verification." },
+  { title: "Acknowledgement support", note: "We obtain and share the acknowledgement, confirm that the liability is paid and advise on closing compliance such as pending returns and record retention." },
+];
+
+const BENEFITS = [
+  { icon: "🔒", t: "Close your GST account properly", d: "A filed GSTR-10 ends your return obligations and avoids open items after cancellation." },
+  { icon: "⚖️", t: "Avoid late fees and notices", d: "Filing within the time limit avoids late fees, and a correct return avoids later demands." },
+  { icon: "🧮", t: "Correct ITC reversal", d: "Stock and capital goods are treated differently; getting the formula right avoids over- or under-payment." },
+  { icon: "📋", t: "Pending returns cleared", d: "We check that all earlier returns are filed, since they must be complete before the final return." },
+  { icon: "🛡️", t: "Protection from later scrutiny", d: "A documented final position gives you a clear answer if the department asks questions later." },
+  { icon: "😌", t: "A clean exit", d: "You close the business, or the registration, with the paperwork done." },
+];
+
+const IDEAL = [
+  { icon: "🚪", t: "Cancelled registrations", d: "Businesses whose GST registration has been cancelled at their request or by the department." },
+  { icon: "🏪", t: "Closed proprietorships & firms", d: "Owners who have closed or merged a business and need to complete GST formalities." },
+  { icon: "🔄", t: "Restructured businesses", d: "Entities that changed their constitution and surrendered the earlier registration." },
+];
+
+type Case = { id: string; label: string; icon: string; t: string; d: string };
+
+const CASES: Case[] = [
+  { id: "regular", label: "Regular taxpayer — registration cancelled", icon: "🧾", t: "GSTR-10 is generally required", d: "A regular taxpayer whose registration is cancelled must furnish a final return, reporting stock and capital goods and any ITC reversal or tax payable." },
+  { id: "suomotu", label: "Registration cancelled by the officer (not by me)", icon: "🏛️", t: "Still generally required", d: "Even where the department cancels the registration, the final return is generally required. If cancellation was wrongly done, revocation may also be possible." },
+  { id: "composition", label: "Composition taxpayer", icon: "📉", t: "Check with a CA", d: "Composition taxpayers also file a final return in many cases, but the treatment of credit is different since they do not claim ITC. Our CA confirms your position." },
+  { id: "tds", label: "TDS / TCS deductor, ISD or non-resident taxpayer", icon: "🌐", t: "Generally not required", d: "Persons in categories such as tax deductors, collectors, input service distributors and non-resident taxable persons are generally exempt from filing GSTR-10. Confirm your case." },
+  { id: "none", label: "I just stopped trading but did not cancel", icon: "⏸️", t: "Cancel first", d: "GSTR-10 follows cancellation. Until the registration is cancelled, regular returns, including nil returns, must still be filed. Apply for cancellation first." },
+];
+
+const DOC_SETS: Record<string, { label: string; docs: string[] }> = {
+  cancel: {
+    label: "Cancellation",
+    docs: [
+      "GSTIN and portal login access",
+      "Cancellation order (REG-19) with date",
+      "Application for cancellation (REG-16), if filed by you",
+      "Proof of closure or change of constitution, if any",
+      "Authorised signatory details",
+    ],
   },
-  description:
-    "Professional GSTR-10 final return filing services after GST registration cancellation. Expert assistance in closing stock valuation, ITC reversal computation, liability reconciliation, and GSTR-10 preparation. Mandatory compliance within 3 months of cancellation order or date of cancellation order, whichever is later. Ideal for closed businesses, cancelled proprietorships, and firms completing GST closure formalities. Serving Khatauli, Muzaffarnagar, Noida, Delhi NCR and pan-India.",
-  serviceType: "GST Final Return Filing & Compliance Closure",
-  offers: {
-    "@type": "Offer",
-    priceCurrency: "INR",
-    price: "2999",
-    priceSpecification: {
-      "@type": "UnitPriceSpecification",
-      minPrice: "2999",
-      maxPrice: "9999",
-    },
+  stock: {
+    label: "Stock & assets",
+    docs: [
+      "Closing stock details as on the cancellation date",
+      "Purchase invoices of stock held",
+      "Capital goods list with invoice dates and values",
+      "Details of goods disposed of before cancellation",
+      "Valuation basis or market value support",
+    ],
+  },
+  books: {
+    label: "Books & returns",
+    docs: [
+      "Books of accounts up to the cancellation date",
+      "All filed returns (GSTR-1, GSTR-3B) up to cancellation",
+      "ITC ledger and cash ledger statements",
+      "Details of pending liabilities or notices",
+      "Annual return of the last year, if applicable",
+    ],
   },
 };
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What is GSTR-10 and when is it mandatory?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "GSTR-10 is the final GST return that MUST be filed by every registered taxpayer whose GST registration has been cancelled or surrendered. It is a one-time return containing details of closing stock, input tax credit (ITC) reversal, and final tax liabilities as on the date of cancellation. It must be filed within 3 months from the date of cancellation order or the date of cancellation order, whichever is later. It is mandatory irrespective of business turnover or type of cancellation (voluntary or suo-moto).",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the deadline for filing GSTR-10?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "GSTR-10 must be filed within 3 months from the date of cancellation order or the effective date of cancellation, whichever is later. For example, if your cancellation order is dated 15th January 2024 with effective cancellation date 31st December 2023, you have 3 months from 15th January 2024 (i.e., till 15th April 2024) to file GSTR-10. Late filing attracts penalty and interest on unpaid tax liability.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What happens if I don't file GSTR-10?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Non-filing of GSTR-10 is a legal violation under GST law. Consequences include: (1) Late fee of ₹100 per day (₹50 CGST + ₹50 SGST) up to a maximum of ₹5,000, (2) Interest at 18% per annum on unpaid tax liability from due date till payment, (3) Legal notices and recovery proceedings by GST department, (4) Difficulty in obtaining GST cancellation completion certificate, (5) ITC reversal liability remains outstanding against you, (6) Penalty and prosecution under Section 122 of CGST Act for willful non-compliance.",
-      },
-    },
-  ],
-};
+const CYCLE = [
+  { t: "Confirm cancellation date", d: "We check the order date and the effective date, which drive both the due date and the stock position." },
+  { t: "Clear pending returns", d: "All regular returns up to the cancellation date must be filed before the final return." },
+  { t: "Value stock & capital goods", d: "We prepare the stock statement and capital goods list with invoice dates and ITC taken." },
+  { t: "Compute the reversal", d: "We calculate the credit to be reversed and the tax payable, and share it with you for approval." },
+  { t: "File GSTR-10 & pay", d: "We file, pay the liability and share the acknowledgement." },
+];
 
-/* ══════════════════════════════════════════════════════════ */
-export default function GSTRTenFinalReturnClient() {
+const STEPS = [
+  { t: "Review your cancellation", d: "We confirm the cancellation order, its date and the due date for the final return." },
+  { t: "Collect documents", d: "You share the documents on this page. We pull portal data to cross-check your returns and ledgers." },
+  { t: "Prepare stock and asset statement", d: "We prepare the closing stock and capital goods statement with ITC details." },
+  { t: "Compute ITC reversal & liability", d: "We calculate the amount payable and explain how we arrived at it." },
+  { t: "File GSTR-10", d: "After your approval, we file the return with the required verification and pay the liability." },
+  { t: "Acknowledge & close out", d: "You receive the acknowledgement and a checklist for record retention and any remaining compliances." },
+];
+
+const MISTAKES = [
+  { t: "Missing the three-month limit", d: "The final return has a time limit from the cancellation. Late filing attracts a late fee for every day of delay." },
+  { t: "Leaving earlier returns pending", d: "Unfiled regular returns up to the cancellation date can block or complicate the final return." },
+  { t: "Ignoring capital goods", d: "Credit on machinery, computers and equipment must be considered, with the prescribed reduction for age." },
+  { t: "Under-valuing stock", d: "Stock should be valued reasonably against invoices and market value; shortcuts can lead to a demand." },
+  { t: "Assuming cancellation ended everything", d: "Liabilities and notices for the period before cancellation can continue after it is cancelled." },
+];
+
+/* ══════════════════════ ROOT ══════════════════════ */
+
+export default function GSTRTenFinalReturnClient({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [active, setActive] = useState("overview");
+
+  useEffect(() => {
+    const els = NAV.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
-      <InquiryForm />
-      <main className="bg-white text-gray-800 overflow-x-hidden">
-        {/* ── URGENCY BANNER ── */}
-        <div
-          className="bg-orange-600 text-white text-center py-3 font-semibold text-sm px-4"
-          role="alert"
-        >
-          ⏰ GST Cancelled? File GSTR-10 Final Return Within 3 Months — Avoid Penalty & Legal Action
+    <main className="bg-slate-50 text-gray-800 overflow-x-clip">
+      <GlobalStyles />
+      <Hero />
+      <InquiryFormButton />
+      <SectionNav active={active} />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14 grid lg:grid-cols-[1fr_340px] gap-10">
+        <div className="min-w-0 space-y-16 md:space-y-20">
+          <Overview />
+          <Benefits />
+          <Planner />
+          <Included />
+          <Who />
+          <Deadline />
+          <Gap />
+          <Documents />
+          <Process />
+          <Pitfalls />
+          <FAQs faqs={faqs} />
+          <Related />
         </div>
+        <aside className="hidden lg:block">
+          <SideCard />
+        </aside>
+      </div>
 
-        {/* ── HERO ── */}
-        <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full border border-white/10" />
-          <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full border border-white/10" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full border border-white/5 -translate-x-1/2 translate-y-1/2" />
-
-          <div className="relative max-w-6xl mx-auto px-6 py-28 md:py-36">
-            <nav className="mb-6 text-sm text-white/60 flex items-center gap-2 flex-wrap">
-              <Link href="/" className="hover:text-white transition">
-                Home
-              </Link>
-              <span>/</span>
-              <Link href="/serviceslist" className="hover:text-white transition">
-                Services
-              </Link>
-              <span>/</span>
-              <Link
-                href="/serviceslist/gst"
-                className="hover:text-white transition"
-              >
-                GST Services
-              </Link>
-              <span>/</span>
-              <span className="text-white">GSTR-10 Final Return</span>
-            </nav>
-
-            <div className="flex flex-col lg:flex-row items-start gap-12">
-              <div className="flex-1">
-                <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-                  📋 GST Closure Compliance
-                </span>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-                  GSTR-10 Final Return
-                  <br />
-                  <span className="text-[#7ecbf0]">Filing Service</span>
-                  <br />
-                  Complete Guide
-                </h1>
-                <p className="text-lg text-gray-200 leading-relaxed max-w-2xl mb-10">
-                  Your <strong className="text-white">GST registration</strong>{" "}
-                  has been cancelled? Filing{" "}
-                  <strong className="text-white">GSTR-10 (Final Return)</strong>{" "}
-                  is <strong className="text-white">MANDATORY</strong> within{" "}
-                  <strong className="text-white">3 months</strong> of the
-                  cancellation order to legally close your GST compliance. This
-                  return includes{" "}
-                  <strong className="text-white">closing stock valuation</strong>,{" "}
-                  <strong className="text-white">ITC reversal computation</strong>,
-                  and{" "}
-                  <strong className="text-white">
-                    final liability reconciliation
-                  </strong>
-                  . Non-filing attracts penalty, interest, and legal action.{" "}
-                  <strong className="text-white">Taxvio</strong> handles complete
-                  GSTR-10 preparation — stock accounting, ITC calculation,
-                  liability settlement, and online filing.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    href="/contact"
-                    className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center text-base"
-                  >
-                    File GSTR-10 Now — ₹2,999 →
-                  </Link>
-                 
-                </div>
-                <div className="mt-8 flex flex-wrap gap-4 text-sm text-white/70">
-                  {[
-                    "✅ 3-Month Deadline Compliance",
-                    "✅ Closing Stock Valuation",
-                    "✅ ITC Reversal Computation",
-                    "✅ Expert CA Assistance",
-                  ].map((t) => (
-                    <span
-                      key={t}
-                      className="bg-white/10 border border-white/20 px-3 py-1 rounded-full"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* hero card */}
-              <div className="w-full lg:w-80 bg-white/10 backdrop-blur border border-white/20 rounded-3xl p-8 flex-shrink-0">
-                <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-5">
-                  Quick Facts
-                </p>
-                <ul className="space-y-4 text-sm text-gray-200">
-                  {[
-                    ["⏰", "Due within 3 months of cancellation"],
-                    ["📋", "Mandatory for all cancelled GSTINs"],
-                    ["📦", "Includes closing stock details"],
-                    ["💰", "ITC reversal computation required"],
-                    ["🚫", "Penalty ₹100/day for late filing"],
-                    ["🚀", "Filing fee: ₹2,999 onwards"],
-                  ].map(([icon, text]) => (
-                    <li key={text as string} className="flex items-start gap-3">
-                      <span className="text-base">{icon}</span>
-                      <span>{text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── STATS ── */}
-        <section className="bg-gray-50 py-14 border-b">
-          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { number: "500+", label: "GSTR-10 Returns Filed", icon: "✅" },
-              { number: "3 Months", label: "Filing Deadline", icon: "⏰" },
-              { number: "100%", label: "Compliance Rate", icon: "📊" },
-              { number: "₹2,999", label: "Starting Fee", icon: "💰" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition"
-              >
-                <div className="text-3xl mb-2">{s.icon}</div>
-                <p className="text-2xl font-extrabold text-[#00416a] mb-1">
-                  {s.number}
-                </p>
-                <p className="text-gray-500 text-sm font-medium">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── TRUST BADGES ── */}
-        <section className="py-8 bg-white border-b">
-          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm font-semibold text-gray-700">
-            {[
-              "✔ Stock Valuation Experts",
-              "✔ ITC Reversal Accuracy",
-              "✔ Deadline Tracking",
-              "✔ CA Certified Filing",
-            ].map((t) => (
-              <div
-                key={t}
-                className="bg-gray-50 rounded-xl py-3 px-4 border hover:border-[#00416a] transition"
-              >
-                {t}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── MAIN CONTENT ── */}
-        <article className="max-w-6xl mx-auto px-6 py-20 space-y-24">
-          {/* WHAT IS GSTR-10 */}
-          <section id="what-is-gstr10">
-            <SectionLabel text="Understanding GSTR-10" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-6">
-              What Is GSTR-10 Final Return?
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8 text-gray-700 leading-relaxed">
-              <div className="space-y-4">
-                <p>
-                  <strong>GSTR-10</strong> is the{" "}
-                  <strong>Final Return</strong> that MUST be filed by every
-                  registered taxpayer whose{" "}
-                  <strong>GST registration has been cancelled</strong> or
-                  surrendered — whether voluntarily (you applied for cancellation)
-                  or suo-moto (cancelled by the department).
-                </p>
-                <p>
-                  It is a <strong>one-time, closing return</strong> that captures:
-                </p>
-                <ul className="space-y-2 ml-6">
-                  {[
-                    "Details of closing stock (finished goods, raw materials, work-in-progress) held as on the date of cancellation",
-                    "Input Tax Credit (ITC) availed on closing stock that needs to be REVERSED and paid back to the government",
-                    "Any other liabilities (pending tax, interest, penalty) outstanding at the time of cancellation",
-                    "Details of capital goods (machinery, equipment) on which ITC was claimed earlier",
-                    "Reconciliation of all GST compliance obligations before final closure",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm">
-                      <span className="text-[#00416a] font-bold mt-0.5">•</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6">
-                  <p className="font-bold text-blue-800 mb-3">
-                    📋 Why GSTR-10 Is Mandatory
-                  </p>
-                  <p className="text-sm text-gray-700 mb-3">
-                    GSTR-10 ensures that you have paid back all{" "}
-                    <strong>ITC (Input Tax Credit)</strong> that you claimed on
-                    stock and capital goods that are now outside the GST system
-                    (since your GSTIN is cancelled). The government wants to
-                    recover this credit to prevent tax evasion.
-                  </p>
-                  <div className="bg-white rounded-xl p-4 border border-blue-200">
-                    <p className="font-bold text-blue-700 text-sm mb-2">
-                      💡 Example
-                    </p>
-                    <p className="text-xs text-gray-600">
-                      You purchased raw materials worth ₹10 lakh (GST ₹1.8 lakh)
-                      and claimed ITC of ₹1.8 lakh. Now your GST is cancelled and
-                      you still have ₹5 lakh worth of raw materials in stock. You
-                      must <strong>reverse ITC</strong> proportionate to the
-                      closing stock value (approximately ₹90,000) and pay it back
-                      via GSTR-10.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <p className="font-bold text-[#00416a]">
-                  When GSTR-10 Must Be Filed
-                </p>
-                <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-6">
-                  <p className="font-bold text-orange-800 mb-3">
-                    ⏰ Filing Deadline
-                  </p>
-                  <p className="text-sm text-gray-700 mb-3">
-                    GSTR-10 must be filed within{" "}
-                    <strong>3 months from the date of cancellation order</strong>{" "}
-                    OR the <strong>effective date of cancellation</strong>,
-                    whichever is <strong>later</strong>.
-                  </p>
-                  <div className="bg-white rounded-xl p-4 border border-orange-200 mb-4">
-                    <p className="font-bold text-orange-700 text-sm mb-2">
-                      📅 Date Calculation Examples
-                    </p>
-                    <div className="space-y-3 text-xs text-gray-700">
-                      <div className="bg-orange-50 rounded-lg p-3">
-                        <p className="font-bold text-orange-800 mb-1">
-                          Scenario 1: Voluntary Cancellation
-                        </p>
-                        <p>
-                          • You applied for cancellation on{" "}
-                          <strong>1st Jan 2024</strong>
-                          <br />
-                          • Cancellation order issued on{" "}
-                          <strong>15th Jan 2024</strong>
-                          <br />
-                          • Effective date of cancellation:{" "}
-                          <strong>31st Dec 2023</strong>
-                          <br />• GSTR-10 due date:{" "}
-                          <strong>15th April 2024</strong> (3 months from order
-                          date, which is later than effective date)
-                        </p>
-                      </div>
-                      <div className="bg-orange-50 rounded-lg p-3">
-                        <p className="font-bold text-orange-800 mb-1">
-                          Scenario 2: Suo-Moto Cancellation
-                        </p>
-                        <p>
-                          • Department cancelled on{" "}
-                          <strong>10th Feb 2024</strong>
-                          <br />
-                          • Effective date of cancellation:{" "}
-                          <strong>10th Feb 2024</strong> (same date)
-                          <br />• GSTR-10 due date:{" "}
-                          <strong>10th May 2024</strong> (3 months from
-                          cancellation date)
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6">
-                  <p className="font-bold text-red-800 mb-3">
-                    🚫 Penalty for Non-Filing or Late Filing
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    {[
-                      "Late fee: ₹100 per day (₹50 CGST + ₹50 SGST) from due date till filing, subject to maximum of ₹5,000",
-                      "Interest: 18% per annum on unpaid tax liability (ITC reversal amount) from due date till payment",
-                      "Legal notices and recovery proceedings by GST department for outstanding liability",
-                      "Difficulty in obtaining GST cancellation completion certificate",
-                      "Penalty under Section 122 of CGST Act for willful non-compliance (up to ₹25,000)",
-                      "Prosecution under Section 132 for deliberate suppression or false information",
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="text-red-600 mt-0.5">→</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <p>
-                  <strong>Taxvio</strong>, based in Khatauli (Muzaffarnagar, UP),
-                  specializes in GSTR-10 final return filing — closing stock
-                  valuation, ITC reversal computation, liability reconciliation,
-                  and online submission across Uttar Pradesh, Noida, Delhi NCR,
-                  Mumbai, and pan-India.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* COMPONENTS OF GSTR-10 */}
-          <section id="components">
-            <SectionLabel text="What's Included" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
-              Key Components of GSTR-10 Return
-            </h2>
-            <p className="text-gray-600 mb-10 max-w-3xl">
-              GSTR-10 is a comprehensive return covering all aspects of your
-              business closure under GST. Here's what you need to report:
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {[
-                {
-                  component: "Details of Closing Stock (Table 5)",
-                  icon: "📦",
-                  desc: "Itemized list of ALL goods (finished goods, raw materials, semi-finished goods, consumables) held in stock as on the date of cancellation. This includes stock at your premises, godowns, job-workers' premises, or in transit.",
-                  whatToReport: [
-                    "Description and HSN code of each item",
-                    "Quantity and unit of measurement",
-                    "Taxable value (purchase cost + proportionate expenses)",
-                    "Rate of tax (CGST, SGST/UTGST, IGST, Cess)",
-                    "Total tax payable on closing stock",
-                  ],
-                  calculation:
-                    "Tax payable = (Closing stock value) × (Applicable GST rate) × (Percentage of ITC claimed on such stock)",
-                },
-                {
-                  component: "ITC Reversal on Inputs in Stock (Table 6)",
-                  icon: "💰",
-                  desc: "Input Tax Credit (ITC) that you had claimed earlier on raw materials, consumables, and other inputs that are now part of closing stock must be REVERSED and paid back to the government.",
-                  whatToReport: [
-                    "ITC claimed on inputs held in stock",
-                    "ITC claimed on inputs contained in semi-finished/finished goods in stock",
-                    "Common/Apportioned ITC on closing stock",
-                    "Total ITC to be reversed (paid back)",
-                  ],
-                  calculation:
-                    "ITC Reversal = (ITC claimed on purchases) × (Closing stock value ÷ Total purchases value)",
-                },
-                {
-                  component: "ITC Reversal on Capital Goods (Table 7)",
-                  icon: "🏭",
-                  desc: "If you claimed ITC on capital goods (machinery, equipment, furniture, computers) that are still with you at the time of cancellation, you must reverse ITC proportionate to the remaining useful life.",
-                  whatToReport: [
-                    "Details of all capital goods (description, invoice date, value)",
-                    "ITC claimed on each capital good",
-                    "Number of months/quarters lapsed since purchase",
-                    "Remaining useful life (as per GST law, capital goods depreciate over 60 months or 20 quarters)",
-                    "ITC to be reversed (proportionate to remaining life)",
-                  ],
-                  calculation:
-                    "ITC Reversal on Capital Goods = (ITC claimed) × (Remaining quarters ÷ 20 quarters). Example: If ITC claimed is ₹50,000 and 8 quarters have lapsed, reversal = ₹50,000 × (12/20) = ₹30,000",
-                },
-                {
-                  component: "Tax Payable and Payment (Table 8 & 9)",
-                  icon: "💵",
-                  desc: "After computing ITC reversal on inputs, capital goods, and closing stock, you must PAY the total liability via the GST portal using electronic cash ledger (payment via challan).",
-                  whatToReport: [
-                    "Total tax liability (sum of Tables 5, 6, 7)",
-                    "Break-up: CGST, SGST/UTGST, IGST, Cess",
-                    "Payment details (challan number, date, amount paid)",
-                    "Interest and late fee (if filing after due date)",
-                  ],
-                  calculation:
-                    "Total Payment = ITC Reversal on Stock + ITC Reversal on Capital Goods + Tax on Closing Stock + Interest + Late Fee",
-                },
-                {
-                  component: "Exempted, Nil-Rated & Non-GST Supplies (Table 10)",
-                  icon: "📋",
-                  desc: "Details of any exempt supplies, nil-rated supplies, or non-GST supplies made during the period between last return filed and date of cancellation.",
-                  whatToReport: [
-                    "Inter-state exempted supplies",
-                    "Intra-state exempted supplies",
-                    "Nil-rated supplies",
-                    "Non-GST supplies (outside GST scope)",
-                  ],
-                  calculation: "Reporting only — no tax payable on these items.",
-                },
-                {
-                  component: "Declaration & Verification (Table 13)",
-                  icon: "✅",
-                  desc: "Final declaration confirming that all information provided in GSTR-10 is true and correct to the best of your knowledge. Signed by authorized signatory (proprietor, partner, director, or authorized representative).",
-                  whatToReport: [
-                    "Name and designation of signatory",
-                    "Place of signing",
-                    "Date of submission",
-                    "Digital signature or EVC (Electronic Verification Code)",
-                  ],
-                  calculation: "No calculation — declaration and submission only.",
-                },
-              ].map((item) => (
-                <div
-                  key={item.component}
-                  className="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-3xl p-6"
-                >
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="text-3xl">{item.icon}</div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-purple-800 mb-2">
-                        {item.component}
-                      </h3>
-                      <p className="text-sm text-gray-700 mb-3">{item.desc}</p>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-xl p-4 border border-purple-200 mb-3">
-                    <p className="font-bold text-purple-800 text-xs mb-2">
-                      📝 What to Report
-                    </p>
-                    <ul className="space-y-1 text-xs text-gray-700">
-                      {item.whatToReport.map((point, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-purple-600 mt-0.5">→</span>
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="bg-purple-50 rounded-xl p-3 border border-purple-300">
-                    <p className="font-bold text-purple-700 text-xs mb-1">
-                      🧮 Calculation
-                    </p>
-                    <p className="text-xs text-gray-600 italic">
-                      {item.calculation}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* FILING PROCESS */}
-          <section id="filing-process">
-            <SectionLabel text="Step-by-Step Process" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
-              How to File GSTR-10 Final Return
-            </h2>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-3xl p-8 md:p-10">
-              <p className="text-gray-700 mb-6">
-                Filing GSTR-10 requires accurate stock accounting, ITC computation,
-                and liability reconciliation. Here's the complete process:
-              </p>
-
-              <div className="space-y-6">
-                {[
-                  {
-                    step: 1,
-                    title: "Verify Cancellation Order & Due Date",
-                    description:
-                      "Log in to GST portal → Services → Registration → View Additional Notices/Orders → Download cancellation order (Form GST REG-19 or REG-08). Note the 'Date of Cancellation Order' and 'Effective Date of Cancellation'. Calculate GSTR-10 due date: 3 months from the later of these two dates. Taxvio verifies the exact due date and remaining time to avoid late filing penalty.",
-                    duration: "1 day",
-                  },
-                  {
-                    step: 2,
-                    title: "Physical Stock Verification (Stock Taking)",
-                    description:
-                      "Conduct physical verification of all goods in stock as on the date of cancellation: Finished goods ready for sale, Raw materials and consumables, Work-in-progress (semi-finished goods), Packing materials, Stock at godowns or job-workers' premises, Goods in transit. Prepare a detailed stock register with item description, HSN code, quantity, unit, and purchase cost. This is the foundation of GSTR-10.",
-                    duration: "2-3 days (depending on stock volume)",
-                  },
-                  {
-                    step: 3,
-                    title: "Closing Stock Valuation (Table 5)",
-                    description:
-                      "Determine the taxable value of each stock item. Valuation method: Cost of purchase + proportionate inward freight, handling, and insurance costs (excluding GST). Do NOT include profit margin — only cost price. Multiply quantity × cost per unit for each item. Apply applicable GST rate (5%, 12%, 18%, 28%) based on HSN code. Compute tax payable on closing stock = Stock value × GST rate. We use accounting software and GST rate databases to ensure accuracy.",
-                    duration: "2-4 days",
-                  },
-                  {
-                    step: 4,
-                    title: "ITC Reversal Computation — Inputs in Stock (Table 6)",
-                    description:
-                      "Extract all purchase invoices from the date of GST registration till cancellation date. Identify ITC claimed on raw materials, consumables, and inputs. Determine which of these inputs are still in stock (not yet sold or consumed). Formula: ITC to be reversed = (ITC claimed on inputs) × (Closing stock value of inputs ÷ Total purchase value of inputs). Example: Total purchases ₹50 lakh (ITC ₹9 lakh). Closing stock ₹10 lakh. ITC reversal = ₹9 lakh × (10/50) = ₹1.8 lakh. We automate this calculation using your purchase register and GSTR-2A/2B data.",
-                    duration: "3-5 days (depending on transaction volume)",
-                  },
-                  {
-                    step: 5,
-                    title: "ITC Reversal on Capital Goods (Table 7)",
-                    description:
-                      "List all capital goods (machinery, equipment, furniture, computers, vehicles used for business) on which ITC was claimed. For each item: Note the date of purchase and ITC claimed. Calculate the number of quarters completed since purchase. Remaining useful life = 20 quarters (5 years as per GST law) – quarters completed. ITC reversal = (ITC claimed) × (Remaining quarters ÷ 20). Example: Machinery purchased on 1st April 2022, ITC ₹2 lakh. Cancellation date 31st Dec 2023 (7 quarters completed). Reversal = ₹2 lakh × (13/20) = ₹1.3 lakh. We maintain a capital goods register for accurate computation.",
-                    duration: "1-2 days",
-                  },
-                  {
-                    step: 6,
-                    title:
-                      "Computation of Total Tax Liability (Tables 5, 6, 7 + Interest + Late Fee)",
-                    description:
-                      "Sum up all components: (1) Tax on closing stock (Table 5), (2) ITC reversal on inputs (Table 6), (3) ITC reversal on capital goods (Table 7), (4) Interest on delayed payment (if filing after due date): 18% p.a. on total tax liability from due date to payment date, (5) Late fee: ₹100/day (max ₹5,000) if filing after due date. We prepare a detailed liability summary with break-up of CGST, SGST/UTGST, IGST, and Cess.",
-                    duration: "1 day",
-                  },
-                  {
-                    step: 7,
-                    title: "Payment of Tax Liability via Electronic Cash Ledger",
-                    description:
-                      "Before filing GSTR-10, you MUST pay the total tax liability. Log in to GST portal → Services → Payments → Create Challan (PMT-06). Enter amount to be paid (CGST, SGST/IGST, Cess separately). Make payment via net banking, debit/credit card, or NEFT/RTGS. Download challan and payment receipt (CIN – Challan Identification Number). The paid amount is credited to your electronic cash ledger. Taxvio assists in challan generation and payment verification.",
-                    duration: "1 day",
-                  },
-                  {
-                    step: 8,
-                    title: "Online Filing of GSTR-10 on GST Portal",
-                    description:
-                      "Log in to GST portal → Services → Returns → Final Return (GSTR-10). Enter all details: Table 5 (Closing stock), Table 6 (ITC reversal on inputs), Table 7 (ITC reversal on capital goods), Table 8 (Tax payable from electronic cash ledger), Table 9 (Payment of tax), Table 10 (Exempt/Nil-rated supplies if any), Table 13 (Verification and declaration). Upload supporting documents (stock register, valuation certificates, capital goods register). Submit with DSC (Digital Signature Certificate) or EVC (Aadhaar-based OTP). Download filed GSTR-10 acknowledgment and save for records.",
-                    duration: "1 day",
-                  },
-                  {
-                    step: 9,
-                    title:
-                      "Post-Filing — Obtain Cancellation Completion Certificate",
-                    description:
-                      "After successful GSTR-10 filing, your GST compliance closure is complete. You can now request a Cancellation Completion Certificate from the GST department (if required for bank closure, company strike-off, etc.). The department verifies GSTR-10 and issues the certificate. We track the status and download the certificate for your records.",
-                    duration: "7-15 days (by department)",
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.step}
-                    className="bg-white rounded-2xl p-6 border border-green-200 flex gap-4"
-                  >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#00416a] text-white flex items-center justify-center font-bold text-lg">
-                      {item.step}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-bold text-[#00416a]">{item.title}</h4>
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold whitespace-nowrap ml-2">
-                          {item.duration}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8 bg-white border-2 border-green-300 rounded-2xl p-6">
-                <p className="font-bold text-green-800 mb-2 flex items-center gap-2">
-                  <span className="text-2xl">✅</span>
-                  Total Timeline
-                </p>
-                <p className="text-sm text-gray-700">
-                  <strong>
-                    10-15 days from stock verification to GSTR-10 filing
-                  </strong>{" "}
-                  (depending on stock volume and accounting complexity). Must be
-                  completed within 3 months of cancellation order to avoid penalty.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* DOCUMENTS */}
-          <section id="documents">
-            <SectionLabel text="What You Need" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
-              Documents Required for GSTR-10 Filing
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="border-t-4 border-[#00416a] bg-white rounded-2xl p-6 shadow-sm">
-                <p className="inline-block text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-5 bg-[#00416a]/10 text-[#00416a]">
-                  Mandatory Documents
-                </p>
-                <ul className="space-y-3">
-                  {[
-                    "GSTIN (cancelled registration number)",
-                    "GST cancellation order copy (Form GST REG-19 or REG-08)",
-                    "Closing stock register (as on cancellation date)",
-                    "Purchase register (all inward supplies from registration to cancellation)",
-                    "Sales register (all outward supplies from last return to cancellation)",
-                    "Capital goods register (machinery, equipment with ITC details)",
-                    "Books of accounts (trading account, profit & loss, balance sheet)",
-                    "Bank statements (for payment verification)",
-                    "GST portal login credentials (username and password)",
-                  ].map((doc) => (
-                    <li
-                      key={doc}
-                      className="flex items-start gap-3 text-sm text-gray-700"
-                    >
-                      <span className="text-[#00416a] font-bold mt-0.5 flex-shrink-0">
-                        ✓
-                      </span>
-                      {doc}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="border-t-4 border-gray-500 bg-white rounded-2xl p-6 shadow-sm">
-                <p className="inline-block text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-5 bg-gray-100 text-gray-700">
-                  Supporting Documents (As Applicable)
-                </p>
-                <ul className="space-y-3">
-                  {[
-                    "Stock valuation certificate (if stock value > ₹10 lakh, CA certification recommended)",
-                    "Job-work challans (if stock held at job-worker's premises)",
-                    "Consignment stock details (if stock held at customer's premises)",
-                    "GSTR-2A/2B (for ITC verification and reconciliation)",
-                    "GSTR-1 (last filed return for sales cross-checking)",
-                    "GSTR-3B (last filed return for ITC and liability cross-checking)",
-                    "Invoices for capital goods purchases (machinery, equipment)",
-                    "Depreciation schedule (for capital goods ITC reversal calculation)",
-                    "PAN card and Aadhaar of authorized signatory",
-                  ].map((doc) => (
-                    <li
-                      key={doc}
-                      className="flex items-start gap-3 text-sm text-gray-700"
-                    >
-                      <span className="text-gray-600 font-bold mt-0.5 flex-shrink-0">
-                        ✓
-                      </span>
-                      {doc}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* COMMON MISTAKES */}
-          <section id="mistakes">
-            <SectionLabel text="Avoid These Errors" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
-              Common Mistakes in GSTR-10 Filing
-            </h2>
-            <div className="bg-red-50 border-2 border-red-200 rounded-3xl p-8 md:p-10">
-              <p className="text-gray-700 mb-6">
-                GSTR-10 errors can lead to notices, penalty, and prolonged
-                compliance closure. Here are critical mistakes to avoid:
-              </p>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {[
-                  {
-                    mistake: "Incorrect Closing Stock Valuation",
-                    icon: "📦",
-                    problem:
-                      "Using selling price instead of cost price for stock valuation, or including GST in the value (which should be excluded).",
-                    solution:
-                      "Use only COST PRICE (purchase cost + proportionate expenses, excluding GST). Example: If you purchased goods at ₹100 + ₹18 GST = ₹118, the stock value for GSTR-10 is ₹100 only.",
-                  },
-                  {
-                    mistake: "Missing Stock at Job-Worker or Godown",
-                    icon: "🏭",
-                    problem:
-                      "Not including stock held at job-worker's premises, consignment stock at customer's premises, or stock in transit in the closing stock declaration.",
-                    solution:
-                      "Conduct a comprehensive stock verification across ALL locations — your premises, godowns, job-workers, customer locations, and in-transit goods. Include all stock in Table 5.",
-                  },
-                  {
-                    mistake: "Incorrect ITC Reversal Calculation",
-                    icon: "💰",
-                    problem:
-                      "Using wrong formula for ITC reversal, or not considering the proportion of closing stock to total purchases, leading to under-payment or over-payment of ITC.",
-                    solution:
-                      "Use the correct formula: ITC Reversal = (ITC claimed on inputs) × (Closing stock value ÷ Total purchase value). Cross-check with GSTR-2A/2B to verify ITC claimed. Taxvio uses automated reconciliation tools for accuracy.",
-                  },
-                  {
-                    mistake: "Ignoring Capital Goods ITC Reversal",
-                    icon: "🛠️",
-                    problem:
-                      "Many taxpayers forget to reverse ITC on capital goods (machinery, equipment) assuming it's only for inputs. This leads to under-payment and department scrutiny.",
-                    solution:
-                      "Maintain a separate capital goods register with purchase date, ITC claimed, and quarters lapsed. Reverse ITC as per the 20-quarter depreciation rule (Rule 44 of CGST Rules).",
-                  },
-                  {
-                    mistake: "Filing GSTR-10 Without Paying Tax Liability",
-                    icon: "💵",
-                    problem:
-                      "Attempting to file GSTR-10 without first paying the computed tax liability via electronic cash ledger. The system will NOT allow submission.",
-                    solution:
-                      "ALWAYS pay the total liability (ITC reversal amount) via PMT-06 challan BEFORE filing GSTR-10. The portal deducts the payment from your electronic cash ledger during filing.",
-                  },
-                  {
-                    mistake: "Missing the 3-Month Filing Deadline",
-                    icon: "⏰",
-                    problem:
-                      "Taxpayers often confuse the cancellation date with the order date, or simply miss the 3-month deadline, leading to late fee and interest.",
-                    solution:
-                      "Calculate the due date correctly: 3 months from the LATER of (a) cancellation order date or (b) effective cancellation date. Set reminders. Taxvio provides deadline tracking and alerts.",
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.mistake}
-                    className="bg-white rounded-2xl p-6 border border-red-200"
-                  >
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="text-3xl">{item.icon}</div>
-                      <h3 className="font-bold text-red-700 text-lg">
-                        {item.mistake}
-                      </h3>
-                    </div>
-                    <div className="bg-red-50 rounded-xl p-4 border border-red-200 mb-3">
-                      <p className="font-bold text-red-600 text-xs mb-2">
-                        ⚠️ Problem
-                      </p>
-                      <p className="text-xs text-gray-700">{item.problem}</p>
-                    </div>
-                    <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-                      <p className="font-bold text-green-700 text-xs mb-2">
-                        ✅ Solution
-                      </p>
-                      <p className="text-xs text-gray-700">{item.solution}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* SERVICES & PRICING */}
-          <section id="our-services">
-            <SectionLabel text="How We Help" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
-              Taxvio's GSTR-10 Filing Services
-            </h2>
-            <p className="text-gray-600 mb-8 max-w-3xl">
-              From stock valuation to online filing — we handle every aspect of
-              your GSTR-10 compliance with CA-level accuracy.
-            </p>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: "⏰",
-                  title: "Deadline Verification & Compliance Check",
-                  desc: "We download your cancellation order, verify the exact GSTR-10 due date (3 months from order/cancellation date, whichever is later), and check if filing is still within deadline or penalty-applicable.",
-                  price: "₹499",
-                },
-                {
-                  icon: "📋",
-                  title: "Complete GSTR-10 Filing (Standard)",
-                  desc: "Closing stock verification and valuation (up to 50 SKUs), ITC reversal computation on inputs and capital goods, tax liability calculation, payment assistance, and online GSTR-10 filing with acknowledgment.",
-                  price: "₹2,999",
-                },
-                {
-                  icon: "📦",
-                  title: "Physical Stock Verification & Valuation",
-                  desc: "On-site or remote stock verification (finished goods, raw materials, WIP), preparation of detailed stock register with HSN codes, cost-based valuation as per GST rules, and stock valuation certificate (if required).",
-                  price: "₹1,999",
-                },
-                {
-                  icon: "💰",
-                  title: "ITC Reversal Computation (Inputs & Capital Goods)",
-                  desc: "Analysis of all purchase invoices and GSTR-2A/2B, identification of ITC claimed on inputs in stock, capital goods ITC reversal as per 20-quarter rule, and detailed ITC reversal report with supporting calculations.",
-                  price: "₹1,499",
-                },
-                {
-                  icon: "💵",
-                  title: "Tax Payment Assistance (PMT-06 Challan)",
-                  desc: "Computation of total tax liability (CGST, SGST/IGST, Cess), challan generation (PMT-06) on GST portal, payment processing via net banking/card, and payment receipt download and verification.",
-                  price: "₹999",
-                },
-                {
-                  icon: "🏭",
-                  title: "Complex GSTR-10 (High Stock Volume)",
-                  desc: "For businesses with large stock volume (>100 SKUs), multiple locations, job-work, or complex ITC scenarios. Includes detailed reconciliation, CA certification of stock valuation, and comprehensive documentation.",
-                  price: "₹7,999",
-                },
-                {
-                  icon: "📨",
-                  title: "Late Filing (After Deadline) + Penalty Computation",
-                  desc: "If you've missed the 3-month deadline, we file GSTR-10 with late fee and interest computation, prepare justification for delayed filing, and liaise with department to minimize penalty.",
-                  price: "₹4,999",
-                },
-                {
-                  icon: "📊",
-                  title: "Post-Filing Notice Response (if any)",
-                  desc: "If the GST department issues notice after GSTR-10 filing (seeking clarification on stock value, ITC reversal), we draft detailed reply, submit supporting documents, and represent you at hearings.",
-                  price: "₹2,999",
-                },
-                {
-                  icon: "✅",
-                  title: "Cancellation Completion Certificate Support",
-                  desc: "After GSTR-10 filing, we help you obtain the GST Cancellation Completion Certificate from the department (required for bank closure, company strike-off, etc.). Includes application drafting and follow-up.",
-                  price: "₹1,499",
-                },
-              ].map((service) => (
-                <div
-                  key={service.title}
-                  className="border rounded-2xl p-6 bg-white hover:shadow-lg hover:border-[#00416a]/30 transition"
-                >
-                  <div className="text-3xl mb-3">{service.icon}</div>
-                  <h3 className="font-bold text-[#00416a] mb-2 text-sm">
-                    {service.title}
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed mb-4">
-                    {service.desc}
-                  </p>
-                  <p className="text-lg font-bold text-[#00416a]">
-                    {service.price}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 bg-green-50 border-2 border-green-200 rounded-2xl p-6">
-              <p className="font-bold text-green-800 mb-3">
-                📦 Complete GSTR-10 Packages
-              </p>
-              <div className="grid md:grid-cols-3 gap-4">
-                {[
-                  {
-                    package: "Basic (Small Business)",
-                    price: "₹2,999",
-                    includes: [
-                      "Stock valuation (up to 50 SKUs)",
-                      "ITC reversal computation",
-                      "GSTR-10 filing",
-                      "Payment assistance",
-                      "Email support",
-                    ],
-                  },
-                  {
-                    package: "Standard (Medium Business)",
-                    price: "₹5,999",
-                    includes: [
-                      "Stock valuation (up to 100 SKUs)",
-                      "Capital goods ITC reversal",
-                      "Multi-location stock reconciliation",
-                      "GSTR-10 filing + acknowledgment",
-                      "Priority support",
-                    ],
-                  },
-                  {
-                    package: "Premium (Large/Complex)",
-                    price: "₹9,999",
-                    includes: [
-                      "Unlimited SKUs + multi-location",
-                      "Job-work stock reconciliation",
-                      "CA-certified valuation report",
-                      "Notice response support",
-                      "WhatsApp + call support",
-                    ],
-                  },
-                ].map((pkg) => (
-                  <div
-                    key={pkg.package}
-                    className="bg-white rounded-xl p-5 border border-green-300"
-                  >
-                    <p className="font-bold text-green-800 mb-1">{pkg.package}</p>
-                    <p className="text-2xl font-extrabold text-[#00416a] mb-3">
-                      {pkg.price}
-                    </p>
-                    <ul className="space-y-1">
-                      {pkg.includes.map((item, i) => (
-                        <li
-                          key={i}
-                          className="text-xs text-gray-600 flex items-start gap-2"
-                        >
-                          <span className="text-green-600 mt-0.5">✓</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* TESTIMONIALS */}
-          <section id="testimonials">
-            <SectionLabel text="Client Stories" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-8">
-              Real Stories from Our GSTR-10 Clients
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  name: "Sharma Enterprises",
-                  location: "Muzaffarnagar",
-                  text: "Closed my business in December 2023 and had no idea about GSTR-10. Taxvio reminded me in February 2024 (within deadline), conducted full stock verification, computed ITC reversal on ₹8 lakh stock, and filed GSTR-10 in 10 days. Saved me from penalty!",
-                },
-                {
-                  name: "Gupta Traders Pvt. Ltd.",
-                  location: "Noida",
-                  text: "Had closing stock of ₹25 lakh across 3 godowns. Taxvio team visited all locations, verified stock physically, prepared valuation report, and filed GSTR-10 with 100% accuracy. Their capital goods ITC reversal computation was exceptional.",
-                },
-                {
-                  name: "Rajesh Manufacturing",
-                  location: "Meerut",
-                  text: "I missed the GSTR-10 deadline by 2 months and received a notice from GST department. Taxvio immediately filed the return with late fee and interest computation, drafted a detailed reply to the notice, and got the matter settled. Highly professional!",
-                },
-              ].map((r, i) => (
-                <div
-                  key={i}
-                  className="border rounded-2xl p-6 hover:shadow-lg transition bg-white"
-                >
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, j) => (
-                      <span key={j} className="text-yellow-400 text-lg">
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                  <p className="mb-4 text-gray-700 text-sm leading-relaxed italic">
-                    "{r.text}"
-                  </p>
-                  <p className="font-bold text-[#00416a]">{r.name}</p>
-                  <p className="text-sm text-gray-500">{r.location}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* LOCAL SEO */}
-          <section id="cities-served">
-            <SectionLabel text="Our Reach" />
-            <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-4">
-              GSTR-10 Final Return Filing Services Across India
-            </h2>
-            <p className="text-gray-600 mb-8 max-w-3xl leading-relaxed">
-              Taxvio is based in <strong>Khatauli, Muzaffarnagar, UP</strong> and
-              provides GSTR-10 final return filing (closing stock valuation, ITC
-              reversal, liability reconciliation) for businesses across{" "}
-              <strong>Noida</strong>, <strong>Delhi NCR</strong>,{" "}
-              <strong>Meerut</strong>, <strong>Ghaziabad</strong>,{" "}
-              <strong>Mumbai</strong>, and pan-India online.
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {[
-                "Khatauli",
-                "Muzaffarnagar",
-                "Noida",
-                "Delhi NCR",
-                "Meerut",
-                "Mumbai",
-              ].map((city) => (
-                <div
-                  key={city}
-                  className="bg-gray-50 border rounded-xl p-4 text-center text-sm font-semibold text-[#00416a] hover:bg-[#00416a] hover:text-white transition cursor-default"
-                >
-                  📍 {city}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* FAQ */}
-          <FAQSection />
-
-          {/* RELATED SERVICES */}
-          <section id="related-services">
-            <SectionLabel text="Explore More" />
-            <h2 className="text-3xl font-bold text-[#00416a] mb-8">
-              Related GST Services
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {[
-                {
-                  title: "GST Cancellation",
-                  icon: "❌",
-                  link: "/serviceslist/gst/gst-cancellation",
-                  desc: "Voluntary GST cancellation (REG-16) filing.",
-                },
-                {
-                  title: "GST Revocation",
-                  icon: "🔄",
-                  link: "/serviceslist/gst/gst-revocation",
-                  desc: "Restore cancelled GSTIN via REG-21.",
-                },
-                {
-                  title: "GST Return Filing",
-                  icon: "📊",
-                  link: "/serviceslist/gst/gst-return-filing",
-                  desc: "Monthly GSTR-1, GSTR-3B filing.",
-                },
-                {
-                  title: "GST Notice Response",
-                  icon: "📨",
-                  link: "/serviceslist/gst/gst-notice-response",
-                  desc: "Expert response to GST notices and SCNs.",
-                },
-              ].map((s) => (
-                <Link
-                  key={s.title}
-                  href={s.link}
-                  className="block border rounded-2xl p-6 hover:shadow-lg hover:border-[#00416a]/40 transition group bg-white"
-                >
-                  <div className="text-3xl mb-3">{s.icon}</div>
-                  <h3 className="font-bold text-[#00416a] mb-2">{s.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{s.desc}</p>
-                  <span className="text-sm text-[#00416a] font-semibold group-hover:underline">
-                    Learn More →
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
-
-          {/* FINAL CTA */}
-          <section id="cta">
-            <div className="bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] rounded-3xl shadow-2xl px-8 py-14 md:px-14 md:py-16 text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
-              <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
-                <div className="max-w-2xl text-center lg:text-left">
-                  <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">
-                    Complete Your GST Closure Today
-                  </p>
-                  <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
-                    File GSTR-10 Final Return Now
-                  </h3>
-                  <p className="text-lg text-gray-200 leading-relaxed">
-                    Don't risk penalty and legal action — file your GSTR-10 within
-                    3 months of GST cancellation. Taxvio provides complete stock
-                    valuation, ITC reversal computation, payment assistance, and
-                    online filing. Starting ₹2,999. Close your GST compliance
-                    legally and permanently.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto flex-shrink-0">
-                  <Link
-                    href="/contact"
-                    className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 text-center"
-                  >
-                    Start Now — ₹2,999
-                  </Link>
-                  
-                </div>
-              </div>
-            </div>
-          </section>
-        </article>
-
-        <Footar />
-      </main>
-    </>
+      <FinalCTA />
+      <Footar />
+    </main>
   );
 }
 
-/* ══════════════════════ INTERACTIVE COMPONENTS ══════════════════════ */
+/* ══════════════════════ PRIMITIVES ══════════════════════ */
 
-function FAQSection() {
-  const [open, setOpen] = useState<number | null>(null);
-
-  const faqs = [
-    {
-      q: "Can I file GSTR-10 if I have already filed GST cancellation application but it's not yet approved?",
-      a: "No. GSTR-10 can only be filed AFTER your GST registration is officially cancelled and you have received the cancellation order (Form GST REG-19 or REG-08). The 3-month deadline starts from the date of this cancellation order. If your cancellation is still pending approval, you must wait for the order and then file GSTR-10.",
-    },
-    {
-      q: "Is CA certification mandatory for GSTR-10 filing?",
-      a: "No, CA certification is NOT legally mandatory for GSTR-10 filing. However, it is HIGHLY RECOMMENDED if: (1) Your closing stock value exceeds ₹10 lakh, (2) You have complex ITC scenarios (multiple locations, job-work), (3) You want to avoid department scrutiny and notices. A CA-certified stock valuation report adds credibility and reduces the chances of department questioning your return.",
-    },
-    {
-      q: "What if I don't have any closing stock — do I still need to file GSTR-10?",
-      a: "YES. GSTR-10 is MANDATORY for all cancelled GSTINs, even if you have ZERO closing stock. In such cases, you will file a NIL GSTR-10, reporting zero values in all tables. This legally confirms to the department that you have no stock, no ITC liability, and no pending tax obligations. Not filing GSTR-10 (even if NIL) attracts penalty and late fee.",
-    },
-    {
-      q: "Can I revise or correct GSTR-10 after filing?",
-      a: "No. Once GSTR-10 is filed, it CANNOT be revised or amended. This is because GSTR-10 is a FINAL return marking the closure of your GST registration. If you made an error in GSTR-10, you will need to: (1) File a rectification application with the GST department explaining the error, (2) Pay any additional tax liability (if error resulted in short payment), or (3) Seek department's approval for correction. Prevention is better than cure — get expert assistance to file GSTR-10 accurately the first time.",
-    },
-    {
-      q: "If my cancellation is effective from 31st December 2023, which date's stock should I report in GSTR-10?",
-      a: "You must report closing stock as on the EFFECTIVE DATE OF CANCELLATION, which is 31st December 2023 in your case. Even if you received the cancellation order on 15th January 2024, the stock valuation date is 31st December 2023. Conduct stock verification and valuation as on this specific date and report it in GSTR-10.",
-    },
-    {
-      q: "How is ITC reversal calculated if I purchased goods at different rates (5%, 12%, 18%)?",
-      a: "ITC reversal must be calculated SEPARATELY for each GST rate category. Formula: For 5% rate goods: ITC reversal = (ITC claimed on 5% rate purchases) × (Closing stock value of 5% rate goods ÷ Total purchase value of 5% rate goods). Repeat for 12%, 18%, 28%, and Cess categories separately. The total ITC reversal is the sum of all categories. Taxvio uses automated tools to handle multi-rate ITC calculations accurately.",
-    },
-    {
-      q: "Can Taxvio handle GSTR-10 for businesses with stock at multiple locations (godowns, branches)?",
-      a: "Yes. As part of our Premium GSTR-10 package (₹9,999), we conduct multi-location stock verification — either physically (if locations are in our serviceable area) or remotely (via video verification and client coordination). We consolidate stock data from all locations, prepare a unified valuation report, and file GSTR-10 with comprehensive documentation. We have handled GSTR-10 for businesses with up to 15 locations across India.",
-    },
-  ];
-
+function GlobalStyles() {
   return (
-    <section id="faq">
-      <SectionLabel text="FAQs" />
-      <h2 className="text-3xl md:text-4xl font-bold text-[#00416a] mb-10">
-        Frequently Asked Questions — GSTR-10 Final Return
-      </h2>
-      <div className="space-y-5">
-        {faqs.map((f, i) => (
-          <details
-            key={i}
-            className="group border rounded-2xl overflow-hidden"
-            open={open === i}
-            onToggle={(e) =>
-              setOpen((e.target as HTMLDetailsElement).open ? i : null)
-            }
-          >
-            <summary className="flex items-center justify-between px-6 py-5 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50 transition list-none">
-              <span>{f.q}</span>
-              <span className="text-[#00416a] text-xl group-open:rotate-45 transition-transform duration-200 flex-shrink-0 ml-4">
-                +
-              </span>
-            </summary>
-            <div className="px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t pt-4">
-              {f.a}
+    <style>{`
+      @keyframes ft-aurora { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-30px) scale(1.15); } 100% { transform: translate(0,0) scale(1); } }
+      @keyframes ft-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      .ft-aurora { animation: ft-aurora 14s ease-in-out infinite; }
+      .ft-float { animation: ft-float 7s ease-in-out infinite; }
+      .ft-reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+      .ft-reveal.ft-in { opacity: 1; transform: none; }
+      .ft-hide-scroll::-webkit-scrollbar { display: none; }
+      .ft-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .ft-aurora, .ft-float { animation: none !important; }
+        .ft-reveal { opacity: 1; transform: none; transition: none; }
+      }
+    `}</style>
+  );
+}
+
+function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`ft-reveal ${shown ? "ft-in" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+      {children}
+    </div>
+  );
+}
+
+function Heading({ label, title }: { label: string; title: string }) {
+  return (
+    <Reveal className="mb-7">
+      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#00416a]/70 border border-[#00416a]/15 bg-[#00416a]/5 px-3 py-1.5 rounded-full mb-3">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00416a]" />
+        {label}
+      </span>
+      <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#00416a] leading-tight">{title}</h2>
+    </Reveal>
+  );
+}
+
+/* ══════════════════════ HERO + NAV ══════════════════════ */
+
+function Hero() {
+  const facts = [
+    { k: "Form", v: "GSTR-10" },
+    { k: "Filed", v: "After cancellation" },
+    { k: "Filed", v: "After cancellation" },
+  ];
+  return (
+    <section className="relative bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white overflow-hidden">
+      <div className="ft-aurora absolute -top-32 -left-24 w-[26rem] h-[26rem] rounded-full bg-sky-400/20 blur-3xl" />
+      <div className="ft-aurora absolute -bottom-40 right-0 w-[28rem] h-[28rem] rounded-full bg-cyan-300/10 blur-3xl [animation-delay:-7s]" />
+      <div
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          maskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 25% 40%, black 20%, transparent 70%)",
+        }}
+      />
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 pt-12 pb-24 md:pt-16 md:pb-28 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+        <div>
+          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/60 flex flex-wrap items-center gap-2">
+            <Link href="/" className="hover:text-white transition">Home</Link><span>/</span>
+            <Link href="/serviceslist" className="hover:text-white transition">Services</Link><span>/</span>
+            <Link href="/serviceslist#gst" className="hover:text-white transition">GST Services</Link><span>/</span>
+            <span className="text-white">GSTR-10 Final Return Filing</span>
+          </nav>
+          <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-5">
+            🔒 GST Services
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.1] tracking-tight mb-5">
+            GSTR-10 Final Return Filing{" "}
+            <span className="bg-gradient-to-r from-white via-sky-200 to-cyan-200 bg-clip-text text-transparent">
+              — Accurate, On Time, CA-Reviewed
+            </span>
+          </h1>
+          <p className="text-base sm:text-lg text-sky-100/90 leading-relaxed max-w-2xl mb-8">
+            File the mandatory final return after GST cancellation, with closing stock valuation and ITC reversal worked out correctly by a CA-led team.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <button
+              onClick={() => openInquiryForm(SERVICE)}
+              className="group bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200"
+            >
+              Get a Free Quote <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+            <a href="#planner" className="border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#00416a] transition-all duration-200 text-center">
+              Who Must File
+            </a>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {facts.map((q) => (
+              <div key={q.k} className="bg-white/10 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5">
+                <p className="text-[10px] uppercase tracking-widest text-sky-200/70">{q.k}</p>
+                <p className="font-bold text-sm">{q.v}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden lg:block">
+          <div className="ft-float bg-white text-gray-800 rounded-3xl shadow-2xl shadow-black/30 p-6 rotate-1">
+            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-1">Your final return, tracked</p>
+            <p className="font-extrabold text-[#00416a] text-lg mb-4">Sample status view</p>
+            <ul className="space-y-2.5 mb-5">
+              {[
+                { t: "Cancellation confirmed", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "Stock valued", s: "Done", c: "bg-emerald-100 text-emerald-700" },
+                { t: "ITC reversal computed", s: "In progress", c: "bg-amber-100 text-amber-700" },
+                { t: "Acknowledgement", s: "Next", c: "bg-sky-100 text-sky-700" },
+                { t: "Acknowledgement shared", s: "Next", c: "bg-sky-100 text-sky-700" },
+              ].map((r) => (
+                <li key={r.t} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3 py-2.5 text-sm">
+                  <span className="flex-1 font-semibold">{r.t}</span>
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${r.c}`}>{r.s}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="rounded-2xl bg-[#00416a] text-white px-4 py-3 text-sm flex items-center gap-3">
+              <span className="text-xl">👨‍💼</span>
+              <span><b>CA-reviewed</b> before every filing</span>
             </div>
-          </details>
+          </div>
+        </div>
+      </div>
+      <svg className="absolute bottom-0 left-0 w-full h-10 text-slate-50" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden>
+        <path fill="currentColor" d="M0,60 L0,30 Q360,-10 720,25 T1440,20 L1440,60 Z" />
+      </svg>
+    </section>
+  );
+}
+
+function SectionNav({ active }: { active: string }) {
+  return (
+    <div className="sticky top-[72px] z-40 bg-white/85 backdrop-blur-xl border-b border-gray-200/80 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-1.5 overflow-x-auto ft-hide-scroll">
+          {NAV.map((n) => (
+            <a
+              key={n.id}
+              href={`#${n.id}`}
+              className={`flex-shrink-0 text-sm font-semibold px-3.5 py-2 rounded-full transition-all whitespace-nowrap ${
+                active === n.id ? "bg-[#00416a] text-white shadow-md shadow-[#00416a]/25" : "text-[#00416a]/80 hover:bg-[#00416a]/5"
+              }`}
+            >
+              {n.label}
+            </a>
+          ))}
+        </div>
+        <button
+          onClick={() => openInquiryForm(SERVICE)}
+          className="hidden md:inline-flex flex-shrink-0 text-xs font-bold bg-[#00416a] text-white px-4 py-2.5 rounded-lg hover:bg-[#002b45] active:scale-95 transition"
+        >
+          Enquire now
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════ SECTIONS ══════════════════════ */
+
+function Overview() {
+  return (
+    <section id="overview" className="scroll-mt-40">
+      <Heading label="Overview" title="What Is GSTR-10 Final Return Filing?" />
+      <div className="space-y-5">
+        {INTRO.map((p, i) => (
+          <Reveal key={i} delay={i * 70}>
+            <p className={`pl-5 border-l-4 text-gray-700 leading-relaxed ${i === 0 ? "border-[#00416a]" : "border-[#00416a]/25"}`}>{p}</p>
+          </Reveal>
         ))}
       </div>
     </section>
   );
 }
 
-/* ─── SHARED ─── */
-function SectionLabel({ text }: { text: string }) {
+function Benefits() {
   return (
-    <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#00416a]/60 mb-3 border border-[#00416a]/20 px-3 py-1 rounded-full bg-[#00416a]/5">
-      {text}
-    </span>
+    <section className="scroll-mt-40">
+      <Heading label="Benefits" title="Why Professional GSTR-10 Final Return Filing Pays Off" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {BENEFITS.map((b, i) => (
+          <Reveal key={b.t} delay={i * 60}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center text-xl mb-3 group-hover:scale-110 group-hover:-rotate-6 transition-transform">{b.icon}</div>
+              <h3 className="font-bold text-[#00416a] mb-1">{b.t}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{b.d}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Included() {
+  return (
+    <section id="included" className="scroll-mt-40">
+      <Heading label="What's Included" title="What You Get With GSTR-10 Final Return Filing" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {FEATURES.map((f, i) => (
+          <Reveal key={f.title} delay={i * 70}>
+            <div className="group h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center font-bold group-hover:scale-110 group-hover:-rotate-6 transition-transform">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-bold text-[#00416a]">{f.title}</h3>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{f.note}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Who() {
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Who It's For" title="Who We Support" />
+      <div className="grid sm:grid-cols-3 gap-4">
+        {IDEAL.map((w, i) => (
+          <Reveal key={w.t} delay={i * 70}>
+            <div className="relative h-full overflow-hidden bg-gradient-to-br from-[#00416a] to-[#00527f] text-white rounded-2xl p-6 shadow-lg">
+              <span className="absolute -right-4 -bottom-6 text-8xl opacity-10 select-none">{w.icon}</span>
+              <div className="relative">
+                <p className="text-2xl mb-2">{w.icon}</p>
+                <h3 className="font-bold text-lg mb-1.5">{w.t}</h3>
+                <p className="text-sm text-sky-100/90 leading-relaxed">{w.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** Who must file */
+function Planner() {
+  const [sel, setSel] = useState<string | null>(null);
+  const cur = CASES.find((c) => c.id === sel);
+  return (
+    <section id="planner" className="scroll-mt-40">
+      <Heading label="Who Must File" title="Do You Need to File GSTR-10?" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          GSTR-10 is required after a registration is cancelled, but not everyone files it. Pick the option closest to your
+          situation for an indication.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="grid gap-2.5">
+            {CASES.map((c) => {
+              const on = sel === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setSel(c.id)}
+                  aria-pressed={on}
+                  className={`text-left flex items-center gap-3 rounded-xl border px-4 py-3 transition-all ${on ? "bg-[#00416a] text-white border-[#00416a] shadow-lg shadow-[#00416a]/20" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/40"}`}
+                >
+                  <span className="text-xl">{c.icon}</span>
+                  <span className="flex-1 text-sm font-semibold">{c.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {cur && (
+            <div className="mt-6 rounded-2xl border border-sky-100 bg-sky-50 p-5">
+              <p className="text-xs uppercase tracking-widest text-[#00416a]/60 font-bold mb-1">Indication</p>
+              <p className="font-extrabold text-[#00416a] text-lg">{cur.t}</p>
+              <p className="text-sm text-gray-700 mt-1">{cur.d}</p>
+              <button onClick={() => openInquiryForm(SERVICE)} className="mt-3 text-sm font-bold bg-[#00416a] text-white px-4 py-2 rounded-lg hover:bg-[#002b45] transition">Confirm with a CA →</button>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">Indicative only. Requirements depend on your registration type and current rules; our CA confirms your case.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/** Due date tracker */
+function Deadline() {
+  const [cancelDate, setCancelDate] = useState("");
+  const [orderDate, setOrderDate] = useState("");
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    setToday(d);
+  }, []);
+
+  const info = useMemo(() => {
+    if (!today) return null;
+    const dates = [cancelDate, orderDate]
+      .filter(Boolean)
+      .map((s) => new Date(s + "T00:00:00"))
+      .filter((d) => !isNaN(d.getTime()));
+    if (!dates.length) return null;
+    const base = new Date(Math.max(...dates.map((d) => d.getTime())));
+    const due = new Date(base);
+    due.setMonth(due.getMonth() + 3);
+    const diff = Math.round((due.getTime() - today.getTime()) / 86400000);
+    return { due, diff };
+  }, [cancelDate, orderDate, today]);
+
+  const fmt = (d: Date) => d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+
+  return (
+    <section id="deadline" className="scroll-mt-40">
+      <Heading label="Due Date" title="When Is Your GSTR-10 Due?" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          The final return is generally due within three months of the date of cancellation or the date of the cancellation
+          order, whichever is later. Enter both dates to see an indicative due date.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="text-sm font-semibold text-gray-700">Effective date of cancellation</span>
+              <input type="date" value={cancelDate} onChange={(e) => setCancelDate(e.target.value)} className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#00416a]" />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-gray-700">Date of cancellation order</span>
+              <input type="date" value={orderDate} onChange={(e) => setOrderDate(e.target.value)} className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#00416a]" />
+            </label>
+          </div>
+          {info && (
+            <div className={`mt-5 rounded-2xl border p-5 ${info.diff < 0 ? "bg-red-50 border-red-200" : info.diff <= 15 ? "bg-amber-50 border-amber-200" : "bg-emerald-50 border-emerald-200"}`}>
+              <p className="text-xs uppercase tracking-widest text-[#00416a]/60 font-bold mb-1">Indicative due date</p>
+              <p className="text-xl font-extrabold text-[#00416a]">{fmt(info.due)}</p>
+              <p className="text-sm text-gray-700 mt-1">
+                {info.diff < 0 ? `This date passed ${Math.abs(info.diff)} day${Math.abs(info.diff) === 1 ? "" : "s"} ago. A late fee may apply; file as soon as possible.` : info.diff === 0 ? "Due today." : `${info.diff} day${info.diff === 1 ? "" : "s"} left.`}
+              </p>
+              <button onClick={() => openInquiryForm(SERVICE)} className="mt-3 text-sm font-bold bg-[#00416a] text-white px-4 py-2 rounded-lg hover:bg-[#002b45] transition">File my GSTR-10 →</button>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">Indicative only. The due date and late fee follow current law and any notified extensions; our CA confirms yours.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/** ITC reversal on closing stock and capital goods */
+function Gap() {
+  const [stockItc, setStockItc] = useState(80000);
+  const [capItc, setCapItc] = useState(120000);
+  const [quarters, setQuarters] = useState(6);
+  const [capMarketTax, setCapMarketTax] = useState(60000);
+  const [stockMarketTax, setStockMarketTax] = useState(70000);
+
+  const r = useMemo(() => {
+    const s = Math.max(0, stockItc), c = Math.max(0, capItc), q = Math.max(0, Math.ceil(quarters));
+    const capReduced = Math.max(0, Math.round(c * (1 - 0.05 * q)));
+    const stockRev = Math.max(s, Math.max(0, stockMarketTax));
+    const capRev = Math.max(capReduced, Math.max(0, capMarketTax));
+    return { capReduced, stockRev, capRev, total: stockRev + capRev };
+  }, [stockItc, capItc, quarters, capMarketTax, stockMarketTax]);
+
+  const inr = (n: number) => "₹" + n.toLocaleString("en-IN");
+  const Field = ({ label, v, set }: { label: string; v: number; set: (n: number) => void }) => (
+    <label className="block">
+      <span className="text-sm font-semibold text-gray-700">{label}</span>
+      <input type="number" min={0} value={v} onChange={(e) => set(+e.target.value)} className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#00416a]" />
+    </label>
+  );
+
+  return (
+    <section id="gap" className="scroll-mt-40">
+      <Heading label="ITC Reversal" title="Estimate the ITC You May Have to Reverse" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          On cancellation, credit on inputs, finished goods and capital goods held is generally reversed. For stock, the
+          higher of the credit taken and the tax on the market value is typically payable. For capital goods, the credit is
+          reduced by a fixed percentage for each quarter of use, and the higher of that and the tax on market value is
+          typically payable. This shows how the two interact.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="grid sm:grid-cols-2 gap-4 mb-5">
+            <Field label="ITC taken on stock held (₹)" v={stockItc} set={setStockItc} />
+            <Field label="Tax on market value of stock (₹)" v={stockMarketTax} set={setStockMarketTax} />
+            <Field label="ITC taken on capital goods (₹)" v={capItc} set={setCapItc} />
+            <Field label="Quarters since capital goods invoice" v={quarters} set={setQuarters} />
+            <Field label="Tax on market value of capital goods (₹)" v={capMarketTax} set={setCapMarketTax} />
+          </div>
+          <div className="grid sm:grid-cols-3 gap-3">
+            <div className="rounded-2xl bg-sky-50 border border-sky-100 p-4">
+              <p className="text-xs uppercase tracking-widest font-bold text-[#00416a]/70">Stock reversal</p>
+              <p className="text-2xl font-extrabold text-[#00416a]">{inr(r.stockRev)}</p>
+            </div>
+            <div className="rounded-2xl bg-sky-50 border border-sky-100 p-4">
+              <p className="text-xs uppercase tracking-widest font-bold text-[#00416a]/70">Capital goods reversal</p>
+              <p className="text-2xl font-extrabold text-[#00416a]">{inr(r.capRev)}</p>
+              <p className="text-sm text-gray-600 mt-1">After age reduction: {inr(r.capReduced)}</p>
+            </div>
+            <div className="rounded-2xl bg-[#00416a] text-white p-4">
+              <p className="text-xs uppercase tracking-widest text-sky-200 font-bold">Indicative total</p>
+              <p className="text-2xl font-extrabold">{inr(r.total)}</p>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-col sm:flex-row sm:items-center gap-3 rounded-2xl bg-sky-50 px-5 py-4 text-sm text-[#00416a]">
+            <span className="flex-1 font-medium">We compute this item by item from your invoices and tell you the exact figure before filing.</span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">Get my exact figure →</button>
+          </div>
+          <p className="mt-4 text-xs text-gray-400">Simplified illustration only (assumes a 5% reduction per quarter or part). The actual method, rates and valuation follow the law and your facts.</p>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Documents() {
+  const keys = Object.keys(DOC_SETS);
+  const [tab, setTab] = useState(keys[0]);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const set = DOC_SETS[tab];
+  const done = set.docs.filter((d) => checked[tab + d]).length;
+  const pct = Math.round((done / set.docs.length) * 100);
+
+  return (
+    <section id="documents" className="scroll-mt-40">
+      <Heading label="Documents" title="Documents Required for GSTR-10" />
+      <Reveal>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          We need your cancellation details, closing stock and capital goods records, and your books and returns up to the cancellation date. Tick off what you have.
+        </p>
+        <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm">
+          <div className="flex flex-wrap gap-2 mb-5" role="tablist">
+            {keys.map((k) => (
+              <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${tab === k ? "bg-[#00416a] text-white border-[#00416a]" : "bg-white text-[#00416a] border-[#00416a]/20 hover:border-[#00416a]/50"}`}>
+                {DOC_SETS[k].label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="font-bold text-[#00416a]">Your document checklist</p>
+            <p className="text-sm font-semibold text-gray-500 tabular-nums">{done}/{set.docs.length} ready</p>
+          </div>
+          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden mb-5">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#00416a] to-emerald-500 transition-all duration-500" style={{ width: `${pct}%` }} />
+          </div>
+          <ul className="space-y-2.5">
+            {set.docs.map((d) => {
+              const on = !!checked[tab + d];
+              return (
+                <li key={d}>
+                  <label className={`flex items-center gap-3 cursor-pointer rounded-xl border px-4 py-3 transition-all ${on ? "bg-emerald-50 border-emerald-200" : "bg-gray-50 border-gray-200 hover:border-[#00416a]/30"}`}>
+                    <input type="checkbox" checked={on} onChange={() => setChecked((c) => ({ ...c, [tab + d]: !on }))} className="w-5 h-5 accent-[#00416a]" />
+                    <span className={`text-sm font-medium ${on ? "text-emerald-800 line-through decoration-emerald-400" : "text-gray-800"}`}>{d}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          <div className={`mt-5 rounded-2xl px-5 py-4 text-sm flex flex-col sm:flex-row sm:items-center gap-3 ${pct === 100 ? "bg-emerald-50 text-emerald-900" : "bg-sky-50 text-[#00416a]"}`}>
+            <span className="flex-1 font-medium">{pct === 100 ? "🎉 This group is complete." : "Missing something? We can download GSTR-2B and related data from the portal."}</span>
+            <button onClick={() => openInquiryForm(SERVICE)} className="bg-[#00416a] text-white font-bold px-4 py-2.5 rounded-lg hover:bg-[#002b45] transition">Ask us →</button>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Pitfalls() {
+  return (
+    <section id="mistakes" className="scroll-mt-40">
+      <Heading label="Pitfalls" title="GSTR-10 Mistakes That Cost Businesses Money" />
+      <Reveal>
+        <h3 className="font-extrabold text-[#00416a] text-xl mb-4">How your final return comes together</h3>
+        <ol className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
+          {CYCLE.map((s, i) => (
+            <li key={s.t} className="bg-white border border-gray-200 rounded-2xl p-4">
+              <span className="inline-block text-[11px] font-bold text-[#00416a] uppercase tracking-wide bg-sky-50 border border-sky-100 px-2.5 py-1 rounded-full mb-2">Step {i + 1}</span>
+              <p className="font-bold text-[#00416a] mb-1">{s.t}</p>
+              <p className="text-sm text-gray-600 leading-relaxed">{s.d}</p>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
+      <div className="space-y-3">
+        {MISTAKES.map((m, i) => (
+          <Reveal key={m.t} delay={i * 50}>
+            <div className="flex gap-4 bg-amber-50/70 border border-amber-200/70 rounded-2xl p-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center">!</span>
+              <div>
+                <p className="font-bold text-gray-800">{m.t}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{m.d}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+      <Reveal>
+        <p className="mt-6 text-sm text-gray-500">
+          Related: <Link href="/serviceslist/gst/gst-registration" className="font-semibold text-[#00416a] hover:underline">GST registration</Link>, <Link href="/serviceslist/gst/gst-return" className="font-semibold text-[#00416a] hover:underline">GST return filing</Link> and all <Link href="/serviceslist#gst" className="font-semibold text-[#00416a] hover:underline">GST services</Link>.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section id="process" className="scroll-mt-40">
+      <Heading label="Process" title="How Our GSTR-10 Final Return Filing Works" />
+      <ol className="relative space-y-5 before:absolute before:left-[27px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-[#00416a]/40 before:to-[#00416a]/5">
+        {STEPS.map((s, i) => (
+          <Reveal key={s.t} delay={i * 70}>
+            <li className="relative flex gap-5">
+              <span className="relative z-10 flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00416a] to-[#0a6aa8] text-white flex items-center justify-center text-lg font-extrabold shadow-lg shadow-[#00416a]/25">{i + 1}</span>
+              <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg hover:border-[#00416a]/30 transition-all">
+                <h3 className="font-bold text-[#00416a] mb-1.5">{s.t}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{s.d}</p>
+              </div>
+            </li>
+          </Reveal>
+        ))}
+      </ol>
+      <Reveal>
+        <div className="mt-8 grid md:grid-cols-2 gap-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">💰</p>
+            <h3 className="font-bold text-[#00416a] mb-2">What does it cost?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Our fee depends on the size of your stock and asset list, whether earlier returns are pending and how many registrations are involved. You receive a written quote before we start. Any tax, late fee or interest payable to the government is separate.
+            </p>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <p className="text-2xl mb-2">⏱️</p>
+            <h3 className="font-bold text-[#00416a] mb-2">How long does it take?</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Once your documents and stock details are ready, the return can usually be prepared quickly. Pending returns or a missed due date can add time, so start early. We confirm a plan before we begin.
+            </p>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function FAQs({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faqs" className="scroll-mt-40">
+      <Heading label="FAQs" title="GSTR-10 Final Return Filing — Frequently Asked Questions" />
+      <div className="space-y-3">
+        {faqs.map((f, i) => {
+          const isOpen = open === i;
+          return (
+            <Reveal key={f.q} delay={Math.min(i, 5) * 40}>
+              <div className={`rounded-2xl border bg-white transition-all duration-300 ${isOpen ? "border-[#00416a]/40 shadow-lg shadow-[#00416a]/10" : "border-gray-200 hover:border-[#00416a]/25"}`}>
+                <button onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left">
+                  <span className={`font-bold ${isOpen ? "text-[#00416a]" : "text-gray-800"}`}>{f.q}</span>
+                  <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${isOpen ? "bg-[#00416a] text-white rotate-45" : "bg-[#00416a]/10 text-[#00416a]"}`}>+</span>
+                </button>
+                <div className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                  <div className="overflow-hidden"><p className="px-5 pb-5 text-sm text-gray-600 leading-relaxed">{f.a}</p></div>
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Related() {
+  const gst = serviceCategories.find((c) => c.slug === "gst");
+  const items = (gst?.services ?? []).filter((s) => s.slug !== "gstr-10-final-return").slice(0, 6);
+  if (!items.length) return null;
+  return (
+    <section className="scroll-mt-40">
+      <Heading label="Related Services" title="More GST Services" />
+      <div className="grid sm:grid-cols-2 gap-4">
+        {items.map((r, i) => (
+          <Reveal key={r.slug} delay={i * 60}>
+            <Link
+              href={`/serviceslist/gst/${r.slug}`}
+              className="group block h-full bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-[#00416a]/10 hover:-translate-y-1 hover:border-[#00416a]/30 transition-all duration-300"
+            >
+              <h3 className="font-bold text-[#00416a] mb-1.5 leading-snug">{r.title}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 mb-3">{r.shortDescription}</p>
+              <span className="text-sm font-semibold text-[#00416a] inline-flex items-center gap-1">
+                Learn more <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════ SIDEBAR + CTA ══════════════════════ */
+
+function SideCard() {
+  return (
+    <div className="sticky top-40 space-y-4">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] text-white p-6 shadow-xl">
+        <div className="ft-aurora absolute -top-16 -right-16 w-48 h-48 rounded-full bg-sky-400/25 blur-2xl" />
+        <div className="relative">
+          <p className="text-xs uppercase tracking-widest text-sky-200 font-semibold mb-2">Free consultation</p>
+          <h3 className="font-extrabold text-xl leading-snug mb-2">Close your GST account properly</h3>
+          <p className="text-sm text-sky-100/85 leading-relaxed mb-5">Tell us about your business — a CA from our team will call you back with a clear plan and a fixed quote.</p>
+          <button onClick={() => openInquiryForm(SERVICE)} className="w-full bg-white text-[#00416a] font-bold py-3.5 rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition">
+            Get a Free Quote →
+          </button>
+          <ul className="mt-4 space-y-1.5 text-sm text-white/80">
+            <li>✓ No obligation</li>
+            <li>✓ Fixed quote upfront</li>
+            <li>✓ 100% online</li>
+          </ul>
+        </div>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-2xl p-5">
+        <p className="font-bold text-[#00416a] mb-3 text-sm">On this page</p>
+        <ul className="space-y-1.5">
+          {NAV.map((n) => (
+            <li key={n.id}>
+              <a href={`#${n.id}`} className="text-sm text-gray-600 hover:text-[#00416a] hover:translate-x-1 inline-block transition">{n.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-10 pb-24">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#00416a] via-[#00527f] to-[#002b45] shadow-2xl px-6 py-12 sm:px-12 sm:py-16 text-white">
+          <div className="ft-aurora absolute -top-20 -right-20 w-72 h-72 rounded-full bg-sky-400/25 blur-3xl" />
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="max-w-2xl text-center lg:text-left">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-3 leading-tight">Ready to file your final GST return?</h3>
+              <p className="text-lg text-sky-100/90 leading-relaxed">Share your requirement in 30 seconds. A CA from our team will call you back with a clear plan and honest pricing.</p>
+            </div>
+            <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
+              <button onClick={() => openInquiryForm(SERVICE)} className="bg-white text-[#00416a] px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition-all">
+                Get a Free Quote →
+              </button>
+              <Link href="/serviceslist" className="border-2 border-white/40 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition text-center">
+                All Services
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
   );
 }

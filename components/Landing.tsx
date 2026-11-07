@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -9,7 +10,7 @@ import InquiryFormButton, { openInquiryForm } from "@/components/InquiryFormButt
 
 export default function Landing() {
   return (
-    <main className="bg-white text-gray-800 overflow-x-hidden">
+    <main className="bg-white text-gray-800 overflow-x-clip">
       <GlobalStyles />
       <Hero />
       <InquiryFormButton />
@@ -179,8 +180,8 @@ function SectionHeader({
 function Hero() {
   const calendar = [
     { d: "11", t: "GSTR-1", s: "Filed", c: "bg-emerald-100 text-emerald-700" },
-    { d: "20", t: "GSTR-3B", s: "Filed", c: "bg-emerald-100 text-emerald-700" },
-    { d: "21 Oct", t: "Tax audit report", s: "In review", c: "bg-sky-100 text-sky-700" },
+    { d: "20", t: "GSTR-3B", s: "In review", c: "bg-amber-100 text-amber-700" },
+    { d: "21 Oct", t: "Tax audit report", s: "Upcoming", c: "bg-sky-100 text-sky-700" },
     { d: "21 Nov", t: "ITR (audit cases)", s: "Upcoming", c: "bg-sky-100 text-sky-700" },
   ];
   return (
