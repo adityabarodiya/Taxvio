@@ -13,8 +13,7 @@ import InquiryFormButton from "@/components/InquiryFormButton"; // ← adjust pa
 // Set this in .env.local as NEXT_PUBLIC_GOOGLE_SCRIPT_URL after you
 // deploy the Google Apps Script web app (see setup steps provided separately).
 const GOOGLE_SCRIPT_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL ??
-  "https://script.google.com/macros/s/AKfycbzQa2vYEo6rdMi75hHf3YZDdIKpmAzLyKpaVRdwU54UrLPpBOmQBiQSikyzZWR_WAGnyQ/exec";
+  process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
 
 const INDIAN_STATES = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",

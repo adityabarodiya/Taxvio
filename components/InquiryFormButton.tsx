@@ -36,8 +36,7 @@ import { useEffect, useState } from "react";
 import { serviceCategories } from "@/data/serviceCategories"; // ← adjust this import path to match where serviceCategories.ts actually lives in your repo
 
 const GOOGLE_SCRIPT_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL ??
-  "https://script.google.com/macros/s/AKfycbzQa2vYEo6rdMi75hHf3YZDdIKpmAzLyKpaVRdwU54UrLPpBOmQBiQSikyzZWR_WAGnyQ/exec";
+  process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL ;
 
 const INDIAN_STATES = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
